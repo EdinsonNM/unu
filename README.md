@@ -6,7 +6,9 @@ version 0.1
 
 ```
 Install NodeJS
+https://nodejs.org/
 Install MongoDB
+https://www.mongodb.org/
 ```
 
 ## Run MongoDB
