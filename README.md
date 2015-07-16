@@ -21,8 +21,8 @@ Windows:
 ## Requirements for Development
 
 ```
-[sudo] npm install -g nodemon --save
-[sudo] npm install -g node-inspector --save
+[sudo] npm install -g nodemon
+[sudo] npm install -g node-inspector
 
 ```
 
