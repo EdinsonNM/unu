@@ -5,8 +5,8 @@ version 0.1
 ## Requirements
 
 
-Install NodeJS from [https://nodejs.org/](https://nodejs.org/)
-Install MongoDB from [https://www.mongodb.org/](https://www.mongodb.org/)
+* Install NodeJS from [https://nodejs.org/](https://nodejs.org/)
+* Install MongoDB from [https://www.mongodb.org/](https://www.mongodb.org/)
 
 
 ## Run MongoDB
