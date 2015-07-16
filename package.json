@@ -1,0 +1,22 @@
+{
+  "name": "unu-api",
+  "version": "1.0.0",
+  "description": "restapi for unu",
+  "main": "app.js",
+  "scripts": {
+    "start": "set NODE_ENV=production node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "unu"
+  ],
+  "author": "Edinson Nuñez More",
+  "license": "ISC",
+  "dependencies": {
+    "baucis": "^1.6.0",
+    "body-parser": "~1.0.1",
+    "express": "^4.13.1",
+    "mongoose": "^4.0.7",
+    "mongoose-unique-validator": "^0.4.1"
+  }
+}
