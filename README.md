@@ -1,17 +1,14 @@
-# API FOR APP UNU #
-
-This README would normally document whatever steps are necessary to get your application up and running.
+# API para Sistema UNU #
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Este proyecto es una aplicación basada en NodeJS y MongoDB, la cual contiene todos lose servicios que serán expuestos hacia la aplicación web 
+* Version: 1.0
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
+* Install Node JS
+* Install MongoDB
 * Dependencies
 * Database configuration
 * How to run tests
