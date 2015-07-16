@@ -39,3 +39,9 @@ Windows:
 cd /unu-server
 npm install
 ```
+
+## Init Project for Development
+
+```
+nodemon app
+```
