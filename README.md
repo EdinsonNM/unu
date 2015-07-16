@@ -7,7 +7,21 @@ version 0.1
 ```
 Install NodeJS
 Install MongoDB
-npm install -g nodemon
+```
+
+## Requirements for Development
+
+```
+[sudo] npm install -g nodemon --save
+[sudo] npm install -g node-inspector --save
+
+```
+
+## Requirements for Production
+
+```
+[sudo] npm install forever -g
+
 ```
 
 ## Install packages in Project
