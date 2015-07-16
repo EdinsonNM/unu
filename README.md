@@ -1,26 +1,18 @@
-# API para Sistema UNU #
+# UNU-SERVER
 
-### What is this repository for? ###
+version 0.1
 
-* Este proyecto es una aplicación basada en NodeJS y MongoDB, la cual contiene todos lose servicios que serán expuestos hacia la aplicación web 
-* Version: 1.0
+## Requirements
 
-### Requerimientos ###
+```
+Install NodeJS
+Install MongoDB
+npm install -g nodemon
+```
 
-* Instalar Node JS
-* Instalar MongoDB
-* Instalar Nodemon: npm install -g nodemon
-* ir al directorio del proyecto cd /unu-server
-* Ejecutar npm install
-* Ejecutar nodemon app.js
+## Install packages in Project
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+```
+cd /unu-server
+npm install
+```
