@@ -5,5 +5,6 @@
 
 module.exports = {
   db: 'mongodb://localhost/unu-development',
-  port:9000
+  port:3000,
+  key_secret:'{unu2015}'
 };
