@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -7,11 +8,15 @@ var swagger = require('baucis-swagger');
 var controllers = require('./controllers');
 var routes=require('./routes')(controllers);
 var passport=require('./config/passport');
+var cors = require('cors');//para permitir solicitudes desde cualquier puerto
 var app = express();
 // config express
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/api',cors());
 app.use('/api',baucis());
+
+
 app.set('jwt-key',config.key_secret);
 
 // Connect to mongodb
