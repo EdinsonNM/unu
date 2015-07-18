@@ -7,7 +7,7 @@ var PlazaasignaturaSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Plaza',
     required:true
-  }
+  },
   _planestudiodetallegrupo:{
     type:Schema.Types.ObjectId,
     ref:'Planestudiodetallegrupo',

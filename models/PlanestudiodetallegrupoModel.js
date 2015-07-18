@@ -7,7 +7,7 @@ var PlanestudiodetallegrupoSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Periodo',
     required:true
-  }
+  },
   _planestudiodetalle:{
     type:Schema.Types.ObjectId,
     ref:'Planestudiodetalle',

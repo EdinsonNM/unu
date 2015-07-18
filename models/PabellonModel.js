@@ -23,4 +23,4 @@ PabellonSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Panellon', PabellonSchema).plural('pabellones');
+module.exports = mongoose.model('Pabellon', PabellonSchema).plural('pabellones');

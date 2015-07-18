@@ -1,7 +1,18 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var FacultadSchema = new Schema({	nombre : {		type:String,		required:true	},	_escuelas:[{		type:Schema.ObjectId,		ref:'Escuela'	}],	created_at:Date,	updated_at:Date});
+var FacultadSchema = new Schema({
+	nombre : {
+		type:String,
+		required:true
+	},
+	_escuelas:[{
+		type:Schema.ObjectId,
+		ref:'Escuela'
+	}],
+	created_at:Date,
+	updated_at:Date
+});
 
 FacultadSchema.pre('save',function(next){
 	var now = new Date;
@@ -12,4 +23,4 @@ FacultadSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Facultad', FacultadSchema);
+module.exports = mongoose.model('Facultad', FacultadSchema).plural('facultades');
