@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var Schema   = mongoose.Schema;
 
 var AulaSchema = new Schema({
@@ -19,6 +20,7 @@ var AulaSchema = new Schema({
 	updated_at:Date
 });
 
+AulaSchema.plugin(mongoosePaginate);
 AulaSchema.pre('save',function(next){
 	var now = new Date;
 	this.updated_at = now;

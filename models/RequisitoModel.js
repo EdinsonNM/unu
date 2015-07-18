@@ -5,7 +5,7 @@ var RequisitoSchema = new Schema({
 	nombre : {
 		type:String,
 		required:true
-	}
+	},
 	created_at:Date,
 	updated_at:Date
 });

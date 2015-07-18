@@ -39,4 +39,4 @@ PlazaSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Escuela', PlazaSchema).plural('escuelas');
+module.exports = mongoose.model('Plaza', PlazaSchema).plural('plazas');

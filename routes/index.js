@@ -1,5 +1,22 @@
 module.exports=function(controller){
-  controller.Facultad.setup();
-  controller.Escuela.setup();
-  controller.Usuario.setup();
+	controller.Actividadacademica.setup();
+	controller.Aula.setup();
+	controller.Curso.setup();
+	controller.Distribucionaula.setup();
+	controller.Distribucionauladetalle.setup();
+	controller.Docente.setup();
+    controller.Escuela.setup();
+	controller.Facultad.setup();
+	controller.Pabellon.setup();
+	controller.Periodo.setup();
+	controller.Planestudio.setup();
+	controller.Planestudiodetalle.setup();
+	controller.Planestudiodetallegrupo.setup();
+	controller.Plazaasignatura.setup();
+	controller.Plaza.setup();
+	controller.Prerequisito.setup();
+	controller.Requisito.setup();
+	controller.Tipocurso.setup();
+	controller.Tipoplaza.setup();
+    controller.Usuario.setup();
 }
