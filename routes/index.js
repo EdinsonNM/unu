@@ -5,7 +5,7 @@ module.exports=function(controller){
 	controller.Distribucionaula.setup();
 	controller.Distribucionauladetalle.setup();
 	controller.Docente.setup();
-    controller.Escuela.setup();
+  controller.Escuela.setup();
 	controller.Facultad.setup();
 	controller.Pabellon.setup();
 	controller.Periodo.setup();
@@ -18,5 +18,7 @@ module.exports=function(controller){
 	controller.Requisito.setup();
 	controller.Tipocurso.setup();
 	controller.Tipoplaza.setup();
-    controller.Usuario.setup();
+  controller.Usuario.setup();
+	controller.Grupo.setup();
+	
 }

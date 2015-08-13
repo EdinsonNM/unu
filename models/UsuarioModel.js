@@ -7,6 +7,12 @@ var UsuarioSchema = new Schema({
 	username:{type:String, required:true},
   password:{type:String, required:true},
   email:{type:String, required:true},
+  _grupo:{
+    type:Schema.Types.ObjectId,
+    ref:'Grupo',
+    required:true
+  },
+  permisos:[{type:String}],
   salt:String,
 	created_at:Date,
 	updated_at:Date

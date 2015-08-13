@@ -16,9 +16,10 @@ module.exports={
 	Requisito: require('./RequisitoController')(),
 	Tipocurso: require('./TipocursoController')(),
 	Tipoplaza: require('./TipoplazaController')(),
-	
+
 
   Facultad: require('./FacultadController')(),
   Escuela: require('./EscuelaController')(),
-  Usuario: require('./UsuarioController')()
+  Usuario: require('./UsuarioController')(),
+	Grupo:require('./GrupoController')()
 }
