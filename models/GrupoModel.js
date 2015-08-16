@@ -11,6 +11,7 @@ var GrupoSchema = new Schema({
 		required:true,
     uppercase:true
 	},
+	menu:[],
 	created_at:Date,
 	updated_at:Date
 });

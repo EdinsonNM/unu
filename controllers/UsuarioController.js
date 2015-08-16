@@ -20,6 +20,8 @@ module.exports=function(){
           console.log(obj);
           if(err) next(err);
           var user=new model({
+            firstname:'Edinson',
+            lastname:'Nuñez More',
             username:'admin',
             password:'admin',
             email:'admin@admin.com',
@@ -62,7 +64,7 @@ module.exports=function(){
         model
         .findOne({ _id: decoded._id })
         .populate('_grupo').exec(function(err, user) {
-          delete user.password;
+        
           res.status(200).send({user:user});
           next();
         });
