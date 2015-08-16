@@ -11,9 +11,9 @@ module.exports=function(){
       controller.get('/methods/paginate', function(req, res){
       	var limit = req.query.count;
       	var page = req.query.page || 1;
-      	var filters = req.query.filters;
+      	var filter = req.query.filter;
       	model.paginate(
-      		filters,
+      		filter,
       		{page: page, limit: limit},
       		function(err, results, pageCount, itemCount){
             var obj = {

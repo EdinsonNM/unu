@@ -12,10 +12,16 @@ module.exports=function(){
       controller.get('/methods/paginate', function(req, res){
       	var limit = req.query.count;
       	var page = req.query.page || 1;
-      	var filters = req.query.filters;
+      	var filter = req.query.filter;
+        var _facultad=req.query._facultad;
       	model.paginate(
-      		filters,
-      		{page: page, limit: limit},
+      		filter,
+      		{
+            page: page,
+            limit: limit,
+            populate: [ '_facultad' ],
+          },
+
       		function(err, results, pageCount, itemCount){
             var obj = {
               total: itemCount,
