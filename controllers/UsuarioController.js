@@ -1,3 +1,4 @@
+var Grupo = require('../models/GrupoModel.js');
 var model = require('../models/UsuarioModel.js');
 var baucis=require('baucis');
 var jwt = require('jsonwebtoken');
@@ -11,11 +12,27 @@ module.exports=function(){
       controller.fragment('/usuarios');
 
       //custom routes
-      controller.post('/login/register', function(req,res){
-        model.signup("admin2@admin.com","admin","en",function(err,user){
-          if(err) return res.send(err);
-          return res.send(user);
+      controller.post('/seed/data', function(req,res,next){
+        model.remove({}, function(err) {
+           console.log('grupo removed');
         });
+        Grupo.findOne({codigo:'ADMIN'},function(err,obj){
+          console.log(obj);
+          if(err) next(err);
+          var user=new model({
+            username:'admin',
+            password:'admin',
+            email:'admin@admin.com',
+            _grupo:obj._id
+          });
+          user.save(function(err,u){
+            res.send(u);
+            next();
+          });
+
+
+        })
+
       });
       controller.post('/auth/login', function(req,res,next){
         passport.authenticate('local', function(err, user, info) {
@@ -27,7 +44,8 @@ module.exports=function(){
           var obj={
             _id:user._id,
             username:user.username,
-            email:user.email
+            email:user.email,
+            grupo_id:user._grupo
           }
           var token = jwt.sign(obj, config.key_secret);
           res.status(200).json({ token : token, success:true });
@@ -35,8 +53,29 @@ module.exports=function(){
         })(req, res, next);
       });
 
-      controller.get('/auth/me',auth.ensureAuthenticated,function(req,res){
-        res.send(req.token);
+      controller.get('/auth/me',auth.ensureAuthenticated,function(req,res,next){
+        try {
+          var decoded = jwt.verify(req.token,config.key_secret);
+        }catch(err) {
+          next(err);
+        }
+        model
+        .findOne({ _id: decoded._id })
+        .populate('_grupo').exec(function(err, user) {
+          delete user.password;
+          res.status(200).send({user:user});
+          next();
+        });
+
+      });
+
+      controller.get('/auth/access',auth.ensureAuthenticated,function(req,res,next){
+        try {
+          var decoded = jwt.verify(req.token,config.key_secret);
+        }catch(err) {
+          next(err);
+        }
+
       });
 
     }

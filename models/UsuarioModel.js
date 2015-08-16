@@ -12,7 +12,6 @@ var UsuarioSchema = new Schema({
     ref:'Grupo',
     required:true
   },
-  permisos:[{type:String}],
   salt:String,
 	created_at:Date,
 	updated_at:Date
