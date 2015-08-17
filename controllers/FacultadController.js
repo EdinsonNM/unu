@@ -6,8 +6,8 @@ module.exports=function(){
       var controller=baucis.rest('Facultad');
       controller.fragment('/facultades');
 
-
       //custom methods
+
       controller.get('/methods/paginate', function(req, res){
       	var limit = req.query.count;
       	var page = req.query.page || 1;

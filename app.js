@@ -10,6 +10,8 @@ var routes=require('./routes')(controllers);
 var passport=require('./config/passport');
 var cors = require('cors');//para permitir solicitudes desde cualquier puerto
 var app = express();
+Error.stackTraceLimit = 0; // disables it
+
 // config express
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

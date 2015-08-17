@@ -1,11 +1,12 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
-
+var uniqueValidator = require('mongoose-unique-validator');
 var FacultadSchema = new Schema({
 	codigo: {
 		type:String,
-		required:true
+		required:true,
+		unique: true
 	},
 	resolucion:String,
 	nombre : {
@@ -20,6 +21,7 @@ var FacultadSchema = new Schema({
 	updated_at:Date
 });
 FacultadSchema.plugin(mongoosePaginate);
+FacultadSchema.plugin(uniqueValidator);
 FacultadSchema.pre('save',function(next){
 	var now = new Date;
 	this.updated_at = now;

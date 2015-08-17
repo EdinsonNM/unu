@@ -13,7 +13,7 @@
   "author": "Edinson Nuñez More",
   "license": "ISC",
   "dependencies": {
-    "baucis": "^1.6.0",
+    "baucis": "^1.6.1",
     "baucis-swagger": "^1.1.2",
     "bcryptjs": "^2.2.0",
     "body-parser": "~1.0.1",

@@ -20,5 +20,5 @@ module.exports=function(controller){
 	controller.Tipoplaza.setup();
   controller.Usuario.setup();
 	controller.Grupo.setup();
-	
+
 }
