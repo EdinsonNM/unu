@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
-
+var mongoosePaginate = require('mongoose-paginate');
 var PlanestudioSchema = new Schema({
 	nombre : {
 		type:String,
@@ -48,7 +48,7 @@ var PlanestudioSchema = new Schema({
 	created_at:Date,
 	updated_at:Date
 });
-
+PlanestudioSchema.plugin(mongoosePaginate);
 PlanestudioSchema.pre('save',function(next){
 	var now = new Date;
 	this.updated_at = now;
