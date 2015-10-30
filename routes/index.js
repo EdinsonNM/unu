@@ -1,24 +1,16 @@
-module.exports=function(controller){
-	controller.Actividadacademica.setup();
-	controller.Aula.setup();
-	controller.Curso.setup();
-	controller.Distribucionaula.setup();
-	controller.Distribucionauladetalle.setup();
-	controller.Docente.setup();
-  controller.Escuela.setup();
-	controller.Facultad.setup();
-	controller.Pabellon.setup();
-	controller.Periodo.setup();
-	controller.Planestudio.setup();
-	controller.Planestudiodetalle.setup();
-	controller.Planestudiodetallegrupo.setup();
-	controller.Plazaasignatura.setup();
-	controller.Plaza.setup();
-	controller.Prerequisito.setup();
-	controller.Requisito.setup();
-	controller.Tipocurso.setup();
-	controller.Tipoplaza.setup();
-  controller.Usuario.setup();
-	controller.Grupo.setup();
+var controller = require('../controllers');
+var fs = require('fs');
+module.exports=function(){
+	var controllerFn;
+	controller.bootstrap();
+	var file;
+	var controllers = fs.readdirSync("./controllers");
+	for (var i = 0; i < controllers.length; i++) {
+		file = controllers[i];
+		controllerName = file.split('.')[0];
+		if(controllerName!='index')
+			controller.controllers[i]().setup();
 
-}
+	}
+
+};

@@ -44,4 +44,7 @@ npm install
 
 ```
 nodemon app
+or
+node-inspector --web-port:8080
+nodemon --debug-brk app
 ```

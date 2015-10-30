@@ -8,5 +8,5 @@ module.exports=function(){
       controller.relations(true);
       controller.hints(true);
     }
-  }
-}
+  };
+};

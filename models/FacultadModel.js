@@ -23,7 +23,7 @@ var FacultadSchema = new Schema({
 FacultadSchema.plugin(mongoosePaginate);
 FacultadSchema.plugin(uniqueValidator);
 FacultadSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updated_at = now;
 	if (!this.created_at){
 		this.created_at=now;

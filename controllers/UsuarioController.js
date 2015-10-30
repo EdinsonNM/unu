@@ -33,12 +33,12 @@ module.exports=function(){
           });
 
 
-        })
+        });
 
       });
       controller.post('/auth/login', function(req,res,next){
         passport.authenticate('local', function(err, user, info) {
-          if (err) { return next(err) }
+          if (err) { return next(err); }
           if (!user) {
             return res.json(401, { success:false, message: 'Usuario o Contraseña incorrectos' });
           }
@@ -48,7 +48,7 @@ module.exports=function(){
             username:user.username,
             email:user.email,
             grupo_id:user._grupo
-          }
+          };
           var token = jwt.sign(obj, config.key_secret);
           res.status(200).json({ token : token, success:true });
 
@@ -64,7 +64,7 @@ module.exports=function(){
         model
         .findOne({ _id: decoded._id })
         .populate('_grupo').exec(function(err, user) {
-        
+
           res.status(200).send({user:user});
           next();
         });
@@ -81,5 +81,5 @@ module.exports=function(){
       });
 
     }
-  }
-}
+  };
+};

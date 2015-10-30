@@ -1,25 +1,15 @@
-module.exports={
-	Actividadacademica: require('./ActividadacademicaController')(),
-	Aula: require('./AulaController')(),
-	Curso: require('./CursoController')(),
-	Distribucionaula: require('./DistribucionaulaController')(),
-	Distribucionauladetalle: require('./DistribucionauladetalleController')(),
-	Docente: require('./DocenteController')(),
-	Pabellon: require('./PabellonController')(),
-	Periodo: require('./PeriodoController')(),
-	Planestudio: require('./PlanestudioController')(),
-	Planestudiodetalle: require('./PlanestudiodetalleController')(),
-	Planestudiodetallegrupo: require('./PlanestudiodetallegrupoController')(),
-	Plazaasignatura: require('./PlazaasignaturaController')(),
-	Plaza: require('./PlazaController')(),
-	Prerequisito: require('./PrerequisitoController')(),
-	Requisito: require('./RequisitoController')(),
-	Tipocurso: require('./TipocursoController')(),
-	Tipoplaza: require('./TipoplazaController')(),
+var fs = require('fs');
+var path = require('path');
+module.exports.bootstrap=function bootstrap(){
+	var file;
+	var controllers = fs.readdirSync(__dirname);
+	module.exports.controllers=[];
+	for (var i = 0; i < controllers.length; i++) {
+		file = controllers[i];
+		controllerName = file.split('.')[0];
+		if(controllerName!='index'){
+			module.exports.controllers[i] = require('./'+controllerName);
+		}
 
-
-  Facultad: require('./FacultadController')(),
-  Escuela: require('./EscuelaController')(),
-  Usuario: require('./UsuarioController')(),
-	Grupo:require('./GrupoController')()
-}
+	}
+};
