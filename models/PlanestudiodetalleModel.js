@@ -26,8 +26,6 @@ var PlanestudiodetalleSchema = new Schema({
 		type:Number,
 		required:true
 	},
-	
-
   _curso:{
     type:Schema.Types.ObjectId,
     ref:'Curso',
@@ -38,12 +36,20 @@ var PlanestudiodetalleSchema = new Schema({
     ref:'Planestudio',
     required:true
   },
+	_requisitos:[{
+		type:Schema.Types.ObjectId,
+    ref:'Planestudiodetalle',
+	}],
+	_revisiones:[{
+		created_at:{type:Date},
+		comentario:String
+	}],
 	created_at:Date,
 	updated_at:Date
 });
 
 PlanestudiodetalleSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updated_at = now;
 	if (!this.created_at){
 		this.created_at=now;

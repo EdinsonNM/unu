@@ -15,6 +15,10 @@ var DistribucionaulaSchema = new Schema({
     ref:'Pabellon',
     required:true
   },
+	_periodos:[{
+    type:Schema.Types.ObjectId,
+    ref:'Periodo'
+  }],
 	created_at:Date,
 	updated_at:Date
 });
