@@ -1,0 +1,84 @@
+<md-dialog aria-label="{{title}}">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span>{{title}}</span>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="More" ng-click="Cancel()">
+        <md-icon md-font-icon="fa fa-close fa-lg"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+
+
+
+    <div class="dialog__content p++">
+      <form name="myForm">
+        <div flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Año</label>
+              <input required name="anio" ng-model="model.anio">
+              <div ng-messages="myForm.anio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Periodo</label>
+              <input required name="periodo" ng-model="model.periodo">
+              <div ng-messages="myForm.periodo.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Nombre</label>
+              <input required name="nombre" ng-model="model.nombre">
+              <div ng-messages="myForm.nombre.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+        </div>
+        <div flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Resolución</label>
+              <input required name="resolucion" ng-model="model.resolucion">
+              <div ng-messages="myForm.resolucion.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+            <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha"></md-datepicker>
+            <div ng-messages="myForm.inicio.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+            </md-input-container>
+          </div>
+
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Fin</label>
+              <input required name="fin" ng-model="model.fin">
+              <div ng-messages="myForm.fin.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog__actions">
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </div>
+  </md-dialog-content>
+</md-dialog>

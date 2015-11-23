@@ -1,0 +1,16 @@
+<md-sidenav ng-controller="SidenavCtrl" ng-include="'views/blocks/app_sidenav.html'" class="md-sidenav-left md-whiteframe-z2 bg-cyan-900" md-component-id="left">
+
+</md-sidenav>
+<div layout="column" flex>
+  <md-toolbar ng-include="'views/blocks/app_header.html'">
+  </md-toolbar>
+
+
+  <md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+    <div ui-view>
+      <md-button ng-click="New($event)" class="md-fab" aria-label="Use Android" style="position:fixed; right:40px;bottom:40px;">
+        <md-icon md-font-icon="fa fa-question fa-lg"></md-icon>
+      </md-button>
+    </div>
+  </md-content>
+</div>

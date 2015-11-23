@@ -1,0 +1,24 @@
+<div class="md-toolbar-tools">
+  <md-button class="md-icon-button" aria-label="Settings" ng-click="SidenavToggle()">
+    <md-icon md-font-icon="fa fa-bars fa-lg"></md-icon>
+  </md-button>
+  <h2>
+    <span>{{app.name}} {{app.module}}</span>
+  </h2>
+  <span flex></span>
+  <md-button class="md-icon-button" aria-label="Favorite">
+    <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+  </md-button>
+  <md-button class="md-icon-button" aria-label="More" ng-click="close()">
+      <img src="/images/user0.jpg" class="md-avatar">
+  </md-button>
+  <md-menu>
+          <md-button class="capitalize" ng-click="$mdOpenMenu()" aria-label="Open menu">
+              <md-icon md-font-icon="fa fa-cog fa-lg"></md-icon>
+          </md-button>
+          <md-menu-content>
+              <md-menu-item><md-button ng-click="$mdCloseMenu()" ui-sref="home.profile">Configuración</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="Logout()" ui-sref="home.dashboard">Log out</md-button></md-menu-item>
+          </md-menu-content>
+      </md-menu>
+</div>

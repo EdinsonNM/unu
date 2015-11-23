@@ -1,0 +1,61 @@
+<md-dialog aria-label="List dialog">
+<md-dialog-content>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span>{{title}}</span>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="More" ng-click="Cancel()">
+       <md-icon md-font-icon="fa fa-close fa-lg"></md-icon>
+     </md-button>
+    </div>
+  </md-toolbar>
+
+
+    <div class="dialog__content p++">
+    <form name="myForm" >
+     <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+                <md-input-container class="md-block">
+                  <label>Nombres</label>
+                  <input required name="nombres" ng-model="model.nombres">
+                  <div ng-messages="myForm.nombres.$error"  ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+            </div>
+             <div flex-item>
+               <md-input-container class="md-block">
+                 <label>Apellidos</label>
+                 <input required name="apellidos" ng-model="model.apellidos">
+                 <div ng-messages="myForm.apellidos.$error"  ng-if="submited">
+                   <div ng-message="required">{{message.Required}}</div>
+                 </div>
+               </md-input-container>
+            </div>
+        </div>
+        <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Facultad</label>
+                <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}">
+                  <md-option ng-repeat="fac in facultades" ng-value="fac">
+                    {{fac.nombre}}
+                  </md-option>
+                </md-select>
+                <!--input required name="facultad" ng-model="model.facultad"-->
+                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div class="dialog__actions">
+         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+         <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </div>
+  </md-dialog-content>
+</md-dialog>
