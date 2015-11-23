@@ -1,0 +1,9 @@
+<md-content role="navigation">
+  <ul class="side-menu">
+    <li ng-repeat="section in $root.menu" class="parent-list-item"
+        ng-class="{'parentActive' : section.active}">
+      <menu-link section="section" ng-if="!section.hasOwnProperty('children')||section.children.length==0" ></menu-link>
+      <menu-toggle section="section" ng-if="section.children.length>0" toggle="toggleMenu"></menu-toggle>
+    </li>
+  </ul>
+</md-content>

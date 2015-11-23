@@ -1,0 +1,57 @@
+<md-dialog aria-label="List dialog">
+  <md-dialog-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <span>{{title}}</span>
+        <!-- fill up the space between left and right area -->
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="More" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+
+    <div class="dialog__content p++">
+      <form name="myForm">
+        <div flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Nombre</label>
+              <input required name="nombre" ng-model="model.nombre">
+              <div ng-messages="myForm.nombre.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Abreviatura</label>
+              <input required name="abreviatura" ng-model="model.abreviatura">
+              <div ng-messages="myForm.abreviatura.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+        </div>
+        <div flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Pabellón</label>
+              <input required name="pabellon" ng-model="model.pabellon">
+              <div ng-messages="myForm.pabellon.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog__actions">
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </div>
+  </md-dialog-content>
+</md-dialog>

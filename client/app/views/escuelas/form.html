@@ -1,0 +1,65 @@
+<md-dialog aria-label="List dialog">
+<md-dialog-content>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span>{{title}}</span>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="More" ng-click="Cancel()">
+       <md-icon md-font-icon="fa fa-close fa-lg"></md-icon>
+     </md-button>
+    </div>
+  </md-toolbar>
+
+
+    <div class="dialog__content p++">
+      <form name="myForm" >
+        <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+                <md-input-container class="md-block">
+                  <label>Código</label>
+                  <input required name="codigo" ng-model="model.codigo">
+                  <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Nombre de Escuela</label>
+                <input required name="nombre" ng-model="model.nombre">
+                <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+        </div>
+        <div  flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Resolución</label>
+              <input required name="resolucion" ng-model="model.resolucion">
+              <div ng-messages="myForm.resolucion.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+         </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Facultad</label>
+              <input required name="facultad" ng-model="facultad.nombre" readonly>
+              <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+         </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog__actions">
+         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+         <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </div>
+  </md-dialog-content>
+</md-dialog>
