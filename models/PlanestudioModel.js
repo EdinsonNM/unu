@@ -40,6 +40,11 @@ var PlanestudioSchema = new Schema({
     ref:'Escuela',
     required:true
   },
+	_facultad:{
+    type:Schema.Types.ObjectId,
+    ref:'Facultad',
+    required:true
+  },
   _periodo:{
     type:Schema.Types.ObjectId,
     ref:'Periodo',

@@ -1,57 +1,62 @@
-<md-dialog aria-label="List dialog">
-<md-dialog-content>
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <span>{{title}}</span>
-      <!-- fill up the space between left and right area -->
-      <span flex></span>
-      <md-button class="md-icon-button" aria-label="More" ng-click="Cancel()">
-       <md-icon md-font-icon="fa fa-close fa-lg"></md-icon>
-     </md-button>
-    </div>
-  </md-toolbar>
-
-
-    <div class="dialog__content p++">
-    <form name="myForm" >
-     <div  flex-container="row" flex-gutter="24">
-            <div flex-item>
-                <md-input-container class="md-block">
-                  <label>Código</label>
-                  <input required name="codigo" ng-model="model.codigo">
-                  <div ng-messages="myForm.codigo.$error"  ng-if="submited">
-                    <div ng-message="required">{{message.Required}}</div>
-                  </div>
-                </md-input-container>
-            </div>
-             <div flex-item>
-               <md-input-container class="md-block">
-                 <label>Resolución</label>
-                 <input required name="resolucion" ng-model="model.resolucion">
-                 <div ng-messages="myForm.resolucion.$error"  ng-if="submited">
-                   <div ng-message="required">{{message.Required}}</div>
-                 </div>
-               </md-input-container>
-            </div>
-        </div>
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="min-width:800px;max-height:810px; ">
+      <md-content class="md-padding">
         <div  flex-container="row" flex-gutter="24">
-            <div flex-item>
-              <md-input-container class="md-block">
-                <label>Nombre de Facultad</label>
-                <input required name="nombre" ng-model="model.nombre">
-                <div ng-messages="myForm.nombre.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
+               <div flex-item>
+                   <md-input-container class="md-block">
+                     <label>Código</label>
+                     <input required name="codigo" ng-model="model.codigo">
+                     <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                       <div ng-message="required">{{message.Required}}</div>
+                     </div>
+                   </md-input-container>
+               </div>
+                <div flex-item>
+                  <md-input-container class="md-block">
+                    <label>Resolución</label>
+                    <input required name="resolucion" ng-model="model.resolucion">
+                    <div ng-messages="myForm.resolucion.$error"  ng-if="submited">
+                      <div ng-message="required">{{message.Required}}</div>
+                    </div>
+                  </md-input-container>
+               </div>
+           </div>
+           <div  flex-container="row" flex-gutter="24">
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <label>Nombre de Facultad</label>
+                   <input required name="nombre" ng-model="model.nombre">
+                   <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
+                 </md-input-container>
 
-            </div>
-        </div>
-        </form>
-    </div>
+               </div>
+           </div>
 
-    <div class="dialog__actions">
+      </md-content>
+      <div class="dialog__actions">
+          <div class="pull-left">
+            <md-checkbox ng-model="model.activo">
+                 Activo
+               </md-checkbox>
+          </div>
          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </div>
-  </md-dialog-content>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+    </md-dialog-actions>
+  </form>
 </md-dialog>

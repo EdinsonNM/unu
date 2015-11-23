@@ -4,153 +4,193 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:PlanestudiosCtrl
+    * @name unuApp.controller:FacultadesCtrl
     * @description
-    * # PlanestudiosCtrl
+    * # FacultadesCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('PlanestudiosCtrl', function($scope, Restangular, $timeout, ngTableParams, LxDialogService, LxNotificationService) {
-    var AsignSelects, List, LoadFacultades, LoadPeriodos, SaveForm, UpdateForm, route, service;
-    route = 'planestudios';
-    service = Restangular.all(route);
-    $scope.refresh = false;
-    $scope.TitleForms = {
-      New: 'Nuevo Plan de Estudios',
-      Edit: 'Editar Plan de Estudios',
-      List: 'Listado de Planes de Estudio',
-      TitleDelete: 'Plan de Estudios',
-      DescDelete: 'Desea eliminar el elemento seleccionado',
-      saved: 'Registro satisfactorio',
-      updated: 'Actualización Satisfactoria',
-      deleted: 'Eliminación Satisfactoria'
+  angular.module('unuApp').controller('PlanestudiosCtrl', function($q,MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
+    var List, service;
+
+    $scope.UI = {
+      refresh: false,
+      message: MessageFactory,
+      title: 'Listado de Planes de Estudio',
+      editMode: false,
+      selected:null,
+      customActions:[]
     };
-    $scope.filters = {
-      facultad: void 0,
-      escuela: void 0
+
+    var LOCAL ={
+      name: 'Plan de Estudio',
+      form:'views/planestudios/form.html',
+      route:'planestudios'
     };
-    $scope.selects = {
-      periodo: void 0
-    };
-    LoadFacultades = function() {
-      var localService;
-      localService = Restangular.all('facultades');
-      return localService.getList({}).then(function(result) {
-        return $scope.facultades = result;
+    service = Restangular.all(LOCAL.route);
+    $rootScope.app.module = ' > ' + LOCAL.name;
+
+    //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
+    $scope.UI.customActions.push({label:'Escuelas', onclick: function(){
+      $state.go('app.escuelas', { id: $scope.UI.selected._id });
+    }});
+    //end custom actions
+
+    $scope.LoadFacultades = function(){
+      var defer = $q.defer();
+      var result = [];
+      var serviceFacultad = Restangular.all('facultades');
+      serviceFacultad.getList().then(function(data){
+        angular.forEach(data,function(item){
+          result.push({id:item._id,title:item.nombre});
+        });
+        //$scope.tableParams.filter({_facultad:"56425a5229b7aa7437b5e09b"});
+        defer.resolve(result);
       });
+      return defer;
     };
-    LoadPeriodos = function() {
-      var localService;
-      localService = Restangular.all('periodos');
-      return localService.getList({}).then(function(result) {
-        return $scope.periodos = result;
+    $scope.LoadEcuelas = function(){
+      var defer = $q.defer();
+      var result = [];
+      var serviceEscuela = Restangular.all('escuelas');
+      serviceEscuela.getList().then(function(data){
+        angular.forEach(data,function(item){
+          result.push({id:item._id,title:item.nombre});
+        });
+        defer.resolve(result);
       });
+      return defer;
     };
-    $scope.LoadEscuelas = function(newvalue, oldvalue) {
-      var localService;
-      console.log(newvalue);
-      localService = Restangular.all('escuelas');
-      return localService.getList({
-        conditions: {
-          _facultad: newvalue.newValue._id
-        }
-      }).then(function(result) {
-        return $scope.escuelas = result;
-      });
-    };
+
+
     List = function() {
-      return $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new ngTableParams({
         page: 1,
-        count: 10,
-        filter: {
-          escuela_id: 0
-        }
+        count: 10
       }, {
         total: 0,
         getData: function($defer, params) {
           var query;
           query = params.url();
-          $scope.refresh = true;
-          return service.customGET('methods/paginate', query).then(function(result) {
-            return $timeout(function() {
+          $scope.UI.refresh = true;
+          service.customGET('methods/paginate', query).then(function(result) {
+            $timeout(function() {
               params.total(result.total);
               $defer.resolve(result.data);
-              return $scope.refresh = false;
+              $scope.UI.refresh = false;
             }, 500);
           });
         }
       });
     };
-    $scope.Reload = function(value) {
-      console.log(value, $scope.tableParams);
-      $scope.tableParams.$params.filter.escuela_id = value.newValue.id;
-      return $scope.tableParams.reload();
+
+    $scope.Refresh = function Refresh(){
+      $scope.UI.selected = null;
+      $scope.UI.editMode = false;
+      $scope.tableParams.reload();
     };
-    $scope.New = function() {
-      $scope.submited = false;
-      console.log($scope.filters.facultad.nombre);
-      $scope.TitleForm = $scope.TitleForms.New;
-      $scope.model = {};
-      LxDialogService.open('form');
-      $scope.model.facultad = $scope.filters.facultad;
-      $scope.model.escuela = $scope.filters.escuela;
-      return $scope.Save = SaveForm;
-    };
-    $scope.Edit = function(item) {
-      $scope.submited = false;
-      $scope.TitleForm = $scope.TitleForms.Edit;
-      $scope.model = Restangular.copy(item);
-      LxDialogService.open('form');
-      return $scope.Save = UpdateForm;
-    };
-    AsignSelects = function() {
-      $scope.model.escuela_id = $scope.filters.escuela.id;
-      return $scope.model.periodo_id = $scope.model.periodo.id;
-    };
-    SaveForm = function(form) {
-      $scope.submited = true;
-      if (form.$valid) {
-        AsignSelects();
-        return service.post($scope.model).then(function(result) {
-          LxNotificationService.info($scope.TitleForms.saved);
-          LxDialogService.close('form');
-          return $scope.tableParams.reload();
-        });
-      }
-    };
-    UpdateForm = function(form) {
-      $scope.submited = true;
-      if (form.$valid) {
-        AsignSelects();
-        $scope.model.route = route;
-        return $scope.model.put().then(function(result) {
-          LxNotificationService.info($scope.TitleForms.updated);
-          LxDialogService.close('form');
-          return $scope.tableParams.reload();
-        });
-      }
-    };
-    $scope.Delete = function(item) {
-      $scope.model = Restangular.copy(item);
-      $scope.model.route = route;
-      return LxNotificationService.confirm($scope.TitleForms.TitleDelete, $scope.TitleForms.DescDelete, {
-        cancel: 'No',
-        ok: 'Si'
-      }, function(answer) {
-        console.log($scope.model, answer);
-        if (answer) {
-          return $scope.model.remove().then(function() {
-            $scope.tableParams.reload();
-            return LxNotificationService.info($scope.TitleForms.deleted);
-          });
+
+    $scope.New = function New($event){
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl :LOCAL.form,
+        locals:{
+          name: LOCAL.name,
+          table:$scope.tableParams
+        },
+        controller: function($scope, table,name,MessageFactory){
+          $scope.submited = false;
+          $scope.title = MessageFactory.Form.New.replace('{element}',name);
+          $scope.Buttons = MessageFactory.Buttons;
+          $scope.message = MessageFactory.Form;
+          $scope.Save = function(form) {
+            $scope.submited = true;
+            if (form.$valid) {
+              service.post($scope.model).then(function() {
+                LxNotificationService.info(MessageFactory.Form.Saved);
+                $mdDialog.hide();
+                table.reload();
+              });
+            }
+          };
+          $scope.Cancel = function(){
+            $mdDialog.hide();
+          };
         }
       });
     };
-    $scope.closingDialog = function() {
-      return angular.element('.dialog-filter').remove();
+    $scope.Edit = function Edit($event){
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl :LOCAL.form,
+        locals:{
+          name: LOCAL.name,
+          table:$scope.tableParams,
+          model: Restangular.copy($scope.UI.selected)
+        },
+        controller: function($scope, table,name, MessageFactory,model){
+          $scope.submited = false;
+          $scope.model = model;
+          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+          $scope.Buttons = MessageFactory.Buttons;
+          $scope.Save = function(form) {
+            $scope.submited = true;
+            if (form.$valid) {
+              $scope.model.put().then(function() {
+                LxNotificationService.info(MessageFactory.Form.Updated);
+                $mdDialog.hide();
+                table.reload();
+              });
+            }
+          };
+          $scope.Cancel = function(){
+            $mdDialog.hide();
+          };
+        }
+      });
     };
-    List();
-    LoadFacultades();
-    return LoadPeriodos();
+
+    $scope.Delete = function Delete($event){
+      var confirm = $mdDialog.confirm()
+          .title(LOCAL.name)
+          .content(MessageFactory.Form.QuestionDelete)
+          .ariaLabel(LOCAL.name)
+          .targetEvent($event)
+          .ok(MessageFactory.Buttons.Yes)
+          .cancel(MessageFactory.Buttons.No);
+
+      var selected = Restangular.copy($scope.UI.selected);
+
+      $mdDialog.show(confirm).then(function() {
+        selected.remove().then(function() {
+          $scope.Refresh();
+          LxNotificationService.info(MessageFactory.Form.Deleted);
+        });
+      }, function() {
+
+      });
+    };
+
+    $scope.EnabledEdit =function EnabledEdit(item){
+      $scope.UI.editMode = false;
+      $scope.UI.selected = null;
+      angular.forEach($scope.tableParams.data,function(element){
+        if(item._id !== element._id){
+          element.active = false;
+        }
+      });
+
+      if( item.active ){
+        $scope.UI.editMode = true;
+        $scope.UI.selected = item;
+        $scope.UI.selected.route = LOCAL.route;
+      }
+    };
+
+    new List();
   });
 
 }).call(this);

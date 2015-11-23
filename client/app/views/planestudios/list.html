@@ -14,10 +14,17 @@
   <tbody>
     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
     <tr ng-repeat="item in $data">
-      <td class="text-left" data-title="'Nombre Plan'" sortable="codigo" filter="{'nombre':'text'}">
+      <td class="text-left" data-title="'Facultad'" sortable="_facultad"
+      filter="{'_facultad':'select'}"
+      filter-data="LoadFacultades()">
         <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item)">
           {{item.nombre}}
         </md-checkbox>
+      </td>
+      <td class="text-left" data-title="'Escuela'" sortable="_escuela"
+      filter="{'_escuela':'select'}"
+      filter-data="LoadEcuelas()">
+        {{item._escuela.nombre}}
       </td>
       <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
         {{item.periodo.nombre}}
