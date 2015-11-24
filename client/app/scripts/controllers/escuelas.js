@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('EscuelasCtrl', function($stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('EscuelasCtrl', function($stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -89,7 +89,7 @@
             $scope.submited = true;
             if (form.$valid) {
               service.post($scope.model).then(function() {
-                LxNotificationService.info(MessageFactory.Form.Saved);
+                ToastMD.info(MessageFactory.Form.Saved);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -121,7 +121,7 @@
             $scope.submited = true;
             if (form.$valid) {
               $scope.model.put().then(function() {
-                LxNotificationService.info(MessageFactory.Form.Updated);
+                ToastMD.info(MessageFactory.Form.Updated);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -148,7 +148,7 @@
       $mdDialog.show(confirm).then(function() {
         selected.remove().then(function() {
           $scope.Refresh();
-          LxNotificationService.info(MessageFactory.Form.Deleted);
+          ToastMD.info(MessageFactory.Form.Deleted);
         });
       }, function() {
 

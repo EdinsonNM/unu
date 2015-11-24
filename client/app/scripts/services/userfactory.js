@@ -9,7 +9,7 @@
     * # UserFactory
     * Service in the unuApp.
    */
-  angular.module('unuApp').factory('UserFactory', function(Restangular, $log, $state, $rootScope, AuthTokenFactory, LxNotificationService, $timeout, TYPE_GROUP) {
+  angular.module('unuApp').factory('UserFactory', function(Restangular, $log, $state, $rootScope, AuthTokenFactory, ToastMD, $timeout, TYPE_GROUP) {
     var service;
     service = Restangular.all('usuarios');
     return {
@@ -34,7 +34,7 @@
             }
           });
         }, function(result) {
-          LxNotificationService.warning(result.data.message);
+          ToastMD.warning(result.data.message);
         });
       },
       logout: function() {
