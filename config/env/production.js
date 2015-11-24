@@ -5,5 +5,5 @@
 
 module.exports = {
   db: process.env.MONGOLAB_URI,
-  port:80
+  port: process.env.PORT || 80
 };
