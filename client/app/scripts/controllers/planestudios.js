@@ -35,32 +35,19 @@
     }});
     //end custom actions
 
-    $scope.LoadFacultades = function(){
-      var defer = $q.defer();
-      var result = [];
+    var LoadFacultades = function LoadFacultades() {
       var serviceFacultad = Restangular.all('facultades');
       serviceFacultad.getList().then(function(data){
-        angular.forEach(data,function(item){
-          result.push({id:item._id,title:item.nombre});
-        });
-        //$scope.tableParams.filter({_facultad:"56425a5229b7aa7437b5e09b"});
-        defer.resolve(result);
+        $scope.facultades = data;
       });
-      return defer;
     };
-    $scope.LoadEcuelas = function(){
-      var defer = $q.defer();
-      var result = [];
+    $scope.LoadEcuelas = function LoadEcuelas(){
       var serviceEscuela = Restangular.all('escuelas');
-      serviceEscuela.getList().then(function(data){
-        angular.forEach(data,function(item){
-          result.push({id:item._id,title:item.nombre});
-        });
-        defer.resolve(result);
+      serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id}}).then(function(data){
+        $scope.escuelas = data;
       });
-      return defer;
     };
-
+    LoadFacultades();
 
     List = function() {
       $scope.tableParams = new ngTableParams({

@@ -4,6 +4,6 @@
  */
 
 module.exports = {
-  db: 'mongodb://EdinsonNM:edink09@ds057934.mongolab.com:57934/unuweb',
+  db: process.env.MONGODB,
   port:80
 };
