@@ -9,7 +9,6 @@ module.exports = function(config){
   var routes=require('./routes')();
   var staticFolder = 'client/app/';
 
-  //require('./controllers/FacultadController.js')().setup();
   // config express
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
