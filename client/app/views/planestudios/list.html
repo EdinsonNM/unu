@@ -8,16 +8,41 @@
 </md-button>
 <div layout="row" layout-align="center start" layout-margin layout-fill>
 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+  <div  flex-container="row" flex-gutter="24">
+      <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+      </div>
+      <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+      </div>
+  </div>
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-<table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+<table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
   <tbody>
     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
     <tr ng-repeat="item in $data">
-      <td class="text-left" data-title="'Nombre Plan'" sortable="codigo" filter="{'nombre':'text'}">
+      <td class="text-left" data-title="'Facultad'" sortable="_facultad">
         <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item)">
           {{item.nombre}}
         </md-checkbox>
+      </td>
+      <td class="text-left" data-title="'Escuela'" sortable="_escuela">
+        {{item._escuela.nombre}}
       </td>
       <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
         {{item.periodo.nombre}}

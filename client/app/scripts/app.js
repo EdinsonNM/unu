@@ -65,7 +65,7 @@
       'A400': '#E75753',
       'A700': '#E75753'
     });
-    RestangularProvider.setBaseUrl('http://localhost:3000/api');
+    RestangularProvider.setBaseUrl('/api');
     $httpProvider.interceptors.push('AuthInterceptor');
     RestangularProvider.setRestangularFields({ id: '_id' });
     $urlRouterProvider.otherwise('/');
