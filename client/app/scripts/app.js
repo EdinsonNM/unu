@@ -195,6 +195,11 @@
       templateUrl: 'views/reports/matricula/ingresantesdetalle.html',
       controller: 'ReportsMatriculaIngresantesdetalleCtrl'
     })
+    .state('app.asignaraulas', {
+      url: '/asignaraulas',
+      templateUrl: 'views/asignaraulas/index.html',
+      controller: 'AsignarAulasCtrl'
+    })
     .state('app.inicio', {
       url: '/inicio',
       templateUrl: 'views/app_inicio.html',
