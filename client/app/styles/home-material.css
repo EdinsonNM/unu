@@ -1444,7 +1444,15 @@ body {
   width: 550px;
   height: 270px;
 }
+@media (max-width:600px){
+  .tile-lg {
+    width: 100%;
+  }
+  .tile-sm {
+    width: 100%;
+  }
 
+}
 .tile-lg .content-wrapper .tile-content {
   height: 270px;
   padding: 20px;

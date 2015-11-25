@@ -15,7 +15,11 @@ module.exports=function(){
       	var filter = req.query.filter;
       	model.paginate(
       		filter,
-      		{page: page, limit: limit},
+      		{
+            page: page,
+            limit: limit,
+            populate: ['_escuela','_periodo']
+          },
       		function(err, results, pageCount, itemCount){
             var obj = {
               total: itemCount,

@@ -2,15 +2,15 @@
   "name": "unu",
   "version": "0.0.0",
   "dependencies": {
-    "angular":  "~1.4.7",
-    "angular-animate":  "~1.4.7",
-    "angular-aria":  "~1.4.7",
-    "angular-cookies":  "~1.4.7",
-    "angular-messages":  "~1.4.7",
-    "angular-resource":  "~1.4.7",
-    "angular-route":  "~1.4.7",
-    "angular-sanitize":  "~1.4.7",
-    "angular-touch":  "~1.4.7",
+    "angular": "~1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-aria": "~1.4.7",
+    "angular-cookies": "~1.4.7",
+    "angular-messages": "~1.4.7",
+    "angular-resource": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-sanitize": "~1.4.7",
+    "angular-touch": "~1.4.7",
     "lumx": "*",
     "restangular": "~1.4.0",
     "angular-ui-router": "~0.2.13",
@@ -18,7 +18,8 @@
     "angular-loading-bar": "~0.7.1",
     "ng-table": "~0.5.4",
     "angular-ui-router-anim-in-out": "~0.0.13",
-    "angular-material": "0.11.2"
+    "angular-material": "0.11.2",
+    "moment": "~2.10.6"
   },
   "devDependencies": {
     "angular-mocks": "^1.3.0"

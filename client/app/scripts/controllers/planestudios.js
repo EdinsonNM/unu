@@ -43,16 +43,24 @@
     };
     $scope.LoadEcuelas = function LoadEcuelas(){
       var serviceEscuela = Restangular.all('escuelas');
-      serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id}}).then(function(data){
+      serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id},populate:'_facultad'}).then(function(data){
         $scope.escuelas = data;
       });
+    };
+
+    $scope.ListPlanEstudios = function ListPlanEstudios(){
+      //$scope.tableParams.reload();
+      angular.extend($scope.tableParams.filter(), {_escuela:$scope.filter._escuela._id});
     };
     LoadFacultades();
 
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter:{
+          _escuela:0
+        }
       }, {
         total: 0,
         getData: function($defer, params) {
@@ -68,6 +76,7 @@
           });
         }
       });
+
     };
 
     $scope.Refresh = function Refresh(){
@@ -84,13 +93,21 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          escuela: $scope.filter._escuela
         },
-        controller: function($scope, table,name,MessageFactory){
+        controller: function($scope, table,name,MessageFactory, escuela){
+          $scope.escuela = escuela;
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
+          Restangular.all('periodos').getList().then(function(data){
+            $scope.periodos = data;
+          });
+          $scope.model = {
+            _escuela: escuela._id
+          };
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {
@@ -116,13 +133,20 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          model: Restangular.copy($scope.UI.selected),
+          escuela: $scope.filter._escuela
         },
-        controller: function($scope, table,name, MessageFactory,model){
+        controller: function($scope, table,name, MessageFactory,model,escuela){
+          $scope.escuela = escuela;
           $scope.submited = false;
           $scope.model = model;
+          console.log(model);
+          $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
           $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
           $scope.Buttons = MessageFactory.Buttons;
+          Restangular.all('periodos').getList().then(function(data){
+            $scope.periodos = data;
+          });
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {

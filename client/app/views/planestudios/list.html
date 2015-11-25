@@ -22,7 +22,7 @@
       <div flex-item>
           <md-input-container class="md-block">
             <label>Escuela</label>
-            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}">
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
               <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                 {{escuela.nombre}}
               </md-option>
@@ -45,13 +45,13 @@
         {{item._escuela.nombre}}
       </td>
       <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
-        {{item.periodo.nombre}}
+        {{item._periodo.nombre}}
       </td>
       <td class="text-left" data-title="'Resolución'" sortable="resolucion" filter="{'resolucion':'text'}">
         {{item.resolucion}}
       </td>
       <td class="text-left" data-title="'Fecha Resolución'">
-        {{item.fechaResolucion}}
+        {{item.fecha_resolucion}}
       </td>
       <td class="text-left" data-title="'Estado'">
         {{item.estado.nombre}}

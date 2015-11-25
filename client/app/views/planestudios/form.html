@@ -15,7 +15,7 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Facultad</label>
-                <input required name="facultad" ng-model="facultad.nombre" readonly>
+                <input required name="facultad" ng-model="escuela._facultad.nombre" readonly>
                 <div ng-messages="myForm.facultad.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
@@ -27,7 +27,7 @@
           <div flex-item>
           <md-input-container class="md-block">
             <label>Nombre de Escuela</label>
-            <input required name="nombre" ng-model="model.nombre">
+            <input required name="nombre" ng-model="escuela.nombre" readonly>
             <div ng-messages="myForm.nombre.$error"  ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -37,26 +37,43 @@
 
 
            <div  flex-container="row" flex-gutter="24">
-               <div flex-item>
-                   <md-input-container class="md-block">
-                     <label>Código</label>
-                     <input required name="codigo" ng-model="model.codigo">
-                     <div ng-messages="myForm.codigo.$error"  ng-if="submited">
-                       <div ng-message="required">{{message.Required}}</div>
-                     </div>
-                   </md-input-container>
-               </div>
+
                <div flex-item>
                  <md-input-container class="md-block">
-                   <label>Resolución</label>
-                   <input required name="resolucion" ng-model="model.resolucion">
-                   <div ng-messages="myForm.resolucion.$error"  ng-if="submited">
+                   <label>Nombre</label>
+                   <input required name="nombre" ng-model="model.nombre">
+                   <div ng-messages="myForm.nombre.$error"  ng-if="submited">
                      <div ng-message="required">{{message.Required}}</div>
                    </div>
                  </md-input-container>
                </div>
            </div>
-
+           <div  flex-container="row" flex-gutter="24">
+             <div flex-item>
+               <md-input-container class="md-block">
+                 <label>Periodo</label>
+                 <md-select ng-model="model._periodo" ng-model-options="{trackBy: '$value._id'}">
+                   <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                     {{periodo.nombre}}
+                   </md-option>
+                 </md-select>
+               </md-input-container>
+             </div>
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <label>Resolución</label>
+                   <input required name="resolucion" ng-model="model.resolucion">
+                 </md-input-container>
+               </div>
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Fecha Resolución"></md-datepicker>
+                   <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
+                 </md-input-container>
+               </div>
+           </div>
       </md-content>
       <div class="dialog__actions">
           <div class="pull-left">

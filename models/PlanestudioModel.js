@@ -7,42 +7,39 @@ var PlanestudioSchema = new Schema({
 		required:true
 	},
 	resolucion : {
-		type:String,
-		required:true
+		type:String
 	},
 	total_creditos : {
 		type:Number,
-		required:true
+		required:true,
+		default:0
 	},
 	total_horas : {
 		type:Number,
-		required:true
+		required:true,
+		default:0
 	},
 	total_horas_teoria : {
 		type:Number,
-		required:true
+		required:true,
+		default:0
 	},
 	total_horas_practica : {
 		type:Number,
-		required:true
+		required:true,
+		default:0
 	},
 	total_horas_laboratorio : {
 		type:Number,
-		required:true
+		required:true,
+		default:0
 	},
-	fecharesolucion : {
-		type:Date,
-		required:true
+	fecha_resolucion : {
+		type:Date
 	},
-
   _escuela:{
     type:Schema.Types.ObjectId,
     ref:'Escuela',
-    required:true
-  },
-	_facultad:{
-    type:Schema.Types.ObjectId,
-    ref:'Facultad',
     required:true
   },
   _periodo:{
@@ -55,7 +52,7 @@ var PlanestudioSchema = new Schema({
 });
 PlanestudioSchema.plugin(mongoosePaginate);
 PlanestudioSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updated_at = now;
 	if (!this.created_at){
 		this.created_at=now;
