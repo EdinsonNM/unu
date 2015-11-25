@@ -175,10 +175,10 @@
       templateUrl: 'views/planestudios/list.html',
       controller: 'PlanestudiosCtrl'
     })
-    .state('app.planestudiosdetalles', {
-      url: '/planestudios/:id/detalles',
-      templateUrl: 'views/planestudiosdetalles/list.html',
-      controller: 'PlanestudiosCtrl'
+    .state('app.planestudiodetalles', {
+      url: '/planestudiodetalles/:id/detalles',
+      templateUrl: 'views/planestudiodetalles/list.html',
+      controller: 'PlanEstudioDetallesCtrl'
     })
     .state('app.matriculaingresanteconsolidadoporanio', {
       url: '/reporte/matricula/ingresante/consolidadoporanio',

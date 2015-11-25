@@ -4,40 +4,50 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:CursosCtrl
+    * @name unuApp.controller:EscuelasCtrl
     * @description
-    * # CursosCtrl
+    * # EscuelasCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('CursosCtrl', function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+
+  angular.module('unuApp').controller('PlanEstudioDetallesCtrl', function($stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $state) {
     var List, service;
 
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Cursos',
+      title: 'Listado de Cursos del Plan de Estudios',
       editMode: false,
       selected:null,
-      customActions:[]
+      customActions:[],
+      facultad: {}
     };
 
     var LOCAL ={
-      name: 'Curso',
-      form:'views/cursos/form.html',
-      route:'cursos'
+      planestudio_id: $stateParams.id,
+      name: 'Detalle Plan de Estudios',
+      form:'views/planestudiodetalles/form.html',
+      route:'escuelas'
     };
+
+    Restangular.one('planestudios', LOCAL.planestudio_id).get({single: true}).then(function(data){
+      $scope.UI.facultad = data;
+    });
+
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter: {_planestudio: LOCAL.planestudioId}
       }, {
         total: 0,
         getData: function($defer, params) {
           var query;
           query = params.url();
+
           $scope.UI.refresh = true;
           service.customGET('methods/paginate', query).then(function(result) {
             $timeout(function() {
@@ -64,11 +74,15 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          facultad: $scope.UI.facultad
         },
-        controller: function($scope, table,name,MessageFactory){
+        controller: function($scope, table, name, MessageFactory, facultad){
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
+          $scope.model = {};
+          $scope.model._facultad = facultad._id;
+          $scope.facultad = facultad;
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
           $scope.Save = function(form) {
@@ -78,15 +92,6 @@
                 ToastMD.info(MessageFactory.Form.Saved);
                 $mdDialog.hide();
                 table.reload();
-              },function(error){
-                console.log(error);
-                switch (error.status) {
-                  case 422:
-                    $scope.ValidationError = error.data;
-                    break;
-                  default:
-
-                }
               });
             }
           };

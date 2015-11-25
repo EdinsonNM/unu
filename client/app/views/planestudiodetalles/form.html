@@ -1,0 +1,120 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="min-width:800px;max-height:810px; ">
+      <md-content class="md-padding">
+        <div  flex-container="row" flex-gutter="24">
+
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Código</label>
+                <input required name="codigo" ng-model="model.codigo">
+                <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Tipo</label>
+               <md-select ng-model="model.silencio">
+                <md-option value="General">General</md-option>
+                <md-option value="Carrera">Carrera</md-option>
+              </md-select>
+            </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Ciclo</label>
+                <input required name="ciclo" ng-model="model.ciclo">
+                <div ng-messages="myForm.ciclo.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Creditos</label>
+                <input required name="creditos" ng-model="model.creditos">
+                <div ng-messages="myForm.creditos.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+
+        </div>
+        <div  flex-container="row" flex-gutter="24">
+          <div flex-item>
+          <md-input-container class="md-block">
+            <label>Nombre del Curso</label>
+            <input required name="nombre" ng-model="escuela.nombre" readonly>
+            <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+          </diV>
+        </div>
+
+
+           <div  flex-container="row" flex-gutter="24">
+
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <label>Nombre</label>
+                   <input required name="nombre" ng-model="model.nombre">
+                   <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
+                 </md-input-container>
+               </div>
+           </div>
+           <div  flex-container="row" flex-gutter="24">
+             <div flex-item>
+               <md-input-container class="md-block">
+                 <label>Periodo</label>
+                 <md-select ng-model="model._periodo" ng-model-options="{trackBy: '$value._id'}">
+                   <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                     {{periodo.nombre}}
+                   </md-option>
+                 </md-select>
+               </md-input-container>
+             </div>
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <label>Resolución</label>
+                   <input required name="resolucion" ng-model="model.resolucion">
+                 </md-input-container>
+               </div>
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Fecha Resolución"></md-datepicker>
+                   <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
+                 </md-input-container>
+               </div>
+           </div>
+      </md-content>
+      <div class="dialog__actions">
+          <div class="pull-left">
+            <md-checkbox ng-model="model.activo">
+                 Activo
+               </md-checkbox>
+          </div>
+         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+         <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+    </md-dialog-actions>
+  </form>
+</md-dialog>

@@ -30,8 +30,8 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
-    $scope.UI.customActions.push({label:'Escuelas', onclick: function(){
-      $state.go('app.escuelas', { id: $scope.UI.selected._id });
+    $scope.UI.customActions.push({icon:'fa-book',label:'Detalle Plan de Estudio', onclick: function(){
+      $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
     }});
     //end custom actions
 

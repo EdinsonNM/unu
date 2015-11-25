@@ -8,19 +8,57 @@
 </md-button>
 <div layout="row" layout-align="center start" layout-margin layout-fill>
 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-<table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+<table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+  <tbody ng-repeat="group in $groups">
+          <tr class="ng-table-group">
+            <td colspan="{{$columns.length}}">
+                <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                    <strong>Ciclo: {{group.value}} </strong>
+                </a>
+            </td>
+        </tr>
+        <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
+            <td data-title="'Code'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item.codigo}}</td>
+            <td data-title="'Curso'" sortable="nombre" filter="{ 'nombre': 'text' }">{{item.nombre}}</td>
+            <td data-title="'Ciclo'" sortable="name" filter="{ 'ciclo': 'text' }">{{item.ciclo}}</td>
+            <td data-title="'N° Creditos'">{{item.numbercredits}}</td>
+            <td data-title="'N° Horas'">{{item.numberhours}}</td>
+            <td data-title="'Ecuela'">{{item.escuela.name}}</td>
+            <td data-title="'Facultad'" >{{others.facultad.name}}</td>
+
+            <td data-title="'Fecha Creación'" sortable="created_at">{{item.created_at}}</td>
+            <td data-title="'Ultima Actualización'" sortable="updated_at">{{item.updated_at}}</td>
+
+        </tr>
+
+        </tbody>
   <tbody>
     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
     <tr ng-repeat="item in $data">
-      <td class="text-left" data-title="'CÓDIGO'" sortable="codigo" filter="{'codigo':'text'}">
+      <td class="text-left" data-title="'Facultad'" sortable="_facultad">
         <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item)">
-          {{item.codigo}}
+          {{item.nombre}}
         </md-checkbox>
       </td>
-      <td class="text-left" data-title="'NOMBRE'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
-      <td class="text-left" data-title="'TIPO'" sortable="tipo" filter="{'tipo':'text'}">{{item.tipo}}</td>
+      <td class="text-left" data-title="'Escuela'" sortable="_escuela">
+        {{item._escuela.nombre}}
+      </td>
+      <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
+        {{item._periodo.nombre}}
+      </td>
+      <td class="text-left" data-title="'Resolución'" sortable="resolucion" filter="{'resolucion':'text'}">
+        {{item.resolucion}}
+      </td>
+      <td class="text-left" data-title="'Fecha Resolución'">
+        {{item.fecha_resolucion}}
+      </td>
+      <td class="text-left" data-title="'Estado'">
+        {{item.estado.nombre}}
+      </td>
     </tr>
   </tbody>
 </table>
@@ -37,7 +75,7 @@
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
      <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
-     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-red-500" aria-label="{{action.label}}"></md-icon>
+     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-red-500 " aria-label="{{action.label}}"></md-icon>
    </md-button>
    <!--end custom actions-->
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
