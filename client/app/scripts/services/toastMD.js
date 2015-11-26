@@ -31,6 +31,13 @@
            hideDelay: 4000,
            position: 'top right'
         });
+      },
+      error: function warning(message){
+        $mdToast.show({
+           template: '<md-toast><span class="tc-red-900 fa fa-exclamation-triangle fa-lg"></span>&nbsp;' + message + '</md-toast>',
+           hideDelay: 4000,
+           position: 'top right'
+        });
       }
     };
   });

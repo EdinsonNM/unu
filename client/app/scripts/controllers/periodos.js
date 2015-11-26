@@ -66,7 +66,7 @@
           name: LOCAL.name,
           table:$scope.tableParams
         },
-        controller: function($scope, table,name,MessageFactory){
+        controller: function($scope, table, name, MessageFactory){
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
           $scope.Buttons = MessageFactory.Buttons;

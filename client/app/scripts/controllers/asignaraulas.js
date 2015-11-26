@@ -12,6 +12,13 @@
   angular.module('unuApp').controller('AsignarAulasCtrl', function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
     var List, service;
 
+    var LoadPabellones = function LoadPabellones() {
+      var servicePabellones = Restangular.all('facultades');
+      serviceFacultad.getList().then(function(data){
+        $scope.facultades = data;
+      });
+    };
+
     $scope.horarios = [
       {ini: '7:00 am', fin: '8:00 am'},
       {ini: '8:00 am', fin: '9:00 am'},
@@ -44,10 +51,14 @@
     var LOCAL ={
       name: 'Asignación de Aulas',
       form:'views/asignaraulas/index.html',
-      route:'asignaraulas'
+      route:'asignaraulas',
+      route_facultades: 'facultades',
+      route_escuelas: 'escuelas'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
+
+    var service_facultades = Restangular.all(LOCAL.route_facultades);
 
     $scope.handleCell = function(hora, aula){
       alert(hora.ini + ' - ' + hora.fin + ' - ' + aula);

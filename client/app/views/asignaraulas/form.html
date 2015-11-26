@@ -38,7 +38,10 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Facultad</label>
-              <input required name="facultad" ng-model="model.facultad">
+              <md-select ng-model="size">
+                <md-option ng-repeat="fac in facultades" value="{{fac._id}}">{{facultad.nombre}}</md-option>
+              </md-select>
+              <!--input required name="facultad" ng-model="model.facultad"-->
               <div ng-messages="myForm.facultad.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>

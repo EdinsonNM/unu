@@ -51,7 +51,7 @@
         {{item.resolucion}}
       </td>
       <td class="text-left" data-title="'Fecha Resolución'">
-        {{item.fecha_resolucion}}
+        {{item.fecha_resolucion | date:'dd/MM/yyyy'}}        
       </td>
       <td class="text-left" data-title="'Estado'">
         {{item.estado.nombre}}

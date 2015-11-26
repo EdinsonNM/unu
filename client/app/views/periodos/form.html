@@ -56,7 +56,19 @@
           </div>
           <div flex-item>
             <md-input-container class="md-block">
-            <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha"></md-datepicker>
+              <!--label>Fecha Resolución</label-->
+              <md-datepicker required name="fechaResolucion" ng-model="model.fechaResolucion" md-placeholder="Fecha Resolución"></md-datepicker>
+              <!--input required name="fecharesolucion" ng-model="model.fecharesolucion"-->
+              <div ng-messages="myForm.fechaResolucion.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+        </div>
+        <div flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+            <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
             <div ng-messages="myForm.inicio.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -65,8 +77,8 @@
 
           <div flex-item>
             <md-input-container class="md-block">
-              <label>Fin</label>
-              <input required name="fin" ng-model="model.fin">
+              <md-datepicker required name="fin" ng-model="model.fin" md-placeholder="Fecha Fin"></md-datepicker>
+              <!--input required name="fin" ng-model="model.fin"-->
               <div ng-messages="myForm.fin.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>

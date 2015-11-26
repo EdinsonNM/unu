@@ -85,7 +85,13 @@
       $scope.tableParams.reload();
     };
 
+    $scope.filter = {};
     $scope.New = function New($event){
+      if(!$scope.filter._escuela){
+        ToastMD.error("Debe seleccionar una escuela antes de crear un plan de estudio");
+        return;
+      }
+
       var parentEl = angular.element(document.body);
       $mdDialog.show({
         parent: parentEl,
@@ -96,7 +102,7 @@
           table:$scope.tableParams,
           escuela: $scope.filter._escuela
         },
-        controller: function($scope, table,name,MessageFactory, escuela){
+        controller: function($scope, table, name, MessageFactory, escuela){
           $scope.escuela = escuela;
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
