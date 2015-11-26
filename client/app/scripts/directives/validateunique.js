@@ -20,18 +20,20 @@
       link: function(scope, element, attrs, ctrl) {
         scope.minlengthvalidation = scope.minlengthvalidation || 0;
         return ctrl.$parsers.unshift(function(value) {
+
           var localService;
           if (value.length >= scope.minlengthvalidation) {
             localService = Restangular.all(scope.queryModel);
-            localService.customGET(scope.url, {
-              value: value
-            }).then(function(result) {
-              if (result.success) {
-                return ctrl.$setValidity('validateUnique', true);
-              } else {
-                return ctrl.$setValidity('validateUnique', false);
-              }
-            });
+              localService.customGET('/methods/validate-unique', {
+                value: value,
+                attribute:scope.attribute
+              }).then(function(result) {
+                if (result.success) {
+                  return ctrl.$setValidity('validateUnique', true);
+                } else {
+                  return ctrl.$setValidity('validateUnique', false);
+                }
+              });
           } else {
             ctrl.$setValidity('validateUnique', true);
           }

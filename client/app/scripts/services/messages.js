@@ -28,7 +28,8 @@
         Updated:'Actualización satisfactoria',
         Deleted:'Se quito el elemento',
         QuestionDelete:'¿Desea eliminar el elemento seleccionado?',
-        Required:'Campo es requerido'
+        Required:'Campo es requerido',
+        validateUnique:'Valor ya se encuentra registrado'
       }
     };
   });

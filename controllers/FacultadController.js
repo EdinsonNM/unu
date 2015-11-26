@@ -12,6 +12,14 @@ module.exports=function(){
       	var limit = req.query.count;
       	var page = req.query.page || 1;
       	var filter = req.query.filter;
+        for (var key in filter) {
+          switch (key) {
+            case 'codigo':
+            case 'nombre':
+              filter[key] = new RegExp(filter[key],'i');
+              break;
+          }
+        }
       	model.paginate(
       		filter,
       		{page: page, limit: limit},
