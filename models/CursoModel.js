@@ -5,26 +5,16 @@ var uniqueValidator = require('mongoose-unique-validator');
 var CursoSchema = new Schema({
   codigo: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   nombre: {
     type: String,
     required: true
   },
-
-  _facultad: {
-    type: Schema.Types.ObjectId,
-    ref: 'Facultad',
-    required: true
-  },
-  _escuela: {
-    type: Schema.Types.ObjectId,
-    ref: 'Escuela',
-    required: true
-  },
-  _tipocurso: {
-    type: Schema.Types.ObjectId,
-    ref: 'Tipocurso',
+  tipo: {
+    type: String,
+    enum: ['General','Carrera'],
     required: true
   },
   created_at: Date,

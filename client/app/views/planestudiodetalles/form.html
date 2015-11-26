@@ -12,21 +12,49 @@
     <md-dialog-content style="min-width:800px;max-height:810px; ">
       <md-content class="md-padding">
         <div  flex-container="row" flex-gutter="24">
+
             <div flex-item>
               <md-input-container class="md-block">
-                <label>Facultad</label>
-                <input required name="facultad" ng-model="escuela._facultad.nombre" readonly>
-                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+                <label>Código</label>
+                <input required name="codigo" ng-model="model.codigo">
+                <div ng-messages="myForm.codigo.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
-
             </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Tipo</label>
+               <md-select ng-model="model.silencio">
+                <md-option value="General">General</md-option>
+                <md-option value="Carrera">Carrera</md-option>
+              </md-select>
+            </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Ciclo</label>
+                <input required name="ciclo" ng-model="model.ciclo">
+                <div ng-messages="myForm.ciclo.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Creditos</label>
+                <input required name="creditos" ng-model="model.creditos">
+                <div ng-messages="myForm.creditos.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+
         </div>
         <div  flex-container="row" flex-gutter="24">
           <div flex-item>
           <md-input-container class="md-block">
-            <label>Nombre de Escuela</label>
+            <label>Nombre del Curso</label>
             <input required name="nombre" ng-model="escuela.nombre" readonly>
             <div ng-messages="myForm.nombre.$error"  ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>

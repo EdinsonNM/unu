@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var config = require('./config/config');
 var passport=require('./config/passport');
 var app = require('./expressjs')(config);
-Error.stackTraceLimit = 0; // disables it
+//Error.stackTraceLimit = 0; // disables it
 
 
 
