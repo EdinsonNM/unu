@@ -32,7 +32,16 @@ module.exports=function(){
                 {title:'Alumnos Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
                 {title:'Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:2}
               ]
+            },
+            {
+              order:3,
+              title: 'Programación Académica',
+              url:'',
+              children:[
+                {title:'Asignar Aulas',icon:'',url:'app.asignaraulas',order:1},
+              ]
             }
+
           ];
           grupo.save(function(error, data){
             res.status(200).send(data);
