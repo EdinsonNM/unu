@@ -25,8 +25,9 @@
     'angular-loading-bar',
     'ngTable',
     'anim-in-out',
-    'ngMaterial'
-  ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider,$mdThemingProvider) {
+    'ngMaterial',
+    'scDateTime'
+  ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider, $mdThemingProvider) {
     $mdThemingProvider
       .theme('default')
         .primaryPalette('green', {
@@ -84,7 +85,7 @@
           deferred = $q.defer();
           UserFactory.getUser().then(function(result) {
             $rootScope.USER = result.user;
-            console.log(result.user);
+            //console.log(result.user);
             deferred.resolve(true);
           });
           return deferred.promise;
@@ -197,7 +198,7 @@
     })
     .state('app.asignaraulas', {
       url: '/asignaraulas',
-      templateUrl: 'views/asignaraulas/index.html',
+      templateUrl: 'views/asignaraulas/list.html',
       controller: 'AsignarAulasCtrl'
     })
     .state('app.inicio', {
@@ -236,6 +237,16 @@
         return (!value) ? '' : value.replace(/ /g, '');
       };
     })
+    .value('scDateTimeConfig', {
+		    defaultTheme: 'material',
+		    autosave: false,
+		    defaultMode: 'date',
+		    defaultDate: undefined, //should be date object!!
+		    displayMode: undefined,
+		    defaultOrientation: false,
+		    displayTwentyfour: false,
+		    compact: false
+		})
     //replace uppercase to regular case
     .filter('humanizeDoc', function () {
       return function (doc) {

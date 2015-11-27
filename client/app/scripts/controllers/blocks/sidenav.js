@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('SidenavCtrl', function($scope,$rootScope) {
-    console.log($rootScope.menu);
+    //console.log($rootScope.menu);
     this.autoFocusContent = false;
 
     this.isOpen = function isOpen(){
