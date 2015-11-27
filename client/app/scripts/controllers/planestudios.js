@@ -88,7 +88,7 @@
     $scope.filter = {};
     $scope.New = function New($event){
       if(!$scope.filter._escuela){
-        ToastMD.error("Debe seleccionar una escuela antes de crear un plan de estudio");
+        ToastMD.warning("Debe seleccionar una escuela antes de crear un plan de estudio");
         return;
       }
 

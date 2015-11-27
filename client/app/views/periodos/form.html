@@ -9,14 +9,10 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content>
-
-
-
-    <div class="dialog__content p++">
+    <md-dialog-content class="window-modal-content-sm">
       <form name="myForm">
-        <div flex-container="row" flex-gutter="24">
-          <div flex-item>
+        <div flex  layout="row" layout-sm="column">
+          <div flex>
             <md-input-container class="md-block">
               <label>Año</label>
               <input required name="anio" ng-model="model.anio">
@@ -25,7 +21,7 @@
               </div>
             </md-input-container>
           </div>
-          <div flex-item>
+          <div flex>
             <md-input-container class="md-block">
               <label>Periodo</label>
               <input required name="periodo" ng-model="model.periodo">
@@ -34,7 +30,7 @@
               </div>
             </md-input-container>
           </div>
-          <div flex-item>
+          <div flex>
             <md-input-container class="md-block">
               <label>Nombre</label>
               <input required name="nombre" ng-model="model.nombre">
@@ -44,8 +40,8 @@
             </md-input-container>
           </div>
         </div>
-        <div flex-container="row" flex-gutter="24">
-          <div flex-item>
+        <div flex  layout="row" layout-sm="row">
+          <div flex>
             <md-input-container class="md-block">
               <label>Resolución</label>
               <input required name="resolucion" ng-model="model.resolucion">
@@ -54,7 +50,7 @@
               </div>
             </md-input-container>
           </div>
-          <div flex-item>
+          <div flex>
             <md-input-container class="md-block">
               <!--label>Fecha Resolución</label-->
               <md-datepicker required name="fechaResolucion" ng-model="model.fechaResolucion" md-placeholder="Fecha Resolución"></md-datepicker>
@@ -65,8 +61,8 @@
             </md-input-container>
           </div>
         </div>
-        <div flex-container="row" flex-gutter="24">
-          <div flex-item>
+        <div flex  layout="row" layout-sm="row">
+          <div flex>
             <md-input-container class="md-block">
             <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
             <div ng-messages="myForm.inicio.$error" ng-if="submited">
@@ -75,7 +71,7 @@
             </md-input-container>
           </div>
 
-          <div flex-item>
+          <div flex>
             <md-input-container class="md-block">
               <md-datepicker required name="fin" ng-model="model.fin" md-placeholder="Fecha Fin"></md-datepicker>
               <!--input required name="fin" ng-model="model.fin"-->
@@ -86,11 +82,17 @@
           </div>
         </div>
       </form>
-    </div>
 
-    <div class="dialog__actions">
-      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-    </div>
+      <div  flex  layout="row" layout-sm="column">
+       <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
+         <md-checkbox ng-model="model.activo">
+             Activo
+           </md-checkbox>
+       </div>
+       <div flex="70" layout="row"  layout-align="end center" flex-sm="100">
+         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+         <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+       </div>
+     </div>
   </md-dialog-content>
 </md-dialog>
