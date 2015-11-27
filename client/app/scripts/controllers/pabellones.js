@@ -75,7 +75,7 @@
             $scope.submited = true;
             if (form.$valid) {
               service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
+                ToastMD.success(MessageFactory.Form.Saved);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -107,7 +107,7 @@
             $scope.submited = true;
             if (form.$valid) {
               $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
+                ToastMD.success(MessageFactory.Form.Updated);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -134,7 +134,7 @@
       $mdDialog.show(confirm).then(function() {
         selected.remove().then(function() {
           $scope.Refresh();
-          ToastMD.info(MessageFactory.Form.Deleted);
+          ToastMD.success(MessageFactory.Form.Deleted);
         });
       }, function() {
 

@@ -12,55 +12,35 @@
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+  <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+
   <tbody ng-repeat="group in $groups">
           <tr class="ng-table-group">
             <td colspan="{{$columns.length}}">
-                <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                     <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
                     <strong>Ciclo: {{group.value}} </strong>
                 </a>
             </td>
         </tr>
         <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
-            <td data-title="'Code'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item.codigo}}</td>
-            <td data-title="'Curso'" sortable="nombre" filter="{ 'nombre': 'text' }">{{item.nombre}}</td>
-            <td data-title="'Ciclo'" sortable="name" filter="{ 'ciclo': 'text' }">{{item.ciclo}}</td>
-            <td data-title="'N° Creditos'">{{item.numbercredits}}</td>
-            <td data-title="'N° Horas'">{{item.numberhours}}</td>
-            <td data-title="'Ecuela'">{{item.escuela.name}}</td>
-            <td data-title="'Facultad'" >{{others.facultad.name}}</td>
-
-            <td data-title="'Fecha Creación'" sortable="created_at">{{item.created_at}}</td>
-            <td data-title="'Ultima Actualización'" sortable="updated_at">{{item.updated_at}}</td>
+            <td class="text-left" data-title="'Curso'" sortable="curso">
+              <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item,$groups)">
+                {{item._curso.nombre}}
+              </md-checkbox>
+            </td>
+            <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
+            <td data-title="'N° Creditos'">{{item.creditos}}</td>
+            <td data-title="'N° Horas'">{{item.total_horas}}</td>
+            <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
+            <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
+            <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
 
         </tr>
 
         </tbody>
   <tbody>
-    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-    <tr ng-repeat="item in $data">
-      <td class="text-left" data-title="'Facultad'" sortable="_facultad">
-        <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item)">
-          {{item.nombre}}
-        </md-checkbox>
-      </td>
-      <td class="text-left" data-title="'Escuela'" sortable="_escuela">
-        {{item._escuela.nombre}}
-      </td>
-      <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
-        {{item._periodo.nombre}}
-      </td>
-      <td class="text-left" data-title="'Resolución'" sortable="resolucion" filter="{'resolucion':'text'}">
-        {{item.resolucion}}
-      </td>
-      <td class="text-left" data-title="'Fecha Resolución'">
-        {{item.fecha_resolucion}}
-      </td>
-      <td class="text-left" data-title="'Estado'">
-        {{item.estado.nombre}}
-      </td>
-    </tr>
-  </tbody>
+
 </table>
 </md-content>
 </div>

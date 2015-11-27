@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
 
 var PlanestudiodetalleSchema = new Schema({
 	creditos : {
@@ -48,6 +49,7 @@ var PlanestudiodetalleSchema = new Schema({
 	updated_at:Date
 });
 
+PlanestudiodetalleSchema.plugin(mongoosePaginate);
 PlanestudiodetalleSchema.pre('save',function(next){
 	var now = new Date();
 	this.updated_at = now;

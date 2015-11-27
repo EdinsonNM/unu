@@ -139,7 +139,6 @@ body {
 .dashboard > * {
   display: block;
   float: left;
-  margin: 5px;
 }
 /* -- Tiles ------------------------------------------- */
 
@@ -1407,7 +1406,6 @@ body {
 
 .tile .content-wrapper .tile-content {
   height: 130px;
-  padding: 10px;
 }
 
 .tile .content-wrapper .tile-content .tile-img {
@@ -1441,21 +1439,12 @@ body {
 }
 
 .tile-lg {
-  width: 550px;
+  width: 100%;
   height: 270px;
 }
-@media (max-width:600px){
-  .tile-lg {
-    width: 100%;
-  }
-  .tile-sm {
-    width: 100%;
-  }
 
-}
 .tile-lg .content-wrapper .tile-content {
   height: 270px;
-  padding: 20px;
 }
 
 .tile-lg .content-wrapper .tile-content .tile-img {
@@ -1463,14 +1452,14 @@ body {
 }
 
 .tile-lg .content-wrapper .tile-content .tile-img-bg {
-  width: 550px;
+  width: 100%;
   height: 270px;
   margin-left: -20px;
   margin-top: -20px;
 }
 
 .tile-lg .content-wrapper .tile-content .tile-img-sm {
-  width: 135px;
+  width: 100%;
   height: 90px;
 }
 
@@ -1481,15 +1470,15 @@ body {
 }
 
 .tile-lg.tile-sqr {
-  width: 270px;
+  width: 100%;
 }
 
 .tile-lg.tile-sqr .content-wrapper .tile-content .tile-img-bg {
-  width: 270px;
+  width: 100%;
 }
 
 .tile-sm {
-  width: 130px;
+  width: 25%;
   height: 60px;
 }
 
@@ -1503,7 +1492,7 @@ body {
 }
 
 .tile-sm .content-wrapper .tile-content .tile-img-bg {
-  width: 130px;
+  width: 25%;
   height: 60px;
   margin-left: -5px;
   margin-top: -5px;

@@ -11,7 +11,7 @@
    */
   angular.module('unuApp')
   .controller('AppCtrl', function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
-
+    $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
     $scope.GoTo = function(item) {
       $rootScope.app.module = ' > ' + item.title;

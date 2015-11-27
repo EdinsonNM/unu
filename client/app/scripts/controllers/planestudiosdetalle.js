@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('PlanEstudioDetallesCtrl', function($stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $state) {
+  angular.module('unuApp').controller('PlanEstudioDetallesCtrl', function($q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
     var List, service;
 
     $scope.UI = {
@@ -24,26 +24,27 @@
     };
 
     var LOCAL ={
-      planestudio_id: $stateParams.id,
+      planestudioId: $stateParams.id,
       name: 'Detalle Plan de Estudios',
       form:'views/planestudiodetalles/form.html',
-      route:'escuelas'
+      route:'planestudiodetalles'
     };
 
-    Restangular.one('planestudios', LOCAL.planestudio_id).get({single: true}).then(function(data){
-      $scope.UI.facultad = data;
+    Restangular.one('planestudios', LOCAL.planestudioId).get({single: true}).then(function(data){
+      $scope.UI.planestudios = data;
     });
 
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10,
         filter: {_planestudio: LOCAL.planestudioId}
       }, {
         total: 0,
+        groupBy: 'ciclo',
         getData: function($defer, params) {
           var query;
           query = params.url();
@@ -75,25 +76,60 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          facultad: $scope.UI.facultad
+          planestudios: $scope.UI.planestudios
         },
-        controller: function($scope, table, name, MessageFactory, facultad){
+        controller: function($scope, table, name, MessageFactory, planestudios, $timeout){
+          $scope.cursoFound = false;
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {};
-          $scope.model._facultad = facultad._id;
-          $scope.facultad = facultad;
+          $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'}};
+          $scope.model._planestudio = planestudios._id;
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
+          var tempFilterText = '', filterTextTimeout;
+          var serviceCurso = Restangular.all('cursos');
+          var service = Restangular.all('planestudiodetalles');
+          $scope.$watch('model._curso.codigo', function (val) {
+            if(val.length>0){
+              if (filterTextTimeout){
+                $timeout.cancel(filterTextTimeout);
+              }
+              tempFilterText = val;
+              filterTextTimeout = $timeout(function() {
+                  $scope.model._curso.codigo = tempFilterText;
+                  serviceCurso.getList({conditions:{ codigo:$scope.model._curso.codigo }}).then(function(data){
+                    if(data.length>0){
+                      $scope.model._curso = data[0];
+                      $scope.cursoFound = true;
+                    }else{
+                      $scope.model._curso = {codigo:tempFilterText};
+                      $scope.cursoFound = false;
+                    }
+                  });
+              }, 1000);
+            }
+          });
+
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-                table.reload();
-              });
+              if(!$scope.cursoFound){
+                serviceCurso.post($scope.model._curso).then(function(data){
+                  $scope.model._curso = data._id;
+                  new Save();
+                });
+              }else{
+                new Save();
+              }
+
             }
+          };
+          var Save = function(){
+            service.post($scope.model).then(function() {
+              ToastMD.info(MessageFactory.Form.Saved);
+              $mdDialog.hide();
+              table.reload();
+            });
           };
           $scope.Cancel = function(){
             $mdDialog.hide();
@@ -155,13 +191,16 @@
       });
     };
 
-    $scope.EnabledEdit =function EnabledEdit(item){
+    $scope.EnabledEdit =function EnabledEdit(item,$groups){
+      console.log($groups);
       $scope.UI.editMode = false;
       $scope.UI.selected = null;
-      angular.forEach($scope.tableParams.data,function(element){
-        if(item._id !== element._id){
-          element.active = false;
-        }
+      angular.forEach($groups,function(group){
+        angular.forEach(group.data,function(element){
+          if(item._id !== element._id){
+            element.active = false;
+          }
+        });
       });
 
       if( item.active ){

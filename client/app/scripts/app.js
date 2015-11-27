@@ -29,11 +29,11 @@
   ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider,$mdThemingProvider) {
     $mdThemingProvider
       .theme('default')
-        .primaryPalette('green', {
+        .primaryPalette('teal', {
           'default': '600'
         })
-        .accentPalette('teal', {
-          'default': '500'
+        .accentPalette('pink', {
+          'default': '400'
         })
         .warnPalette('defaultPrimary');
 
@@ -42,7 +42,7 @@
       .dark();
 
     $mdThemingProvider.theme('green', 'default')
-      .primaryPalette('green');
+      .primaryPalette('teal');
 
     $mdThemingProvider.theme('custom', 'default')
       .primaryPalette('defaultPrimary', {

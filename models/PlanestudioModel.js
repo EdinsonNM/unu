@@ -47,6 +47,20 @@ var PlanestudioSchema = new Schema({
     ref:'Periodo',
     required:true
   },
+	estado:{
+		type: String,
+		enum:['Registrado','Enviado','Observado','Aprobado'],
+		default: 'Registrado'
+	},
+	historial:[
+		{
+			estado:{
+				type: String,
+				enum:['Registrado','Enviado','Observado','Aprobado']
+			},
+			created_at:Date
+		}
+	],
 	created_at:Date,
 	updated_at:Date
 });

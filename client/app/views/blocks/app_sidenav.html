@@ -1,7 +1,14 @@
 <md-toolbar class="md-theme-indigo">
-  <h1 class="md-toolbar-tools">{{app.name}}</h1>
+  <div class="md-toolbar-tools">
+    <h2>{{app.name}}</h2>
+    <span flex></span>
+    <md-button class="md-icon-button" aria-label="Favorite" ng-click="close()">
+      <md-icon md-font-icon="fa fa-arrow-left fa-lg"></md-icon>
+    </md-button>
+  </div>
+
 </md-toolbar>
-<md-content layout-padding class="bgc-green-500">
+<md-content layout-padding class="bgc-teal-500">
 
 <div layout="column" layout-align="center center" style="height:160px;">
   <div layout-align="center start"  layout-padding>
@@ -26,10 +33,6 @@
   </div>
 </md-button>
 <md-divider ng-repeat-end></md-divider>
-<md-button hide-gt-md flex ng-click="vm.showActions($event)">
-  <div layout="row" class="md-tile-content">
-    Actions
-  </div>
-</md-button>
+
 <md-menu-bar  ng-include="'views/blocks/app_menu.html'" style="padding: 0;">
 </md-menu-bar>

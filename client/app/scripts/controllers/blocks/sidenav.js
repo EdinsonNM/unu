@@ -9,7 +9,7 @@
     * # AboutCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('SidenavCtrl', function($scope,$rootScope) {
+  angular.module('unuApp').controller('SidenavCtrl', function($scope,$rootScope,$mdSidenav) {
     console.log($rootScope.menu);
     this.autoFocusContent = false;
 
@@ -18,16 +18,13 @@
     };
     $scope.close = function() {
       return $mdSidenav('left').toggle().then(function() {
-        $log.debug('close sidenav');
       });
     };
     $scope.toggle = function() {
       return $mdSidenav('left').toggle().then(function() {
-        $log.debug('close sidenav');
       });
     };
     $scope.toggleMenu = function() {
-      alert("ok toggle...");
     };
 
   });

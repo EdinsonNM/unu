@@ -8,21 +8,31 @@
     * @description
     * # ValidateUnique
    */
-  angular.module('unuApp').directive('validateUnique', function(Restangular) {
+  angular.module('unuApp').directive('validateUnique', function(Restangular,$timeout) {
     return {
       require: 'ngModel',
       scope: {
         attribute: '@',
         minlengthvalidation: '@',
         queryModel: '@',
-        url: '@'
+        url: '@',
+        filtertimeout:'='
       },
       link: function(scope, element, attrs, ctrl) {
         scope.minlengthvalidation = scope.minlengthvalidation || 0;
+        var delay = function(callback){
+          if (scope.filterTimeout){
+            $timeout.cancel(scope.filterTimeout);
+          }
+          scope.filterTimeout = $timeout(function() {
+            callback();
+          },1000);
+        };
         return ctrl.$parsers.unshift(function(value) {
 
+
           var localService;
-          if (value.length >= scope.minlengthvalidation) {
+          delay(function() {
             localService = Restangular.all(scope.queryModel);
               localService.customGET('/methods/validate-unique', {
                 value: value,
@@ -34,9 +44,7 @@
                   return ctrl.$setValidity('validateUnique', false);
                 }
               });
-          } else {
-            ctrl.$setValidity('validateUnique', true);
-          }
+          });
           return value;
         });
       }

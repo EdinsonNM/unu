@@ -16,16 +16,17 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Código</label>
-                <input required name="codigo" ng-model="model.codigo">
+                <input required name="codigo" ng-model="model._curso.codigo">
+
                 <div ng-messages="myForm.codigo.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
             </div>
             <div flex-item>
-              <md-input-container class="md-block">
+              <md-input-container class="md-block" >
                 <label>Tipo</label>
-               <md-select ng-model="model.silencio">
+               <md-select ng-model="model._curso.tipo" ng-disabled="cursoFound">
                 <md-option value="General">General</md-option>
                 <md-option value="Carrera">Carrera</md-option>
               </md-select>
@@ -55,7 +56,7 @@
           <div flex-item>
           <md-input-container class="md-block">
             <label>Nombre del Curso</label>
-            <input required name="nombre" ng-model="escuela.nombre" readonly>
+            <input required name="nombre" ng-model="model._curso.nombre" ng-readonly="cursoFound">
             <div ng-messages="myForm.nombre.$error"  ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -68,35 +69,36 @@
 
                <div flex-item>
                  <md-input-container class="md-block">
-                   <label>Nombre</label>
-                   <input required name="nombre" ng-model="model.nombre">
-                   <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                   <label>Horas Teoria</label>
+                   <input required name="horas_teoria" ng-model="model.horas_teoria">
+                   <div ng-messages="myForm.horas_teoria.$error"  ng-if="submited">
                      <div ng-message="required">{{message.Required}}</div>
                    </div>
                  </md-input-container>
                </div>
-           </div>
-           <div  flex-container="row" flex-gutter="24">
-             <div flex-item>
-               <md-input-container class="md-block">
-                 <label>Periodo</label>
-                 <md-select ng-model="model._periodo" ng-model-options="{trackBy: '$value._id'}">
-                   <md-option ng-repeat="periodo in periodos" ng-value="periodo">
-                     {{periodo.nombre}}
-                   </md-option>
-                 </md-select>
-               </md-input-container>
-             </div>
                <div flex-item>
                  <md-input-container class="md-block">
-                   <label>Resolución</label>
-                   <input required name="resolucion" ng-model="model.resolucion">
+                   <label>Horas Práctica</label>
+                   <input required name="horas_practica" ng-model="model.horas_practica">
+                   <div ng-messages="myForm.horas_practica.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
                  </md-input-container>
                </div>
                <div flex-item>
                  <md-input-container class="md-block">
-                   <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Fecha Resolución"></md-datepicker>
-                   <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
+                   <label>Horas Laboratorio</label>
+                   <input required name="horas_laboratorio" ng-model="model.horas_laboratorio">
+                   <div ng-messages="myForm.horas_laboratorio.$error"  ng-if="submited">
+                     <div ng-message="required">{{message.Required}}</div>
+                   </div>
+                 </md-input-container>
+               </div>
+               <div flex-item>
+                 <md-input-container class="md-block">
+                   <label>Total Horas</label>
+                   <input required name="horas_total" ng-model="model.horas_total">
+                   <div ng-messages="myForm.horas_total.$error"  ng-if="submited">
                      <div ng-message="required">{{message.Required}}</div>
                    </div>
                  </md-input-container>
