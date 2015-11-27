@@ -25,8 +25,7 @@
     'angular-loading-bar',
     'ngTable',
     'anim-in-out',
-    'ngMaterial',
-    'scDateTime'
+    'ngMaterial'
   ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider, $mdThemingProvider) {
     $mdThemingProvider
       .theme('default')
