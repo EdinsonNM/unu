@@ -9,13 +9,12 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content style="min-width:800px;max-height:810px; ">
-      <md-content class="md-padding">
-        <div  flex-container="row" flex-gutter="24">
-            <div flex-item>
+    <md-dialog-content class="window-modal-content-sm">
+        <div flex  layout="row" layout-sm="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Facultad</label>
-                <input required name="facultad" ng-model="facultad.nombre" readonly>
+                <input required name="facultad" ng-model="model._facultad.nombre" readonly>
                 <div ng-messages="myForm.facultad.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
@@ -23,8 +22,8 @@
 
             </div>
         </div>
-        <div  flex-container="row" flex-gutter="24">
-          <div flex-item>
+        <div flex  layout="row" layout-sm="row">
+          <div flex>
           <md-input-container class="md-block">
             <label>Nombre de Escuela</label>
             <input required name="nombre" ng-model="model.nombre">
@@ -36,8 +35,8 @@
         </div>
 
 
-           <div  flex-container="row" flex-gutter="24">
-               <div flex-item>
+           <div flex  layout="row" layout-sm="row">
+               <div flex>
                    <md-input-container class="md-block">
                      <label>Código</label>
                      <input required name="codigo" ng-model="model.codigo">
@@ -46,7 +45,7 @@
                      </div>
                    </md-input-container>
                </div>
-               <div flex-item>
+               <div flex>
                  <md-input-container class="md-block">
                    <label>Resolución</label>
                    <input required name="resolucion" ng-model="model.resolucion">
@@ -57,16 +56,17 @@
                </div>
            </div>
 
-      </md-content>
-      <div class="dialog__actions">
-          <div class="pull-left">
-            <md-checkbox ng-model="model.activo">
-                 Activo
-               </md-checkbox>
-          </div>
-         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-         <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-    </div>
+           <div  flex  layout="row" layout-sm="column">
+            <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
+              <md-checkbox ng-model="model.activo">
+                  Activo
+                </md-checkbox>
+            </div>
+            <div flex="70" layout="row"  layout-align="end center" flex-sm="100">
+              <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+              <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+            </div>
+           </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
 

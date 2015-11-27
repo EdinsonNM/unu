@@ -80,16 +80,15 @@
         controller: function($scope, table, name, MessageFactory, facultad){
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {};
-          $scope.model._facultad = facultad._id;
-          $scope.facultad = facultad;
+          $scope.model = {_facultad:facultad};
+          //$scope.facultad = facultad;
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {
               service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
+                ToastMD.success(MessageFactory.Form.Saved);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -121,7 +120,7 @@
             $scope.submited = true;
             if (form.$valid) {
               $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
+                ToastMD.success(MessageFactory.Form.Updated);
                 $mdDialog.hide();
                 table.reload();
               });
@@ -148,7 +147,7 @@
       $mdDialog.show(confirm).then(function() {
         selected.remove().then(function() {
           $scope.Refresh();
-          ToastMD.info(MessageFactory.Form.Deleted);
+          ToastMD.success(MessageFactory.Form.Deleted);
         });
       }, function() {
 
