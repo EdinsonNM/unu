@@ -12,12 +12,94 @@
   angular.module('unuApp').controller('AsignarAulasCtrl', function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
     var List, service;
 
+    $scope.UI = {
+      refresh: false,
+      message: MessageFactory,
+      title: 'Asignación de Aulas',
+      editMode: false,
+      selected:null,
+      customActions:[]
+    };
+
+    var LOCAL ={
+      name: 'Asignación de Aulas',
+      form:'views/asignaraulas/form.html',
+      route:'asignaraulas',
+      route_pabellones: 'pabellones',
+      route_aulas: 'aulas',
+      route_facultades: 'facultades',
+      route_escuelas: 'escuelas',
+      route_periodos: 'periodos'
+    };
+    service = Restangular.all(LOCAL.route);
+    $rootScope.app.module = ' > ' + LOCAL.name;
+
+    var service_facultades = Restangular.all(LOCAL.route_facultades);
+
+    $scope.facultades = [];
+    $scope.escuelas = [];
+    $scope.pabellones = [];
+    $scope.aulas = [];
+    $scope.periodos = [];
+
+    $scope.periodosSeleccionados = [];
+    $scope.transformChip = transformChip;
+    $scope.autocompleteDemoRequireMatch = true;
+    $scope.selectedItem = null;
+    $scope.searchText = null;
+    $scope.querySearch = querySearch;
+
+    var LoadPeriodos = function LoadPeriodos() {
+      var servicePeriodos = Restangular.all(LOCAL.route_periodos);
+      servicePeriodos.getList().then(function(data){
+        $scope.periodos = data;
+      });
+    };
     var LoadPabellones = function LoadPabellones() {
-      var servicePabellones = Restangular.all('facultades');
+      var servicePabellones = Restangular.all(LOCAL.route_pabellones);
+      servicePabellones.getList().then(function(data){
+        $scope.pabellones = data;
+      });
+    };
+    $scope.LoadAulas = function LoadAulas(){
+      var serviceAula = Restangular.all(LOCAL.route_aulas);
+      serviceAula.getList({conditions:{_pabellon:$scope.filter._pabellon._id},populate:'_pabellon'}).then(function(data){
+        $scope.aulas = data;
+      });
+    };
+    var LoadFacultades = function LoadFacultades() {
+      var serviceFacultad = Restangular.all(LOCAL.route_facultades);
       serviceFacultad.getList().then(function(data){
         $scope.facultades = data;
       });
     };
+
+
+    LoadPabellones();
+    LoadPeriodos();
+    LoadFacultades();
+
+    function transformChip(chip) {
+      // If it is an object, it's already a known chip
+      console.log(chip);
+      if (angular.isObject(chip)) {
+        return chip;
+      }
+      // Otherwise, create a new one
+      return { name: chip, type: 'new' }
+    }
+    function querySearch (query) {
+      var results = query ? $scope.periodos.filter(createFilterFor(query)) : [];
+      console.log(results);
+      return results;
+    }
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+      return function filterFn(periodo) {
+        return (periodo.nombre.indexOf(lowercaseQuery) === 0) ||
+            (periodo.periodo.indexOf(lowercaseQuery) === 0);
+      };
+    }
 
     $scope.horarios = [
       {ini: '7:00 am', fin: '8:00 am'},
@@ -37,31 +119,55 @@
       {ini: '10:00 am', fin: '11:00 am'}
     ];
 
-    $scope.pabellones = [];
 
-    $scope.UI = {
-      refresh: false,
-      message: MessageFactory,
-      title: 'Asignación de Aulas',
-      editMode: false,
-      selected:null,
-      customActions:[]
+    $scope.handleCell = function($event, hora, aula){
+      console.log(hora);
+      console.log(aula);
+      $scope.New($event, hora, aula);
     };
 
-    var LOCAL ={
-      name: 'Asignación de Aulas',
-      form:'views/asignaraulas/index.html',
-      route:'asignaraulas',
-      route_facultades: 'facultades',
-      route_escuelas: 'escuelas'
-    };
-    service = Restangular.all(LOCAL.route);
-    $rootScope.app.module = ' > ' + LOCAL.name;
-
-    var service_facultades = Restangular.all(LOCAL.route_facultades);
-
-    $scope.handleCell = function(hora, aula){
-      alert(hora.ini + ' - ' + hora.fin + ' - ' + aula);
+    $scope.New = function New($event, hora, aula){
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl :LOCAL.form,
+        locals:{
+          name: LOCAL.name,
+          facultades: $scope.facultades,
+          hora: hora,
+          aula: aula
+        },
+        controller: function($scope, name, MessageFactory, facultades, hora, aula){
+          $scope.facultades = facultades;
+          $scope.submited = false;
+          $scope.title = MessageFactory.Form.New.replace('{element}',name);
+          $scope.model = {};
+          $scope.model.aula = aula;
+          $scope.model.horainicio = hora.ini;
+          $scope.model.horafin = hora.fin;
+          $scope.Buttons = MessageFactory.Buttons;
+          $scope.message = MessageFactory.Form;
+          $scope.LoadEcuelas = function LoadEcuelas(){
+            var serviceEscuela = Restangular.all(LOCAL.route_escuelas);
+            serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+              $scope.escuelas = data;
+            });
+          };
+          $scope.Save = function(form) {
+            $scope.submited = true;
+            if (form.$valid) {
+              service.post($scope.model).then(function() {
+                ToastMD.info(MessageFactory.Form.Saved);
+                $mdDialog.hide();
+              });
+            }
+          };
+          $scope.Cancel = function(){
+            $mdDialog.hide();
+          };
+        }
+      });
     };
 
   });

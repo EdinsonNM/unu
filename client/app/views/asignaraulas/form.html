@@ -1,5 +1,5 @@
-<md-dialog aria-label="List dialog">
-  <md-dialog-content>
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
     <md-toolbar>
       <div class="md-toolbar-tools">
         <span>{{title}}</span>
@@ -18,7 +18,7 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Aula</label>
-              <input required name="aula" ng-model="model.aula">
+              <input required name="aula" ng-model="model.aula.nombre">
               <div ng-messages="myForm.aula.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
@@ -26,9 +26,20 @@
           </div>
           <div flex-item>
             <md-input-container class="md-block">
-              <label>Horario</label>
-              <input required name="horario" ng-model="model.horario">
-              <div ng-messages="myForm.horario.$error" ng-if="submited">
+              <label>Hora Inicio</label>
+              <input required name="horainicio" ng-model="model.horainicio" date-time-picker-input display-mode="time" />
+              <!--time-date-picker ng-model="model.horainicio" name="horainicio" compact="true" display-mode="time" class="modal-content"></time-date-picker-->
+              <div ng-messages="myForm.horainicio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Hora Fin</label>
+              <input required name="horafin" ng-model="model.horafin" date-time-picker-input display-mode="time">
+              <!--time-date-picker ng-model="model.horafin" name="horafin" compact="true" display-mode="time" class="modal-content"></time-date-picker-->
+              <div ng-messages="myForm.horafin.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
             </md-input-container>
@@ -38,10 +49,9 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Facultad</label>
-              <md-select ng-model="size">
-                <md-option ng-repeat="fac in facultades" value="{{fac._id}}">{{facultad.nombre}}</md-option>
+              <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+                <md-option ng-repeat="facultad in facultades" ng-value="facultad">{{facultad.nombre}}</md-option>
               </md-select>
-              <!--input required name="facultad" ng-model="model.facultad"-->
               <div ng-messages="myForm.facultad.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
@@ -50,7 +60,9 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Escuela</label>
-              <input required name="escuela" ng-model="model.escuela">
+              <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}">
+                <md-option ng-repeat="escuela in escuelas" ng-value="escuela">{{escuela.nombre}}</md-option>
+              </md-select>
               <div ng-messages="myForm.escuela.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
@@ -64,5 +76,5 @@
       <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
       <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </div>
-  </md-dialog-content>
+  </form>
 </md-dialog>
