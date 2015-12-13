@@ -28,11 +28,26 @@ module.exports=function(){
             _grupo:obj._id
           });
           user.save(function(err,u){
+          
+            next();
+          });
+        });
+
+        Grupo.findOne({codigo:'MIC'},function(err,obj){
+          console.log(obj);
+          if(err) next(err);
+          var user=new model({
+            firstname:'Usuario',
+            lastname:'MIC',
+            username:'usermic',
+            password:'usermic',
+            email:'usermic@admin.com',
+            _grupo:obj._id
+          });
+          user.save(function(err,u){
             res.send(u);
             next();
           });
-
-
         });
 
       });

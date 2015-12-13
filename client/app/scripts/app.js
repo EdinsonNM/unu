@@ -26,45 +26,7 @@
     'ngTable',
     'anim-in-out',
     'ngMaterial'
-  ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider, $mdThemingProvider) {
-    $mdThemingProvider
-      .theme('default')
-        .primaryPalette('teal', {
-          'default': '600'
-        })
-        .accentPalette('pink', {
-          'default': '400'
-        })
-        .warnPalette('defaultPrimary');
-
-    $mdThemingProvider.theme('dark', 'default')
-      .primaryPalette('defaultPrimary')
-      .dark();
-
-    $mdThemingProvider.theme('green', 'default')
-      .primaryPalette('teal');
-
-    $mdThemingProvider.theme('custom', 'default')
-      .primaryPalette('defaultPrimary', {
-        'hue-1': '50'
-    });
-
-    $mdThemingProvider.definePalette('defaultPrimary', {
-      '50':  '#000000',
-      '100': 'rgb(255, 198, 197)',
-      '200': '#E75753',
-      '300': '#E75753',
-      '400': '#E75753',
-      '500': '#E75753',
-      '600': '#E75753',
-      '700': '#E75753',
-      '800': '#E75753',
-      '900': '#E75753',
-      'A100': '#E75753',
-      'A200': '#E75753',
-      'A400': '#E75753',
-      'A700': '#E75753'
-    });
+  ]).config(function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider) {
     RestangularProvider.setBaseUrl('/api');
     $httpProvider.interceptors.push('AuthInterceptor');
     RestangularProvider.setRestangularFields({ id: '_id' });
@@ -79,12 +41,18 @@
       },
 
       resolve: {
-        DataResolve: function(UserFactory, $q, $rootScope) {
+        DataResolve: function(UserFactory, $q, $rootScope, TYPE_GROUP) {
           var deferred;
           deferred = $q.defer();
           UserFactory.getUser().then(function(result) {
             $rootScope.USER = result.user;
-            //console.log(result.user);
+            switch ($rootScope.USER._grupo.codigo) {
+              case TYPE_GROUP.MIC:
+                $rootScope.app.name = 'M. Investigación Científica';
+                break;
+              default:
+                $rootScope.app.name = 'Sistema de Matrícula';
+            }
             deferred.resolve(true);
           });
           return deferred.promise;
@@ -204,31 +172,33 @@
       url: '/inicio',
       templateUrl: 'views/app_inicio.html',
       controller: 'AppInicioCtrl'
+    })
+    .state('app.mic_asignaturas', {
+      url: '/mic/asignaturas',
+      templateUrl: 'views/mic/asignaturas/list.html',
+      controller: 'MICAsignaturasCtrl'
+    })
+    .state('app.mic_revisionplanestudios', {
+      url: '/mic/revision-planestudios',
+      templateUrl: 'views/mic/planestudios/list.html',
+      controller: 'MICRevisionPlanEstudiosCtrl'
+    })
+    .state('app.mic_silabus', {
+      url: '/mic/silabus',
+      templateUrl: 'views/mic/silabus/list.html',
+      controller: 'MICSilabusCtrl'
+    })
+    .state('app.mic_revisionsilabus', {
+      url: '/mic/revision-silabus',
+      templateUrl: 'views/mic/revisionsilabus/list.html',
+      controller: 'MICRevisionSilabusCtrl'
     });
   }).constant('TYPE_ALUMNO', {
     INGRESANTE: 'ING'
   }).constant('TYPE_GROUP', {
     ADMIN: 'ADMIN',
-    ALUMNO: 'ALUMNO'
-  }).run(function($rootScope) {
-    $rootScope.inProgress = false;
-    $rootScope.app = {
-      name: 'Sistema de Matrícula',
-      module:'',
-      corporation: 'Universidad Nacional de Ucayali',
-      developer: 'Edinson Nuñez More',
-      isTest: true
-    };
-    $rootScope.errors = {
-      required: 'Campo es requerido',
-      email: 'Campo email inválido',
-      validateUnique: 'Valor ya registrado'
-    };
-    $rootScope.Buttons = {
-      Save: 'Guardar',
-      Cancel: 'Cancelar',
-      New: 'Nuevo'
-    };
+    ALUMNO: 'ALUMNO',
+    MIC: 'MIC'
   })
   //take all whitespace out of string
     .filter('nospace', function () {

@@ -44,6 +44,35 @@ module.exports=function(){
 
           ];
           grupo.save(function(error, data){
+            //res.status(200).send(data);
+          });
+        });
+
+        model.findOne({codigo: 'MIC'}, function(error, grupo){
+          grupo.menu = [
+            {
+              order:1,
+              title:'Asignaturas',
+              url:'app.mic_asignaturas',
+            },
+            {
+              order:2,
+              title: 'Revisión Plan de Estudios',
+              url:'app.mic_revisionplanestudios'
+            },
+            {
+              order:3,
+              title: 'Registro de Silabus',
+              url:'app.mic_silabus'
+            },
+            {
+              order:4,
+              title: 'Reportes',
+              url:'app.mic_revision'
+            }
+
+          ];
+          grupo.save(function(error, data){
             res.status(200).send(data);
           });
         });
@@ -92,6 +121,8 @@ module.exports=function(){
         grupo3.save();
         var grupo4=new model({nombre:'Alumno',codigo:'ALUMNO'});
         grupo4.save();
+        var grupo5=new model({nombre:'Módulo de Investigación Científica',codigo:'MIC'});
+        grupo5.save();
 
         res.send({ok:'ok'});
         next();

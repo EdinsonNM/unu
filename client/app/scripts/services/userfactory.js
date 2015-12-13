@@ -26,12 +26,13 @@
             group = $rootScope.USER._grupo.codigo;
             switch (group) {
               case TYPE_GROUP.ADMIN:
-                $state.go('app');
+                $rootScope.app.name = 'Sistema de Matrícula';
                 break;
-              case TYPE_GROUP.ALUMNO:
-                $state.go('appalumno.inicio');
+              case TYPE_GROUP.MIC:
+                $rootScope.app.name = 'M. Investigación Científica';
                 break;
             }
+            $state.go('app');
           });
         }, function(result) {
           ToastMD.warning(result.data.message);
