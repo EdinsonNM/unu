@@ -22,7 +22,7 @@
       customActions:[],
       facultad: {},
       asignaturas:[],
-      asignaturasNoexistentes:[]
+      unidades:[{titulo:'',inicio:'',fin:''}]
     };
 
     var LOCAL ={
@@ -32,6 +32,9 @@
       route:'planestudiodetalles',
       routePlan:'planestudios'
     };
+    $scope.AddUnidad = function(){
+      $scope.UI.unidades.push({titulo:'',inicio:'',fin:''});
+    }
 
 
 

@@ -11,8 +11,26 @@
 
 <!--end form content-->
 <h3>1. IDENTIFICACIÓN ACADÉMICA</h3>
-<div class="">
-  content...
+<div flex  layout="row" layout-sm="row">
+
+    <div flex>
+      <md-input-container class="md-block">
+        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+        <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+          <div ng-message="required">{{message.Required}}</div>
+        </div>
+      </md-input-container>
+
+    </div>
+    <div flex>
+      <md-input-container class="md-block">
+        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Fin"></md-datepicker>
+        <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+          <div ng-message="required">{{message.Required}}</div>
+        </div>
+      </md-input-container>
+
+    </div>
 </div>
 <h3>2. SUMILLA</h3>
 
@@ -26,15 +44,18 @@
 </div>
 </div>
 <h3>3. TRATAMIENTO DE LAS UNIDADES DIDÁCTICAS</h3>
-<md-button class="md-raised" ng-click="AddUnidad(myForm)">Agregar Unidad</md-button>
-<table class="table table-bordered">
-  <tbody>
+<md-button class="md-raised" ng-click="AddUnidad()">Agregar Unidad</md-button>
+<table class="table table-bordered" ng-repeat="unidad in UI.unidades">
+  <thead>
     <tr>
-      <td colspan="1">
-        <h4>Unidad 1</h4>
-      </td>
+      <th colspan="3">
+        <h4>UNIDAD {{$index+1}}</h4>
+      </th>
     </tr>
     <tr>
+  </thead>
+  <tbody>
+
       <td colspan="3">
         <div flex  layout="row" layout-sm="row">
           <div flex>
@@ -57,12 +78,21 @@
             </div>
             <div flex>
               <md-input-container class="md-block">
-                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Fin"></md-datepicker>
                 <div ng-messages="myForm.facultad.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
 
+            </div>
+            <div flex>
+              <md-input-container class="md-block">
+                <label>Total de Horas</label>
+                <input required name="unidadhoras" ng-model="model.unidadhoras">
+                <div ng-messages="myForm.unidadhoras.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
         </div>
       </td>
