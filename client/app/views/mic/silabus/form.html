@@ -8,19 +8,14 @@
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 <!--form content-->
-<div flex  layout="row" layout-sm="row">
-    <div flex>
-      <md-input-container class="md-block">
-        <label>Facultad</label>
-        <input required name="facultad" ng-model="model._facultad.nombre" readonly>
-        <div ng-messages="myForm.facultad.$error"  ng-if="submited">
-          <div ng-message="required">{{message.Required}}</div>
-        </div>
-      </md-input-container>
 
-    </div>
-</div>
 <!--end form content-->
+<h3>1. IDENTIFICACIÓN ACADÉMICA</h3>
+<div class="">
+  content...
+</div>
+<h3>2. SUMILLA</h3>
+
 <div  flex-container="row" flex-gutter="24">
     <div flex-item>
 <md-input-container class="md-block">
@@ -30,10 +25,93 @@
 </md-content>
 </div>
 </div>
+<h3>3. TRATAMIENTO DE LAS UNIDADES DIDÁCTICAS</h3>
+<md-button class="md-raised" ng-click="AddUnidad(myForm)">Agregar Unidad</md-button>
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td colspan="1">
+        <h4>Unidad 1</h4>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <div flex  layout="row" layout-sm="row">
+          <div flex>
+            <md-input-container class="md-block">
+              <label>Titulo Unidad</label>
+              <input required name="unidad" ng-model="model.unidad">
+              <div ng-messages="myForm.unidad.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+            <div flex>
+              <md-input-container class="md-block">
+                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+
+            </div>
+            <div flex>
+              <md-input-container class="md-block">
+                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+
+            </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <md-input-container class="md-block">
+          <label>Criterios de Desempeño</label>
+          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="md-block">
+          <label>Conocimientos Esenciales</label>
+          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="md-block">
+          <label>Evidencias</label>
+          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+        </md-input-container>
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+<h3>4. ESTRATEGIAS DE APRENDIZAJE-ENSENANZA</h3>
+<md-input-container class="md-block">
+  <label>De Enseñanza</label>
+  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+</md-input-container>
+<md-input-container class="md-block">
+  <label>De aprendizaje</label>
+  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+</md-input-container>
+<md-input-container class="md-block">
+  <label>De investigación Formativa</label>
+  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+</md-input-container>
+<md-input-container class="md-block">
+  <label>De Responsabulidad Social</label>
+  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+</md-input-container>
+
 </div>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-click="Save($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">Guardar</md-tooltip>
-  <md-icon md-font-icon="fa fa fa-disk fa-lg"></md-icon>
+  <md-icon md-font-icon="fa fa fa-floppy-o fa-lg"></md-icon>
 </md-button>
