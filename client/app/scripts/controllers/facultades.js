@@ -9,6 +9,7 @@
     * # FacultadesCtrl
     * Controller of the unuApp
    */
+
   angular.module('unuApp').controller('FacultadesCtrl', function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
