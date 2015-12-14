@@ -10,8 +10,8 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('MICSilabusCtrl', function($q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
-    var List, service, ListAsignaturas;
+  angular.module('unuApp').controller('MICSilabusCtrl', function($state,$q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams) {
+    var List, service;
 
     $scope.UI = {
       refresh: false,
@@ -30,7 +30,7 @@
       name: 'Registro de Silabus por Plan de Estudios',
       form:'views/planestudiodetalles/form.html',
       route:'planestudiodetalles',
-      routeAsignaturas:'mic_asignaturas'
+      routePlan:'planestudios'
     };
 
     Restangular.one('planestudios', LOCAL.planestudioId).get({single: true}).then(function(data){
@@ -52,19 +52,21 @@
         $scope.escuelas = data;
       });
     };
-
-    ListAsignaturas = function(){
-      var service = Restangular.all(LOCAL.routeAsignaturas);
-      service.getList({populate:{path:'_curso'}}).then(function(data){
-        $scope.UI.asignaturas = data;
+    $scope.LoadPlanEstudios = function LoadPlanEstudios(){
+      $scope.planes = [];
+      var servicePlan = Restangular.all(LOCAL.routePlan);
+      servicePlan.getList({conditions:{_escuela:$scope.filter._escuela._id},populate:'_escuela'}).then(function(data){
+        $scope.planes = data;
       });
     };
+
+
 
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
         count: 500,
-        filter: {_planestudio: LOCAL.planestudioId}
+        filter: {_planestudio: 0}
       }, {
         total: 0,
         groupBy: 'ciclo',
@@ -105,132 +107,15 @@
     $scope.Refresh = function Refresh(){
       $scope.UI.selected = null;
       $scope.UI.editMode = false;
+      $scope.tableParams.filter({_planestudio: $scope.filter._planestudio._id});
       $scope.tableParams.reload();
     };
 
-    $scope.New = function New($event){
-      var parentEl = angular.element(document.body);
-      $mdDialog.show({
-        parent: parentEl,
-        targetEvent: $event,
-        templateUrl :LOCAL.form,
-        locals:{
-          name: LOCAL.name,
-          table:$scope.tableParams,
-          planestudios: $scope.UI.planestudios
-        },
-        controller: function($scope, table, name, MessageFactory, planestudios, $timeout){
-          $scope.cursoFound = false;
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'}};
-          $scope.model._planestudio = planestudios._id;
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          var tempFilterText = '', filterTextTimeout;
-          var serviceCurso = Restangular.all('cursos');
-          var service = Restangular.all('planestudiodetalles');
-          $scope.$watch('model._curso.codigo', function (val) {
-            if(val.length>0){
-              if (filterTextTimeout){
-                $timeout.cancel(filterTextTimeout);
-              }
-              tempFilterText = val;
-              filterTextTimeout = $timeout(function() {
-                  $scope.model._curso.codigo = tempFilterText;
-                  serviceCurso.getList({conditions:{ codigo:$scope.model._curso.codigo }}).then(function(data){
-                    if(data.length>0){
-                      $scope.model._curso = data[0];
-                      $scope.cursoFound = true;
-                    }else{
-                      $scope.model._curso = {codigo:tempFilterText};
-                      $scope.cursoFound = false;
-                    }
-                  });
-              }, 1000);
-            }
-          });
 
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              if(!$scope.cursoFound){
-                serviceCurso.post($scope.model._curso).then(function(data){
-                  $scope.model._curso = data._id;
-                  new Save();
-                });
-              }else{
-                new Save();
-              }
-
-            }
-          };
-          var Save = function(){
-            service.post($scope.model).then(function() {
-              ToastMD.info(MessageFactory.Form.Saved);
-              $mdDialog.hide();
-              table.reload();
-            });
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
-      });
-    };
     $scope.Edit = function Edit($event){
-      var parentEl = angular.element(document.body);
-      $mdDialog.show({
-        parent: parentEl,
-        targetEvent: $event,
-        templateUrl :LOCAL.form,
-        locals:{
-          name: LOCAL.name,
-          table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
-        },
-        controller: function($scope, table,name, MessageFactory,model){
-          $scope.submited = false;
-          $scope.model = model;
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
-      });
+      $state.go('app.mic_silabus_detalle',{id:$scope.UI.selected._id});
     };
 
-    $scope.Delete = function Delete($event){
-      var confirm = $mdDialog.confirm()
-          .title(LOCAL.name)
-          .content(MessageFactory.Form.QuestionDelete)
-          .ariaLabel(LOCAL.name)
-          .targetEvent($event)
-          .ok(MessageFactory.Buttons.Yes)
-          .cancel(MessageFactory.Buttons.No);
-
-      var selected = Restangular.copy($scope.UI.selected);
-
-      $mdDialog.show(confirm).then(function() {
-        selected.remove().then(function() {
-          $scope.Refresh();
-          ToastMD.info(MessageFactory.Form.Deleted);
-        });
-      }, function() {
-
-      });
-    };
 
     $scope.EnabledEdit =function EnabledEdit(item,$groups){
       console.log($groups);
@@ -253,7 +138,6 @@
 
     new List();
     new LoadFacultades();
-    new ListAsignaturas();
 
   });
 
