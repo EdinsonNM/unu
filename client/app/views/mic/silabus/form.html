@@ -4,38 +4,7 @@
 
 <div layout="row" layout-align="center start" layout-margin layout-fill>
 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-  <div  flex-container="row" flex-gutter="24">
-      <div flex-item>
-          <md-input-container class="md-block">
-            <label>Facultad</label>
-            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
-              <md-option ng-repeat="fac in facultades" ng-value="fac">
-                {{fac.nombre}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-      </div>
-      <div flex-item>
-          <md-input-container class="md-block">
-            <label>Escuela</label>
-            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadPlanEstudios()">
-              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
-                {{escuela.nombre}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-      </div>
-      <div flex-item>
-          <md-input-container class="md-block">
-            <label>Plan de Estudios</label>
-            <md-select ng-model="filter._planestudio" ng-model-options="{trackBy: '$value._id'}" ng-change="Refresh()">
-              <md-option ng-repeat="plan in planes" ng-value="plan">
-                {{plan.nombre}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-      </div>
-  </div>
+
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 <!--form content-->
@@ -55,7 +24,7 @@
 <div  flex-container="row" flex-gutter="24">
     <div flex-item>
 <md-input-container class="md-block">
-  <label>Comentarios</label>
+  <label>Sumilla</label>
   <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
 </md-input-container>
 </md-content>
@@ -65,6 +34,6 @@
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-click="Save($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
-  <md-tooltip md-direction="left">Validar Silabus</md-tooltip>
+  <md-tooltip md-direction="left">Guardar</md-tooltip>
   <md-icon md-font-icon="fa fa fa-disk fa-lg"></md-icon>
 </md-button>
