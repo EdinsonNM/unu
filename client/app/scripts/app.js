@@ -188,6 +188,11 @@
       templateUrl: 'views/mic/silabus/list.html',
       controller: 'MICSilabusCtrl'
     })
+    .state('app.mic_silabus_detalle', {
+      url: '/mic/silabus/:id',
+      templateUrl: 'views/mic/silabus/form.html',
+      controller: 'MICSilabusDetalleCtrl'
+    })
     .state('app.mic_revisionsilabus', {
       url: '/mic/revision-silabus',
       templateUrl: 'views/mic/revisionsilabus/list.html',
