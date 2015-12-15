@@ -1,147 +1,175 @@
 <md-subheader class="md-primary " style="margin-right: 0">
-<h3>{{UI.title}}</h3>
+  <h3>{{UI.title}}</h3>
 </md-subheader>
 
 <div layout="row" layout-align="center start" layout-margin layout-fill>
-<md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+  <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;min-height:400px">
 
-<!--tabla: contiene el listado de elementos-->
-<md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-<!--form content-->
+    <!--tabla: contiene el listado de elementos-->
+    <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+    <!--form content-->
+    <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
 
-<!--end form content-->
-<h3>1. IDENTIFICACIÓN ACADÉMICA</h3>
-<div flex  layout="row" layout-sm="row">
-
-    <div flex>
-      <md-input-container class="md-block">
-        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
-        <div ng-messages="myForm.facultad.$error"  ng-if="submited">
-          <div ng-message="required">{{message.Required}}</div>
-        </div>
-      </md-input-container>
-
-    </div>
-    <div flex>
-      <md-input-container class="md-block">
-        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Fin"></md-datepicker>
-        <div ng-messages="myForm.facultad.$error"  ng-if="submited">
-          <div ng-message="required">{{message.Required}}</div>
-        </div>
-      </md-input-container>
-
-    </div>
-</div>
-<h3>2. SUMILLA</h3>
-
-<div  flex-container="row" flex-gutter="24">
-    <div flex-item>
-<md-input-container class="md-block">
-  <label>Sumilla</label>
-  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-</md-input-container>
-</md-content>
-</div>
-</div>
-<h3>3. TRATAMIENTO DE LAS UNIDADES DIDÁCTICAS</h3>
-<md-button class="md-raised" ng-click="AddUnidad()">Agregar Unidad</md-button>
-<table class="table table-bordered" ng-repeat="unidad in UI.unidades">
-  <thead>
-    <tr>
-      <th colspan="3">
-        <h4>UNIDAD {{$index+1}}</h4>
-      </th>
-    </tr>
-    <tr>
-  </thead>
-  <tbody>
-
-      <td colspan="3">
-        <div flex  layout="row" layout-sm="row">
-          <div flex>
-            <md-input-container class="md-block">
-              <label>Titulo Unidad</label>
-              <input required name="unidad" ng-model="model.unidad">
-              <div ng-messages="myForm.unidad.$error"  ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
+      <md-tab label="Sumilla">
+        <md-content class="md-padding">
+          <span class="fs-body-2 display-block">
+            Es el resumen sobre el componente curricular (Asignatura, Curso, Seminario, Taller, Laboratorio, Trabajo de Campo, Actividad). En su redacción se debe considerar:
+          </span>
+          <div>
+            <ul>
+              <li> Área del componente curricular: si es de formación básica, formativa, especializada o complementaria.</li>
+              <li> El carácter: si es teórico, práctico o teórico-práctico.</li>
+              <li> El propósito: la contribución del componente curricular al logro del perfil del egresado.</li>
+              <li> Los conocimientos esenciales organizados en unidades didácticas.</li>
+            </ul>
           </div>
-            <div flex>
-              <md-input-container class="md-block">
-                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
-                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
+          <md-input-container class="md-block">
+            <label>Sumilla</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="10"></textarea>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Unidades Didacticas">
+        <md-content class="md-padding">
+          <span class="fs-body-2 display-block">
+            El componente curricular puede tener dos, tres, a más unidades de acuerdo a la naturaleza del mismo.
+          </span>
+          <md-button class="md-raised" ng-click="AddUnidad()">Agregar Unidad</md-button>
+          <table class="table table-bordered" ng-repeat="unidad in UI.unidades">
+            <thead>
+              <tr>
+                <th colspan="3">
+                  <h4>UNIDAD {{$index+1}}: {{model.unidad[$index].titulo}}</h4>
+                </th>
+              </tr>
+              <tr>
+            </thead>
+            <tbody>
+
+              <td colspan="3">
+                <div flex layout="row" layout-sm="row">
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Titulo Unidad</label>
+                      <input required name="unidad" ng-model="model.unidad[$index].titulo">
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+                      <div ng-messages="myForm.facultad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Fin"></md-datepicker>
+                      <div ng-messages="myForm.facultad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Total de Horas</label>
+                      <input required name="unidadhoras" ng-model="model.unidadhoras">
+                      <div ng-messages="myForm.unidadhoras.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+                  </div>
                 </div>
-              </md-input-container>
+              </td>
+              </tr>
+              <tr>
+                <td>
+                  <md-input-container class="md-block">
+                    <label>Criterios de Desempeño</label>
+                    <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container class="md-block">
+                    <label>Conocimientos Esenciales</label>
+                    <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container class="md-block">
+                    <label>Evidencias</label>
+                    <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+                  </md-input-container>
+                </td>
+              </tr>
+            </tbody>
 
-            </div>
-            <div flex>
-              <md-input-container class="md-block">
-                <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Fin"></md-datepicker>
-                <div ng-messages="myForm.facultad.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
+          </table>
+        </md-content>
+      </md-tab>
+      <md-tab label="Estrategias de Aprendizaje">
+        <md-content class="md-padding">
+          <md-input-container class="md-block">
+            <label>De Enseñanza</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>De aprendizaje</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>De investigación Formativa</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>De Responsabulidad Social</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Recursos Didacticos">
+        <md-content class="md-padding">
+          <span class="fs-body-2 display-block">
+            Recursos didácticos que permitirán el logro de aprendizajes.
+          </span>
+          <md-input-container class="md-block">
+            <label>Recursos Didácticos</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="10"></textarea>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Evaluación del Aprendizaje">
 
-            </div>
-            <div flex>
-              <md-input-container class="md-block">
-                <label>Total de Horas</label>
-                <input required name="unidadhoras" ng-model="model.unidadhoras">
-                <div ng-messages="myForm.unidadhoras.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
-            </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <md-input-container class="md-block">
-          <label>Criterios de Desempeño</label>
-          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-        </md-input-container>
-      </td>
-      <td>
-        <md-input-container class="md-block">
-          <label>Conocimientos Esenciales</label>
-          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-        </md-input-container>
-      </td>
-      <td>
-        <md-input-container class="md-block">
-          <label>Evidencias</label>
-          <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-        </md-input-container>
-      </td>
-    </tr>
-  </tbody>
+      </md-tab>
+      <md-tab label="Fuentes de Información">
+        <md-content class="md-padding">
+          <md-input-container class="md-block">
+            <label>Bibliográficas</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Electrónicas</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Producción intelectual del docente relacionada con el componente curricular</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+    </md-tabs>
+    <!--end form content-->
 
-</table>
-<h3>4. ESTRATEGIAS DE APRENDIZAJE-ENSENANZA</h3>
-<md-input-container class="md-block">
-  <label>De Enseñanza</label>
-  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-</md-input-container>
-<md-input-container class="md-block">
-  <label>De aprendizaje</label>
-  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-</md-input-container>
-<md-input-container class="md-block">
-  <label>De investigación Formativa</label>
-  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-</md-input-container>
-<md-input-container class="md-block">
-  <label>De Responsabulidad Social</label>
-  <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
-</md-input-container>
-
+  </md-content>
 </div>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-click="Save($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
+<md-button ng-click="Save($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}">
   <md-tooltip md-direction="left">Guardar</md-tooltip>
   <md-icon md-font-icon="fa fa fa-floppy-o fa-lg"></md-icon>
 </md-button>

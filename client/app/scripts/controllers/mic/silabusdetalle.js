@@ -22,7 +22,7 @@
       customActions:[],
       facultad: {},
       asignaturas:[],
-      unidades:[{titulo:'',inicio:'',fin:''}]
+      unidades:[]
     };
 
     var LOCAL ={
