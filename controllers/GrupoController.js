@@ -19,9 +19,10 @@ module.exports=function(){
                 {title:'Plan de Estudios',icon:'',url:'app.planestudios',order:3},
                 {title:'Cursos',icon:'',url:'app.cursos',order:4},
                 {title:'Pabellones',icon:'',url:'app.pabellones',order:5},
-                {title:'Docentes',icon:'',url:'app.do1centes',order:6},
+                {title:'Docentes',icon:'',url:'app.docentes',order:6},
                 {title:'Aulas',icon:'',url:'app.aulas',order:7},
-                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:8}
+                {title:'Alumnos',icon:'',url:'app.alumnos',order:8},
+                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:9}
               ]
             },
             {
@@ -97,7 +98,7 @@ module.exports=function(){
                 {title:'Plan de Estudios',icon:'',url:'app.planestudios',order:3},
                 {title:'Cursos',icon:'',url:'app.cursos',order:4},
                 {title:'Pabellones',icon:'',url:'app.pabellones',order:5},
-                {title:'Docentes',icon:'',url:'app.do1centes',order:6},
+                {title:'Docentes',icon:'',url:'app.docentes',order:6},
                 {title:'Aulas',icon:'',url:'app.aulas',order:7},
                 {title:'Ingresantes',icon:'',url:'app.ingresantes',order:8}
               ]

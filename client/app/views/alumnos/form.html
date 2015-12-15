@@ -12,7 +12,6 @@
 
     <md-dialog-content class="window-modal-content-sm">
       <div flex layout="row" layout-sm="row">
-
         <div flex>
           <md-input-container class="md-block">
             <label>Código</label>
@@ -22,6 +21,7 @@
             </div>
           </md-input-container>
         </div>
+
         <div flex>
           <md-input-container class="md-block">
             <label>Nombres</label>
@@ -31,6 +31,7 @@
             </div>
           </md-input-container>
         </div>
+
         <div flex>
           <md-input-container class="md-block">
             <label>Apellidos</label>
@@ -40,84 +41,53 @@
             </div>
           </md-input-container>
         </div>
+
       </div>
 
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
-            <label>Condición</label>
-            <input required name="condicion" ng-model="model.condicion">
-            <div ng-messages="myForm.condicion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Grado</label>
-            <input required name="grado" ng-model="model.grado">
-            <div ng-messages="myForm.grado.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Tipo Dedicación</label>
-            <input required name="tipoDedicacion" ng-model="model.tipoDedicacion">
-            <div ng-messages="myForm.tipoDedicacion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-      </div>
-
-      <div flex layout="row" layout-sm="row">
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Facultad</label>
-            <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}">
-              <md-option ng-repeat="fac in facultades" ng-value="fac">
-                {{fac.nombre}}
-              </md-option>
-            </md-select>
-            <div ng-messages="myForm.facultad.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-      </div>
-
-      <div flex layout="row" layout-sm="row">
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Nombre de Usuario</label>
+            <label>Username</label>
             <input required name="username" ng-model="model.usuario.username">
-            <div ng-messages="myForm._usuario.$error" ng-if="submited">
+            <div ng-messages="myForm.usuario.username.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
+
         <div flex>
           <md-input-container class="md-block">
-            <label>Contraseña</label>
-            <input required name="username" ng-model="model.usuario.password">
-            <div ng-messages="myForm._usuario.$error" ng-if="submited">
+            <label>Password</label>
+            <input required name="password" ng-model="model.usuario.password">
+            <div ng-messages="myForm.usuario.confirmpass.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
+
         <div flex>
           <md-input-container class="md-block">
-            <label>Correo Electrónico</label>
-            <input required name="password" ng-model="model.usuario.email">
+            <label>Confirm Password</label>
+            <input required name="confirmpass" ng-model="">
+            <div ng-messages="myForm.usuario.confirmpass.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+
+      </div>
+
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Email</label>
+            <input required name="email" ng-model="model.usuario.email">
             <div ng-messages="myForm.usuario.email.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
       </div>
-
 
       <div flex layout="row" layout-sm="column">
         <div flex="30" layout-align="start start" flex-sm="100" class="text-left">

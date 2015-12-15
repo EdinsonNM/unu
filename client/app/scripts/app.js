@@ -128,6 +128,11 @@
     templateUrl: 'views/docentes/list.html',
     controller: 'DocentesCtrl'
     })
+    .state('app.alumnos', {
+    url: '/alumnos',
+    templateUrl: 'views/alumnos/list.html',
+    controller: 'AlumnosCtrl'
+    })
     .state('app.periodos', {
       url: '/periodos',
       templateUrl: 'views/periodos/list.html',
