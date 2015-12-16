@@ -11,7 +11,7 @@
    */
 
   angular.module('unuApp').controller('AlumnosCtrl', function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var List, service;
+    var List, service, service_usuario;
 
     $scope.UI = {
       refresh: false,
@@ -25,9 +25,12 @@
     var LOCAL ={
       name: 'Alumno',
       form:'views/alumnos/form.html',
-      route:'alumnos'
+      route:'alumnos',
+      route_usuarios:'usuarios'
     };
     service = Restangular.all(LOCAL.route);
+    service_usuario = Restangular.all(LOCAL.route_usuarios);
+
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     List = function() {
@@ -112,6 +115,8 @@
                 $mdDialog.hide();
                 table.reload();
               });
+
+
             }
           };
           $scope.Cancel = function(){
