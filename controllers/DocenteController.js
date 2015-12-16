@@ -1,4 +1,6 @@
 var model = require('../models/DocenteModel.js');
+var Usuario = require('../models/UsuarioModel.js');
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -7,6 +9,19 @@ module.exports = function() {
       controller.fragment('/docentes');
 
       //custom methods
+
+      controller.query('post', function (request, response, next) {
+        if(request._usuario){
+          //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
+          var usuario = new Usuario(request._usuario);
+          usuario.save(function(error, data){
+            if(error) return response.status(500).send(error);
+            request._usuario = data;
+            next();
+          });
+        }
+
+      });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = req.query.count;

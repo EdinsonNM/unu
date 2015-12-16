@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
-
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var PlanestudiodetalleSchema = new Schema({
 	creditos : {
 		type:Number,
@@ -50,6 +50,8 @@ var PlanestudiodetalleSchema = new Schema({
 });
 
 PlanestudiodetalleSchema.plugin(mongoosePaginate);
+PlanestudiodetalleSchema.plugin(deepPopulate,{} );
+
 PlanestudiodetalleSchema.pre('save',function(next){
 	var now = new Date();
 	this.updated_at = now;

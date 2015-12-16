@@ -12,6 +12,7 @@
   angular.module('unuApp').factory('MessageFactory', function() {
     return {
       Buttons:{
+        Add: 'Agregar',
         New: 'Nuevo',
         Edit: 'Editar',
         Delete: 'Eliminar',

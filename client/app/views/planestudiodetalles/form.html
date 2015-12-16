@@ -9,102 +9,156 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content style="min-width:800px;max-height:810px; ">
-      <md-content class="md-padding">
-        <div  flex-container="row" flex-gutter="24">
+      <md-tabs md-selected="0" md-dynamic-height md-border-bottom>
 
-            <div flex-item>
+        <md-tab label="Datos del Curso">
+          <md-content class="md-padding">
+            <div  flex-container="row" flex-gutter="24">
+
+                <div flex-item>
+                  <md-input-container class="md-block">
+                    <label>Código</label>
+                    <input required name="codigo" ng-model="model._curso.codigo">
+
+                    <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                      <div ng-message="required">{{message.Required}}</div>
+                    </div>
+                  </md-input-container>
+                </div>
+                <div flex-item>
+                  <md-input-container class="md-block" >
+                    <label>Tipo</label>
+                   <md-select ng-model="model._curso.tipo" ng-disabled="cursoFound">
+                    <md-option value="General">General</md-option>
+                    <md-option value="Carrera">Carrera</md-option>
+                  </md-select>
+                </md-input-container>
+                </div>
+                <div flex-item>
+                  <md-input-container class="md-block">
+                    <label>Ciclo</label>
+                    <input required name="ciclo" ng-model="model.ciclo">
+                    <div ng-messages="myForm.ciclo.$error"  ng-if="submited">
+                      <div ng-message="required">{{message.Required}}</div>
+                    </div>
+                  </md-input-container>
+                </div>
+                <div flex-item>
+                  <md-input-container class="md-block">
+                    <label>Creditos</label>
+                    <input required name="creditos" ng-model="model.creditos">
+                    <div ng-messages="myForm.creditos.$error"  ng-if="submited">
+                      <div ng-message="required">{{message.Required}}</div>
+                    </div>
+                  </md-input-container>
+                </div>
+
+            </div>
+            <div  flex-container="row" flex-gutter="24">
+              <div flex-item>
               <md-input-container class="md-block">
-                <label>Código</label>
-                <input required name="codigo" ng-model="model._curso.codigo">
-
-                <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                <label>Nombre del Curso</label>
+                <input required name="nombre" ng-model="model._curso.nombre" ng-readonly="cursoFound">
+                <div ng-messages="myForm.nombre.$error"  ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
-            </div>
-            <div flex-item>
-              <md-input-container class="md-block" >
-                <label>Tipo</label>
-               <md-select ng-model="model._curso.tipo" ng-disabled="cursoFound">
-                <md-option value="General">General</md-option>
-                <md-option value="Carrera">Carrera</md-option>
-              </md-select>
-            </md-input-container>
-            </div>
-            <div flex-item>
-              <md-input-container class="md-block">
-                <label>Ciclo</label>
-                <input required name="ciclo" ng-model="model.ciclo">
-                <div ng-messages="myForm.ciclo.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
-            </div>
-            <div flex-item>
-              <md-input-container class="md-block">
-                <label>Creditos</label>
-                <input required name="creditos" ng-model="model.creditos">
-                <div ng-messages="myForm.creditos.$error"  ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
+              </diV>
             </div>
 
-        </div>
-        <div  flex-container="row" flex-gutter="24">
-          <div flex-item>
-          <md-input-container class="md-block">
-            <label>Nombre del Curso</label>
-            <input required name="nombre" ng-model="model._curso.nombre" ng-readonly="cursoFound">
-            <div ng-messages="myForm.nombre.$error"  ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+
+               <div  flex-container="row" flex-gutter="24">
+
+                   <div flex-item>
+                     <md-input-container class="md-block">
+                       <label>Horas Teoria</label>
+                       <input required name="horas_teoria" ng-model="model.horas_teoria">
+                       <div ng-messages="myForm.horas_teoria.$error"  ng-if="submited">
+                         <div ng-message="required">{{message.Required}}</div>
+                       </div>
+                     </md-input-container>
+                   </div>
+                   <div flex-item>
+                     <md-input-container class="md-block">
+                       <label>Horas Práctica</label>
+                       <input required name="horas_practica" ng-model="model.horas_practica">
+                       <div ng-messages="myForm.horas_practica.$error"  ng-if="submited">
+                         <div ng-message="required">{{message.Required}}</div>
+                       </div>
+                     </md-input-container>
+                   </div>
+                   <div flex-item>
+                     <md-input-container class="md-block">
+                       <label>Horas Laboratorio</label>
+                       <input required name="horas_laboratorio" ng-model="model.horas_laboratorio">
+                       <div ng-messages="myForm.horas_laboratorio.$error"  ng-if="submited">
+                         <div ng-message="required">{{message.Required}}</div>
+                       </div>
+                     </md-input-container>
+                   </div>
+                   <div flex-item>
+                     <md-input-container class="md-block">
+                       <label>Total Horas</label>
+                       <input required name="horas_total" ng-model="model.horas_total">
+                       <div ng-messages="myForm.horas_total.$error"  ng-if="submited">
+                         <div ng-message="required">{{message.Required}}</div>
+                       </div>
+                     </md-input-container>
+                   </div>
+               </div>
+          </md-content>
+        </md-tab>
+        <md-tab label="Requisitos">
+          <md-content class="md-padding window-modal-content">
+            <div flex  layout="row" layout-sm="row">
+              <div flex>
+                <md-input-container class="md-block">
+                  <label>Requisito</label>
+                  <md-select ng-model="_requisito" ng-model-options="{trackBy: '$value._id'}">
+                    <md-option ng-repeat="requisito in requisitos" ng-value="requisito">
+                      {{requisito._curso.nombre}}
+                    </md-option>
+                  </md-select>
+                  <md-button class="md-primary" ng-click="AgregarRequisito()">{{Buttons.Add}}</md-button>
+                  <div ng-messages="myForm.facultad.$error" ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+              </div>
+
             </div>
-          </md-input-container>
-          </diV>
-        </div>
-
-
-           <div  flex-container="row" flex-gutter="24">
-
-               <div flex-item>
-                 <md-input-container class="md-block">
-                   <label>Horas Teoria</label>
-                   <input required name="horas_teoria" ng-model="model.horas_teoria">
-                   <div ng-messages="myForm.horas_teoria.$error"  ng-if="submited">
-                     <div ng-message="required">{{message.Required}}</div>
-                   </div>
-                 </md-input-container>
-               </div>
-               <div flex-item>
-                 <md-input-container class="md-block">
-                   <label>Horas Práctica</label>
-                   <input required name="horas_practica" ng-model="model.horas_practica">
-                   <div ng-messages="myForm.horas_practica.$error"  ng-if="submited">
-                     <div ng-message="required">{{message.Required}}</div>
-                   </div>
-                 </md-input-container>
-               </div>
-               <div flex-item>
-                 <md-input-container class="md-block">
-                   <label>Horas Laboratorio</label>
-                   <input required name="horas_laboratorio" ng-model="model.horas_laboratorio">
-                   <div ng-messages="myForm.horas_laboratorio.$error"  ng-if="submited">
-                     <div ng-message="required">{{message.Required}}</div>
-                   </div>
-                 </md-input-container>
-               </div>
-               <div flex-item>
-                 <md-input-container class="md-block">
-                   <label>Total Horas</label>
-                   <input required name="horas_total" ng-model="model.horas_total">
-                   <div ng-messages="myForm.horas_total.$error"  ng-if="submited">
-                     <div ng-message="required">{{message.Required}}</div>
-                   </div>
-                 </md-input-container>
-               </div>
-           </div>
-      </md-content>
+            <div flex  layout="row" layout-sm="row">
+              <div flex>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>
+                      Código
+                    </th>
+                    <th>
+                      Curso
+                    </th>
+                    <th>
+                      Ciclo
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="req in model._requisitos">
+                    <td>
+                      {{req._curso.codigo}}
+                    </td>
+                    <td>
+                      {{req._curso.nombre}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+          </md-content>
+        </md-tab>
+  </md-tabs>
       <div class="dialog__actions">
           <div class="pull-left">
             <md-checkbox ng-model="model.activo">
@@ -114,7 +168,6 @@
          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </div>
-    </md-dialog-content>
     <md-dialog-actions layout="row">
 
     </md-dialog-actions>

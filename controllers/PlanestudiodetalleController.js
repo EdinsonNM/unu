@@ -7,6 +7,11 @@ module.exports=function(){
       controller.relations(true);
       controller.hints(true);
 
+      controller.query(function (request, response, next) {
+        request.baucis.query.deepPopulate('_curso');
+        next();
+      });
+
       //custom methods
       controller.get('/methods/paginate', function(req, res){
       	var limit = req.query.count;

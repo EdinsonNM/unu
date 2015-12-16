@@ -82,13 +82,22 @@
           $scope.cursoFound = false;
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'}};
+          $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'},_requisitos:[]};
           $scope.model._planestudio = planestudios._id;
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
           var tempFilterText = '', filterTextTimeout;
           var serviceCurso = Restangular.all('cursos');
           var service = Restangular.all('planestudiodetalles');
+          var LoadRequisitos = function(){
+            service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
+            .then(function(data){
+              $scope.requisitos = data;
+            });
+          };
+          $scope.AgregarRequisito = function(){
+            $scope.model._requisitos.push($scope._requisito);
+          };
           $scope.$watch('model._curso.codigo', function (val) {
             if(val.length>0){
               if (filterTextTimeout){
@@ -134,6 +143,8 @@
           $scope.Cancel = function(){
             $mdDialog.hide();
           };
+
+          new LoadRequisitos();
         }
       });
     };
