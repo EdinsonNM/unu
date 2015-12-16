@@ -41,15 +41,14 @@
             </div>
           </md-input-container>
         </div>
-
       </div>
 
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
             <label>Username</label>
-            <input required name="username" ng-model="model.usuario.username">
-            <div ng-messages="myForm.usuario.username.$error" ng-if="submited">
+            <input required name="username" ng-model="model._usuario.username">
+            <div ng-messages="myForm._usuario.username.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -57,9 +56,9 @@
 
         <div flex>
           <md-input-container class="md-block">
-            <label>Password</label>
-            <input required name="password" ng-model="model.usuario.password">
-            <div ng-messages="myForm.usuario.confirmpass.$error" ng-if="submited">
+            <label>Contraseña</label>
+            <input required name="password" ng-model="model._usuario.password">
+            <div ng-messages="myForm._usuario.password.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -67,9 +66,12 @@
 
         <div flex>
           <md-input-container class="md-block">
-            <label>Confirm Password</label>
-            <input required name="confirmpass" ng-model="">
-            <div ng-messages="myForm.usuario.confirmpass.$error" ng-if="submited">
+            <label>Grupo</label>
+            <md-select ng-model="model._usuario._grupo" disabled>
+             <md-option value="ALUMNO" selected>Alumno</md-option>
+           </md-select>
+            <!--input required name="grupo" ng-model="myForm.usuario.grupo._id"-->
+            <div ng-messages="myForm.usuario.grupo._id.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -81,8 +83,8 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Email</label>
-            <input required name="email" ng-model="model.usuario.email">
-            <div ng-messages="myForm.usuario.email.$error" ng-if="submited">
+            <input required name="email" ng-model="model._usuario.email">
+            <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
