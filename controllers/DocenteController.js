@@ -1,5 +1,6 @@
 var model = require('../models/DocenteModel.js');
 var Usuario = require('../models/UsuarioModel.js');
+var Grupo = require('../models/GrupoModel.js');
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -10,15 +11,44 @@ module.exports = function() {
 
       //custom methods
 
+      controller.get('/model/tiposDedicacion', function(req, res, next){
+        var enumValues = model.schema.path('tipoDedicacion').enumValues;
+        res.send(enumValues);
+      });
+      controller.get('/model/condiciones', function(req, res, next){
+        var enumValues = model.schema.path('condicion').enumValues;
+        res.send(enumValues);
+      });
+
+
       controller.query('post', function (request, response, next) {
         if(request._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           var usuario = new Usuario(request._usuario);
-          usuario.save(function(error, data){
-            if(error) return response.status(500).send(error);
-            request._usuario = data;
-            next();
+          Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
+            if(grupoErr) next(grupoErr);
+
+            Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
+              console.log(objUsuario);
+              if(usuarioErr){next(usuarioErr);}
+
+              if(objUsuario){
+                return response.status(412).send("El usuario ya existe");
+              }else{
+                console.log("El usuario no existe, entonces lo guardamos");
+                usuario._grupo =objGrupo._id;
+                console.log("Ahora guardaremos al puto usuario");
+                usuario.save(function(error, data){
+                  console.log("dentro de save");
+                  if(error) return response.status(500).send(error);
+                  request._usuario = data;
+                  next();
+                });
+              }
+            });
           });
+        }else{
+          return response.status(500).send("No se ha enviado el usuario");
         }
 
       });

@@ -46,7 +46,11 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Condición</label>
-            <input required name="condicion" ng-model="model.condicion">
+            <md-select ng-model="model.condicion" name="condicion" required>
+              <md-option ng-repeat="cond in condiciones" ng-value="cond">
+                {{cond}}
+              </md-option>
+            </md-select>
             <div ng-messages="myForm.condicion.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -55,8 +59,12 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Grado</label>
-            <input required name="grado" ng-model="model.grado">
-            <div ng-messages="myForm.grado.$error" ng-if="submited">
+            <md-select ng-model="model._grado" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="gra in gradosdocente" ng-value="gra">
+                {{gra.nombre}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm._grado.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -64,7 +72,11 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Tipo Dedicación</label>
-            <input required name="tipoDedicacion" ng-model="model.tipoDedicacion">
+            <md-select ng-model="model.tipoDedicacion" name="tipoDedicacion" required>
+              <md-option ng-repeat="td in tiposDedicacion" ng-value="td">
+                {{td}}
+              </md-option>
+            </md-select>
             <div ng-messages="myForm.tipoDedicacion.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -92,7 +104,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Nombre de Usuario</label>
-            <input required name="username" ng-model="model.usuario.username">
+            <input required name="username" ng-model="model._usuario.username">
             <div ng-messages="myForm._usuario.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -101,7 +113,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Contraseña</label>
-            <input required name="username" ng-model="model.usuario.password">
+            <input required name="username" ng-model="model._usuario.password">
             <div ng-messages="myForm._usuario.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -110,8 +122,8 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Correo Electrónico</label>
-            <input required name="password" ng-model="model.usuario.email">
-            <div ng-messages="myForm.usuario.email.$error" ng-if="submited">
+            <input required name="password" ng-model="model._usuario.email">
+            <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
