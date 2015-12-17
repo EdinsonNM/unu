@@ -71,6 +71,9 @@
           $scope.title = MessageFactory.Form.New.replace('{element}',name);
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
+          Restangular.all('pabellones').getList().then(function(data){
+            $scope.pabellones = data;
+          });
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {

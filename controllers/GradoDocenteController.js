@@ -38,13 +38,17 @@ module.exports=function(){
       });
 
       controller.post('/seed/data', function(req,res,next){
-        var grado1=new model({nombre:'Grado 1'});
+        /*model.remove({}, function(err) {
+           console.log('Data de GradoDocente eliminada');
+        });*/
+
+        var grado1=new model({nombre:'BACHILLER'});
         grado1.save();
-        var grado2=new model({nombre:'Grado 2'});
+        var grado2=new model({nombre:'MAGISTER'});
         grado2.save();
-        var grado3=new model({nombre:'Grado 3'});
+        var grado3=new model({nombre:'DOCTOR'});
         grado3.save();
-        var grado4=new model({nombre:'Grado 4'});
+        var grado4=new model({nombre:'PHD'});
         grado4.save();
         res.send({success:'true', message:'Data creada correctamente en GradoDocente'});
         next();

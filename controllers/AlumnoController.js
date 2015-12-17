@@ -1,4 +1,7 @@
 var model = require('../models/AlumnoModel.js');
+var Usuario = require('../models/UsuarioModel.js');
+var Grupo = require('../models/GrupoModel.js');
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -7,6 +10,37 @@ module.exports = function() {
       controller.fragment('/alumnos');
 
       //custom methods
+      controller.query('post', function (request, response, next) {
+        if(request._usuario){
+          //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
+          var usuario = new Usuario(request._usuario);
+          Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
+            if(grupoErr) next(grupoErr);
+
+            Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
+              console.log(objUsuario);
+              if(usuarioErr){next(usuarioErr);}
+
+              if(objUsuario){
+                return response.status(412).send("El usuario ya existe");
+              }else{
+                console.log("El usuario no existe, entonces lo guardamos");
+                usuario._grupo =objGrupo._id;
+                console.log("Ahora guardaremos al puto usuario");
+                usuario.save(function(error, data){
+                  console.log("dentro de save");
+                  if(error) return response.status(500).send(error);
+                  request._usuario = data;
+                  next();
+                });
+              }
+            });
+          });
+        }else{
+          return response.status(500).send("No se ha enviado el usuario");
+        }
+
+      });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = req.query.count;

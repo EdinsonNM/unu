@@ -25,7 +25,7 @@ module.exports = function() {
         if(request._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           var usuario = new Usuario(request._usuario);
-          Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
+          Grupo.findOne({codigo:'DOCENTE'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
 
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
