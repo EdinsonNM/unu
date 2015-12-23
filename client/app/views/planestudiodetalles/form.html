@@ -72,7 +72,7 @@
                    <div flex-item>
                      <md-input-container class="md-block">
                        <label>Horas Teoria</label>
-                       <input required name="horas_teoria" ng-model="model.horas_teoria">
+                       <input required name="horas_teoria" ng-model="model.horas_teoria" ng-change="CalcularTotalHoras()">
                        <div ng-messages="myForm.horas_teoria.$error"  ng-if="submited">
                          <div ng-message="required">{{message.Required}}</div>
                        </div>
@@ -81,7 +81,7 @@
                    <div flex-item>
                      <md-input-container class="md-block">
                        <label>Horas Práctica</label>
-                       <input required name="horas_practica" ng-model="model.horas_practica">
+                       <input required name="horas_practica" ng-model="model.horas_practica" ng-change="CalcularTotalHoras()">
                        <div ng-messages="myForm.horas_practica.$error"  ng-if="submited">
                          <div ng-message="required">{{message.Required}}</div>
                        </div>
@@ -90,7 +90,7 @@
                    <div flex-item>
                      <md-input-container class="md-block">
                        <label>Horas Laboratorio</label>
-                       <input required name="horas_laboratorio" ng-model="model.horas_laboratorio">
+                       <input required name="horas_laboratorio" ng-model="model.horas_laboratorio" ng-change="CalcularTotalHoras()">
                        <div ng-messages="myForm.horas_laboratorio.$error"  ng-if="submited">
                          <div ng-message="required">{{message.Required}}</div>
                        </div>
@@ -99,7 +99,7 @@
                    <div flex-item>
                      <md-input-container class="md-block">
                        <label>Total Horas</label>
-                       <input required name="horas_total" ng-model="model.horas_total">
+                       <input required name="horas_total" ng-model="model.horas_total" readonly>
                        <div ng-messages="myForm.horas_total.$error"  ng-if="submited">
                          <div ng-message="required">{{message.Required}}</div>
                        </div>
@@ -119,13 +119,18 @@
                       {{requisito._curso.nombre}}
                     </md-option>
                   </md-select>
-                  <md-button class="md-primary" ng-click="AgregarRequisito()">{{Buttons.Add}}</md-button>
+
                   <div ng-messages="myForm.facultad.$error" ng-if="submited">
                     <div ng-message="required">{{message.Required}}</div>
                   </div>
                 </md-input-container>
               </div>
+              <div >
+                <md-button class="md-icon-button" aria-label="{{Buttons.Add}}">
+                    <md-icon md-font-icon="fa fa-plus fa-lg" ng-click="AgregarRequisito()"></md-icon>
+                </md-button>
 
+              </div>
             </div>
             <div flex  layout="row" layout-sm="row">
               <div flex>

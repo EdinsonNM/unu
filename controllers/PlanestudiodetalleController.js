@@ -7,8 +7,9 @@ module.exports=function(){
       controller.relations(true);
       controller.hints(true);
 
-      controller.query(function (request, response, next) {
-        request.baucis.query.deepPopulate('_curso');
+      // middlewares
+      controller.query('get',function (request, response, next) {
+        request.baucis.query.populate([{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}}]);
         next();
       });
 
@@ -22,7 +23,7 @@ module.exports=function(){
       		{
             page: page,
             limit: limit,
-            populate: ['_planestudio','_curso']
+            populate: [{path:'_planestudio'},{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}}]
           },
       		function(err, results, pageCount, itemCount){
             var obj = {

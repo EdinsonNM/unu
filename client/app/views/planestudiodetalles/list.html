@@ -16,11 +16,23 @@
 
   <tbody ng-repeat="group in $groups">
           <tr class="ng-table-group">
-            <td colspan="{{$columns.length}}">
+            <td>
                 <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                     <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
                     <strong>Ciclo: {{group.value}} </strong>
                 </a>
+            </td>
+            <td>
+              <strong>TOTAL</strong>
+            </td>
+            <td>
+              <strong>{{getCreditosCiclo(group.data)}}</strong>
+            </td>
+            <td>
+                <strong>{{getHorasCiclo(group.data)}}</strong>
+            </td>
+            <td colspan="{{$columns.length-4}}">
+
             </td>
         </tr>
         <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
@@ -31,7 +43,7 @@
             </td>
             <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
             <td data-title="'N° Creditos'">{{item.creditos}}</td>
-            <td data-title="'N° Horas'">{{item.total_horas}}</td>
+            <td data-title="'N° Horas'">{{item.horas_total}}</td>
             <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
             <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
             <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>

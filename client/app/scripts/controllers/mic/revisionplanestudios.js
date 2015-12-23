@@ -33,8 +33,10 @@
       name: 'Validación del Plan de Estudios',
       form:'views/planestudiodetalles/form.html',
       route:'planestudiodetalles',
-      routeAsignaturas:'mic_asignaturas'
+      routeAsignaturas:'mic_asignaturas',
+      routePlan:'planestudios'
     };
+
 
     Restangular.one('planestudios', LOCAL.planestudioId).get({single: true}).then(function(data){
       $scope.UI.planestudios = data;
@@ -55,19 +57,29 @@
         $scope.escuelas = data;
       });
     };
-
-    ListAsignaturas = function(){
-      var service = Restangular.all(LOCAL.routeAsignaturas);
-      service.getList({populate:{path:'_curso'}}).then(function(data){
-        $scope.UI.asignaturas = data;
+    $scope.LoadPlanEstudios = function LoadPlanEstudios(){
+      $scope.planes = [];
+      var servicePlan = Restangular.all(LOCAL.routePlan);
+      servicePlan.getList({conditions:{_escuela:$scope.filter._escuela._id},populate:'_escuela'}).then(function(data){
+        $scope.planes = data;
       });
     };
+
+    $scope.Refresh = function Refresh(){
+      $scope.UI.selected = null;
+      $scope.UI.editMode = false;
+      $scope.tableParams.filter({_planestudio: $scope.filter._planestudio._id});
+      $scope.tableParams.reload();
+    };
+
+
+
 
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
         count: 500,
-        filter: {_planestudio: LOCAL.planestudioId}
+        filter: {_planestudio: 0}
       }, {
         total: 0,
         groupBy: 'ciclo',
@@ -88,6 +100,14 @@
       $scope.tableParams.settings({counts:[]});
     };
 
+    ListAsignaturas = function(){
+      var service = Restangular.all(LOCAL.routeAsignaturas);
+      service.getList({populate:{path:'_curso'}}).then(function(data){
+        $scope.UI.asignaturas = data;
+      });
+    };
+
+
     $scope.RevisarPlan = function(){
       angular.forEach($scope.UI.asignaturas,function(asignatura){
         var existe = false;
@@ -105,11 +125,7 @@
       });
     };
 
-    $scope.Refresh = function Refresh(){
-      $scope.UI.selected = null;
-      $scope.UI.editMode = false;
-      $scope.tableParams.reload();
-    };
+  
 
     $scope.New = function New($event){
       var parentEl = angular.element(document.body);

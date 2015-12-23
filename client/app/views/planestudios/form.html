@@ -75,9 +75,7 @@
            </div>
            <div  flex  layout="row" layout-sm="column">
             <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-              <md-checkbox ng-model="model.activo">
-                  Activo
-                </md-checkbox>
+              <md-button class="md-warn">{{model.estado}}</md-button>
             </div>
             <div flex="70" layout="row"  layout-align="end center" flex-sm="100">
               <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>

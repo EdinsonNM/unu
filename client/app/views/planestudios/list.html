@@ -35,11 +35,12 @@
 <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
   <tbody>
     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-    <tr ng-repeat="item in $data">
-      <td class="text-left" data-title="'Facultad'" sortable="_facultad">
-        <md-checkbox ng-model="item.active" ng-change="EnabledEdit(item)">
+    <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)">
+      <td class="col- table-column-select">
+        <md-checkbox ng-model="item.active" ></md-checkbox>
+      </td>
+      <td class="text-left" data-title="'Nombre'" sortable="_facultad">
           {{item.nombre}}
-        </md-checkbox>
       </td>
       <td class="text-left" data-title="'Escuela'" sortable="_escuela">
         {{item._escuela.nombre}}
@@ -51,10 +52,12 @@
         {{item.resolucion}}
       </td>
       <td class="text-left" data-title="'Fecha Resolución'">
-        {{item.fecha_resolucion | date:'dd/MM/yyyy'}}        
+        {{item.fecha_resolucion | date:'dd/MM/yyyy'}}
       </td>
       <td class="text-left" data-title="'Estado'">
-        {{item.estado.nombre}}
+        {{item.estado}}
+        <span ng-switch="item.estado">
+        </span>
       </td>
     </tr>
   </tbody>

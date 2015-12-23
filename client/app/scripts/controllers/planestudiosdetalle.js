@@ -40,11 +40,12 @@
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
-        count: 10,
+        count: 1000,
         filter: {_planestudio: LOCAL.planestudioId}
       }, {
         total: 0,
         groupBy: 'ciclo',
+         counts: [] ,
         getData: function($defer, params) {
           var query;
           query = params.url();
@@ -59,6 +60,22 @@
           });
         }
       });
+    };
+
+    $scope.getCreditosCiclo = function(data){
+      var total = 0;
+      angular.forEach(data,function(item){
+        total+= item.creditos;
+      });
+      return total;
+    };
+
+    $scope.getHorasCiclo = function(data){
+      var total = 0;
+      angular.forEach(data,function(item){
+        total+= item.horas_total;
+      });
+      return total;
     };
 
     $scope.Refresh = function Refresh(){
@@ -144,6 +161,10 @@
             $mdDialog.hide();
           };
 
+          $scope.CalcularTotalHoras = function(){
+            $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
+          };
+
           new LoadRequisitos();
         }
       });
@@ -157,13 +178,21 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          model: Restangular.copy($scope.UI.selected),
+          planestudios: $scope.UI.planestudios
         },
-        controller: function($scope, table,name, MessageFactory,model){
+        controller: function($scope, table,name, MessageFactory,model,planestudios){
           $scope.submited = false;
           $scope.model = model;
           $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
           $scope.Buttons = MessageFactory.Buttons;
+          var service = Restangular.all('planestudiodetalles');
+          var LoadRequisitos = function(){
+            service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
+            .then(function(data){
+              $scope.requisitos = data;
+            });
+          };
           $scope.Save = function(form) {
             $scope.submited = true;
             if (form.$valid) {
@@ -174,9 +203,18 @@
               });
             }
           };
+          $scope.AgregarRequisito = function(){
+            $scope.model._requisitos.push($scope._requisito);
+          };
           $scope.Cancel = function(){
             $mdDialog.hide();
           };
+
+          $scope.CalcularTotalHoras = function(){
+            $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
+          };
+
+          new LoadRequisitos();
         }
       });
     };

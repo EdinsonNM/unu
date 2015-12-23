@@ -1,0 +1,297 @@
+<md-subheader class="md-primary " style="margin-right: 0">
+  <h3>{{UI.title}}</h3>
+</md-subheader>
+
+<div layout="row" layout-align="center start" layout-margin layout-fill>
+  <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;min-height:400px">
+
+    <!--tabla: contiene el listado de elementos-->
+    <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+    <!--form content-->
+    <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom>
+
+      <md-tab label="Datos">
+        <md-content class="md-padding">
+          <div  flex-container="row" flex-gutter="24">
+
+              <div flex-item>
+                <md-input-container class="md-block">
+                  <label>Facultad</label>
+                  <input required name="codigo"  value="Facultad de Ingenieria Civil y de Sistemas">
+
+                  <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div flex-item>
+                <md-input-container class="md-block">
+                  <label>Escuela</label>
+                  <input required name="codigo"  value="Ingeniería de Sistemas">
+
+                  <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div flex-item>
+                <md-input-container class="md-block">
+                  <label>Plan de Estudios</label>
+                  <input required name="ciclo"  value="2015-I">
+                  <div ng-messages="myForm.ciclo.$error"  ng-if="submited">
+                    <div ng-message="required">{{message.Required}}</div>
+                  </div>
+                </md-input-container>
+              </div>
+
+
+          </div>
+          <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+            <md-input-container class="md-block">
+              <label>Nombre del Curso</label>
+              <input required name="nombre" value="Matemática Básica">
+              <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            </diV>
+          </div>
+          <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+            <md-input-container class="md-block">
+              <label>Docente</label>
+              <input required name="nombre" value="Juan Perez">
+              <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            </diV>
+          </div>
+          <div  flex-container="row" flex-gutter="24">
+            <div flex-item>
+            <md-input-container class="md-block">
+              <label>Tema</label>
+                <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+              <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            </diV>
+          </div>
+
+
+             <div  flex-container="row" flex-gutter="24">
+
+                 <div flex-item>
+                   <md-input-container class="md-block">
+                     <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Duración"></md-datepicker>
+                     <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
+                       <div ng-message="required">{{message.Required}}</div>
+                     </div>
+                   </md-input-container>
+                 </div>
+                 <div flex-item>
+                   <md-input-container class="md-block">
+                     <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Fecha"></md-datepicker>
+                     <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
+                       <div ng-message="required">{{message.Required}}</div>
+                     </div>
+                   </md-input-container>
+                 </div>
+                 <div flex-item>
+
+                 </div>
+                 <div flex-item>
+                  
+                 </div>
+             </div>
+        </md-content>
+      </md-tab>
+      <md-tab label="Propósito">
+        <md-content class="md-padding">
+          <md-input-container class="md-block">
+            <label>Propósito de la Sesión de Aprendizaje</label>
+            <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="10"></textarea>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Secuencia Didáctica">
+        <md-content class="md-padding">
+
+          <md-button class="md-raised" ng-click="AddUnidad()">Agregar</md-button>
+          <table class="table table-bordered" ng-repeat="unidad in UI.unidades">
+            <thead>
+              <tr>
+                <th colspan="3">
+                  <h3>SECUENCIA {{$index+1}}: {{model.unidad[$index].titulo}}</h3>
+                </th>
+              </tr>
+              <tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="3">
+                  <h4>Estrategias Metodológicas</h4>
+                </td>
+              </tr>
+            <tr>
+              <td colspan="3">
+                <div flex layout="row" layout-sm="row">
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Inicio</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Proceso</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Cierre</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+
+                </div>
+              </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <h4>Tiempo</h4>
+                </td>
+              </tr>
+            <tr>
+              <td colspan="3">
+                <div flex layout="row" layout-sm="row">
+                  <div flex>
+                    <md-input-container class="md-block">
+                        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Proceso"></md-datepicker>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                        <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Cierre"></md-datepicker>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+
+                </div>
+              </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <h4>Recursos</h4>
+                </td>
+              </tr>
+            <tr>
+              <td colspan="3">
+                <div flex layout="row" layout-sm="row">
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Inicio</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Proceso</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+                  <div flex>
+                    <md-input-container class="md-block">
+                      <label>Cierre</label>
+                        <textarea ng-model="user.biography" columns="1" md-maxlength="500" rows="2"></textarea>
+                      <div ng-messages="myForm.unidad.$error" ng-if="submited">
+                        <div ng-message="required">{{message.Required}}</div>
+                      </div>
+                    </md-input-container>
+
+                  </div>
+
+                </div>
+              </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <h4>Evaluación - Indicadores</h4>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <md-input-container class="md-block">
+                    <label>Criterios de Desempeño</label>
+                    <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+                  </md-input-container>
+                </td>
+
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <h4>Evaluación - Instrumentos</h4>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <md-input-container class="md-block">
+                    <label>Criterios de Desempeño</label>
+                    <textarea ng-model="user.biography" columns="1" md-maxlength="150" rows="3"></textarea>
+                  </md-input-container>
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </md-content>
+      </md-tab>
+
+    </md-tabs>
+    <!--end form content-->
+
+  </md-content>
+</div>
+
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-click="Save($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}">
+  <md-tooltip md-direction="left">Guardar</md-tooltip>
+  <md-icon md-font-icon="fa fa fa-floppy-o fa-lg"></md-icon>
+</md-button>

@@ -202,6 +202,16 @@
       url: '/mic/revision-silabus',
       templateUrl: 'views/mic/revisionsilabus/list.html',
       controller: 'MICRevisionSilabusCtrl'
+    })
+    .state('app.sesionaprendizaje', {
+      url: '/mic/sesionaprendizaje',
+      templateUrl: 'views/mic/sesionaprendizaje/list.html',
+      controller: 'MICSesionAprendizajeCtrl'
+    })
+    .state('app.mic_sesionaprendizaje_detalle', {
+      url: '/mic/sesionaprendizaje/:id',
+      templateUrl: 'views/mic/sesionaprendizaje/form.html',
+      controller: 'MICSesionaprendizajeDetalleCtrl'
     });
   }).constant('TYPE_ALUMNO', {
     INGRESANTE: 'ING'
