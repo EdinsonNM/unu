@@ -66,22 +66,6 @@
 
         <div flex>
           <md-input-container class="md-block">
-            <label>Grupo</label>
-            <md-select ng-model="model._usuario._grupo" disabled>
-             <md-option value="ALUMNO" selected>Alumno</md-option>
-           </md-select>
-            <!--input required name="grupo" ng-model="myForm.usuario.grupo._id"-->
-            <div ng-messages="myForm.usuario.grupo._id.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-
-      </div>
-
-      <div flex layout="row" layout-sm="row">
-        <div flex>
-          <md-input-container class="md-block">
             <label>Email</label>
             <input required name="email" ng-model="model._usuario.email">
             <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
@@ -89,7 +73,10 @@
             </div>
           </md-input-container>
         </div>
+
       </div>
+
+
 
       <div flex layout="row" layout-sm="column">
         <div flex="30" layout-align="start start" flex-sm="100" class="text-left">

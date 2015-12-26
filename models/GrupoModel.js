@@ -26,4 +26,4 @@ GrupoSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Grupo', GrupoSchema).plural('facultades');
+module.exports = mongoose.model('Grupo', GrupoSchema).plural('grupos');

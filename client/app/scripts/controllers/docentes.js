@@ -18,7 +18,9 @@
       title: 'Listado de Docentes',
       editMode: false,
       selected:null,
-      customActions:[]
+      customActions:[],
+      tiposDedicacion: [],
+      condiciones: []
     };
 
     var LOCAL ={
@@ -28,6 +30,14 @@
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
+
+    service.customGET('model/tiposDedicacion', {}).then(function(result){
+      $scope.UI.tiposDedicacion = result;
+    });
+    service.customGET('model/condiciones', {}).then(function(result){
+      //$scope.UI.condiciones = result.map(function(elem){ return {id:elem, name: elem};});
+      $scope.UI.condiciones = result;
+    });
 
     List = function() {
       $scope.tableParams = new ngTableParams({
@@ -64,16 +74,24 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          condiciones: $scope.UI.condiciones,
+          tiposDedicacion: $scope.UI.tiposDedicacion
         },
-        controller: function($scope, table,name,MessageFactory){
+        controller: function($scope, table, name, condiciones, tiposDedicacion, MessageFactory){
           $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
+          $scope.title = MessageFactory.Form.New.replace('{element}', name);
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
+          $scope.condiciones= condiciones;
+          $scope.tiposDedicacion= tiposDedicacion;
           Restangular.all('facultades').getList().then(function(data){
             $scope.facultades = data;
           });
+          Restangular.all('gradodocentes').getList().then(function(data){
+            $scope.gradosdocente = data;
+          });
+          console.log("condiciones:", $scope.condiciones);
 
           $scope.Save = function(form) {
             $scope.submited = true;

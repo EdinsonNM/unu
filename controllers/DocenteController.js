@@ -1,5 +1,6 @@
 var model = require('../models/DocenteModel.js');
 var Usuario = require('../models/UsuarioModel.js');
+var Grupo = require('../models/GrupoModel.js');
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -9,16 +10,35 @@ module.exports = function() {
       controller.fragment('/docentes');
 
       //custom methods
+      controller.get('/model/tiposDedicacion', function(req, res, next){
+        var enumValues = model.schema.path('tipoDedicacion').enumValues;
+        res.send(enumValues);
+      });
+      controller.get('/model/condiciones', function(req, res, next){
+        var enumValues = model.schema.path('condicion').enumValues;
+        res.send(enumValues);
+      });
 
       controller.request('post', function (request, response, next) {
         if(request._usuario){
-          //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
-          var usuario = new Usuario(request._usuario);
-          usuario.save(function(error, data){
-            if(error) return response.status(500).send(error);
-            request._usuario = data;
-            next();
+          Grupo.findOne({codigo:'DOCENTE'},function(grupoErr, objGrupo){
+            if(grupoErr) return next(grupoErr);
+            var usuario = new Usuario(request._usuario);
+            usuario._grupo = objGrupo._id;
+            Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
+              if(usuarioErr) return next(usuarioErr);
+              if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
+
+              usuario.save(function(error, data){
+                if(error) return response.status(500).send(error);
+                request._usuario = data._id;
+                next();
+              });
+
+            });
           });
+        }else{
+          return response.status(500).send({message:"No se ha enviado el usuario"});
         }
 
       });
