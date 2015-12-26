@@ -18,7 +18,7 @@
           'default': '600'
         })
         .accentPalette('pink', {
-          'default': '400'
+          'default': '500'
         })
         .warnPalette('defaultPrimary');
 

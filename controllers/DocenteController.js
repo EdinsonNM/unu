@@ -10,7 +10,7 @@ module.exports = function() {
 
       //custom methods
 
-      controller.query('post', function (request, response, next) {
+      controller.request('post', function (request, response, next) {
         if(request._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           var usuario = new Usuario(request._usuario);

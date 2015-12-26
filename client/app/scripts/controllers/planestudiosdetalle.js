@@ -16,7 +16,7 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Cursos del Plan de Estudios',
+      title: 'Plan de Estudios',
       editMode: false,
       selected:null,
       customActions:[],
@@ -30,7 +30,7 @@
       route:'planestudiodetalles'
     };
 
-    Restangular.one('planestudios', LOCAL.planestudioId).get({single: true}).then(function(data){
+    Restangular.one('planestudios', LOCAL.planestudioId).get({single: true,populate:"_periodo _escuela"}).then(function(data){
       $scope.UI.planestudios = data;
     });
 
@@ -111,6 +111,17 @@
             .then(function(data){
               $scope.requisitos = data;
             });
+          };
+
+          $scope.FilterRequisitos = function(text){
+            var data = [];
+            angular.forEach($scope.requisitos,function(item){
+              var index = item._curso.nombre.search(new RegExp(text,'i'));
+              if(index>=0){
+                data.push(item);
+              }
+            });
+            return data;
           };
           $scope.AgregarRequisito = function(){
             $scope.model._requisitos.push($scope._requisito);

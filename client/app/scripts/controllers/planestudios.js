@@ -33,6 +33,13 @@
     $scope.UI.customActions.push({icon:'fa-book',label:'Detalle Plan de Estudio', onclick: function(){
       $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
     }});
+    $scope.UI.customActions.push({icon:'fa-send',label:'Enviar para aprobación', onclick: function(){
+      var plan = Restangular.copy($scope.UI.selected);
+      plan.estado = 'Pendiente';
+      plan.put().then(function(){
+        $scope.ListPlanEstudios();
+      });
+    }});
     //end custom actions
 
     var LoadFacultades = function LoadFacultades() {

@@ -1,4 +1,5 @@
 var model = require('../models/AlumnoModel.js');
+var Usuario = require('../models/UsuarioModel.js');
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -7,6 +8,23 @@ module.exports = function() {
       controller.fragment('/alumnos');
 
       //custom methods
+      controller.request('post',function(request,response,next){
+        if(request._usuario){
+          Usuario.findOne({username:request._usuario.username})
+          .then(function(error,data){
+            if(error) return response.status(500).send({message:"ERROR INTERNAL CONNECTION",error:error});
+            if(!data){
+
+            }
+          });
+          var usuario = new Usuario(request._usuario);
+          usuario.save(function(error, data){
+            if(error) return response.status(500).send(error);
+            request._usuario = data;
+            next();
+          });
+        }
+      });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = req.query.count;

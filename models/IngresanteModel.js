@@ -3,6 +3,25 @@ var Schema   = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 
 var IngresanteSchema = new Schema({
+	//es la modalidad de ingreso
+	_modalidad:{
+		type:Schema.Types.ObjectId,
+    ref:'ModalidadIngreso',
+    required:true
+	},
+	constanciaIngreso:{
+		existe: Boolean,
+		created_at: Date,
+		numero:String //nro documento de la constancia de ingreso
+	},
+	tipoIngresante:{
+		type:String,
+		enum:['Ordinario','Estudiante 4to y 5to']
+	},
+	_documentosPresentados:[{
+		type:Schema.Types.ObjectId,
+    ref:'DocumentoIngresante'
+	}],
 	codigo: {
 		type:String,
 		required:true

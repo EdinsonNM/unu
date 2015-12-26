@@ -112,7 +112,7 @@
           <md-content class="md-padding window-modal-content">
             <div flex  layout="row" layout-sm="row">
               <div flex>
-                <md-input-container class="md-block">
+                <!--md-input-container class="md-block">
                   <label>Requisito</label>
                   <md-select ng-model="_requisito" ng-model-options="{trackBy: '$value._id'}">
                     <md-option ng-repeat="requisito in requisitos" ng-value="requisito">
@@ -123,7 +123,25 @@
                   <div ng-messages="myForm.facultad.$error" ng-if="submited">
                     <div ng-message="required">{{message.Required}}</div>
                   </div>
-                </md-input-container>
+                </md-input-container-->
+                <md-autocomplete flex required
+                  md-input-name="requisito"
+                  md-input-minlength="2"
+                  md-input-maxlength="50"
+                  md-selected-item="_requisito"
+                  md-search-text="ctrl.searchText"
+                  md-items="requisito in FilterRequisitos(ctrl.searchText)"
+                  md-item-text="requisito._curso.nombre"
+                  md-floating-label="Requisito">
+                <md-item-template>
+                  <span md-highlight-text="ctrl.searchText">{{requisito._curso.nombre}}</span>
+                </md-item-template>
+                <div ng-messages="myForm.requisito.$error" ng-if="myForm.requisito.$touched">
+                  <div ng-message="required">{{message.Required}}</div>
+                  <div ng-message="minlength">Texto demasiado corto</div>
+                  <div ng-message="maxlength">Texto demasiado largo</div>
+                </div>
+              </md-autocomplete>
               </div>
               <div >
                 <md-button class="md-icon-button" aria-label="{{Buttons.Add}}">
@@ -155,6 +173,9 @@
                     </td>
                     <td>
                       {{req._curso.nombre}}
+                    </td>
+                    <td>
+                      {{req.ciclo}}
                     </td>
                   </tr>
                 </tbody>
