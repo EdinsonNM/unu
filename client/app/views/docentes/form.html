@@ -59,9 +59,9 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Grado</label>
-            <md-select ng-model="model._grado" ng-model-options="{trackBy: '$value._id'}">
-              <md-option ng-repeat="gra in gradosdocente" ng-value="gra">
-                {{gra.nombre}}
+            <md-select ng-model="model.grado" >
+              <md-option ng-repeat="grado in gradosdocente" ng-value="grado">
+                {{grado}}
               </md-option>
             </md-select>
             <div ng-messages="myForm._grado.$error" ng-if="submited">
@@ -105,7 +105,7 @@
           <md-input-container class="md-block">
             <label>Nombre de Usuario</label>
             <input required name="username" ng-model="model._usuario.username">
-            <div ng-messages="myForm._usuario.$error" ng-if="submited">
+            <div ng-messages="myForm.username.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -114,7 +114,7 @@
           <md-input-container class="md-block">
             <label>Contraseña</label>
             <input required name="username" ng-model="model._usuario.password">
-            <div ng-messages="myForm._usuario.$error" ng-if="submited">
+            <div ng-messages="myForm.username.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>

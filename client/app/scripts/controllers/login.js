@@ -9,11 +9,11 @@
     * # LoginCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('LoginCtrl', function($scope, UserFactory, $rootScope) {
+  angular.module('unuApp').controller('LoginCtrl',['$scope', 'UserFactory', '$rootScope', function($scope, UserFactory, $rootScope) {
     $scope.Login = function() {
       UserFactory.login($scope.user);
     };
     $scope.Reset = function() {};
-  });
+  }]);
 
 }).call(this);

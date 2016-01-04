@@ -9,7 +9,7 @@
     * # UserFactory
     * Service in the unuApp.
    */
-  angular.module('unuApp').factory('UserFactory', function(Restangular, $log, $state, $rootScope, AuthTokenFactory, ToastMD, $timeout, TYPE_GROUP) {
+  angular.module('unuApp').factory('UserFactory', ['Restangular', '$log', '$state', '$rootScope', 'AuthTokenFactory', 'ToastMD', '$timeout', 'TYPE_GROUP',function(Restangular, $log, $state, $rootScope, AuthTokenFactory, ToastMD, $timeout, TYPE_GROUP) {
     var service;
     service = Restangular.all('usuarios');
     return {
@@ -53,6 +53,6 @@
         return $rootScope.USER._grupo.menu;
       }
     };
-  });
+  }]);
 
 }).call(this);

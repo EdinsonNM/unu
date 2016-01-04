@@ -10,7 +10,9 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('AlumnosCtrl', function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('AlumnosCtrl', [
+  'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  ,function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service, service_usuario;
 
     $scope.UI = {
@@ -164,6 +166,6 @@
     };
 
     new List();
-  });
+  }]);
 
 }).call(this);

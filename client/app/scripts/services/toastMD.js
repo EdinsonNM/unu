@@ -9,7 +9,7 @@
     * # UserFactory
     * Service in the tramiteApp.
    */
-  angular.module('unuApp').factory('ToastMD', function( $mdToast) {
+  angular.module('unuApp').factory('ToastMD',['$mdToast', function( $mdToast) {
     return {
       info: function info(message){
         $mdToast.show({
@@ -40,6 +40,6 @@
         });
       }
     };
-  });
+  }]);
 
 }).call(this);

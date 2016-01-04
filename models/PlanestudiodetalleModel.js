@@ -40,6 +40,11 @@ var PlanestudiodetalleSchema = new Schema({
 		type:Schema.Types.ObjectId,
     ref:'Planestudiodetalle',
 	}],
+	estado:{
+		type: String,
+		enum:['Registrado','Observado','Aprobado'],
+		default: 'Registrado'
+	},
 	_revisiones:[{
 		created_at:{type:Date},
 		comentario:String

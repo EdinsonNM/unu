@@ -8,7 +8,7 @@
     * @description
     * # navscroll
    */
-  angular.module('unuApp').directive('navScroll', function($window) {
+  angular.module('unuApp').directive('navScroll', ['$window',function($window) {
     return function(scope, element, attrs) {
       angular.element($window).bind("scroll", function() {
         if (this.pageYOffset > 155) {
@@ -19,6 +19,6 @@
         scope.$apply();
       });
     };
-  });
+  }]);
 
 }).call(this);

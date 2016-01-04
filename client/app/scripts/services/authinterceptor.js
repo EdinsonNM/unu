@@ -9,18 +9,18 @@
     * # AuthInterceptor
     * Service in the unuApp.
    */
-  angular.module('unuApp').service('AuthInterceptor', function(AuthTokenFactory) {
+  angular.module('unuApp').service('AuthInterceptor', ['AuthTokenFactory',function(AuthTokenFactory) {
     return {
       request: function(config) {
         var token;
         token = AuthTokenFactory.getToken();
         if (token) {
           config.headers = config.headers || {};
-          config.headers.Authorization = "unu " + token;
+          config.headers.Authorization = 'unu ' + token;
         }
         return config;
       }
     };
-  });
+  }]);
 
 }).call(this);

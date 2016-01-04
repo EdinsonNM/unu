@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+  .controller('AppCtrl', ['$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
     $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
     $scope.GoTo = function(item) {
@@ -27,6 +27,6 @@
       UserFactory.logout();
     };
 
-  });
+  }]);
 
 })();

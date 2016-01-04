@@ -38,7 +38,10 @@
       //$scope.UI.condiciones = result.map(function(elem){ return {id:elem, name: elem};});
       $scope.UI.condiciones = result;
     });
-
+    service.customGET('model/grados', {}).then(function(result){
+      //$scope.UI.condiciones = result.map(function(elem){ return {id:elem, name: elem};});
+      $scope.UI.grados = result;
+    });
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
@@ -76,22 +79,21 @@
           name: LOCAL.name,
           table:$scope.tableParams,
           condiciones: $scope.UI.condiciones,
-          tiposDedicacion: $scope.UI.tiposDedicacion
+          tiposDedicacion: $scope.UI.tiposDedicacion,
+          grados: $scope.UI.grados
         },
-        controller: function($scope, table, name, condiciones, tiposDedicacion, MessageFactory){
+        controller: function($scope, table, name, condiciones, tiposDedicacion, grados, MessageFactory){
           $scope.submited = false;
           $scope.title = MessageFactory.Form.New.replace('{element}', name);
           $scope.Buttons = MessageFactory.Buttons;
           $scope.message = MessageFactory.Form;
           $scope.condiciones= condiciones;
           $scope.tiposDedicacion= tiposDedicacion;
+          $scope.gradosdocente = grados;
           Restangular.all('facultades').getList().then(function(data){
             $scope.facultades = data;
           });
-          Restangular.all('gradodocentes').getList().then(function(data){
-            $scope.gradosdocente = data;
-          });
-          console.log("condiciones:", $scope.condiciones);
+
 
           $scope.Save = function(form) {
             $scope.submited = true;
@@ -100,6 +102,19 @@
                 ToastMD.info(MessageFactory.Form.Saved);
                 $mdDialog.hide();
                 table.reload();
+              },function(result){
+                console.log(result);
+                switch (result.status) {
+                  case 400:
+                  case 412:
+                      ToastMD.warning(result.data.message);
+                      break;
+                  case 500:
+                    ToastMD.error(result.data.message);
+                    break;
+                  default:
+                    ToastMD.warning(result.data.message);
+                }
               });
             }
           };

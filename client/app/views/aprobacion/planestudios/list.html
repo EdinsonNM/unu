@@ -1,43 +1,54 @@
-<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
-
 <md-subheader class="md-primary " style="margin-right: 0">
-<h3>{{UI.facultad.nombre}} - {{UI.title}}</h3>
+<h3>{{UI.title}}</h3>
 </md-subheader>
-
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+</md-button>
 <div layout="row" layout-align="center start" layout-margin layout-fill>
 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+
 <!--tabla: contiene el listado de elementos-->
 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-<table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+<div class="table-responsive">
+<table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+
   <tbody>
     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
     <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
       <td style="width:30px;">
         <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
       </td>
-      <td class="text-left" data-title="'Código'" sortable="nombre" filter="{'codigo':'text'}">
-          {{item.codigo}}
+      <td class="text-left" data-title="'Nombre'" sortable="_facultad">
+
+          {{item.nombre}}
       </td>
-      <td class="text-left" data-title="'Escuela'" sortable="nombre" filter="{'nombre':'text'}">
-        {{item.nombre}}
+      <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">
+        {{item._periodo.nombre}}
       </td>
       <td class="text-left" data-title="'Resolución'" sortable="resolucion" filter="{'resolucion':'text'}">
         {{item.resolucion}}
       </td>
-      <td class="text-left" data-title="'Facultad'" sortable="nombre" filter="{'nombre':'text'}">
-        {{item._facultad.nombre}}
+      <td class="text-left" data-title="'Fecha Resolución'">
+        {{item.fecha_resolucion | date:'dd/MM/yyyy'}}
+      </td>
+      <td data-title="'Estado'">
+        <strong>
+        <a href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
+          <span ng-switch-when="Registrado" class="fa fa-pencil tc-blue-grey-500"></span>
+          <span ng-switch-when="Pendiente" class="fa fa-spinner tc-blue-500"></span>
+          <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-green-500"></span>
+          <span ng-switch-when="Observado" class="fa fa-eye tc-orange-500" ></span>
+        </a>
+        </strong>
       </td>
     </tr>
   </tbody>
 </table>
-</md-content>
 </div>
 </md-content>
-<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
-  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
-</md-button>
+</div>
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling button-floating-bottom">
  <md-fab-trigger>
@@ -49,7 +60,7 @@
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
      <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-institution fa-lg tc-pink-500" aria-label="{{action.label}}"></md-icon>
+     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-pink-500 " aria-label="{{action.label}}"></md-icon>
    </md-button>
    <!--end custom actions-->
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->

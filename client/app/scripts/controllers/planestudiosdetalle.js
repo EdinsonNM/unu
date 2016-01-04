@@ -10,7 +10,9 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('PlanEstudioDetallesCtrl', function($q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
+  angular.module('unuApp').controller('PlanEstudioDetallesCtrl', [
+  '$mdSidenav','$q','$stateParams', 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
+  function($mdSidenav,$q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
     var List, service;
 
     $scope.UI = {
@@ -30,13 +32,24 @@
       route:'planestudiodetalles'
     };
 
-    Restangular.one('planestudios', LOCAL.planestudioId).get({single: true,populate:"_periodo _escuela"}).then(function(data){
+    Restangular.one('planestudios', LOCAL.planestudioId).get({single: true,populate:'_periodo _escuela'}).then(function(data){
       $scope.UI.planestudios = data;
     });
 
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
+    //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
+    $scope.UI.customActions.push({icon:'fa-comments-o',label:'Comentarios', onclick: function(){
+      $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
+    }});
+
+    $scope.ShowComments = function(){
+      $mdSidenav('right')
+          .toggle()
+          .then(function () {
+          });
+    };
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
@@ -95,89 +108,7 @@
           table:$scope.tableParams,
           planestudios: $scope.UI.planestudios
         },
-        controller: function($scope, table, name, MessageFactory, planestudios, $timeout){
-          $scope.cursoFound = false;
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'},_requisitos:[]};
-          $scope.model._planestudio = planestudios._id;
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          var tempFilterText = '', filterTextTimeout;
-          var serviceCurso = Restangular.all('cursos');
-          var service = Restangular.all('planestudiodetalles');
-          var LoadRequisitos = function(){
-            service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
-            .then(function(data){
-              $scope.requisitos = data;
-            });
-          };
-
-          $scope.FilterRequisitos = function(text){
-            var data = [];
-            angular.forEach($scope.requisitos,function(item){
-              var index = item._curso.nombre.search(new RegExp(text,'i'));
-              if(index>=0){
-                data.push(item);
-              }
-            });
-            return data;
-          };
-          $scope.AgregarRequisito = function(){
-            $scope.model._requisitos.push($scope._requisito);
-          };
-          $scope.$watch('model._curso.codigo', function (val) {
-            if(val.length>0){
-              if (filterTextTimeout){
-                $timeout.cancel(filterTextTimeout);
-              }
-              tempFilterText = val;
-              filterTextTimeout = $timeout(function() {
-                  $scope.model._curso.codigo = tempFilterText;
-                  serviceCurso.getList({conditions:{ codigo:$scope.model._curso.codigo }}).then(function(data){
-                    if(data.length>0){
-                      $scope.model._curso = data[0];
-                      $scope.cursoFound = true;
-                    }else{
-                      $scope.model._curso = {codigo:tempFilterText};
-                      $scope.cursoFound = false;
-                    }
-                  });
-              }, 1000);
-            }
-          });
-
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              if(!$scope.cursoFound){
-                serviceCurso.post($scope.model._curso).then(function(data){
-                  $scope.model._curso = data._id;
-                  new Save();
-                });
-              }else{
-                new Save();
-              }
-
-            }
-          };
-          var Save = function(){
-            service.post($scope.model).then(function() {
-              ToastMD.info(MessageFactory.Form.Saved);
-              $mdDialog.hide();
-              table.reload();
-            });
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-
-          $scope.CalcularTotalHoras = function(){
-            $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
-          };
-
-          new LoadRequisitos();
-        }
+        controller: 'PlanestudiosNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -192,41 +123,7 @@
           model: Restangular.copy($scope.UI.selected),
           planestudios: $scope.UI.planestudios
         },
-        controller: function($scope, table,name, MessageFactory,model,planestudios){
-          $scope.submited = false;
-          $scope.model = model;
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          var service = Restangular.all('planestudiodetalles');
-          var LoadRequisitos = function(){
-            service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
-            .then(function(data){
-              $scope.requisitos = data;
-            });
-          };
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.AgregarRequisito = function(){
-            $scope.model._requisitos.push($scope._requisito);
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-
-          $scope.CalcularTotalHoras = function(){
-            $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
-          };
-
-          new LoadRequisitos();
-        }
+        controller: 'PlanestudiosEditCtrl'
       });
     };
 
@@ -272,6 +169,125 @@
 
     new List();
 
-  });
+  }])
+  .controller('PlanestudiosNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'planestudios', '$timeout','ToastMD','$mdDialog','Restangular',
+  function($scope, table, name, MessageFactory, planestudios, $timeout,ToastMD,$mdDialog,Restangular){
+    $scope.cursoFound = false;
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.model = {_curso:{codigo:'',nombre:'',tipo:'Carrera'},_requisitos:[]};
+    $scope.model._planestudio = planestudios._id;
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    var tempFilterText = '', filterTextTimeout;
+    var serviceCurso = Restangular.all('cursos');
+    var service = Restangular.all('planestudiodetalles');
+    var LoadRequisitos = function(){
+      service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
+      .then(function(data){
+        $scope.requisitos = data;
+      });
+    };
+
+    $scope.FilterRequisitos = function(text){
+      var data = [];
+      angular.forEach($scope.requisitos,function(item){
+        var index = item._curso.nombre.search(new RegExp(text,'i'));
+        if(index>=0){
+          data.push(item);
+        }
+      });
+      return data;
+    };
+    $scope.AgregarRequisito = function(){
+      $scope.model._requisitos.push($scope._requisito);
+    };
+    $scope.$watch('model._curso.codigo', function (val) {
+      if(val.length>0){
+        if (filterTextTimeout){
+          $timeout.cancel(filterTextTimeout);
+        }
+        tempFilterText = val;
+        filterTextTimeout = $timeout(function() {
+            $scope.model._curso.codigo = tempFilterText;
+            serviceCurso.getList({conditions:{ codigo:$scope.model._curso.codigo }}).then(function(data){
+              if(data.length>0){
+                $scope.model._curso = data[0];
+                $scope.cursoFound = true;
+              }else{
+                $scope.model._curso = {codigo:tempFilterText};
+                $scope.cursoFound = false;
+              }
+            });
+        }, 1000);
+      }
+    });
+
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        if(!$scope.cursoFound){
+          serviceCurso.post($scope.model._curso).then(function(data){
+            $scope.model._curso = data._id;
+            new Save();
+          });
+        }else{
+          new Save();
+        }
+
+      }
+    };
+    var Save = function(){
+      service.post($scope.model).then(function() {
+        ToastMD.info(MessageFactory.Form.Saved);
+        $mdDialog.hide();
+        table.reload();
+      });
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+
+    $scope.CalcularTotalHoras = function(){
+      $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
+    };
+
+    new LoadRequisitos();
+  }])
+  .controller('PlanestudiosEditCtrl',[function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
+    $scope.submited = false;
+    $scope.model = model;
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    var service = Restangular.all('planestudiodetalles');
+    var LoadRequisitos = function(){
+      service.getList({populate:'_curso',conditions:{_planestudio:planestudios._id}})
+      .then(function(data){
+        $scope.requisitos = data;
+      });
+    };
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        $scope.model.put().then(function() {
+          ToastMD.info(MessageFactory.Form.Updated);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.AgregarRequisito = function(){
+      $scope.model._requisitos.push($scope._requisito);
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+
+    $scope.CalcularTotalHoras = function(){
+      $scope.model.horas_total = parseInt($scope.model.horas_teoria) + parseInt($scope.model.horas_practica) + parseInt($scope.model.horas_laboratorio);
+    };
+
+    new LoadRequisitos();
+  }]);
 
 }).call(this);

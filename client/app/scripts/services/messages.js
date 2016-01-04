@@ -9,7 +9,7 @@
     * # UserFactory
     * Service in the unuApp.
    */
-  angular.module('unuApp').factory('MessageFactory', function() {
+  angular.module('unuApp').factory('MessageFactory', [function() {
     return {
       Buttons:{
         Add: 'Agregar',
@@ -33,6 +33,6 @@
         validateUnique:'Valor ya se encuentra registrado'
       }
     };
-  });
+  }]);
 
 }).call(this);

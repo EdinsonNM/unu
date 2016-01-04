@@ -5,15 +5,13 @@
   <md-toolbar ng-include="'views/blocks/app_header.html'" class="app-header">
   </md-toolbar>
 
+  <div flex layout="column" ui-view layout-fill>
+    <div ng-if="$root.USER._grupo.codigo=='ADMIN'" layout="row" ng-include="'views/home.html'" flex layout-fill>
 
-  <md-content flex layout="row" class="page-content" layout-align="center start" style="background-color:#f2f2f2">
-    <div flex ui-view >
-      <div ng-if="$root.USER._grupo.codigo=='ADMIN'" layout="row" ng-include="'views/home.html'" flex layout-fill>
-
-      </div>
-      <div ng-if="$root.USER._grupo.codigo=='MIC'" layout="row" ng-include="'views/home/home_mic.html'" flex layout-fill>
-
-      </div>
     </div>
-  </md-content>
+    <div ng-if="$root.USER._grupo.codigo=='MIC'" layout="row" ng-include="'views/home/home_mic.html'" flex layout-fill>
+
+    </div>
+  </div>
+
 </div>

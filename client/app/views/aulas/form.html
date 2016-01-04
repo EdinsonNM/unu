@@ -48,23 +48,6 @@
         </div>
       </div>
 
-      </div>
-
-      <div flex layout="row" layout-sm="row">
-        <div flex-item>
-          <md-input-container class="md-block">
-            <label>Pabellón</label>
-            <md-select ng-model="model._pabellon" ng-model-options="{trackBy: '$value._id'}">
-              <md-option ng-repeat="pab in pabellones" ng-value="pab">
-                {{pab.nombre + ' ' + pab.codigo}}
-              </md-option>
-            </md-select>
-            <div ng-messages="myForm.pabellon.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-      </div>
 
 
       <div flex layout="row" layout-sm="column">
@@ -80,8 +63,6 @@
       </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
 
-    </md-dialog-actions>
   </form>
 </md-dialog>

@@ -8,7 +8,7 @@
     * @description
     * # ValidateUnique
    */
-  angular.module('unuApp').directive('validateUnique', function(Restangular,$timeout) {
+  angular.module('unuApp').directive('validateUnique', ['Restangular','$timeout',function(Restangular,$timeout) {
     return {
       require: 'ngModel',
       scope: {
@@ -49,6 +49,6 @@
         });
       }
     };
-  });
+  }]);
 
 }).call(this);

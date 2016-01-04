@@ -6,11 +6,14 @@
     "angular-animate": "^1.4.7",
     "angular-aria": "^1.4.7",
     "angular-material": "^0.11.4",
+    "gulp-angular-filesort": "^1.1.1",
+    "gulp-inject": "^3.0.0",
     "gulp-sourcemaps": "^1.6.0"
   },
   "repository": {},
   "devDependencies": {
     "gulp": "^3.9.0",
+    "gulp-angular-builder": "^0.5.3",
     "gulp-bower-files": "^0.2.7",
     "gulp-browserify": "^0.5.1",
     "gulp-coffee": "^2.3.1",
@@ -27,6 +30,7 @@
     "gulp-server-livereload": "^1.5.4",
     "gulp-stylus": "^2.1.0",
     "gulp-uglify": "^1.4.2",
+    "gulp-usemin": "^0.3.16",
     "gulp-watch": "^4.3.5",
     "main-bower-files": "^2.9.0"
   },

@@ -9,7 +9,7 @@
     * # AuthTokenFactory
     * Service in the unuApp.
    */
-  angular.module('unuApp').service('AuthTokenFactory', function($window) {
+  angular.module('unuApp').service('AuthTokenFactory', ['$window',function($window) {
     var key, store;
     store = $window.localStorage;
     key = 'auth-token';
@@ -25,6 +25,6 @@
         }
       }
     };
-  });
+  }]);
 
 }).call(this);

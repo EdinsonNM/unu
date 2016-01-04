@@ -19,10 +19,9 @@ var DocenteSchema = new Schema({
     type:String,
     enum:['Nombrado','Contratado']
   },
-  _grado:{
-    type:Schema.Types.ObjectId,
-    ref:'GradoDocente',
-    required:true
+  grado:{
+    type:String,
+    enum:['Bachiller','Magister','Doctor','PHD']
   },
   tipoDedicacion:{
     type:String,

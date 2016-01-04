@@ -9,7 +9,9 @@
     * # FacultadesCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('PlanestudiosCtrl', function($q,MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('PlanestudiosCtrl',[
+  '$mdSidenav','$q','MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet','$state',
+  function($mdSidenav,$q,MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -29,6 +31,7 @@
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
+
     //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
     $scope.UI.customActions.push({icon:'fa-book',label:'Detalle Plan de Estudio', onclick: function(){
       $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
@@ -41,6 +44,8 @@
       });
     }});
     //end custom actions
+
+
 
     var LoadFacultades = function LoadFacultades() {
       var serviceFacultad = Restangular.all('facultades');
@@ -56,13 +61,13 @@
     };
 
     $scope.ListPlanEstudios = function ListPlanEstudios(){
-      //$scope.tableParams.reload();
       angular.extend($scope.tableParams.filter(), {_escuela:$scope.filter._escuela._id});
+      $scope.tableParams.reload();
     };
-    LoadFacultades();
+    new LoadFacultades();
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10,
         filter:{
@@ -83,6 +88,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
 
     };
 
@@ -95,7 +101,7 @@
     $scope.filter = {};
     $scope.New = function New($event){
       if(!$scope.filter._escuela){
-        ToastMD.warning("Debe seleccionar una escuela antes de crear un plan de estudio");
+        ToastMD.warning('Debe seleccionar una escuela antes de crear un plan de estudio');
         return;
       }
 
@@ -107,34 +113,10 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          escuela: $scope.filter._escuela
+          escuela: $scope.filter._escuela,
+          service:service
         },
-        controller: function($scope, table, name, MessageFactory, escuela){
-          $scope.escuela = escuela;
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          Restangular.all('periodos').getList().then(function(data){
-            $scope.periodos = data;
-          });
-          $scope.model = {
-            _escuela: escuela._id
-          };
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'PlanestudiosNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -149,31 +131,7 @@
           model: Restangular.copy($scope.UI.selected),
           escuela: $scope.filter._escuela
         },
-        controller: function($scope, table,name, MessageFactory,model,escuela){
-          $scope.escuela = escuela;
-          $scope.submited = false;
-          $scope.model = model;
-          console.log(model);
-          $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          Restangular.all('periodos').getList().then(function(data){
-            $scope.periodos = data;
-          });
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'PlanestudiosEditCtrl'
       });
     };
 
@@ -215,6 +173,58 @@
     };
 
     new List();
-  });
+  }])
+  .controller('PlanestudiosNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'escuela','service','Restangular','ToastMD','$mdDialog',
+  function($scope, table, name, MessageFactory, escuela,service,Restangular,ToastMD,$mdDialog){
+    $scope.escuela = escuela;
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    Restangular.all('periodos').getList().then(function(data){
+      $scope.periodos = data;
+    });
+    $scope.model = {
+      _escuela: escuela._id
+    };
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.info(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }])
+  .controller('PlanestudiosEditCtrl',['$scope', 'table','name', 'MessageFactory','model','escuela','Restangular','ToastMD','$mdDialog',
+  function($scope, table,name, MessageFactory,model,escuela,Restangular,ToastMD,$mdDialog){
+    $scope.escuela = escuela;
+    $scope.submited = false;
+    $scope.model = model;
+    $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    Restangular.all('periodos').getList().then(function(data){
+      $scope.periodos = data;
+    });
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        $scope.model.put().then(function() {
+          ToastMD.info(MessageFactory.Form.Updated);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }]);
 
 }).call(this);

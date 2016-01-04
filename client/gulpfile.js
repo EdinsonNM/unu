@@ -7,6 +7,10 @@ var connect = require('gulp-connect');
 var stylus = require('gulp-stylus');
 var sourcemaps = require('gulp-sourcemaps');
 var urlAdjuster = require('gulp-css-url-adjuster');
+var angularFilesort = require('gulp-angular-filesort');
+var inject = require('gulp-inject');
+var minify = require('gulp-minify');
+
 var publishdir = 'app/public';
 var dist = {
    js: publishdir + '/js/',
@@ -45,10 +49,26 @@ gulp.task('icons', function() {
   gulp.src('bower_components/components-font-awesome/fonts/**.*') 
         .pipe(gulp.dest('./app/public/fonts')); 
 });
+
+var jsFilters = {
+    controllers: gulpFilter('**/scripts/controllers/**/*.js'),
+    directives: gulpFilter('**/scripts/directives/**/*.js'),
+    services: gulpFilter('**/scripts/services/**/*.js'),
+    app: gulpFilter([
+        '**/scripts/app.js','**/scripts/app-theme.js','**/scripts/app-run.js',
+    ])
+};
 gulp.task('bundle', function() {
-    return gulp.src('scripts/**/*.js')
+    return gulp.src([
+      './app/scripts/app.js',
+      './app/scripts/app-theme.js',
+      './app/scripts/app-run.js',
+      './app/scripts/directives/*.js',
+      './app/scripts/services/*.js',
+      './app/scripts/controllers/**/*.js',
+      ])
         .pipe(concat('bundle.js'))
-        .pipe(uglify())
+        .pipe(minify())
         .pipe(gulp.dest(dist.js))
         .pipe(connect.reload());
 });
@@ -65,6 +85,14 @@ gulp.task('html', function () {
     .pipe(connect.reload());
 });
 
+gulp.task('jsfiles', function() {
+  return gulp.src('app/index.html')
+    .pipe(inject(
+      gulp.src(['./app/scripts/**/*.js']).pipe(angularFilesort())
+    ))
+    .pipe(gulp.dest('./build'));
+});
+
 
 gulp.task('webserver', function() {
     connect.server({
@@ -73,9 +101,12 @@ gulp.task('webserver', function() {
       livereload: true
     });
 });
+
+
 gulp.task('watch', function() {
     gulp.watch('app/styles/styls/*.styl', ['stylus']);
+    gulp.watch('app/scripts/**/*.js', ['bundle']);
     gulp.watch('bower_components/**', ['bower']);
     gulp.watch(['app/*.html'], ['html']);
-})
-gulp.task('default', ['webserver','bower','bowercss','icons','watch','stylus']);
+});
+gulp.task('default', ['webserver','bower','bowercss','icons','watch','stylus','bundle','jsfiles']);

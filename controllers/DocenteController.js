@@ -12,18 +12,21 @@ module.exports = function() {
       //custom methods
       controller.get('/model/tiposDedicacion', function(req, res, next){
         var enumValues = model.schema.path('tipoDedicacion').enumValues;
-        res.send(enumValues);
+        res.status(200).send(enumValues);
       });
       controller.get('/model/condiciones', function(req, res, next){
         var enumValues = model.schema.path('condicion').enumValues;
-        res.send(enumValues);
+        res.status(200).send(enumValues);
       });
-
+      controller.get('/model/grados', function(req, res, next){
+        var enumValues = model.schema.path('grado').enumValues;
+        res.status(200).send(enumValues);
+      });
       controller.request('post', function (request, response, next) {
-        if(request._usuario){
+        if(request.body._usuario){
           Grupo.findOne({codigo:'DOCENTE'},function(grupoErr, objGrupo){
             if(grupoErr) return next(grupoErr);
-            var usuario = new Usuario(request._usuario);
+            var usuario = new Usuario(request.body._usuario);
             usuario._grupo = objGrupo._id;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
               if(usuarioErr) return next(usuarioErr);
@@ -31,7 +34,7 @@ module.exports = function() {
 
               usuario.save(function(error, data){
                 if(error) return response.status(500).send(error);
-                request._usuario = data._id;
+                request.body._usuario = data._id;
                 next();
               });
 
