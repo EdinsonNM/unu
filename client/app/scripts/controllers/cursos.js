@@ -9,7 +9,11 @@
     * # CursosCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('CursosCtrl', function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+
+  angular.module('unuApp')
+  .controller('CursosCtrl', [
+    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+    function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -64,36 +68,10 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          service: service
         },
-        controller: function($scope, table,name,MessageFactory){
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-                table.reload();
-              },function(error){
-                console.log(error);
-                switch (error.status) {
-                  case 422:
-                    $scope.ValidationError = error.data;
-                    break;
-                  default:
-
-                }
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'CursoNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -107,25 +85,7 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: function($scope, table,name, MessageFactory,model){
-          $scope.submited = false;
-          $scope.model = model;
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.info(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'CursoEditCtrl'
       });
     };
 
@@ -167,7 +127,51 @@
     };
 
     new List();
-
-  });
-
+  }])
+  .controller('CursoNewCtrl', ['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog){
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.info(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+          table.reload();
+        }, function(error){
+          switch (error.status) {
+            case 422:
+              $scope.ValidationError = error.data;
+              break;
+            default:
+          }
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }])
+  .controller('CursoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+    function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+    $scope.submited = false;
+    $scope.model = model;
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        $scope.model.put().then(function() {
+          ToastMD.success(MessageFactory.Form.Updated);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }]);
 }).call(this);

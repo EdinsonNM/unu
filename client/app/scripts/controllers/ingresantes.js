@@ -4,44 +4,33 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:DocentesCtrl
+    * @name unuApp.controller:IngresantesCtrl
     * @description
-    * # DocentesCtrl
+    * # FacultadesCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('DocentesCtrl', [
-    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+
+  angular.module('unuApp').controller('IngresantesCtrl', [
+'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Docentes',
+      title: 'Listado de Ingresantes',
       editMode: false,
-      selected:null,
-      customActions:[],
-      tiposDedicacion: [],
-      condiciones: []
+      selected: null,
+      customActions:[]
     };
 
     var LOCAL ={
-      name: 'Docente',
-      form:'views/docentes/form.html',
-      route:'docentes'
+      name: 'Ingresante',
+      form:'views/facultades/form.html',
+      route:'facultades'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
-
-    service.customGET('model/tiposDedicacion', {}).then(function(result){
-      $scope.UI.tiposDedicacion = result;
-    });
-    service.customGET('model/condiciones', {}).then(function(result){
-      $scope.UI.condiciones = result;
-    });
-    service.customGET('model/grados', {}).then(function(result){
-      $scope.UI.grados = result;
-    });
 
     List = function() {
       $scope.tableParams = new ngTableParams({
@@ -62,6 +51,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){
@@ -77,14 +67,11 @@
         targetEvent: $event,
         templateUrl :LOCAL.form,
         locals:{
+          service: service,
           name: LOCAL.name,
-          table:$scope.tableParams,
-          condiciones: $scope.UI.condiciones,
-          tiposDedicacion: $scope.UI.tiposDedicacion,
-          grados: $scope.UI.grados,
-          service: service
+          table:$scope.tableParams
         },
-        controller: 'DocenteNewCtrl'
+        controller: 'IngresanteNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -98,7 +85,7 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: 'DocenteEditCtrl'
+        controller: 'IngresanteEditCtrl'
       });
     };
 
@@ -112,11 +99,10 @@
           .cancel(MessageFactory.Buttons.No);
 
       var selected = Restangular.copy($scope.UI.selected);
-
       $mdDialog.show(confirm).then(function() {
         selected.remove().then(function() {
           $scope.Refresh();
-          ToastMD.info(MessageFactory.Form.Deleted);
+          ToastMD.success(MessageFactory.Form.Deleted);
         });
       }, function() {
 
@@ -141,19 +127,11 @@
 
     new List();
   }])
-
-  .controller('DocenteNewCtrl',['$scope', 'table', 'name', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, condiciones, tiposDedicacion, grados, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('IngresanteNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-    $scope.condiciones= condiciones;
-    $scope.tiposDedicacion= tiposDedicacion;
-    $scope.gradosdocente = grados;
-    Restangular.all('facultades').getList().then(function(data){
-      $scope.facultades = data;
-    });
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -161,20 +139,6 @@
           ToastMD.success(MessageFactory.Form.Saved);
           $mdDialog.hide();
           table.reload();
-        },
-        function(result){
-          console.log(result);
-          switch (result.status) {
-            case 400:
-            case 412:
-                ToastMD.warning(result.data.message);
-                break;
-            case 500:
-              ToastMD.error(result.data.message);
-              break;
-            default:
-              ToastMD.warning(result.data.message);
-          }
         });
       }
     };
@@ -183,8 +147,7 @@
     };
 
   }])
-
-  .controller('DocenteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('IngresanteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
@@ -203,5 +166,4 @@
       $mdDialog.hide();
     };
   }]);
-
 }).call(this);

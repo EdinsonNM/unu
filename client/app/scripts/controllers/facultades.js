@@ -11,7 +11,7 @@
    */
 
   angular.module('unuApp').controller('FacultadesCtrl', [
-'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
@@ -133,7 +133,8 @@
 
     new List();
   }])
-  .controller('FacultadNewCtrl',['$scope', 'table','name','MessageFactory','$mdDialog','service','ToastMD',function($scope, table,name,MessageFactory,$mdDialog,service,ToastMD){
+  .controller('FacultadNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
@@ -153,7 +154,8 @@
     };
 
   }])
-  .controller('FacultadEditCtrl',['$scope', 'table','name', 'MessageFactory','model','ToastMD','$mdDialog',function($scope, table,name, MessageFactory,model,ToastMD,$mdDialog){
+  .controller('FacultadEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);

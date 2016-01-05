@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
 angular.module('unuApp').controller('SidenavCtrl', ['$scope','$rootScope','$mdSidenav',function($scope,$rootScope,$mdSidenav) {
-    console.log($rootScope.menu);
+    //console.log($rootScope.menu);
 
     this.autoFocusContent = false;
 

@@ -24,7 +24,7 @@
           <div flex>
             <md-input-container class="md-block">
               <label>Periodo</label>
-              <input required name="periodo" ng-model="model.periodo">
+              <input type="number" required name="periodo" ng-model="model.periodo">
               <div ng-messages="myForm.periodo.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>

@@ -1,35 +1,43 @@
 <md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
-  <md-subheader class="md-primary " style="margin-right: 0">
-    <h3>{{UI.title}}</h3>
-  </md-subheader>
+<md-subheader class="md-primary " style="margin-right: 0">
+<h3>{{UI.title}}</h3>
+</md-subheader>
 
-  <div layout="row" layout-align="center start" layout-margin layout-fill>
-    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-      <!--tabla: contiene el listado de elementos-->
-      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-      <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
-        <tbody>
-          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-          <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
-            <td style="width:30px;">
-              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
-            </td>
-            <td class="text-left" data-title="'Nombre'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
-            <td class="text-left" data-title="'Abreviatura'" sortable="abreviatura" filter="{'abreviatura':'text'}">{{item.abreviatura}}</td>
-            <td class="text-left" data-title="'Pabellón'" sortable="pabellon" filter="{'pabellon':'text'}">{{item._pabellon.nombre}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </md-content>
-  </div>
+<div layout="row" layout-align="center start" layout-margin layout-fill>
+<md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+<!--tabla: contiene el listado de elementos-->
+<md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+<table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+  <tbody>
+    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+    <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+      <td style="width:30px;">
+        <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+      </td>
+      <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">
+        {{item.codigo}}
+      </td>
+      <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">
+        {{item.nombres}}
+      </td>
+      <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">
+        {{item.apellidos}}
+      </td>
+      <td class="text-left" data-title="'Sexo'" sortable="sexo" filter="{'sexo':'text'}">
+        {{item.sexo}}
+      </td>
+
+    </tr>
+  </tbody>
+</table>
 </md-content>
-
+</div>
+</md-content>
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
   <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
 </md-button>
-
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling button-floating-bottom">
  <md-fab-trigger>
@@ -37,7 +45,6 @@
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
  </md-fab-trigger>
-
  <md-fab-actions>
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">

@@ -4,14 +4,14 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:FacultadesCtrl
+    * @name unuApp.controller:PlanestudiosCtrl
     * @description
-    * # FacultadesCtrl
+    * # PlanestudiosCtrl
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('PlanestudiosCtrl',[
-  '$mdSidenav','$q','MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet','$state',
-  function($mdSidenav,$q,MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  '$mdSidenav', '$q', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function($mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -174,8 +174,10 @@
 
     new List();
   }])
-  .controller('PlanestudiosNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'escuela','service','Restangular','ToastMD','$mdDialog',
-  function($scope, table, name, MessageFactory, escuela,service,Restangular,ToastMD,$mdDialog){
+
+  .controller('PlanestudiosNewCtrl',[
+    '$scope', 'table', 'name', 'MessageFactory', 'escuela', 'service', 'Restangular', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, escuela, service, Restangular, ToastMD, $mdDialog){
     $scope.escuela = escuela;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
@@ -202,7 +204,7 @@
     };
   }])
   .controller('PlanestudiosEditCtrl',['$scope', 'table','name', 'MessageFactory','model','escuela','Restangular','ToastMD','$mdDialog',
-  function($scope, table,name, MessageFactory,model,escuela,Restangular,ToastMD,$mdDialog){
+  function($scope, table, name, MessageFactory, model, escuela, Restangular, ToastMD, $mdDialog){
     $scope.escuela = escuela;
     $scope.submited = false;
     $scope.model = model;
