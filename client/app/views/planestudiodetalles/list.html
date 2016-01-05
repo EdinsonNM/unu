@@ -1,86 +1,72 @@
 <md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
-  <h3><a ui-sref="app.planestudios"><i class="fa fa-arrow-left tc-green-500"></i></a> {{UI.title}} {{UI.planestudios._escuela.nombre}} {{UI.planestudios._periodo.anio}}-{{UI.planestudios._periodo.periodo}}</h3>
+    <h3><a ui-sref="app.planestudios"><i class="fa fa-arrow-left tc-green-500"></i></a> {{UI.title}} {{UI.planestudios._escuela.nombre}} {{UI.planestudios._periodo.anio}}-{{UI.planestudios._periodo.periodo}}</h3>
   </md-subheader>
-<div layout="row" layout-align="center start" layout-margin layout-fill>
-<md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
 
-<!--tabla: contiene el listado de elementos-->
-<md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
-<div class="table-responsive">
-  <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
-  <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-
-  <tbody ng-repeat="group in $groups">
-          <tr class="ng-table-group">
-            <td colspan="2">
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+      <div class="table-responsive">
+        <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+          <tbody ng-repeat="group in $groups">
+            <tr class="ng-table-group">
+              <td colspan="2">
                 <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                     <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
                     <strong>Ciclo: {{group.value}} </strong>
                 </a>
-            </td>
-            <td>
-              <strong>TOTAL</strong>
-            </td>
-            <td>
-              <strong>{{getCreditosCiclo(group.data)}}</strong>
-            </td>
-            <td>
-                <strong>{{getHorasCiclo(group.data)}}</strong>
-            </td>
-            <td colspan="{{$columns.length-5}}">
+              </td>
+              <td><strong>TOTAL</strong></td>
+              <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
+              <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
+              <td colspan="{{$columns.length-5}}"></td>
+            </tr>
 
-            </td>
-        </tr>
-        <tr ng-hide="group.$hideRows" ng-repeat-start="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
-          <td style="width:30px;">
-            <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
-          </td>
-            <td class="text-left" data-title="'Curso'" sortable="curso">
-                {{item._curso.nombre}}
-            </td>
-            <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-            <td data-title="'N° Creditos'">{{item.creditos}}</td>
-            <td data-title="'N° Horas'">{{item.horas_total}}</td>
-            <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
-            <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
-            <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
-            <td data-title="'Estado'">
-              <strong>
-              <a href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
-                <span ng-switch-when="Registrado" class="fa fa-pencil tc-blue-grey-500"></span>
-                <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-green-500"></span>
-                <span ng-switch-when="Observado" class="fa fa-eye tc-orange-500" ></span>
-              </a>
-              </strong>
-            </td>
-        </tr>
-        <tr ng-repeat-end ng-if="UI.planestudios.estado==='Observado'">
-          <td>
-            <span class="fa fa-comments-o"></span>
-          </td>
-          <td colspan="{{$columns.length-1}}" class="fs-caption">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar bibendum felis at malesuada. Pellentesque eget varius tellus, vel viverra ligula. Nam nisi mauris, accumsan ut eros sed, hendrerit tincidunt libero. Morbi non magna a sem molestie imperdiet quis id lacus. Etiam aliquet massa vel orci maximus, fringilla aliquet magna scelerisque. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur egestas feugiat sapien et condimentum. Ut non nulla mi. Mauris vitae dui at enim pretium suscipit et nec lacus. Nullam auctor purus eget diam pellentesque facilisis.
-            <br>
-            <a href ng-click="ShowComments()">
-              Agregar Comentario
-            </a>
-          </td>
-        </tr>
-
-        </tbody>
-  <tbody>
-
-</table>
-</div>
+            <tr ng-hide="group.$hideRows" ng-repeat-start="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+              <td style="width:30px;">
+                <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+              </td>
+              <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
+              <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
+              <td data-title="'N° Creditos'">{{item.creditos}}</td>
+              <td data-title="'N° Horas'">{{item.horas_total}}</td>
+              <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
+              <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
+              <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
+              <td data-title="'Estado'">
+                <strong>
+                  <a href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
+                    <span ng-switch-when="Registrado" class="fa fa-pencil tc-blue-grey-500"></span>
+                    <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-green-500"></span>
+                    <span ng-switch-when="Observado" class="fa fa-eye tc-orange-500" ></span>
+                  </a>
+                </strong>
+              </td>
+            </tr>
+            <tr ng-repeat-end ng-if="UI.planestudios.estado==='Observado'">
+              <td><span class="fa fa-comments-o"></span></td>
+              <td colspan="{{$columns.length-1}}" class="fs-caption">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar bibendum felis at malesuada. Pellentesque eget varius tellus, vel viverra ligula. Nam nisi mauris, accumsan ut eros sed, hendrerit tincidunt libero. Morbi non magna a sem molestie imperdiet quis id lacus. Etiam aliquet massa vel orci maximus, fringilla aliquet magna scelerisque. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur egestas feugiat sapien et condimentum. Ut non nulla mi. Mauris vitae dui at enim pretium suscipit et nec lacus. Nullam auctor purus eget diam pellentesque facilisis.
+                <br>
+                <a href ng-click="ShowComments()">Agregar Comentario</a>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+        </table>
+      </div>
+    </md-content>
+  </div>
 </md-content>
-</div>
-</md-content>
+
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-if="!UI.editMode&&(UI.planestudios.estado=='Registrado'||UI.planestudios.estado=='Observado')" ng-click="New($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
   <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
 </md-button>
+
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode&&(UI.planestudios.estado=='Registrado'||UI.planestudios.estado=='Observado')" md-open="false" md-direction="up" class="md-fling button-floating-bottom">
  <md-fab-trigger>
@@ -88,6 +74,7 @@
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
  </md-fab-trigger>
+
  <md-fab-actions>
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
@@ -95,6 +82,7 @@
      <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-red-500 " aria-label="{{action.label}}"></md-icon>
    </md-button>
    <!--end custom actions-->
+
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
    <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="New($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>

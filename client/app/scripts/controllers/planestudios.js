@@ -176,8 +176,8 @@
   }])
 
   .controller('PlanestudiosNewCtrl',[
-    '$scope', 'table', 'name', 'MessageFactory', 'escuela', 'service', 'Restangular', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, escuela, service, Restangular, ToastMD, $mdDialog){
+    '$scope', 'name', 'table', 'escuela', 'MessageFactory', 'service', 'Restangular', 'ToastMD', '$mdDialog',
+  function($scope, name, table, escuela, MessageFactory, service, Restangular, ToastMD, $mdDialog){
     $scope.escuela = escuela;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
@@ -203,8 +203,8 @@
       $mdDialog.hide();
     };
   }])
-  .controller('PlanestudiosEditCtrl',['$scope', 'table','name', 'MessageFactory','model','escuela','Restangular','ToastMD','$mdDialog',
-  function($scope, table, name, MessageFactory, model, escuela, Restangular, ToastMD, $mdDialog){
+  .controller('PlanestudiosEditCtrl',['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+  function($scope, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog){
     $scope.escuela = escuela;
     $scope.submited = false;
     $scope.model = model;
