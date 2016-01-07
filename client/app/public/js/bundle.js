@@ -2860,7 +2860,7 @@
           escuela: $scope.filter._escuela,
           service:service
         },
-        controller: 'JodaCtrl'
+        controller: 'PlanestudiosNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -2918,15 +2918,8 @@
 
     new List();
   }])
-  .controller('JodaCtrl_',['$scope', 'escuela', 'MessageFactory',
-  function($scope, escuela, MessageFactory){
-    $scope.escuela = escuela;
-    $scope.submited = false;
-    $scope.title = MessageFactory.Form.New.replace('{element}', 'Hola que hace');
-    $scope.Buttons = MessageFactory.Buttons;
-    $scope.message = MessageFactory.Form;
-  }])//PlanestudiosNewCtrl_
-  .controller('JodaCtrl',[
+
+  .controller('PlanestudiosNewCtrl',[
     '$scope', 'name', 'table', 'escuela', 'MessageFactory', 'service', 'Restangular', 'ToastMD', '$mdDialog',
   function($scope, name, table, escuela, MessageFactory, service, Restangular, ToastMD, $mdDialog){
     $scope.escuela = escuela;
