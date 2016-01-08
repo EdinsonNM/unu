@@ -35,8 +35,8 @@ module.exports = function() {
       });
 
       controller.get('/methods/paginate', function(req, res) {
-        var limit = req.query.count;
-        var page = req.query.page || 1;
+        var limit = parseInt(req.query.count);
+        var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
         model.paginate(
           filter, {
@@ -52,7 +52,7 @@ module.exports = function() {
               last_page: Math.ceil(itemCount / limit),
               from: (page - 1) * pageCount + 1,
               to: page * pageCount,
-              data: results
+              data: results.docs
             };
             res.send(obj);
           }

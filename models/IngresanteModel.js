@@ -4,10 +4,39 @@ var mongoosePaginate = require('mongoose-paginate');
 
 var IngresanteSchema = new Schema({
 	//es la modalidad de ingreso
+	codigo: {
+		type:String,
+		required:true
+	},
+	nombres : {
+		type:String,
+		required:true
+	},
+  apellidoPaterno : {
+			type:String,
+			required:true
+	},
+	apellidoMaterno:{
+			type:String,
+			required:true
+	},
 	_modalidad:{
 		type:Schema.Types.ObjectId,
     ref:'ModalidadIngreso',
     required:true
+	},
+	promedio:Number,
+	documentoIdentidad:{
+		tipo:{
+			type:String,
+			enum:['DNI','CARNET EXTRANJERIA'],
+			default: 'DNI'
+		},
+		numero:String
+	},
+	sexo:{
+		type:String,
+		enum:['Masculino','Femenino']
 	},
 	constanciaIngreso:{
 		existe: Boolean,
@@ -22,18 +51,8 @@ var IngresanteSchema = new Schema({
 		type:Schema.Types.ObjectId,
     ref:'DocumentoIngresante'
 	}],
-	codigo: {
-		type:String,
-		required:true
-	},
-	nombres : {
-		type:String,
-		required:true
-	},
-  apellidos : {
-		type:String,
-		required:true
-	},
+
+
   _Escuela:{
     type:Schema.Types.ObjectId,
     ref:'Escuela',
