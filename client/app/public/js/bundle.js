@@ -280,7 +280,7 @@
   angular.module('unuApp')
   .config(['$mdThemingProvider',function($mdThemingProvider) {
     // set the default palette name
-    /*var defaultPalette = 'teal';
+    var defaultPalette = 'teal';
     // define a palette to darken the background of components
     var greyBackgroundMap = $mdThemingProvider.extendPalette(defaultPalette, {'A100': 'fafafa'});
 
