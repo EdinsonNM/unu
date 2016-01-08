@@ -12,7 +12,20 @@
    */
   angular.module('unuApp')
   .config(['$mdThemingProvider',function($mdThemingProvider) {
+    // set the default palette name
+    /*var defaultPalette = 'teal';
+    // define a palette to darken the background of components
+    var greyBackgroundMap = $mdThemingProvider.extendPalette(defaultPalette, {'A100': 'fafafa'});
+
+    $mdThemingProvider.definePalette('grey-background', greyBackgroundMap);
+    $mdThemingProvider.setDefaultTheme(defaultPalette);
+
     $mdThemingProvider
+			.theme(defaultPalette)
+			.primaryPalette(defaultPalette)
+			.accentPalette('pink')
+			.backgroundPalette('grey-background');
+    /*$mdThemingProvider
       .theme('default')
         .primaryPalette('teal', {
           'default': '600'
@@ -22,7 +35,7 @@
         })
         .warnPalette('defaultPrimary');
 
-    $mdThemingProvider.theme('dark', 'default')
+    /*$mdThemingProvider.theme('dark', 'default')
       .primaryPalette('defaultPrimary')
       .dark();
 
@@ -49,7 +62,7 @@
       'A200': '#E75753',
       'A400': '#E75753',
       'A700': '#E75753'
-    });
+    });*/
 
   }]);
 

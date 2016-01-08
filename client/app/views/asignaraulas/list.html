@@ -1,91 +1,95 @@
-<md-subheader class="md-primary " style="margin-right: 0">
-<h3>{{UI.title}}</h3>
-</md-subheader>
-<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab button-floating-bottom" aria-label="{{UI.message.Buttons.New}}" >
-  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
-</md-button>
-<div layout="row" layout-align="center start" layout-margin layout-fill>
-<md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-<!--tabla: contiene el listado de elementos-->
-<md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
 
-<!--md-toolbar layout="column" class="md-tall">
-  <span flex="flex"></span>
-  <div class="md-toolbar-tools">
-    <div layout="row" flex="flex" class="fill-height">
-      <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadAulas()">
-        <md-option ng-repeat="pab in pabellones" value="{{pab.id}}">
-          {{pab.nombre}}
-        </md-option>
-      </md-select>
-    </div>
-  </div>
-</md-toolbar-->
-
-<md-card layout="column" class="md-tall">
-  <div  flex-container="row" flex-gutter="24">
-      <div flex-item>
-          <md-input-container class="md-block">
-            <label>Pabellon</label>
-            <md-select ng-model="filter._pabellon" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadAulas()">
-              <md-option ng-repeat="pab in pabellones" ng-value="pab">
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+      <!--md-toolbar layout="column" class="md-tall">
+        <span flex="flex"></span>
+        <div class="md-toolbar-tools">
+          <div layout="row" flex="flex" class="fill-height">
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadAulas()">
+              <md-option ng-repeat="pab in pabellones" value="{{pab.id}}">
                 {{pab.nombre}}
               </md-option>
             </md-select>
-          </md-input-container>
-      </div>
-
-      <div flex-item>
-          <md-chips ng-model="periodosSeleccionados" md-autocomplete-snap
-              md-transform-chip="transformChip($chip)"
-              md-require-match="autocompleteDemoRequireMatch">
-              <md-autocomplete
-                  md-selected-item="selectedItem"
-                  md-search-text="searchText"
-                  md-items="item in querySearch(searchText)"
-                  md-item-text="item.nombre"
-                  placeholder="Agregar periodos">
-                <span md-highlight-text="searchText">{{item.nombre}} :: {{item.periodo}}</span>
-              </md-autocomplete>
-              <md-chip-template>
-                <span>
-                  <strong>{{item.nombre}}</strong>
-                  <em>{{$chip.type}}</em>
-                </span>
-              </md-chip-template>
-            </md-chips>
+          </div>
         </div>
+      </md-toolbar-->
 
-        <div flex-item>
-          <md-input-container class="md-block">
-            <label>Time picker</label>
-            <input  name="dateOfBirth" ng-model='date' placeholder="Date of Birth" date-time-picker-input  display-mode="date" display-format="d MMMM yyyy" ng-max="getMinimumDrivingDate()"/>
-          </md-input-container>
-        </div>
-      </div>
-</md-card>
+      <md-card layout="column" class="md-tall">
+        <div  flex-container="row" flex-gutter="24">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Pabellon</label>
+              <md-select ng-model="filter._pabellon" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadAulas()">
+                <md-option ng-repeat="pab in pabellones" ng-value="pab">
+                  {{pab.nombre}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
 
-<table class="table table-bordered green-border mt++">
-  <thead>
-    <tr>
-      <th>Horario</th>
-      <th ng-repeat="au in aulas">{{au.nombre}}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-    <tr ng-repeat="hora in horarios">
-      <th class="text-left">{{hora.ini}} - {{hora.fin}}</th>
-      <td ng-repeat="au in aulas" ng-click="handleCell(event, hora, au)"></td>
-    </tr>
-  </tbody>
-</table>
-</md-content>
-</div>
+          <div flex-item>
+            <md-chips ng-model="periodosSeleccionados" md-autocomplete-snap
+                md-transform-chip="transformChip($chip)"
+                md-require-match="autocompleteDemoRequireMatch">
+                <md-autocomplete
+                    md-selected-item="selectedItem"
+                    md-search-text="searchText"
+                    md-items="item in querySearch(searchText)"
+                    md-item-text="item.nombre"
+                    placeholder="Agregar periodos">
+                    <span md-highlight-text="searchText">{{item.nombre}} :: {{item.periodo}}</span>
+                </md-autocomplete>
+                <md-chip-template>
+                  <span>
+                    <strong>{{item.nombre}}</strong>
+                    <em>{{$chip.type}}</em>
+                  </span>
+                </md-chip-template>
+              </md-chips>
+            </div>
+
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Time picker</label>
+                <input  name="dateOfBirth" ng-model='date' placeholder="Date of Birth" date-time-picker-input  display-mode="date" display-format="d MMMM yyyy" ng-max="getMinimumDrivingDate()"/>
+              </md-input-container>
+            </div>
+          </div>
+        </md-card>
+
+        <table class="table table-bordered green-border mt++">
+          <thead>
+            <tr>
+              <th>Horario</th>
+              <th ng-repeat="au in aulas">{{au.nombre}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+            <tr ng-repeat="hora in horarios">
+              <th class="text-left">{{hora.ini}} - {{hora.fin}}</th>
+              <td ng-repeat="au in aulas" ng-click="handleCell(event, hora, au)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </md-content>
+    </div>
+  </md-content>
+
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+</md-button>
+
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
-<md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling button-floating-bottom">
+<md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
    <md-button aria-label="menu" class="md-fab md-warn">
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
