@@ -41,10 +41,15 @@ npm install
 ```
 
 ## Init Project for Development
-
 ```
+Para levantar el servidor ejecutar:
+
 nodemon app
 or
 node-inspector --web-port:8080
 nodemon --debug-brk app
+
+Para escuhar todos los cambios en el cliente:
+cd client
+gulp
 ```
