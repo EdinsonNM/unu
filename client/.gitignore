@@ -6,3 +6,4 @@ bower_components
 app/styles/main.css
 app/styles/login.css
 app/styles/css3.css
+app/public/*
