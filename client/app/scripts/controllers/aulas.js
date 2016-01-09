@@ -151,12 +151,15 @@
     };
   }])
 
-  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog','Restangular',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    Restangular.all('pabellones').getList().then(function(data){
+      $scope.pabellones = data;
+    });
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {

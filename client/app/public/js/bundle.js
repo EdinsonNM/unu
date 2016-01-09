@@ -278,58 +278,19 @@
     * Config Theme module of the application.
    */
   angular.module('unuApp')
-  .config(['$mdThemingProvider',function($mdThemingProvider) {
+  .constant('COLOR', {
+    primary: 'teal',
+    accent: 'orange'
+  })
+  .config(['$mdThemingProvider','COLOR',function($mdThemingProvider,COLOR) {
     // set the default palette name
-    var defaultPalette = 'teal';
-    // define a palette to darken the background of components
-    var greyBackgroundMap = $mdThemingProvider.extendPalette(defaultPalette, {'A100': 'fafafa'});
-
-    $mdThemingProvider.definePalette('grey-background', greyBackgroundMap);
-    $mdThemingProvider.setDefaultTheme(defaultPalette);
-
     $mdThemingProvider
-			.theme(defaultPalette)
-			.primaryPalette(defaultPalette)
-			.accentPalette('pink')
-			.backgroundPalette('grey-background');
-    /*$mdThemingProvider
-      .theme('default')
-        .primaryPalette('teal', {
-          'default': '600'
-        })
-        .accentPalette('pink', {
-          'default': '500'
-        })
-        .warnPalette('defaultPrimary');
-
-    /*$mdThemingProvider.theme('dark', 'default')
-      .primaryPalette('defaultPrimary')
-      .dark();
-
-    $mdThemingProvider.theme('green', 'default')
-      .primaryPalette('teal');
-
-    $mdThemingProvider.theme('custom', 'default')
-      .primaryPalette('defaultPrimary', {
-        'hue-1': '50'
-    });
-
-    $mdThemingProvider.definePalette('defaultPrimary', {
-      '50':  '#000000',
-      '100': 'rgb(255, 198, 197)',
-      '200': '#E75753',
-      '300': '#E75753',
-      '400': '#E75753',
-      '500': '#E75753',
-      '600': '#E75753',
-      '700': '#E75753',
-      '800': '#E75753',
-      '900': '#E75753',
-      'A100': '#E75753',
-      'A200': '#E75753',
-      'A400': '#E75753',
-      'A700': '#E75753'
-    });*/
+			.theme('default')
+			.primaryPalette(COLOR.primary)
+			.accentPalette(COLOR.accent,{
+         'default': '500'
+      })
+			.backgroundPalette('grey');
 
   }]);
 
@@ -339,7 +300,8 @@
 (function() {
   'use strict';
   angular.module('unuApp')
-  .run(['$rootScope',function($rootScope) {
+  .run(['$rootScope','COLOR',function($rootScope,COLOR) {
+    $rootScope.color = COLOR;
     $rootScope.inProgress = false;
     $rootScope.app = {
       name: 'Sistema de Matrícula',
@@ -734,9 +696,8 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('AlumnosCtrl', [
-  'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  ,function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('AlumnosCtrl', [ 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
+  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
     var List, service, service_usuario;
 
     $scope.UI = {
@@ -760,7 +721,7 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10
       }, {
@@ -794,27 +755,10 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          service:service
         },
-        controller: function($scope, table,name,MessageFactory){
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.success(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AlumnoNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -828,27 +772,7 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: function($scope, table,name, MessageFactory,model){
-          $scope.submited = false;
-          $scope.model = model;
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.success(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-
-
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AlumnoEditCtrl'
       });
     };
 
@@ -890,6 +814,46 @@
     };
 
     new List();
+  }])
+  .controller('AlumnoNewCtrl',['$scope', 'table','name','MessageFactory','service','ToastMD','$mdDialog',function($scope, table,name,MessageFactory,service,ToastMD,$mdDialog){
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.success(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }])
+  .controller('AlumnoEditCtrl',['$scope', 'table','name', 'MessageFactory','model','ToastMD','$mdDialog',function($scope, table,name, MessageFactory,model,ToastMD,$mdDialog){
+    $scope.submited = false;
+    $scope.model = model;
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        $scope.model.put().then(function() {
+          ToastMD.success(MessageFactory.Form.Updated);
+          $mdDialog.hide();
+          table.reload();
+        });
+
+
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
   }]);
 
 }).call(this);
@@ -1381,12 +1345,15 @@
     };
   }])
 
-  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog','Restangular',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    Restangular.all('pabellones').getList().then(function(data){
+      $scope.pabellones = data;
+    });
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -1458,6 +1425,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){
@@ -1991,8 +1959,8 @@
    */
 
   angular.module('unuApp').controller('FacultadesCtrl', [
-'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -2019,7 +1987,7 @@
     //end custom actions
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10
       }, {
@@ -2461,6 +2429,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){
@@ -3244,7 +3213,8 @@
 
     new LoadRequisitos();
   }])
-  .controller('PlanEstudioDetallesEditCtrl',[function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
+  .controller('PlanEstudioDetallesEditCtrl',['$scope', 'table','name', 'MessageFactory','model','planestudios','ToastMD','$mdDialog','Restangular',
+  function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);

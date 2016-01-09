@@ -254,7 +254,8 @@
 
     new LoadRequisitos();
   }])
-  .controller('PlanEstudioDetallesEditCtrl',[function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
+  .controller('PlanEstudioDetallesEditCtrl',['$scope', 'table','name', 'MessageFactory','model','planestudios','ToastMD','$mdDialog','Restangular',
+  function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
