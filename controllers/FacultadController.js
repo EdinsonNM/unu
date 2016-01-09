@@ -1,4 +1,6 @@
 var model = require('../models/FacultadModel.js');
+var auth = require('../config/passport');
+
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -7,6 +9,7 @@ module.exports=function(){
       controller.fragment('/facultades');
 
       //custom methods
+
 
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
