@@ -38,6 +38,7 @@
       var deferred;
       deferred = $q.defer();
       UserFactory.getUser().then(function(result) {
+
         $rootScope.USER = result.user;
         switch ($rootScope.USER._grupo.codigo) {
           case TYPE_GROUP.MIC:
@@ -47,6 +48,9 @@
             $rootScope.app.name = 'Sistema de Matrícula';
         }
         deferred.resolve(true);
+      },function(result){
+        console.log(result);
+        deferred.resolve(false);
       });
       return deferred.promise;
     };

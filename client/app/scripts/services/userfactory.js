@@ -43,11 +43,7 @@
         $state.go('login');
       },
       getUser: function() {
-        if (AuthTokenFactory.getToken()) {
           return service.customGET('auth/me', {});
-        } else {
-          return {};
-        }
       },
       getAccess: function() {
         return $rootScope.USER._grupo.menu;

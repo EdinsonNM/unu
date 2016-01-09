@@ -38,6 +38,7 @@
       var deferred;
       deferred = $q.defer();
       UserFactory.getUser().then(function(result) {
+
         $rootScope.USER = result.user;
         switch ($rootScope.USER._grupo.codigo) {
           case TYPE_GROUP.MIC:
@@ -47,6 +48,9 @@
             $rootScope.app.name = 'Sistema de Matrícula';
         }
         deferred.resolve(true);
+      },function(result){
+        console.log(result);
+        deferred.resolve(false);
       });
       return deferred.promise;
     };
@@ -526,7 +530,7 @@
     key = 'auth-token';
     return {
       getToken: function() {
-        return store.getItem(key);
+        return store.getItem(key)||null;
       },
       setToken: function(token) {
         if (token) {
@@ -670,11 +674,7 @@
         $state.go('login');
       },
       getUser: function() {
-        if (AuthTokenFactory.getToken()) {
           return service.customGET('auth/me', {});
-        } else {
-          return {};
-        }
       },
       getAccess: function() {
         return $rootScope.USER._grupo.menu;
@@ -870,7 +870,11 @@
     * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', ['$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+    if(!DataResolve){
+      $state.go('login');
+      return;
+    }
     $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
     $scope.GoTo = function(item) {

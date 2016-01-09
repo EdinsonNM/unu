@@ -15,7 +15,7 @@
     key = 'auth-token';
     return {
       getToken: function() {
-        return store.getItem(key);
+        return store.getItem(key)||null;
       },
       setToken: function(token) {
         if (token) {
