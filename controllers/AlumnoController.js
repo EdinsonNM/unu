@@ -11,12 +11,12 @@ module.exports = function() {
 
       //custom methods
       controller.request('post', function (request, response, next) {
-        if(request._usuario){
+        if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
-          var usuario = new Usuario(request._usuario);
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
-            usuario.grupo = objGrupo._id;
+            var usuario = new Usuario(request.body._usuario);
+            usuario._grupo = objGrupo._id;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
               console.log(objUsuario);
               if(usuarioErr) return next(usuarioErr);
@@ -24,7 +24,7 @@ module.exports = function() {
 
               usuario.save(function(error, data){
                 if(error) return response.status(500).send(error);
-                request._usuario = data._id;
+                request.body._usuario = data._id;
                 next();
               });
             });
