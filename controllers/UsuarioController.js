@@ -102,23 +102,35 @@ module.exports=function(){
           next(err);
           //return res.status(500).send({error:err});
         }*/
-        /*var decoded= {_id:'89898898989989898989'};
+        var decoded= {_id:'567ef477040c56e064433c27'};
         model
         .findOne({ _id: decoded._id })
         .populate('_grupo').exec(function(err, user) {
-          //TODO VALIDAR CONTRASEÑAS si contraseñas no son inguales retornas status=400, message:'Ontraseñas no coinciden'
+          //TODO VALIDAR CONTRASEÑAS si contraseñas no son inguales retornas status=400, message:'Contraseñas no coinciden'
+          if(request.body.newPassword!=request.body.newPasswordRepeat){ return response.status(400).send({message:'Contraseñas no coinciden'}); }
           //contraseña anterior no es correcta, entonces 401 y contraseña es incorrecta
-          //validar que contraseña no sea igual al nombre de Usuario
-          //si todo es ok retornas 200
-          user.password = request.body.password;
-          user.save(function(error,data){
-            res.status(200).send({user:user});
+          user.comparePassword(request.body.password,function(err,isMatch){
+            if (err) { return next(err); }
+            if (isMatch) {
+              //validar que contraseña no sea igual al nombre de Usuario
+              if(user.username==request.body.newPassword){
+                return response.status(400).send({message:'Contraseña no debe ser igual al nombre de Usuario'});
+              }
+              //si todo es ok retornas 200
+              user.password = request.body.newPassword;
+              user.save(function(error,data){
+                response.status(200).send({user:user});
+              });
+            }
+            else {
+              return response.status(401).send({message:'Contraseña es incorrecta'});
+            }
           });
-          res.status(200).send({user:user});
-          next();
-        });*/
+          //next();
+          //return response.status(200).send({password:user.password,name:user.username});
+        });
 
-        return response.status(200).send({password:request.body.password});
+
 
         //INFO considerar recepcion de los siguientes parametros req.body.password,req.body.newPassword,req.body.newPasswordRepeat
 

@@ -13,7 +13,7 @@
   angular.module('unuApp')
   .constant('COLOR', {
     primary: 'teal',
-    accent: 'orange'
+    accent: 'blue'
   })
   .config(['$mdThemingProvider','COLOR',function($mdThemingProvider,COLOR) {
     // set the default palette name
