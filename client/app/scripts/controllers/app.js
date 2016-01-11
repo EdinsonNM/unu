@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state','Restangular','TYPE_GROUP',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state,Restangular,TYPE_GROUP) {
     if(!DataResolve){
       $state.go('login');
       return;
@@ -30,6 +30,37 @@
     $scope.Logout = function() {
       UserFactory.logout();
     };
+    $rootScope.ALUMNO ={};
+    var LaodAlumno = function LaodAlumno(){
+      var service  = Restangular.all('alumnos');
+      service.getList({conditions:{_usuario:$rootScope.USER._id}}).then(function(result){
+        if(result.length>0){
+          $rootScope.ShowAlert = false;
+          $rootScope.ALUMNO = result[0];
+          /*var validation = Validator.validate($rootScope.ALUMNO,schemaAlumno);
+          if(validation.errors.length>0){
+            $rootScope.ShowAlert=true;
+            $rootScope.MessageAlert = "Datos incompletos";
+          }
+
+          if(!$rootScope.ALUMNO.email) {
+            $rootScope.ShowAlert=true;
+          }
+          if(!$rootScope.ALUMNO.telefono) {
+            $rootScope.ShowAlert=true;
+          }*/
+
+        }
+      });
+    };
+    switch ($rootScope.USER._grupo.codigo) {
+      case TYPE_GROUP.ALUMNO:
+        new LaodAlumno();
+        break;
+      default:
+        console.log('grupo no identificado');
+
+    }
 
   }]);
 
