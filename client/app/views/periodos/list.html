@@ -12,7 +12,7 @@
           <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
           <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
             <td style="width:30px;">
-              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
             <td class="text-left" data-title="'Nombre'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
             <td class="text-left" data-title="'Año'" sortable="anio" filter="{'anio':'text'}">{{item.anio}}</td>
@@ -31,7 +31,7 @@
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
 </md-button>
 
 
@@ -47,15 +47,15 @@
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
    <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="New($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-plus fa-lg tc-pink-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
    </md-button>
    <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="Edit($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-pencil fa-lg tc-pink-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+     <md-icon md-font-icon="fa fa-pencil fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
    </md-button>
    <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="Delete($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-trash fa-lg tc-pink-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+     <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
    </md-button>
    <!--end default actions-->
  </md-fab-actions>

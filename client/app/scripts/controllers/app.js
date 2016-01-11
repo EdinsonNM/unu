@@ -10,7 +10,11 @@
     * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', ['$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+    if(!DataResolve){
+      $state.go('login');
+      return;
+    }
     $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
     $scope.GoTo = function(item) {

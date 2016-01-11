@@ -38,6 +38,7 @@
       var deferred;
       deferred = $q.defer();
       UserFactory.getUser().then(function(result) {
+
         $rootScope.USER = result.user;
         switch ($rootScope.USER._grupo.codigo) {
           case TYPE_GROUP.MIC:
@@ -47,6 +48,9 @@
             $rootScope.app.name = 'Sistema de Matrícula';
         }
         deferred.resolve(true);
+      },function(result){
+        console.log(result);
+        deferred.resolve(false);
       });
       return deferred.promise;
     };
@@ -278,58 +282,28 @@
     * Config Theme module of the application.
    */
   angular.module('unuApp')
-  .config(['$mdThemingProvider',function($mdThemingProvider) {
+  .constant('COLOR', {
+    primary: 'teal',
+    accent: 'orange'
+  })
+  .config(['$mdThemingProvider','COLOR',function($mdThemingProvider,COLOR) {
     // set the default palette name
-    /*var defaultPalette = 'teal';
+
+    var defaultPalette = 'teal';
     // define a palette to darken the background of components
     var greyBackgroundMap = $mdThemingProvider.extendPalette(defaultPalette, {'A100': 'fafafa'});
 
     $mdThemingProvider.definePalette('grey-background', greyBackgroundMap);
     $mdThemingProvider.setDefaultTheme(defaultPalette);
 
+
     $mdThemingProvider
-			.theme(defaultPalette)
-			.primaryPalette(defaultPalette)
-			.accentPalette('pink')
-			.backgroundPalette('grey-background');
-    /*$mdThemingProvider
-      .theme('default')
-        .primaryPalette('teal', {
-          'default': '600'
-        })
-        .accentPalette('pink', {
-          'default': '500'
-        })
-        .warnPalette('defaultPrimary');
-
-    /*$mdThemingProvider.theme('dark', 'default')
-      .primaryPalette('defaultPrimary')
-      .dark();
-
-    $mdThemingProvider.theme('green', 'default')
-      .primaryPalette('teal');
-
-    $mdThemingProvider.theme('custom', 'default')
-      .primaryPalette('defaultPrimary', {
-        'hue-1': '50'
-    });
-
-    $mdThemingProvider.definePalette('defaultPrimary', {
-      '50':  '#000000',
-      '100': 'rgb(255, 198, 197)',
-      '200': '#E75753',
-      '300': '#E75753',
-      '400': '#E75753',
-      '500': '#E75753',
-      '600': '#E75753',
-      '700': '#E75753',
-      '800': '#E75753',
-      '900': '#E75753',
-      'A100': '#E75753',
-      'A200': '#E75753',
-      'A400': '#E75753',
-      'A700': '#E75753'
-    });*/
+			.theme('teal')
+			.primaryPalette(COLOR.primary)
+			.accentPalette(COLOR.accent,{
+         'default': '500'
+      })
+			.backgroundPalette('grey');
 
   }]);
 
@@ -339,7 +313,8 @@
 (function() {
   'use strict';
   angular.module('unuApp')
-  .run(['$rootScope',function($rootScope) {
+  .run(['$rootScope','COLOR',function($rootScope,COLOR) {
+    $rootScope.color = COLOR;
     $rootScope.inProgress = false;
     $rootScope.app = {
       name: 'Sistema de Matrícula',
@@ -564,7 +539,7 @@
     key = 'auth-token';
     return {
       getToken: function() {
-        return store.getItem(key);
+        return store.getItem(key)||null;
       },
       setToken: function(token) {
         if (token) {
@@ -708,11 +683,7 @@
         $state.go('login');
       },
       getUser: function() {
-        if (AuthTokenFactory.getToken()) {
           return service.customGET('auth/me', {});
-        } else {
-          return {};
-        }
       },
       getAccess: function() {
         return $rootScope.USER._grupo.menu;
@@ -734,9 +705,8 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('AlumnosCtrl', [
-  'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  ,function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('AlumnosCtrl', [ 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
+  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
     var List, service, service_usuario;
 
     $scope.UI = {
@@ -760,7 +730,7 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10
       }, {
@@ -794,27 +764,10 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          service:service
         },
-        controller: function($scope, table,name,MessageFactory){
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.success(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-                table.reload();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AlumnoNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -828,27 +781,7 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: function($scope, table,name, MessageFactory,model){
-          $scope.submited = false;
-          $scope.model = model;
-          $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              $scope.model.put().then(function() {
-                ToastMD.success(MessageFactory.Form.Updated);
-                $mdDialog.hide();
-                table.reload();
-              });
-
-
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AlumnoEditCtrl'
       });
     };
 
@@ -890,6 +823,47 @@
     };
 
     new List();
+  }])
+  .controller('AlumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog){
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.success(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }])
+  .controller('AlumnoEditCtrl',[
+    '$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+    $scope.submited = false;
+    $scope.model = model;
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        $scope.model.put().then(function() {
+          ToastMD.success(MessageFactory.Form.Updated);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
   }]);
 
 }).call(this);
@@ -906,7 +880,11 @@
     * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', ['$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function($scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state) {
+    if(!DataResolve){
+      $state.go('login');
+      return;
+    }
     $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
     $scope.GoTo = function(item) {
@@ -1063,7 +1041,9 @@
     * # AulasCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('AsignarAulasCtrl', function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('AsignarAulasCtrl', [
+  "MessageFactory", "$rootScope", "$scope", "Restangular", "$mdDialog", "$timeout", "LxDialogService", "LxNotificationService", "$mdBottomSheet", "$state",
+  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -1135,16 +1115,19 @@
 
     function transformChip(chip) {
       // If it is an object, it's already a known chip
-      console.log(chip);
+      console.log("el chip es: ", chip);
       if (angular.isObject(chip)) {
         return chip;
+        return {
+          name: 'oka',
+          obj: {}
+        };
       }
       // Otherwise, create a new one
-      return { name: chip, type: 'new' }
+      return { name: chip, obj: {}, type: 'new' }
     }
     function querySearch (query) {
       var results = query ? $scope.periodos.filter(createFilterFor(query)) : [];
-      console.log(results);
       return results;
     }
     function createFilterFor(query) {
@@ -1188,43 +1171,48 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
+          route_escuelas: LOCAL.route_escuelas,
           facultades: $scope.facultades,
           hora: hora,
           aula: aula
         },
-        controller: function($scope, name, MessageFactory, facultades, hora, aula){
-          $scope.facultades = facultades;
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {};
-          $scope.model.aula = aula;
-          $scope.model.horainicio = hora.ini;
-          $scope.model.horafin = hora.fin;
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          $scope.LoadEcuelas = function LoadEcuelas(){
-            var serviceEscuela = Restangular.all(LOCAL.route_escuelas);
-            serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
-              $scope.escuelas = data;
-            });
-          };
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AsignaraulasNewCtrl'
       });
     };
 
-  });
+  }])
+
+  .controller('AsignaraulasNewCtrl', [
+    '$scope', 'name', 'MessageFactory', 'facultades', 'hora', 'aula', 'Restangular', 'route_escuelas', '$mdDialog',
+  function($scope, name, MessageFactory, facultades, hora, aula, Restangular, route_escuelas, $mdDialog){
+    $scope.facultades = facultades;
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.model = {};
+    $scope.model.aula = aula;
+    $scope.model.horainicio = hora.ini;
+    $scope.model.horafin = hora.fin;
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    $scope.LoadEcuelas = function LoadEcuelas(){
+      var serviceEscuela = Restangular.all(route_escuelas);
+      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+        $scope.escuelas = data;
+      });
+    };
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.info(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }]);
 
 }).call(this);
 
@@ -1381,12 +1369,15 @@
     };
   }])
 
-  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('AulaEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog','Restangular',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    Restangular.all('pabellones').getList().then(function(data){
+      $scope.pabellones = data;
+    });
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -1458,6 +1449,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){
@@ -1991,8 +1983,8 @@
    */
 
   angular.module('unuApp').controller('FacultadesCtrl', [
-'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -2019,7 +2011,7 @@
     //end custom actions
 
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10
       }, {
@@ -2400,7 +2392,9 @@
     * # LoginCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('LoginCtrl',['$scope', 'UserFactory', '$rootScope', function($scope, UserFactory, $rootScope) {
+  angular.module('unuApp').controller('LoginCtrl',[
+    '$scope', 'UserFactory', '$rootScope',
+    function($scope, UserFactory, $rootScope) {
     $scope.Login = function() {
       UserFactory.login($scope.user);
     };
@@ -2461,6 +2455,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){
@@ -3001,8 +2996,8 @@
    */
 
   angular.module('unuApp').controller('PlanEstudioDetallesCtrl', [
-  '$mdSidenav','$q','$stateParams', 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
-  function($mdSidenav,$q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
+  '$mdSidenav', '$q', '$stateParams', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$state',
+  function($mdSidenav, $q, $stateParams, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $state) {
     var List, service;
 
     $scope.UI = {
@@ -3244,7 +3239,8 @@
 
     new LoadRequisitos();
   }])
-  .controller('PlanEstudioDetallesEditCtrl',[function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
+  .controller('PlanEstudioDetallesEditCtrl',['$scope', 'table','name', 'MessageFactory','model','planestudios','ToastMD','$mdDialog','Restangular',
+  function($scope, table,name, MessageFactory,model,planestudios,ToastMD,$mdDialog,Restangular){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);

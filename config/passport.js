@@ -44,7 +44,7 @@ module.exports.ensureAuthenticated = function ensureAuthenticated(req, res, next
     } else {
         res.send(403);
     }
-}
+};
 
 
 // Check for admin middleware, this is unrelated to passport.js

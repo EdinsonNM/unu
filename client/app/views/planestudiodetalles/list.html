@@ -26,7 +26,7 @@
 
             <tr ng-hide="group.$hideRows" ng-repeat-start="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
               <td style="width:30px;">
-                <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+                <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
               </td>
               <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
               <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
@@ -64,13 +64,13 @@
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-if="!UI.editMode&&(UI.planestudios.estado=='Registrado'||UI.planestudios.estado=='Observado')" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
 </md-button>
 
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode&&(UI.planestudios.estado=='Registrado'||UI.planestudios.estado=='Observado')" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
-   <md-button aria-label="menu" class="md-fab md-warn">
+   <md-button aria-label="menu" class="md-fab md-accent">
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
  </md-fab-trigger>
@@ -79,22 +79,22 @@
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
      <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
-     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-red-500 " aria-label="{{action.label}}"></md-icon>
+     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-{{$root.color.accent}}-500 " aria-label="{{action.label}}"></md-icon>
    </md-button>
    <!--end custom actions-->
 
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
    <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="New($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-plus fa-lg tc-red-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
    </md-button>
    <md-button  aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="Edit($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-pencil fa-lg tc-red-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+     <md-icon md-font-icon="fa fa-pencil fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
    </md-button>
    <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="Delete($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-trash fa-lg tc-red-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+     <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
    </md-button>
    <!--end default actions-->
  </md-fab-actions>

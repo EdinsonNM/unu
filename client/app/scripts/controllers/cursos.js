@@ -52,6 +52,7 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
     };
 
     $scope.Refresh = function Refresh(){

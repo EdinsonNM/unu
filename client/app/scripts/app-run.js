@@ -2,7 +2,8 @@
 (function() {
   'use strict';
   angular.module('unuApp')
-  .run(['$rootScope',function($rootScope) {
+  .run(['$rootScope','COLOR',function($rootScope,COLOR) {
+    $rootScope.color = COLOR;
     $rootScope.inProgress = false;
     $rootScope.app = {
       name: 'Sistema de Matrícula',

@@ -28,7 +28,7 @@ module.exports=function(){
             _grupo:obj._id
           });
           user.save(function(err,u){
-          
+
             next();
           });
         });
@@ -95,6 +95,34 @@ module.exports=function(){
 
       });
 
+      controller.put('/auth/change-password',function(request,response,next){
+        /*try {
+          var decoded = jwt.verify(req.token,config.key_secret);
+        }catch(err) {
+          next(err);
+          //return res.status(500).send({error:err});
+        }*/
+        /*var decoded= {_id:'89898898989989898989'};
+        model
+        .findOne({ _id: decoded._id })
+        .populate('_grupo').exec(function(err, user) {
+          //TODO VALIDAR CONTRASEÑAS si contraseñas no son inguales retornas status=400, message:'Ontraseñas no coinciden'
+          //contraseña anterior no es correcta, entonces 401 y contraseña es incorrecta
+          //validar que contraseña no sea igual al nombre de Usuario
+          //si todo es ok retornas 200
+          user.password = request.body.password;
+          user.save(function(error,data){
+            res.status(200).send({user:user});
+          });
+          res.status(200).send({user:user});
+          next();
+        });*/
+
+        return response.status(200).send({password:request.body.password});
+
+        //INFO considerar recepcion de los siguientes parametros req.body.password,req.body.newPassword,req.body.newPasswordRepeat
+
+      });
     }
   };
 };

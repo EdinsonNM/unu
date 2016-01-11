@@ -11,20 +11,20 @@ module.exports = function() {
 
       //custom methods
       controller.request('post', function (request, response, next) {
-        if(request._usuario){
+        if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
-          var usuario = new Usuario(request._usuario);
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
-            usuario.grupo = objGrupo._id;
+            var usuario = new Usuario(request.body._usuario);
+            usuario._grupo = objGrupo._id;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
-              console.log(objUsuario);
+              //console.log(objUsuario);
               if(usuarioErr) return next(usuarioErr);
               if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
 
               usuario.save(function(error, data){
                 if(error) return response.status(500).send(error);
-                request._usuario = data._id;
+                request.body._usuario = data._id;
                 next();
               });
             });
@@ -44,14 +44,14 @@ module.exports = function() {
             limit: limit,
             populate: ['_facultad']
           },
-          function(err, results, pageCount, itemCount) {
+          function(err, results) {
             var obj = {
-              total: itemCount,
-              perpage: limit * 1,
-              current_page: page * 1,
-              last_page: Math.ceil(itemCount / limit),
-              from: (page - 1) * pageCount + 1,
-              to: page * pageCount,
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
               data: results.docs
             };
             res.send(obj);

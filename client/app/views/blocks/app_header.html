@@ -6,17 +6,31 @@
     <span class="app-title">{{app.name}}</span> <span class="hidden-xs">{{app.module}}</span>
   </h2>
   <span flex></span>
-
-
   <md-menu>
           <md-button  class="md-icon-button" ng-click="$mdOpenMenu()" aria-label="Open menu">
               <md-icon md-font-icon="fa fa-ellipsis-v fa-lg"></md-icon>
           </md-button>
           <md-menu-content>
-              <md-menu-item><md-button ui-sref='app'>Inicio</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="$mdCloseMenu()">Mis Datos</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="$mdCloseMenu()">Cambiar mi Contraseña</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="Logout()" >Log out</md-button></md-menu-item>
+              <md-menu-item>
+                <md-button ui-sref='app'>
+                  <md-icon md-font-icon="fa fa-home fa-lg"></md-icon> Inicio
+                </md-button>
+              </md-menu-item>
+              <md-menu-item>
+                <md-button ng-click="$mdCloseMenu()">
+                  <md-icon md-font-icon="fa fa-user fa-lg"></md-icon> Mis Datos
+                </md-button>
+              </md-menu-item>
+              <md-menu-item>
+                <md-button ng-click="$mdCloseMenu()">
+                  <md-icon md-font-icon="fa fa-key fa-lg"></md-icon> Cambiar Contraseña
+                </md-button>
+              </md-menu-item>
+              <md-menu-item>
+                <md-button ng-click="Logout()" >
+                  <md-icon md-font-icon="fa fa-sign-out fa-lg"></md-icon> Cerrar Sesión
+                </md-button>
+              </md-menu-item>
           </md-menu-content>
       </md-menu>
 </div>

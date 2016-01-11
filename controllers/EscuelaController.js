@@ -54,12 +54,12 @@ module.exports = function() {
 
           function(err, results, pageCount, itemCount) {
             var obj = {
-              total: itemCount,
-              perpage: limit * 1,
-              current_page: page * 1,
-              last_page: Math.ceil(itemCount / limit),
-              from: (page - 1) * pageCount + 1,
-              to: page * pageCount,
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
               data: results.docs
             };
             res.send(obj);
