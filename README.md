@@ -24,6 +24,7 @@ Windows:
 [sudo] npm install -g nodemon
 [sudo] npm install -g node-inspector
 [sudo] npm install -g gulp
+[sudo] npm install -g bower
 
 ```
 
