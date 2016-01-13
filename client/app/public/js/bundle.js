@@ -199,6 +199,12 @@
       templateUrl: 'views/alumno/misdatos.html',
       controller: 'AlumnoMisDatosCtrl'
     })
+    .state('app.paramprocesosperiodo', {
+      url: '/periodo-parametros-procesos',
+      templateUrl: 'views/periodos/params-procesos.html',
+      controller: 'AlumnoMisDatosCtrl'
+    })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
@@ -910,6 +916,21 @@
     }
     $rootScope.app.module ='';
     $rootScope.menu = UserFactory.getAccess();
+    var LoadCards = function LoadCards(){
+      $scope.rowsCards = [];
+      var row = [];
+      var rowFlex = 0;
+      angular.forEach($rootScope.menu,function(item,index){
+        rowFlex += parseInt(item.flex);
+        row.push(item);
+        if(rowFlex===100||index===$rootScope.menu.length-1){
+          $scope.rowsCards.push(angular.copy(row));
+          row = [];
+          rowFlex = 0;
+        }
+      });
+      console.log($scope.rowsCards);
+    };
     $scope.GoTo = function(item) {
       $rootScope.app.module = ' > ' + item.title;
       $state.go(item.url);
@@ -954,6 +975,8 @@
         console.log('grupo no identificado');
 
     }
+
+    new LoadCards();
 
   }]);
 
