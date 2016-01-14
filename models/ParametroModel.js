@@ -15,14 +15,16 @@ var ParametroSchema = new Schema({
 		type:String,
 		required:true
 	},
-	activoEscuela:[{
+	activoEscuela:{
 		type:Boolean,
-		ref:'Escuela'
-	}],
-  activoPeriodo:[{
+		ref:'Escuela',
+		default:true
+	},
+  activoPeriodo:{
 		type:Boolean,
-		ref:'Escuela'
-	}],
+		ref:'Escuela',
+		default:true
+	},
 	created_at:Date,
 	updated_at:Date
 });
@@ -37,4 +39,4 @@ ParametroSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Proceso', ParametroSchema).plural('parametros');
+module.exports = mongoose.model('Parametro', ParametroSchema).plural('parametros');
