@@ -1,15 +1,14 @@
-var model = require('../models/FacultadModel.js');
-var auth = require('../config/passport');
+var model = require('../models/ParametroModel.js');
 
 module.exports=function(){
   var baucis=require('baucis');
   return{
     setup:function(){
-      var controller=baucis.rest('Facultad');
-      controller.fragment('/facultades');
+      var controller=baucis.rest('Parametro');
+      controller.fragment('/parametros');
 
       //custom methods
-
+      //api/parametros/methods/paginate
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;
@@ -25,8 +24,7 @@ module.exports=function(){
       	model.paginate(
       		filter,
       		{page: page, limit: limit},
-      		function(err, results, pageCount, itemCount){
-
+      		function(err, results){
             var obj = {
               total: results.total,
               perpage: limit*1,
@@ -36,10 +34,11 @@ module.exports=function(){
               to: page*limit,
               data: results.docs
             };
-      			res.send(obj);
+      			res.status(200).send(obj);
       		}
       	);
       });
+
 
     }
   };

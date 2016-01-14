@@ -23,6 +23,8 @@ Windows:
 ```
 [sudo] npm install -g nodemon
 [sudo] npm install -g node-inspector
+[sudo] npm install -g gulp
+[sudo] npm install -g bower
 
 ```
 
@@ -41,15 +43,15 @@ npm install
 ```
 
 ## Init Project for Development
-```
 Para levantar el servidor ejecutar:
 
-nodemon app
-or
-node-inspector --web-port:8080
+```
+npm start (levanta el servidor)
+Si se desea hacer un debug del servidor
+node-inspector --web-port:8080 
 nodemon --debug-brk app
-
-Para escuhar todos los cambios en el cliente:
-cd client
-gulp
+```
+Para escuchar todos los cambios en el cliente:
+```
+npm run client
 ```
