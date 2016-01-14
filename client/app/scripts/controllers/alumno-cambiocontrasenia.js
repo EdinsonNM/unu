@@ -5,9 +5,9 @@
     $scope.UI = {
       title:'Cambio Contraseña'
     };
-    /*$rootScope.$watch('ALUMNO',function(newValue,oldValue){
+    $rootScope.$watch('ALUMNO',function(newValue,oldValue){
         $scope.model = Restangular.copy(newValue);
-    },true);*/
+    },true);
 
     /*$scope.Edit = function Edit($event) {
       $scope.UI.editMode = true;
@@ -15,7 +15,6 @@
     };*/
 
     $scope.Save = function Save($event) {
-      $scope.UI.editMode = false;
       $scope.model.save().then(function(result){
         console.log(result);
       });

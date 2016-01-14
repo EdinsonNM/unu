@@ -12,7 +12,7 @@
           <md-input-container class="md-block">
             <label>Contraseña Actual</label>
 
-            <input required name="codigo" ng-model="model.contrasenia" ng-readonly="!UI.editMode">
+            <input required name="contrasenia" ng-model="model.contrasenia">
             <div ng-messages="myForm.codigo.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -21,7 +21,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Nueva Contraseña</label>
-            <input required name="resolucion" ng-model="model.nuevaContrasenia">
+            <input required name="nuevacontrasenia" ng-model="model.nuevaContrasenia">
             <div ng-messages="myForm.resolucion.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -30,7 +30,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Repita Nueva Contraseña</label>
-            <input required name="resolucion" ng-model="model.nuevaContraseniaRepetida">
+            <input required name="nuevacontraseniarepetida" ng-model="model.nuevaContraseniaRepetida">
             <div ng-messages="myForm.resolucion.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
