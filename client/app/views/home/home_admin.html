@@ -1,0 +1,35 @@
+<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2;">
+  <md-subheader class="md-primary" style="margin-right: 0">
+    <h3><span class="fa fa-home"></span> Bienvenido al Sistema de Matrícula</h3>
+  </md-subheader>
+  <md-content flex style="max-width:1020px;margin:auto;background-color:#f2f2f2;">
+        <div layout="row" layout-sm="column" ng-repeat="row in rowsCards">
+          <div ng-repeat="item in row" class="dashboard display-animation" flex-sm="100">
+            <a href class="tile tile-lg {{item.style.bgColor}} ripple-effect " >
+              <span class="content-wrapper">
+              <span class="tile-content">
+                <span class="tile-img {{item.style.bgColorHead}}" style="background-image: url(images/{{item.style.image}});background-size:cover;">
+
+                </span>
+                <span class="tile-holder tile-holder-sm grey-500" >
+
+                  <span class="title">
+
+                  {{item.title}}
+                  </span>
+                  <p>
+                  {{item.description}}
+
+                  </p>
+
+                </span>
+              </span>
+              </span>
+            </a>
+          </div>
+
+        </div>
+
+  </md-content>
+
+</md-content>

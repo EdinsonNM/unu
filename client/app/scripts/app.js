@@ -194,6 +194,17 @@
       templateUrl: 'views/aprobacion/planestudios/list.html',
       controller: 'AprobacionPlanestudiosCtrl'
     })
+    .state('app.alumnomisdatos', {
+      url: '/alumno/misdatos',
+      templateUrl: 'views/alumno/misdatos.html',
+      controller: 'AlumnoMisDatosCtrl'
+    })
+    .state('app.paramprocesosperiodo', {
+      url: '/periodo-parametros-procesos',
+      templateUrl: 'views/periodos/params-procesos.html',
+      controller: 'AlumnoMisDatosCtrl'
+    })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
@@ -235,6 +246,7 @@
   }).constant('TYPE_GROUP', {
     ADMIN: 'ADMIN',
     ALUMNO: 'ALUMNO',
+    DOCENTE: 'DOCENTE',
     MIC: 'MIC'
   })
   //take all whitespace out of string
