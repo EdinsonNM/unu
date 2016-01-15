@@ -9,15 +9,26 @@ version 0.1
 * Install MongoDB from [https://www.mongodb.org/](https://www.mongodb.org/)
 
 
-## Run MongoDB
+## Iniciar MongoDB 
 
+```
+Para Windows:
+#!batch
+"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --dbpath=D:\mongodb
+```
+
+## Iniciar MongoDB como servicio
+crear archivo en D:\mongodb\mongod.cfg con el siguiente contenido:
 ```
 #!batch
-Windows:
-"C:\Program Files\MongoDB 2.6 Standard\bin\mongod.exe" --dbpath=D:\mongodb
+logpath=D:\mongodb\log\mongo.log
+dbpath=D:\mongodb
 ```
-
-
+Ejecutar el siguiente comando:
+```
+#!batch
+"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --dbpath=D:\mongodb
+```
 ## Requirements for Development
 
 ```
