@@ -71,3 +71,9 @@ Para escuchar todos los cambios en el cliente:
 ```
 npm run client
 ```
+
+## Pasos a tener en cuenta antes de iniciar el Proyecto
+Antes de iniciar a trabajar se recomienda ejecutar
+```
+git pull
+``
