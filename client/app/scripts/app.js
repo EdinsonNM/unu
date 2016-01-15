@@ -204,6 +204,11 @@
       templateUrl: 'views/periodos/params-procesos.html',
       controller: 'AlumnoMisDatosCtrl'
     })
+    .state('app.parametros', {
+      url: '/parametros',
+      templateUrl: 'views/parametros/list.html',
+      controller: 'ParametrosCtrl'
+    })
 
     //inicio mic
     .state('app.mic_asignaturas', {
