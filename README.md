@@ -56,16 +56,24 @@ cd /unu-server
 npm install
 ```
 
-## Init Project for Development
+## Inciar el Proyecto para desarrollo
 Para levantar el servidor ejecutar:
-
 ```
-npm start (levanta el servidor)
+npm start
+```
+Para visualizar la aplicación abrir la ruta http://localhost:3000
+
 Si se desea hacer un debug del servidor
-node-inspector --web-port:8080 
-nodemon --debug-brk app
+```
+npm run debug
 ```
 Para escuchar todos los cambios en el cliente:
 ```
 npm run client
 ```
+
+## Pasos a tener en cuenta antes de iniciar el Proyecto
+Antes de iniciar a trabajar se recomienda ejecutar
+```
+git pull
+``
