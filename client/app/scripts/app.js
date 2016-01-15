@@ -204,6 +204,12 @@
       templateUrl: 'views/alumno/cambiocontrasenia.html',
       controller: 'AlumnoCambioContraseniaCtrl'
     })
+    .state('app.paramprocesosperiodo', {
+      url: '/periodo-parametros-procesos',
+      templateUrl: 'views/periodos/params-procesos.html',
+      controller: 'AlumnoMisDatosCtrl'
+    })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
