@@ -37,6 +37,8 @@ Ejecutar el siguiente comando:
 [sudo] npm install -g node-inspector
 [sudo] npm install -g gulp
 [sudo] npm install -g bower
+[sudo] npm install -g stylus
+
 
 ```
 
