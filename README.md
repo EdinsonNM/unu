@@ -19,6 +19,7 @@ Para Windows:
 
 ## Iniciar MongoDB como servicio
 crear archivo en D:\mongodb\mongod.cfg con el siguiente contenido:
+
 ```
 #!batch
 logpath=D:\mongodb\log\mongo.log
@@ -27,7 +28,7 @@ dbpath=D:\mongodb
 Ejecutar el siguiente comando:
 ```
 #!batch
-"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --dbpath=D:\mongodb
+"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --config "D:\mongodb\mongod.cfg" --install
 ```
 ## Requirements for Development
 
