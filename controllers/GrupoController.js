@@ -19,7 +19,6 @@ module.exports=function(){
                 {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
                 {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:2},
                 {title:'Procesos',icon:'fa-cogs',url:'app.procesos',order:3},
-                {title:'Plan de Estudios',icon:'fa-books',url:'app.planestudios',order:4},
                 {title:'Cursos',icon:'',url:'app.cursos',order:5},
                 {title:'Pabellones',icon:'',url:'app.pabellones',order:6},
                 {title:'Docentes',icon:'',url:'app.docentes',order:7},
@@ -63,7 +62,9 @@ module.exports=function(){
                 {title:'Cursos',icon:'',url:'app.cursos',order:1},
                 {title:'Plan de Estudios',icon:'',url:'app.planestudios',order:2},
                 {title:'Equivalencias',icon:'',url:'app.paramprocesosperiodo',order:3},
-                {title:'Reportes',icon:'',url:'app.paramprocesosescuela',order:4},
+                {title:'Aprobación Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:4},
+                {title:'Aprobación Cursos Periodo',icon:'',url:'app.aprobacioncursosperiodo',order:5},
+                {title:'Reportes',icon:'',url:'app.paramprocesosescuela',order:6},
 
               ],
               style:{
@@ -80,7 +81,7 @@ module.exports=function(){
               flex:33,
               children:[
                 {title:'Alumnos Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
-                {title:'Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:2}
+
               ],
               style:{
                 color: 'white',

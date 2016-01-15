@@ -10,10 +10,10 @@
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('PlanestudiosCtrl',[
-  '$mdSidenav', '$q', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function($mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var List, service;
-
+  '$window','$mdSidenav', '$q', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function($window,$mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+    var List, service, store;
+    store = $window.localStorage;
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
@@ -51,16 +51,26 @@
       var serviceFacultad = Restangular.all('facultades');
       serviceFacultad.getList().then(function(data){
         $scope.facultades = data;
+        console.log(store.getItem('facultadSelected'));
+        if(store.getItem('facultadSelected')){
+          $scope.filter._facultad = JSON.parse(store.getItem('facultadSelected'));
+        }
+
       });
     };
     $scope.LoadEcuelas = function LoadEcuelas(){
+      store.setItem('facultadSelected', JSON.stringify($scope.filter._facultad));
       var serviceEscuela = Restangular.all('escuelas');
       serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id},populate:'_facultad'}).then(function(data){
         $scope.escuelas = data;
+        if(store.getItem('escuelaSelected')){
+          $scope.filter._escuela = JSON.parse(store.getItem('escuelaSelected'));
+        }
       });
     };
 
     $scope.ListPlanEstudios = function ListPlanEstudios(){
+      store.setItem('escuelaSelected', JSON.stringify($scope.filter._escuela));
       angular.extend($scope.tableParams.filter(), {_escuela:$scope.filter._escuela._id});
       $scope.tableParams.reload();
     };

@@ -12,8 +12,9 @@
   angular.module('unuApp')
     .run(['$templateCache', function ($templateCache) {
       $templateCache.put('partials/menu-link.tmpl.html',
-        '<md-button ng-class="{\'{{section.icon}}\' : true}" \n' +
+        '<md-button\n' +
         ' ng-click="focusSection(section)">\n' +
+        '<span ng-class="{\'fa {{section.icon}}\' : true}" "></span>' +
         '  {{section.title}}\n' +
         '  <span  class="md-visually-hidden "\n' +
         '    ng-if="isSelected()">\n' +
