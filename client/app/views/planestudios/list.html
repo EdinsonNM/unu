@@ -45,11 +45,12 @@
               <td class="text-left" data-title="'Fecha Resolución'">{{item.fecha_resolucion | date:'dd/MM/yyyy'}}</td>
               <td data-title="'Estado'">
                 <strong>
-                  <a href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
-                    <span ng-switch-when="Registrado" class="fa fa-pencil tc-blue-grey-500"></span>
-                    <span ng-switch-when="Pendiente" class="fa fa-hand-o-right tc-blue-500"></span>
-                    <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-green-500"></span>
-                    <span ng-switch-when="Observado" class="fa fa-eye tc-orange-500" ></span>
+                  <a style="text-decoration:none;font-size:11px;color:#777;" href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
+                    <span ng-switch-when="Registrado" class="fa fa-pencil tc-{{color.primary}}-500"></span>
+                    <span ng-switch-when="Pendiente" class="fa fa-share-square tc-{{color.primary}}-500"></span>
+                    <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-{{color.primary}}-500"></span>
+                    <span ng-switch-when="Observado" class="fa fa-eye tc-{{color.primary}}-500" ></span>
+                    {{item.estado}}
                   </a>
                 </strong>
               </td>

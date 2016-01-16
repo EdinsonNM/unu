@@ -1,4 +1,7 @@
-var passport = require('passport')
+var passport = require('passport');
+var jwt = require('jsonwebtoken');
+var config = require('../config/config');
+
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/UsuarioModel.js');
 passport.serializeUser(function(user, done) {
@@ -37,9 +40,17 @@ module.exports.ensureAuthenticated = function ensureAuthenticated(req, res, next
         if(authorization.length===2){
           req.key = authorization[0];
           req.token =authorization[1];
-          console.log(req);
+          try {
+            var user = jwt.verify(req.token,config.key_secret);
+            req._user = user;
+            next();
+
+          }catch(err) {
+            next(err);
+          }
+        }else{
+          next();
         }
-        next();
 
     } else {
         res.send(403);
@@ -55,4 +66,4 @@ module.exports.ensureAdmin = function ensureAdmin(req, res, next) {
       next();
   else
       res.send(403);
-}
+};

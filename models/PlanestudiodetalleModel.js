@@ -47,7 +47,11 @@ var PlanestudiodetalleSchema = new Schema({
 	},
 	_revisiones:[{
 		created_at:{type:Date},
-		comentario:String
+		comentario:String,
+		_user:{
+			type:Schema.Types.ObjectId,
+	    ref:'Planestudiodetalle',
+		}
 	}],
 	created_at:Date,
 	updated_at:Date

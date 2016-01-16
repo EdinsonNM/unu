@@ -6,6 +6,19 @@ module.exports=function(){
       var controller=baucis.rest('Periodo');
       controller.fragment('/periodos');
       //custom methods
+      controller.request('post put', function (request, response, next) {
+        request.baucis.outgoing(function (context, callback) {
+          if(context.doc.activo){
+            model.update({ _id: { $nin: [context.doc._id ]}}, { $set: { activo: false } },{multi:true},function(error){
+              if(error) return response.status(500).send({message:error});
+              callback(null, context);
+            });
+          }else{
+            callback(null, context);
+          }
+        });
+        next();
+      });
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;

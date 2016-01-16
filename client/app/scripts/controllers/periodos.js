@@ -152,13 +152,16 @@
   function($scope, table,name, MessageFactory,model,ToastMD,$mdDialog){
     $scope.submited = false;
     $scope.model = model;
+    $scope.model.inicio = new Date($scope.model.inicio);
+    $scope.model.fin = new Date($scope.model.fin);
+    $scope.model.fechaResolucion = new Date($scope.model.fechaResolucion);
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
         $scope.model.put().then(function() {
-          ToastMD.info(MessageFactory.Form.Updated);
+          ToastMD.success(MessageFactory.Form.Updated);
           $mdDialog.hide();
           table.reload();
         });

@@ -1,0 +1,32 @@
+<md-subheader class="subheader-no-padding">
+<md-toolbar class="md-theme-light">
+  <h1 class="md-toolbar-tools">Comentarios</h1>
+</md-toolbar>
+</md-subheader>
+<md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="Comentarios">
+        <md-content class="md-padding" layout-fill>
+
+          <p ng-repeat="comentario in comentarios" class="md-padding">
+              <strong>{{comentario._user}}</strong> - <small>{{comentario.created_at|date:'dd/MM/yyyy @ h:mma'}}</small><br>
+            {{comentario.comentario}}
+            <md-divider></md-divider>
+          </p>
+
+        </md-content>
+      </md-tab>
+      <md-tab label="Nuevo">
+        <md-content  layout-padding>
+          <form>
+            <md-input-container class="md-block">
+            <label>Agregar Comentario</label>
+              <textarea ng-model="$parent.newComentario" columns="1" rows="1"></textarea>
+            </md-input-container>
+          </form>
+          <md-button ng-click="SaveComment()" class="md-primary">
+            Enviar Comentario
+          </md-button>
+        </md-content>
+      </md-tab>
+
+    </md-tabs>

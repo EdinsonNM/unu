@@ -1,4 +1,6 @@
 var model = require('../models/PlanestudiodetalleModel.js');
+var auth = require('../config/passport');
+
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -9,7 +11,7 @@ module.exports=function(){
 
       // middlewares
       controller.query('get',function (request, response, next) {
-        request.baucis.query.populate([{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}}]);
+        request.baucis.query.populate([{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}},{path:'_revisiones',populate:{path:'_user'}}]);
         next();
       });
 
@@ -38,6 +40,16 @@ module.exports=function(){
       			res.send(obj);
       		}
       	);
+      });
+
+      controller.post('/methods/comentarios/:id',auth.ensureAuthenticated, function(req, res,next){
+        model.findOne({_id:req.params.id},function(error,data){
+          if(data._revisiones)
+          data._revisiones.push({created_at:new Date(),comentario:req.body.comentario,_user:req._user});
+          data.save(function(error,data){
+            return res.status(200).send(data);
+          });
+        });
       });
     }
   };

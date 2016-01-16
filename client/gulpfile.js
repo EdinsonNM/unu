@@ -90,7 +90,8 @@ gulp.task('jsfiles', function() {
     .pipe(inject(
       gulp.src(['./app/scripts/**/*.js']).pipe(angularFilesort())
     ))
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('./build'))
+    .pipe(connect.reload());
 });
 
 

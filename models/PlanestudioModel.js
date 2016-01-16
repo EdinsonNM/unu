@@ -49,14 +49,14 @@ var PlanestudioSchema = new Schema({
   },
 	estado:{
 		type: String,
-		enum:['Registrado','Pendiente','Observado','Aprobado'],
+		enum:['Registrado','Pendiente','Observado','Aprobado','No Activo'],
 		default: 'Registrado'
 	},
 	historial:[
 		{
 			estado:{
 				type: String,
-				enum:['Registrado','Enviado','Observado','Aprobado']
+				enum:['Registrado','Enviado','Observado','Aprobado','No Activo']
 			},
 			created_at:Date
 		}

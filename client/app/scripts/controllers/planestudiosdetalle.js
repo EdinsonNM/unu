@@ -41,7 +41,12 @@
 
     //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
     $scope.UI.customActions.push({icon:'fa-comments-o',label:'Comentarios', onclick: function(){
-      $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
+      $mdSidenav('right')
+        .toggle()
+        .then(function () {
+        });
+      console.log($scope.UI.selected);
+      $scope.comentarios = $scope.UI.selected._revisiones;
     }});
 
     $scope.ShowComments = function(){
@@ -50,6 +55,14 @@
           .then(function () {
           });
     };
+
+    $scope.SaveComment = function(){
+      service.customPOST({comentario:$scope.newComentario},'methods/comentarios/'+$scope.UI.selected._id).then(function(result){
+        ToastMD.success('Comentario Registrado satisfactoriamente');
+        $scope.comentarios.push(result._revisiones[result._revisiones.length-1]);
+      });
+    };
+
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
