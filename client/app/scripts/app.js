@@ -199,6 +199,11 @@
       templateUrl: 'views/alumno/misdatos.html',
       controller: 'AlumnoMisDatosCtrl'
     })
+    .state('app.alumnocambiocontrasenia', {
+      url: '/alumno/cambiocontrasenia',
+      templateUrl: 'views/alumno/cambiocontrasenia.html',
+      controller: 'AlumnoCambioContraseniaCtrl'
+    })
     .state('app.paramprocesosperiodo', {
       url: '/periodo-parametros-procesos',
       templateUrl: 'views/periodos/params-procesos.html',
