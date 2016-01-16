@@ -104,7 +104,7 @@
             escuela: $scope.filter._escuela,
             service:service
           },
-          controller: 'PeriodoParametrosProcesosNewCtrl'
+          controller: 'EscuelaParametrosProcesosNewCtrl'
         });
       };
       $scope.Edit = function Edit($event){
@@ -119,7 +119,7 @@
             model: Restangular.copy($scope.UI.selected),
             escuela: $scope.filter._escuela
           },
-          controller: 'PeriodoParametrosProcesosEditCtrl'
+          controller: 'EscuelaParametrosProcesosEditCtrl'
         });
       };
 
@@ -163,7 +163,7 @@
       new List();
     }])
 
-    .controller('PeriodoParametrosProcesosNewCtrl',[
+    .controller('EscuelaParametrosProcesosNewCtrl',[
       '$scope', 'name', 'table', 'escuela', 'MessageFactory', 'service', 'Restangular', 'ToastMD', '$mdDialog',
     function($scope, name, table, escuela, MessageFactory, service, Restangular, ToastMD, $mdDialog){
       $scope.escuela = escuela;
@@ -191,7 +191,7 @@
         $mdDialog.hide();
       };
     }])
-    .controller('PeriodoParametrosProcesosEditCtrl',['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+    .controller('EscuelaParametrosProcesosEditCtrl',['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
     function($scope, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog){
       $scope.escuela = escuela;
       $scope.submited = false;

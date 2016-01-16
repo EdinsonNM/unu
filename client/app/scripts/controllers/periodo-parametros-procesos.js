@@ -77,8 +77,8 @@
 
     $scope.filter = {};
     $scope.New = function New($event){
-      if(!$scope.filter._escuela){
-        ToastMD.warning('Debe seleccionar una escuela antes de crear un plan de estudio');
+      if(!$scope.filter._periodo){
+        ToastMD.warning('Debe seleccionar un periodo antes de crear un plan de estudio');
         return;
       }
 
@@ -90,7 +90,7 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          escuela: $scope.filter._escuela,
+          periodo: $scope.filter._periodo,
           service:service
         },
         controller: 'PeriodoParametrosProcesosNewCtrl'

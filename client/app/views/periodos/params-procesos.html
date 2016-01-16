@@ -34,20 +34,8 @@
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
-                        <td class="text-left" data-title="'Nombre'" sortable="_facultad">{{item.nombre}}</td>
-                        <td class="text-left" data-title="'Periodo Inicio'" sortable="periodo_id" filter="{'periodo_id':'text'}">{{item._periodo.nombre}}</td>
-                        <td class="text-left" data-title="'Resolución'" sortable="resolucion" filter="{'resolucion':'text'}">{{item.resolucion}}</td>
-                        <td class="text-left" data-title="'Fecha Resolución'">{{item.fecha_resolucion | date:'dd/MM/yyyy'}}</td>
-                        <td data-title="'Estado'">
-                          <strong>
-                            <a href ng-switch="item.estado" title="{{item.estado}}" ng-click="alert('dsd')">
-                              <span ng-switch-when="Registrado" class="fa fa-pencil tc-blue-grey-500"></span>
-                              <span ng-switch-when="Pendiente" class="fa fa-hand-o-right tc-blue-500"></span>
-                              <span ng-switch-when="Aprobado" class="fa fa-check-circle tc-green-500"></span>
-                              <span ng-switch-when="Observado" class="fa fa-eye tc-orange-500" ></span>
-                            </a>
-                          </strong>
-                        </td>
+                        <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
+                        <td class="text-left" data-title="'Nombre de Parametro'" sortable="">{{item.nombre}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -55,12 +43,37 @@
               </md-content>
             </md-tab>
             <md-tab label="Procesos por Periodo">
-              <md-content class="md-padding">
-                <h1 class="md-display-2">Procesos por Periodo</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
-                <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-                <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
-              </md-content>
+                <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+                  <div  flex-container="row" flex-gutter="24">
+                    <div flex-item>
+                      <md-input-container class="md-block">
+                        <label>Periodos</label>
+                        <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
+                          <md-option ng-repeat="per in periodos" ng-value="per">
+                            {{per.nombre}}
+                          </md-option>
+                        </md-select>
+                      </md-input-container>
+                    </div>
+                  </div>
+
+                  <!--tabla: contiene el listado de elementos-->
+                  <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"  class="md-accent"></md-progress-linear>
+                  <div class="table-responsive">
+                    <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                      <tbody>
+                        <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+                        <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+                          <td style="width:30px;">
+                            <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                          </td>
+                          <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
+                          <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item.nombre}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </md-content>
             </md-tab>
 
           </md-tabs>
