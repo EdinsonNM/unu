@@ -22,6 +22,29 @@ module.exports = function() {
         next();
       });
 
+      controller.put('updateEscuelaProcesos', function(request, response, next){
+          model.findByIdAndUpdate(
+              request.params._id,
+              {$push: {"procesos": request.params.procesoescuela}},
+              {safe: true},
+              function(err, model){
+                  console.log(err);
+                  if(err) return response.status(500).send({message:err});
+              }
+          );
+      });
+      controller.put('updateEscuelaParametros', function(request, response, next){
+          model.findByIdAndUpdate(
+              request.params._id,
+              {$push: {"parametros": request.params.parametroescuela}},
+              {safe: true},
+              function(err, model){
+                  console.log(err);
+                  if(err) return response.status(500).send({message:err});
+              }
+          );
+      });
+
       controller.request('delete', function (request, response, next) {
         model.findById(request.params.id, function (err, escuela){
           console.log(escuela);
