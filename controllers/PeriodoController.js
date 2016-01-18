@@ -5,6 +5,38 @@ module.exports=function(){
     setup:function(){
       var controller=baucis.rest('Periodo');
       controller.fragment('/periodos');
+
+      controller.put('updatePeriodoProcesos', function(request, response, next){
+          model.findByIdAndUpdate(
+              request.params._id,
+              {$push: {"procesos": {
+                  _proceso: request.params._proceso,
+                  fechaInicio: request.params.fechaInicio,
+                  fechaFin: request.params.fechaFin
+              }}},
+              {safe: true},
+              function(err, model){
+                  console.log(err);
+                  if(err) return response.status(500).send({message:err});
+              }
+          );
+      });
+
+      controller.put('updatePeriodoParametros', function(request, response, next){
+          model.findByIdAndUpdate(
+              request.params._id,
+              {$push: {"parametros": {
+                  _proceso: request.params._parametro,
+                  valor: request.params.valor
+              }}},
+              {safe: true},
+              function(err, model){
+                  console.log(err);
+                  if(err) return response.status(500).send({message:err});
+              }
+          );
+      });
+
       //custom methods
       controller.request('post put', function (request, response, next) {
         request.baucis.outgoing(function (context, callback) {

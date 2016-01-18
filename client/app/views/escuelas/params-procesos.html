@@ -9,15 +9,25 @@
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 
       <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="Parametros por Periodo">
+            <md-tab label="Parametros por Escuela">
               <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
                 <div  flex-container="row" flex-gutter="24">
                   <div flex-item>
                     <md-input-container class="md-block">
-                      <label>Periodos</label>
-                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
-                        <md-option ng-repeat="per in periodos" ng-value="per">
-                          {{per.nombre}}
+                      <label>Facultad</label>
+                      <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+                        <md-option ng-repeat="fac in facultades" ng-value="fac">
+                          {{fac.nombre}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                  </div>
+                  <div flex-item>
+                    <md-input-container class="md-block">
+                      <label>Escuela</label>
+                      <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
+                        <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                          {{escuela.nombre}}
                         </md-option>
                       </md-select>
                     </md-input-container>
@@ -34,7 +44,7 @@
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
-                        <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
+                        <td class="text-left" data-title="'Coidgo'" sortable="">{{item.codigo}}</td>
                         <td class="text-left" data-title="'Nombre de Parametro'" sortable="">{{item.nombre}}</td>
                       </tr>
                     </tbody>
@@ -42,15 +52,25 @@
                 </div>
               </md-content>
             </md-tab>
-            <md-tab label="Procesos por Periodo">
+            <md-tab label="Procesos por Escuela">
                 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
                   <div  flex-container="row" flex-gutter="24">
                     <div flex-item>
                       <md-input-container class="md-block">
-                        <label>Periodos</label>
-                        <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
-                          <md-option ng-repeat="per in periodos" ng-value="per">
-                            {{per.nombre}}
+                        <label>Facultad</label>
+                        <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+                          <md-option ng-repeat="fac in facultades" ng-value="fac">
+                            {{fac.nombre}}
+                          </md-option>
+                        </md-select>
+                      </md-input-container>
+                    </div>
+                    <div flex-item>
+                      <md-input-container class="md-block">
+                        <label>Escuela</label>
+                        <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
+                          <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                            {{escuela.nombre}}
                           </md-option>
                         </md-select>
                       </md-input-container>
@@ -67,7 +87,7 @@
                           <td style="width:30px;">
                             <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                           </td>
-                          <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
+                          <td class="text-left" data-title="'Coidgo'" sortable="">{{item.codigo}}</td>
                           <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item.nombre}}</td>
                         </tr>
                       </tbody>

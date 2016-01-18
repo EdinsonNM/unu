@@ -207,7 +207,12 @@
     .state('app.paramprocesosperiodo', {
       url: '/periodo-parametros-procesos',
       templateUrl: 'views/periodos/params-procesos.html',
-      controller: 'AlumnoMisDatosCtrl'
+      controller: 'PeriodoParametrosProcesosCtrl'
+    })
+    .state('app.paramprocesosescuela', {
+      url: '/escuela-parametros-procesos',
+      templateUrl: 'views/escuelas/params-procesos.html',
+      controller: 'EscuelaParametrosProcesosCtrl'
     })
     .state('app.parametros', {
       url: '/parametros',

@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var PlanestudioSchema = new Schema({
 	nombre : {
@@ -63,15 +63,16 @@ var PlanestudioSchema = new Schema({
 	],
 	created_at:Date,
 	updated_at:Date
+
 });
 PlanestudioSchema.plugin(mongoosePaginate);
-PlanestudioSchema.pre('save',function(next){
-	var now = new Date();
-	this.updated_at = now;
-	if (!this.created_at){
-		this.created_at=now;
-	}
-	next();
+PlanestudioSchema.pre('save', function(next) {
+    var now = new Date();
+    this.updated_at = now;
+    if (!this.created_at) {
+        this.created_at = now;
+    }
+    next();
 });
 
 module.exports = mongoose.model('Planestudio', PlanestudioSchema).plural('planestudios');

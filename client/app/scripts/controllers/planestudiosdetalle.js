@@ -11,8 +11,8 @@
    */
 
   angular.module('unuApp').controller('PlanEstudioDetallesCtrl', [
-  '$mdSidenav','$q','$stateParams', 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
-  function($mdSidenav,$q,$stateParams, MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
+  '$mdSidenav', '$q', '$stateParams', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$state',
+  function($mdSidenav, $q, $stateParams, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $state) {
     var List, service;
 
     $scope.UI = {
