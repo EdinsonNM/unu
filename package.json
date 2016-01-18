@@ -4,6 +4,7 @@
   "description": "Sistema de Matrícula",
   "main": "app.js",
   "scripts": {
+    "build": "cd client && gulp build",
     "start": "nodemon app",
     "dev": "nodemon app",
     "client":"cd client && gulp",

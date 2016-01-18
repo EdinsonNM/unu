@@ -111,3 +111,4 @@ gulp.task('watch', function() {
     gulp.watch(['app/*.html'], ['html']);
 });
 gulp.task('default', ['webserver','bower','bowercss','icons','watch','stylus','bundle','jsfiles']);
+gulp.task('build', ['bower','bowercss','icons','stylus','bundle','jsfiles']);
