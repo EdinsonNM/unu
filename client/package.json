@@ -12,6 +12,7 @@
   },
   "repository": {},
   "devDependencies": {
+    "bower": "^1.7.2",
     "gulp": "^3.9.0",
     "gulp-angular-builder": "^0.5.3",
     "gulp-bower-files": "^0.2.7",
@@ -39,6 +40,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "build":"npm install && bower install && .\\node_modules\\gulp\\bin\\gulp build"
+    "build": "npm install && bower install && .\\node_modules\\gulp\\bin\\gulp build"
   }
 }
