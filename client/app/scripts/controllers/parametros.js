@@ -132,7 +132,6 @@
   .controller('ParametroNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD',
   function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD){
     $scope.submited = false;
-    $scope.model = model;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;

@@ -194,6 +194,11 @@
       templateUrl: 'views/aprobacion/planestudios/list.html',
       controller: 'AprobacionPlanestudiosCtrl'
     })
+    .state('app.aprobacionplanestudiosdetalle', {
+      url: '/aprobacion/planestudios/:id',
+      templateUrl: 'views/aprobacion/planestudios/list-detalle.html',
+      controller: 'AprobacionPlanestudiosDetalleCtrl'
+    })
     .state('app.alumnomisdatos', {
       url: '/alumno/misdatos',
       templateUrl: 'views/alumno/misdatos.html',
