@@ -21,7 +21,7 @@ var ProcesoSchema = new Schema({
     }],
     activoPeriodo: [{
         type: Boolean,
-        ref: 'Escuela'
+        ref: 'Periodo'
     }],
     created_at: Date,
     updated_at: Date

@@ -8,7 +8,7 @@
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 
-      <md-tabs md-dynamic-height md-border-bottom>
+      <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
             <md-tab label="Parametros por Escuela">
               <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
                 <div  flex-container="row" flex-gutter="24">
@@ -25,9 +25,19 @@
                   <div flex-item>
                     <md-input-container class="md-block">
                       <label>Escuela</label>
-                      <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
+                      <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" >
                         <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                           {{escuela.nombre}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                  </div>
+                  <div flex-item>
+                    <md-input-container class="md-block">
+                      <label>Periodos</label>
+                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
+                        <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                          {{periodo.nombre}}
                         </md-option>
                       </md-select>
                     </md-input-container>
