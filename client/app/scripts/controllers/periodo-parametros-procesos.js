@@ -25,14 +25,11 @@
 
     var LOCAL ={
       name: 'Parametros y Procesos por Periodo',
-      form:'views/planestudios/form.html',
+      form:'views/periodo/params-procesos-form.html',
       route:'planestudios'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
-
-
-
 
     var LoadPeriodos = function LoadPeriodos() {
       var servicePeriodo = Restangular.all('periodos');
@@ -40,7 +37,6 @@
         $scope.periodos = data;
       });
     };
-
     new LoadPeriodos();
 
     List = function() {
