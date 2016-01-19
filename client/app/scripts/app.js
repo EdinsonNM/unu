@@ -209,6 +209,11 @@
       templateUrl: 'views/parametros/list.html',
       controller: 'ParametrosCtrl'
     })
+    .state('app.procesos', {
+      url: '/procesos',
+      templateUrl: 'views/procesos/list.html',
+      controller: 'ProcesosCtrl'
+    })
 
     //inicio mic
     .state('app.mic_asignaturas', {
