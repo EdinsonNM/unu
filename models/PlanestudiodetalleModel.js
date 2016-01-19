@@ -53,6 +53,10 @@ var PlanestudiodetalleSchema = new Schema({
 	    ref:'Planestudiodetalle',
 		}
 	}],
+	_equivalencias:[{
+		type:Schema.Types.ObjectId,
+    ref:'Planestudiodetalle',
+	}],
 	created_at:Date,
 	updated_at:Date
 });

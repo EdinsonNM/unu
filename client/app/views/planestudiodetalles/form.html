@@ -132,9 +132,25 @@
                   md-search-text="ctrl.searchText"
                   md-items="requisito in FilterRequisitos(ctrl.searchText)"
                   md-item-text="requisito._curso.nombre"
-                  md-floating-label="Requisito">
+                  md-floating-label="Requisito"
+                  md-menu-class="autocomplete-custom-template">
                 <md-item-template>
-                  <span md-highlight-text="ctrl.searchText">{{requisito._curso.nombre}}</span>
+                  <!--span md-highlight-text="ctrl.searchText">{{requisito._curso.nombre}}</span-->
+                  <span class="item-title">
+                    <md-icon md-font-icon="fa fa-book"></md-icon>
+                    <span> {{requisito._curso.nombre}} </span>
+                  </span>
+                  <span class="item-metadata">
+                    <span class="item-metastat">
+                      <strong>Código</strong> {{requisito._curso.codigo}};
+                    </span>
+                    <span class="item-metastat">
+                      <strong>Ciclo</strong> {{requisito.ciclo}};
+                    </span>
+                    <span class="item-metastat">
+                      <strong>Creditos</strong> {{requisito.creditos}}
+                    </span>
+                  </span>
                 </md-item-template>
                 <div ng-messages="myForm.requisito.$error" ng-if="myForm.requisito.$touched">
                   <div ng-message="required">{{message.Required}}</div>
