@@ -16,8 +16,14 @@
             </td>
             <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
             <td class="text-left" data-title="'Nombre'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
-            <td class="text-left" data-title="'Activo Periodo'" sortable="resolucion" filter="{'activoPeriodo':'text'}">{{item.activoPeriodo}}</td>
-            <td class="text-left" data-title="'Activo Escuela'">{{item.activoEscuela}}</td>
+            <td class="text-center" data-title="'Activo Periodo'">
+              <span href title="Activo" ng-if="item.activoPeriodo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
+              <span href title="Inactivo" ng-if="!item.activoPeriodo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
+            </td>
+            <td class="text-center" data-title="'Activo Escuela'">
+              <span href title="Activo" ng-if="item.activoEscuela" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
+              <span href title="Inactivo" ng-if="!item.activoEscuela" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
+            </td>
           </tr>
         </tbody>
       </table>

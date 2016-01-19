@@ -18,7 +18,7 @@ module.exports = function() {
             var usuario = new Usuario(request.body._usuario);
             usuario._grupo = objGrupo._id;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
-              console.log(objUsuario);
+              //console.log(objUsuario);
               if(usuarioErr) return next(usuarioErr);
               if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
 

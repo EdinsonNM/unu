@@ -17,14 +17,14 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Planes de Estudio',
+      title: 'Aprobación de Planes de Estudio',
       editMode: false,
       selected:null,
       customActions:[]
     };
 
     var LOCAL ={
-      name: 'Plan de Estudio',
+      name: 'Aprobación Plan de Estudio',
       form:'views/planestudios/form.html',
       route:'planestudios'
     };
@@ -32,10 +32,10 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
-    $scope.UI.customActions.push({icon:'fa-book',label:'Detalle Plan de Estudio', onclick: function(){
+    $scope.UI.customActions.push({icon:'fa-check',label:'Aprobar Plan de Estudios', onclick: function(){
       $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
     }});
-    $scope.UI.customActions.push({icon:'fa-send',label:'Enviar para aprobación', onclick: function(){
+    $scope.UI.customActions.push({icon:'fa-eye',label:'Observar Plan de Estudios', onclick: function(){
       var plan = Restangular.copy($scope.UI.selected);
       plan.estado = 'Pendiente';
       plan.put().then(function(){

@@ -21,6 +21,10 @@
             <td class="text-left" data-title="'Fecha Resolución'" sortable="fechaResolucion" filter="{'fechaResolucion':'text'}">{{item.fechaResolucion| date:'dd/MM/yyyy'}}</td>
             <td class="text-left" data-title="'Inicio'" sortable="inicio" filter="{'inicio':'text'}">{{item.inicio| date:'dd/MM/yyyy'}}</td>
             <td class="text-left" data-title="'Fin'" sortable="fin" filter="{'fin':'text'}">{{item.fin| date:'dd/MM/yyyy'}}</td>
+            <td class="text-center" data-title="'Activo'" sortable="activo" >
+              <span href title="Activo" ng-if="item.activo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
+              <span href title="Inactivo" ng-if="!item.activo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
+            </td>
           </tr>
         </tbody>
       </table>

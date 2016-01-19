@@ -57,7 +57,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Contraseña</label>
-            <input required name="password" ng-model="model._usuario.password">
+            <input required name="password" ng-model="model._usuario.password"  type="password">
             <div ng-messages="myForm._usuario.password.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>

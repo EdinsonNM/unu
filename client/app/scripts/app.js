@@ -194,15 +194,30 @@
       templateUrl: 'views/aprobacion/planestudios/list.html',
       controller: 'AprobacionPlanestudiosCtrl'
     })
+    .state('app.aprobacionplanestudiosdetalle', {
+      url: '/aprobacion/planestudios/:id',
+      templateUrl: 'views/aprobacion/planestudios/list-detalle.html',
+      controller: 'AprobacionPlanestudiosDetalleCtrl'
+    })
     .state('app.alumnomisdatos', {
       url: '/alumno/misdatos',
       templateUrl: 'views/alumno/misdatos.html',
       controller: 'AlumnoMisDatosCtrl'
     })
+    .state('app.alumnocambiocontrasenia', {
+      url: '/alumno/cambiocontrasenia',
+      templateUrl: 'views/alumno/cambiocontrasenia.html',
+      controller: 'AlumnoCambioContraseniaCtrl'
+    })
     .state('app.paramprocesosperiodo', {
       url: '/periodo-parametros-procesos',
       templateUrl: 'views/periodos/params-procesos.html',
-      controller: 'AlumnoMisDatosCtrl'
+      controller: 'PeriodoParametrosProcesosCtrl'
+    })
+    .state('app.paramprocesosescuela', {
+      url: '/escuela-parametros-procesos',
+      templateUrl: 'views/escuelas/params-procesos.html',
+      controller: 'EscuelaParametrosProcesosCtrl'
     })
     .state('app.parametros', {
       url: '/parametros',

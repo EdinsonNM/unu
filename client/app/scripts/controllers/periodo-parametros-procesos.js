@@ -4,37 +4,48 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:PeriodosCtrl
+    * @name unuApp.controller:PlanestudiosCtrl
     * @description
-    * # PeriodosCtrl
+    * # PlanestudiosCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('PeriodosCtrl',[
-  'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams',  'ToastMD',
-   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams,  ToastMD) {
+  angular.module('unuApp').controller('PeriodoParametrosProcesosCtrl',[
+  '$mdSidenav', '$q', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function($mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Periodos',
+      title: 'Registro de Parametros y Procesos por Periodo',
       editMode: false,
       selected:null,
       customActions:[]
     };
 
     var LOCAL ={
-      name: 'Periodo',
-      form:'views/periodos/form.html',
-      route:'periodos'
+      name: 'Parametros y Procesos por Periodo',
+      form:'views/periodo/params-procesos-form.html',
+      route:'planestudios'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
+    var LoadPeriodos = function LoadPeriodos() {
+      var servicePeriodo = Restangular.all('periodos');
+      servicePeriodo.getList().then(function(data){
+        $scope.periodos = data;
+      });
+    };
+    new LoadPeriodos();
+
     List = function() {
       $scope.tableParams = new NgTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter:{
+          _escuela:0
+        }
       }, {
         total: 0,
         getData: function($defer, params) {
@@ -50,6 +61,8 @@
           });
         }
       });
+      $scope.tableParams.settings({counts:[]});
+
     };
 
     $scope.Refresh = function Refresh(){
@@ -58,7 +71,13 @@
       $scope.tableParams.reload();
     };
 
+    $scope.filter = {};
     $scope.New = function New($event){
+      if(!$scope.filter._periodo){
+        ToastMD.warning('Debe seleccionar un periodo antes de crear un plan de estudio');
+        return;
+      }
+
       var parentEl = angular.element(document.body);
       $mdDialog.show({
         parent: parentEl,
@@ -67,12 +86,12 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
+          periodo: $scope.filter._periodo,
           service:service
         },
-        controller: 'PeriodoNewCtrl'
+        controller: 'PeriodoParametrosProcesosNewCtrl'
       });
     };
-
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
       $mdDialog.show({
@@ -82,9 +101,10 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          model: Restangular.copy($scope.UI.selected),
+          escuela: $scope.filter._escuela
         },
-        controller: 'PeriodoEditCtrl'
+        controller: 'PeriodoParametrosProcesosEditCtrl'
       });
     };
 
@@ -126,14 +146,22 @@
     };
 
     new List();
-
   }])
-  .controller('PeriodoNewCtrl',['$scope', 'table', 'name', 'MessageFactory','service','ToastMD','$mdDialog',
-  function($scope, table, name, MessageFactory,service,ToastMD,$mdDialog){
+
+  .controller('PeriodoParametrosProcesosNewCtrl',[
+    '$scope', 'name', 'table', 'escuela', 'MessageFactory', 'service', 'Restangular', 'ToastMD', '$mdDialog',
+  function($scope, name, table, escuela, MessageFactory, service, Restangular, ToastMD, $mdDialog){
+    $scope.escuela = escuela;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
+    Restangular.all('periodos').getList().then(function(data){
+      $scope.periodos = data;
+    });
+    $scope.model = {
+      _escuela: escuela._id
+    };
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -148,20 +176,22 @@
       $mdDialog.hide();
     };
   }])
-  .controller('PeriodoEditCtrl',['$scope', 'table','name', 'MessageFactory','model','ToastMD','$mdDialog',
-  function($scope, table,name, MessageFactory,model,ToastMD,$mdDialog){
+  .controller('PeriodoParametrosProcesosEditCtrl',['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+  function($scope, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog){
+    $scope.escuela = escuela;
     $scope.submited = false;
     $scope.model = model;
-    $scope.model.inicio = new Date($scope.model.inicio);
-    $scope.model.fin = new Date($scope.model.fin);
-    $scope.model.fechaResolucion = new Date($scope.model.fechaResolucion);
+    $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    Restangular.all('periodos').getList().then(function(data){
+      $scope.periodos = data;
+    });
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
         $scope.model.put().then(function() {
-          ToastMD.success(MessageFactory.Form.Updated);
+          ToastMD.info(MessageFactory.Form.Updated);
           $mdDialog.hide();
           table.reload();
         });

@@ -9,7 +9,9 @@
     * # AulasCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('AsignarAulasCtrl', function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
+  angular.module('unuApp').controller('AsignarAulasCtrl', [
+  "MessageFactory", "$rootScope", "$scope", "Restangular", "$mdDialog", "$timeout", "LxDialogService", "LxNotificationService", "$mdBottomSheet", "$state",
+  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, LxDialogService, LxNotificationService, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -81,16 +83,19 @@
 
     function transformChip(chip) {
       // If it is an object, it's already a known chip
-      console.log(chip);
+      console.log("el chip es: ", chip);
       if (angular.isObject(chip)) {
         return chip;
+        return {
+          name: 'oka',
+          obj: {}
+        };
       }
       // Otherwise, create a new one
-      return { name: chip, type: 'new' }
+      return { name: chip, obj: {}, type: 'new' }
     }
     function querySearch (query) {
       var results = query ? $scope.periodos.filter(createFilterFor(query)) : [];
-      console.log(results);
       return results;
     }
     function createFilterFor(query) {
@@ -134,42 +139,47 @@
         templateUrl :LOCAL.form,
         locals:{
           name: LOCAL.name,
+          route_escuelas: LOCAL.route_escuelas,
           facultades: $scope.facultades,
           hora: hora,
           aula: aula
         },
-        controller: function($scope, name, MessageFactory, facultades, hora, aula){
-          $scope.facultades = facultades;
-          $scope.submited = false;
-          $scope.title = MessageFactory.Form.New.replace('{element}',name);
-          $scope.model = {};
-          $scope.model.aula = aula;
-          $scope.model.horainicio = hora.ini;
-          $scope.model.horafin = hora.fin;
-          $scope.Buttons = MessageFactory.Buttons;
-          $scope.message = MessageFactory.Form;
-          $scope.LoadEcuelas = function LoadEcuelas(){
-            var serviceEscuela = Restangular.all(LOCAL.route_escuelas);
-            serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
-              $scope.escuelas = data;
-            });
-          };
-          $scope.Save = function(form) {
-            $scope.submited = true;
-            if (form.$valid) {
-              service.post($scope.model).then(function() {
-                ToastMD.info(MessageFactory.Form.Saved);
-                $mdDialog.hide();
-              });
-            }
-          };
-          $scope.Cancel = function(){
-            $mdDialog.hide();
-          };
-        }
+        controller: 'AsignaraulasNewCtrl'
       });
     };
 
-  });
+  }])
+
+  .controller('AsignaraulasNewCtrl', [
+    '$scope', 'name', 'MessageFactory', 'facultades', 'hora', 'aula', 'Restangular', 'route_escuelas', '$mdDialog',
+  function($scope, name, MessageFactory, facultades, hora, aula, Restangular, route_escuelas, $mdDialog){
+    $scope.facultades = facultades;
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.model = {};
+    $scope.model.aula = aula;
+    $scope.model.horainicio = hora.ini;
+    $scope.model.horafin = hora.fin;
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    $scope.LoadEcuelas = function LoadEcuelas(){
+      var serviceEscuela = Restangular.all(route_escuelas);
+      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+        $scope.escuelas = data;
+      });
+    };
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.info(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
+  }]);
 
 }).call(this);

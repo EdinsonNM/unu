@@ -129,7 +129,8 @@
 
     new List();
   }])
-  .controller('AlumnoNewCtrl',['$scope', 'table','name','MessageFactory','service','ToastMD','$mdDialog',function($scope, table,name,MessageFactory,service,ToastMD,$mdDialog){
+  .controller('AlumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
@@ -148,7 +149,9 @@
       $mdDialog.hide();
     };
   }])
-  .controller('AlumnoEditCtrl',['$scope', 'table','name', 'MessageFactory','model','ToastMD','$mdDialog',function($scope, table,name, MessageFactory,model,ToastMD,$mdDialog){
+  .controller('AlumnoEditCtrl',[
+    '$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
@@ -161,8 +164,6 @@
           $mdDialog.hide();
           table.reload();
         });
-
-
       }
     };
     $scope.Cancel = function(){

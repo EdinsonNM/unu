@@ -24,7 +24,7 @@
               <td colspan="{{$columns.length-5}}"></td>
             </tr>
 
-            <tr ng-hide="group.$hideRows" ng-repeat-start="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+            <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
               <td style="width:30px;">
                 <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
               </td>
@@ -45,14 +45,7 @@
                 </strong>
               </td>
             </tr>
-            <tr ng-repeat-end ng-if="UI.planestudios.estado==='Observado'">
-              <td><span class="fa fa-comments-o"></span></td>
-              <td colspan="{{$columns.length-1}}" class="fs-caption">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar bibendum felis at malesuada. Pellentesque eget varius tellus, vel viverra ligula. Nam nisi mauris, accumsan ut eros sed, hendrerit tincidunt libero. Morbi non magna a sem molestie imperdiet quis id lacus. Etiam aliquet massa vel orci maximus, fringilla aliquet magna scelerisque. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur egestas feugiat sapien et condimentum. Ut non nulla mi. Mauris vitae dui at enim pretium suscipit et nec lacus. Nullam auctor purus eget diam pellentesque facilisis.
-                <br>
-                <a href ng-click="ShowComments()">Agregar Comentario</a>
-              </td>
-            </tr>
+
           </tbody>
           <tbody>
         </table>
@@ -101,18 +94,8 @@
 </md-fab-speed-dial>
 
 <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" >
-  <md-toolbar class="md-theme-light">
-    <h1 class="md-toolbar-tools">Agregar Comentarios</h1>
-  </md-toolbar>
-  <md-content  layout-padding>
-    <form>
-      <md-input-container class="md-block">
-      <label>Agregar Comentario</label>
-        <textarea ng-model="model.comentario" columns="1" rows="1"></textarea>
-      </md-input-container>
-    </form>
-    <md-button ng-click="ShowComments()" class="md-primary">
-      Close Sidenav Right
-    </md-button>
-  </md-content>
+  
+  <md-content layout="column" ng-include="'views/planestudiodetalles/comentarios.html'"  layout-fill>
+
+</md-content>
 </md-sidenav>

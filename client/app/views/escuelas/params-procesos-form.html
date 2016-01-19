@@ -13,20 +13,19 @@
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
-            <label>Facultad</label>
-            <input required name="facultad" ng-model="model._facultad.nombre" readonly>
-            <div ng-messages="myForm.facultad.$error" ng-if="submited">
+            <label>Periodo</label>
+            <input required name="periodo" ng-model="_periodo.nombre" readonly>
+            <div ng-messages="myForm.periodo.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
-      </div>
-      <div flex layout="row" layout-sm="row">
+
         <div flex>
           <md-input-container class="md-block">
             <label>Nombre de Escuela</label>
-            <input required name="nombre" ng-model="model.nombre">
-            <div ng-messages="myForm.nombre.$error" ng-if="submited">
+            <input required name="escuela" ng-model="_escuela.nombre" readonly>
+            <div ng-messages="myForm.escuela.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
@@ -37,18 +36,44 @@
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
-            <label>Código</label>
-            <input required name="codigo" ng-model="model.codigo">
-            <div ng-messages="myForm.codigo.$error" ng-if="submited">
+            <label>Proceso</label>
+            <md-select ng-model="proceso" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="proc in procesos" ng-value="proc">
+                {{proc.nombre}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm.proceso.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">            
+            <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
+            <div ng-messages="myForm.inicio.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
         <div flex>
           <md-input-container class="md-block">
-            <label>Resolución</label>
-            <input required name="resolucion" ng-model="model.resolucion">
-            <div ng-messages="myForm.resolucion.$error" ng-if="submited">
+            <md-datepicker required name="fin" ng-model="model.fin" md-placeholder="Fecha Fin"></md-datepicker>
+            <div ng-messages="myForm.fin.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Estado</label>
+            <md-select ng-model="model.estado">
+                <md-option value="Ejecutado">Ejecutado</md-option>
+                <md-option value="No Ejecutado">No Ejecutado</md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>

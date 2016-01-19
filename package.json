@@ -4,11 +4,15 @@
   "description": "Sistema de Matrícula",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app",
+    "build": "cd client && gulp build",
+    "start": "node  app",
     "dev": "nodemon app",
     "client":"cd client && gulp",
     "debug": "node-inspector --web-port 8082 --save-live-edit true && node --debug-brk app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-all": ".\\scripts\\install-all.sh",
+    "build-all": ".\\scripts\\build-all.sh",
+    "postinstall": "cd client && npm run build"
   },
   "keywords": [
     "unu"

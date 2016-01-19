@@ -61,7 +61,7 @@ module.exports=function(){
               children:[
                 {title:'Cursos',icon:'',url:'app.cursos',order:1},
                 {title:'Plan de Estudios',icon:'',url:'app.planestudios',order:2},
-                {title:'Equivalencias',icon:'',url:'app.paramprocesosperiodo',order:3},
+                {title:'Equivalencias',icon:'',url:'app.planestudiosequivalencia',order:3},
                 {title:'Aprobación Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:4},
                 {title:'Aprobación Cursos Periodo',icon:'',url:'app.aprobacioncursosperiodo',order:5},
                 {title:'Reportes',icon:'',url:'app.paramprocesosescuela',order:6},
