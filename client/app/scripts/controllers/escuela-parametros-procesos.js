@@ -27,11 +27,14 @@
       var LOCAL = {
         name: 'Parametros y Procesos por Escuela',
         form: 'views/escuelas/params-procesos-form.html',
-        routeParametros: 'parametroescuelas',
+        formProcesos: 'views/escuelas/escuelaprocesos-form.html',
+        formParametros: 'views/escuelas/escuelaparametros-form.html',
+        routeParametros: 'parametrosescuelas',
         routeProcesos: 'procesosescuelas'
       };
 
       serviceProcesoEscuela = Restangular.all(LOCAL.routeProcesos);
+      serviceParametroEscuela = Restangular.all(LOCAL.routeParametros);
       $rootScope.app.module = ' > ' + LOCAL.name;
 
       var LoadFacultades = function LoadFacultades() {
@@ -72,12 +75,13 @@
       new LoadPeriodos();
       new LoadFacultades();
 
-      List = function() {
+      /*List = function() {
         $scope.tableParams = new NgTableParams({
           page: 1,
           count: 10,
           filter: {
-            _escuela: 0
+            _escuela: $scope.filter._escuela._id,
+            _periodo: $scope.filter._periodo._id,
           }
         }, {
           total: 0,
@@ -85,16 +89,85 @@
             var query;
             query = params.url();
             $scope.UI.refresh = true;
-            service.customGET('methods/paginate', query).then(function(result) {
+            if(selectedTab == 0){ // Parametros
+                serviceParametroEscuela.customGET('methods/paginate', query).then(function(result) {
+                  $timeout(function() {
+                    params.total(result.total);
+                    $defer.resolve(result.data);
+                    $scope.UI.refresh = false;
+                  }, 500);
+                });
+            }else{//Procesos
+                serviceProcesoEscuela.customGET('methods/paginate', query).then(function(result) {
+                  $timeout(function() {
+                    params.total(result.total);
+                    console.log("result.data");
+                    console.log(result.data);
+                    $defer.resolve(result.data);
+                    $scope.UI.refresh = false;
+                  }, 500);
+                });
+            }
+          }
+        });
+        $scope.tableParams.settings({
+          counts: []
+        });
+    };*/
+
+      $scope.ListParametros = function() {
+        $scope.tableParamsParametros = new NgTableParams({
+          page: 1,
+          count: 10,
+          filter: {
+            _escuela: $scope.filter._escuela._id,
+            _periodo: $scope.filter._periodo._id,
+          }
+        }, {
+          total: 0,
+          getData: function($defer, params) {
+            var query;
+            query = params.url();
+            $scope.UI.refresh = true;
+            serviceParametroEscuela.customGET('methods/paginate', query).then(function(result) {
               $timeout(function() {
-                params.total(result.total);
-                $defer.resolve(result.data);
+                params.total(result.data[0].length);
+                $defer.resolve(result.data[0].parametros);
                 $scope.UI.refresh = false;
               }, 500);
             });
           }
         });
-        $scope.tableParams.settings({
+        $scope.tableParamsParametros.settings({
+          counts: []
+        });
+      };
+
+      $scope.ListProcesos = function() {
+        $scope.tableParamsProcesos = new NgTableParams({
+          page: 1,
+          count: 10,
+          filter: {
+            _escuela: $scope.filter._escuela._id,
+            _periodo: $scope.filter._periodo._id,
+            populate: ['parametros._parametro'],
+          }
+        }, {
+          total: 0,
+          getData: function($defer, params) {
+            var query;
+            query = params.url();
+            $scope.UI.refresh = true;
+            serviceProcesoEscuela.customGET('methods/paginate', query).then(function(result) {
+              $timeout(function() {
+                params.total(result.data[0].length);
+                $defer.resolve(result.data[0].procesos);
+                $scope.UI.refresh = false;
+              }, 500);
+            });
+          }
+        });
+        $scope.tableParamsProcesos.settings({
           counts: []
         });
       };
@@ -107,30 +180,28 @@
 
       $scope.filter = {};
       $scope.New = function New($event) {
-          console.log($scope.selectedTab);
         if (!$scope.filter._escuela) {
           ToastMD.warning('Debe seleccionar una escuela antes de agregar un parametro');
           return;
         }
-
         if (!$scope.filter._periodo) {
           ToastMD.warning('Debe seleccionar un periodo antes de crear un parametro');
           return;
         }
 
-
-
         var parentEl = angular.element(document.body);
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,
-          templateUrl: LOCAL.form,
+          templateUrl: $scope.selectedTab==0 ?  LOCAL.formParametros : LOCAL.formProcesos,
           locals: {
+            selectedTab: $scope.selectedTab,
             name: LOCAL.name,
             table: $scope.tableParams,
             escuela: $scope.filter._escuela,
             periodo: $scope.filter._periodo,
-            serviceProcesoEscuela: serviceProcesoEscuela
+            serviceProcesoEscuela: serviceProcesoEscuela,
+            serviceParametroEscuela: serviceParametroEscuela
           },
           controller: 'EscuelaParametrosProcesosNewCtrl'
         });
@@ -193,10 +264,8 @@
   ])
 
   .controller('EscuelaParametrosProcesosNewCtrl', [
-      '$scope', 'name', 'table', 'escuela', 'periodo', 'MessageFactory', 'serviceProcesoEscuela', 'Restangular', 'ToastMD', '$mdDialog',
-      function($scope, name, table, escuela, periodo, MessageFactory, serviceProcesoEscuela, Restangular, ToastMD, $mdDialog) {
-        console.log(escuela);
-        console.log(periodo);
+      '$scope', 'name', 'table', 'escuela', 'periodo', 'selectedTab', 'serviceParametroEscuela', 'serviceProcesoEscuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+      function($scope, name, table, escuela, periodo, selectedTab, serviceParametroEscuela, serviceProcesoEscuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
         $scope._escuela = escuela;
         $scope._periodo = periodo;
         $scope.submited = false;
@@ -204,26 +273,46 @@
         $scope.Buttons = MessageFactory.Buttons;
         $scope.message = MessageFactory.Form;
 
-        Restangular.all('procesos').getList().then(function(data) {
-          $scope.procesos = data;
-        });
         $scope.model = {
           _escuela: escuela._id,
           _periodo: periodo._id
         };
-        $scope.Save = function(form) {
-          $scope.submited = true;
-          if (form.$valid) {
-            serviceProcesoEscuela.post($scope.model).then(function() {
-              ToastMD.info(MessageFactory.Form.Saved);
-              $mdDialog.hide();
-              table.reload();
-            });
-          }
-        };
+
         $scope.Cancel = function() {
           $mdDialog.hide();
         };
+
+        if(selectedTab == 0){ // Parametros
+            Restangular.all('parametros').getList().then(function(data) {
+              $scope.parametros = data;
+            });
+
+            $scope.Save = function(form) {
+              $scope.submited = true;
+              if (form.$valid) {
+                serviceParametroEscuela.post($scope.model).then(function() {
+                  ToastMD.info(MessageFactory.Form.Saved);
+                  $mdDialog.hide();
+                  table.reload();
+                });
+              }
+            };
+
+        }else{ // Procesos
+            Restangular.all('procesos').getList().then(function(data) {
+              $scope.procesos = data;
+            });
+            $scope.Save = function(form) {
+              $scope.submited = true;
+              if (form.$valid) {
+                serviceProcesoEscuela.post($scope.model).then(function() {
+                  ToastMD.info(MessageFactory.Form.Saved);
+                  $mdDialog.hide();
+                  table.reload();
+                });
+              }
+            };
+        }
       }
     ])
     .controller('EscuelaParametrosProcesosEditCtrl', ['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',

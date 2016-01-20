@@ -10,27 +10,39 @@ module.exports = function() {
             controller.hints(true);
             controller.fragment('/parametrosescuelas');
 
+            //Primero busco de acuerdo a la escuela y periodo
+            //Si existe: hacer push en su arreglo parametros
+            //Sino guardar todo
+
             controller.request('post', function (request, response, next) {
-              request.baucis.outgoing(function (context, callback) {
+                console.log(request.body)
                 model.find({
-                    _escuela: context.doc._escuela._id,
-                    _periodo: context.doc._periodo._id
+                    _escuela: request.body._escuela,
+                    _periodo: request.body._periodo
                 }, function (err, parametroescuela){
                   if(err) return response.status(500).send({message:err});
-                  if(parametroescuela){
-                      parametroescuela._procesos.push({
-                          _proceso: context.doc._proceso._id,
-                          valor: context.doc.valor
+                  console.log(parametroescuela);
+                  if(parametroescuela && parametroescuela.length>0){
+                      parametroescuela.parametros.push({
+                          _parametro: request.body.parametro._id,
+                          valor: request.body.valor
                       });
-                      parametroescuela.save(function(){
-                        callback(null, context);
+                      parametroescuela.save(function(err, data){
+                          if(err){
+                              return response.status(500).send({error: err});
+                          }
+                          return response.status(202).send(data);
                       });
                   }else{
                       //Insertar y guardar arreglo.
+                      request.body.parametros = [];
+                      request.body.parametros.push({
+                          _parametro: request.body.parametro._id,
+                          valor: request.body.valor
+                      });
+                      next();
                   }
                 });
-              });
-              next();
             });
 
 

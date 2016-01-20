@@ -11,28 +11,42 @@ module.exports = function() {
             controller.fragment('/procesosescuelas');
 
             controller.request('post', function (request, response, next) {
-              request.baucis.outgoing(function (context, callback) {
+                console.log(request.body)
                 model.find({
-                    _escuela: context.doc._escuela._id,
-                    _periodo: context.doc._periodo._id
-                }, function (err, procesoescuela){
+                    _escuela: request.body._escuela,
+                    _periodo: request.body._periodo
+                }, function (err, result){
+
                   if(err) return response.status(500).send({message:err});
-                  if(procesoescuela){
-                      procesoescuela._procesos.push({
-                          _proceso: context.doc._proceso._id,
-                          inicio: context.doc.inicio,
-                          fin: context.doc.fin,
-                          estado: context.doc.estado,
+                  console.log("Hubieron resultados:");
+                  //console.log(procesoescuela);
+
+                  if(result && result.length>0){
+                      procesoescuela = result[0];
+                      procesoescuela.procesos.push({
+                          _proceso: request.body.proceso._id,
+                          inicio: request.body.inicio,
+                          fin: request.body.fin,
+                          estado: request.body.estado
                       });
-                      procesoescuela.save(function(){
-                        callback(null, context);
+                      procesoescuela.save(function(err, data){
+                          if(err){
+                              return response.status(500).send({error: err});
+                          }
+                          return response.status(202).send(data);
                       });
                   }else{
                       //Insertar y guardar arreglo.
+                      request.body.procesos = [];
+                      request.body.procesos.push({
+                          _proceso: request.body.proceso._id,
+                          inicio: request.body.inicio,
+                          fin: request.body.fin,
+                          estado: request.body.estado
+                      });
+                      next();
                   }
                 });
-              });
-              next();
             });
 
 
