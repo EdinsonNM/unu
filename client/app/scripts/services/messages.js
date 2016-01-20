@@ -19,7 +19,9 @@
         Save: 'Guardar',
         Cancel:'Cancelar',
         Yes:'Si',
-        No:'No'
+        No:'No',
+        Approve: 'Aprobar',
+        Observe:'Observar'
       },
       Form:{
         New:'Agregar {element}',

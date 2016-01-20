@@ -31,18 +31,9 @@
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
-    //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
-    $scope.UI.customActions.push({icon:'fa-check',label:'Aprobar Plan de Estudios', onclick: function(){
-      $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
-    }});
-    $scope.UI.customActions.push({icon:'fa-eye',label:'Observar Plan de Estudios', onclick: function(){
-      var plan = Restangular.copy($scope.UI.selected);
-      plan.estado = 'Pendiente';
-      plan.put().then(function(){
-        $scope.ListPlanEstudios();
-      });
-    }});
-    //end custom actions
+    $scope.Detail = function Detail(){
+      $state.go('app.aprobacionplanestudiosdetalle', { id: $scope.UI.selected._id });
+    };
 
 
 

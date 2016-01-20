@@ -1,4 +1,6 @@
 var model = require('../models/PlanestudioModel.js');
+var auth = require('../config/passport');
+
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -8,6 +10,11 @@ module.exports=function(){
       controller.hints(true);
       controller.fragment('/planestudios');
       //custom methods
+      controller.query('get',function (request, response, next) {
+        request.baucis.query.populate([{path:'_escuela'},{path:'_escuela',populate:{path:'_facultad'}}]);
+        next();
+      });
+
 
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
@@ -45,6 +52,17 @@ module.exports=function(){
       			res.send(obj);
       		}
       	);
+      });
+
+      controller.put('/methods/change/:estado/:id',auth.ensureAuthenticated, function(req, res,next){
+        model.findOne({_id:req.params.id},function(error,data){
+          if(error) return res.status(500).send({error:error});
+          data.estado = req.params.estado;
+          data.historial.push({created_at:new Date(),estado:data.estado});
+          data.save(function(error,data){
+            return res.status(200).send(data);
+          });
+        });
       });
 
     }

@@ -37,11 +37,12 @@
       $state.go('app.planestudiodetalles', { id: $scope.UI.selected._id });
     }});
     $scope.UI.customActions.push({icon:'fa-send',label:'Enviar para aprobación', onclick: function(){
-      var plan = Restangular.copy($scope.UI.selected);
-      plan.estado = 'Pendiente';
-      plan.put().then(function(){
-        $scope.ListPlanEstudios();
+      service.customPUT({},'methods/change/Pendiente/'+$scope.UI.selected._id).then(function(result){
+          $scope.ListPlanEstudios();
+      },function(result){
+        console.log(result.data.error);
       });
+
     }});
     //end custom actions
 
