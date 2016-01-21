@@ -15,14 +15,14 @@ var ProcesoSchema = new Schema({
         type: String,
         required: true
     },
-    activoEscuela: [{
+    activoEscuela: {
         type: Boolean,
         ref: 'Escuela'
-    }],
-    activoPeriodo: [{
+    },
+    activoPeriodo: {
         type: Boolean,
         ref: 'Periodo'
-    }],
+    },
     created_at: Date,
     updated_at: Date
 });
