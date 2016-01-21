@@ -37,7 +37,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Proceso</label>
-            <md-select ng-model="proceso" ng-model-options="{trackBy: '$value._id'}">
+            <md-select ng-model="model.proceso" ng-model-options="{trackBy: '$value._id'}">
               <md-option ng-repeat="proc in procesos" ng-value="proc">
                 {{proc.nombre}}
               </md-option>
@@ -51,7 +51,7 @@
 
       <div flex layout="row" layout-sm="row">
         <div flex>
-          <md-input-container class="md-block">            
+          <md-input-container class="md-block">
             <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
             <div ng-messages="myForm.inicio.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
