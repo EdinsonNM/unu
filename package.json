@@ -6,6 +6,7 @@
   "scripts": {
     "build": "cd client && gulp build",
     "start": "node  app",
+    "start-all": "start nodemon app.js && start npm run client",
     "dev": "nodemon app",
     "client":"cd client && gulp",
     "debug": "node-inspector --web-port 8082 --save-live-edit true && node --debug-brk app.js",
