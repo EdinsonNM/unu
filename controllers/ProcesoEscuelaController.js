@@ -12,17 +12,12 @@ module.exports = function() {
 
             controller.request('post', function (request, response, next) {
                 console.log(request.body)
-                model.find({
+                model.findOne({
                     _escuela: request.body._escuela,
                     _periodo: request.body._periodo
-                }, function (err, result){
-
+                }, function (err, procesoescuela){
                   if(err) return response.status(500).send({message:err});
-                  console.log("Hubieron resultados:");
-                  //console.log(procesoescuela);
-
-                  if(result && result.length>0){
-                      procesoescuela = result[0];
+                  if(procesoescuela){
                       procesoescuela.procesos.push({
                           _proceso: request.body.proceso._id,
                           inicio: request.body.inicio,
@@ -60,7 +55,8 @@ module.exports = function() {
                 model.paginate(
                     filter, {
                         page: page,
-                        limit: limit
+                        limit: limit,
+                        populate: ['procesos._proceso']
                     },
 
                     function(err, results, pageCount, itemCount) {

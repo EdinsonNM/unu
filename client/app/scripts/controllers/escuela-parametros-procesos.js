@@ -75,45 +75,6 @@
       new LoadPeriodos();
       new LoadFacultades();
 
-      /*List = function() {
-        $scope.tableParams = new NgTableParams({
-          page: 1,
-          count: 10,
-          filter: {
-            _escuela: $scope.filter._escuela._id,
-            _periodo: $scope.filter._periodo._id,
-          }
-        }, {
-          total: 0,
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
-            $scope.UI.refresh = true;
-            if(selectedTab == 0){ // Parametros
-                serviceParametroEscuela.customGET('methods/paginate', query).then(function(result) {
-                  $timeout(function() {
-                    params.total(result.total);
-                    $defer.resolve(result.data);
-                    $scope.UI.refresh = false;
-                  }, 500);
-                });
-            }else{//Procesos
-                serviceProcesoEscuela.customGET('methods/paginate', query).then(function(result) {
-                  $timeout(function() {
-                    params.total(result.total);
-                    console.log("result.data");
-                    console.log(result.data);
-                    $defer.resolve(result.data);
-                    $scope.UI.refresh = false;
-                  }, 500);
-                });
-            }
-          }
-        });
-        $scope.tableParams.settings({
-          counts: []
-        });
-    };*/
 
       $scope.ListParametros = function() {
         $scope.tableParamsParametros = new NgTableParams({
@@ -131,8 +92,14 @@
             $scope.UI.refresh = true;
             serviceParametroEscuela.customGET('methods/paginate', query).then(function(result) {
               $timeout(function() {
-                params.total(result.data[0].length);
-                $defer.resolve(result.data[0].parametros);
+                  if(result.data.length>0){
+                      params.total(result.data[0].length);
+                      $defer.resolve(result.data[0].parametros);
+                  }else{
+                      params.total(0);
+                      $defer.resolve([]);
+                  }
+
                 $scope.UI.refresh = false;
               }, 500);
             });
@@ -149,8 +116,7 @@
           count: 10,
           filter: {
             _escuela: $scope.filter._escuela._id,
-            _periodo: $scope.filter._periodo._id,
-            populate: ['parametros._parametro'],
+            _periodo: $scope.filter._periodo._id            
           }
         }, {
           total: 0,
@@ -160,8 +126,15 @@
             $scope.UI.refresh = true;
             serviceProcesoEscuela.customGET('methods/paginate', query).then(function(result) {
               $timeout(function() {
-                params.total(result.data[0].length);
-                $defer.resolve(result.data[0].procesos);
+                  if(result.data.length > 0){
+                      params.total(result.data[0].length);
+                      $defer.resolve(result.data[0].procesos);
+                  }else{
+                      params.total(0);
+                      $defer.resolve([]);
+                  }
+
+
                 $scope.UI.refresh = false;
               }, 500);
             });
@@ -197,7 +170,7 @@
           locals: {
             selectedTab: $scope.selectedTab,
             name: LOCAL.name,
-            table: $scope.tableParams,
+            table: $scope.selectedTab==0 ? $scope.tableParamsParametros : $scope.tableParamsProcesos,
             escuela: $scope.filter._escuela,
             periodo: $scope.filter._periodo,
             serviceProcesoEscuela: serviceProcesoEscuela,
@@ -259,7 +232,6 @@
         }
       };
 
-      //new List();
     }
   ])
 

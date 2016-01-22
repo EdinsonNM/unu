@@ -54,8 +54,8 @@
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
-                        
-                        <td class="text-left" data-title="'Nombre de Parámetro'" sortable="">{{item._parametro}}</td>
+
+                        <td class="text-left" data-title="'Nombre de Parámetro'" sortable="">{{item._parametro.nombre}}</td>
                         <td class="text-left" data-title="'Valor de Parámetro'" sortable="">{{item.valor}}</td>
                       </tr>
                     </tbody>
@@ -110,7 +110,7 @@
                             <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                           </td>
 
-                          <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item._proceso}}</td>
+                          <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item._proceso.nombre}}</td>
                           <td class="text-left" data-title="'Fecha Inicio'" sortable="">{{item.inicio}}</td>
                           <td class="text-left" data-title="'Fecha Fin'" sortable="">{{item.fin}}</td>
                           <td class="text-left" data-title="'Estado'" sortable="">{{item.estado}}</td>

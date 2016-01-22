@@ -14,15 +14,15 @@ module.exports = function() {
             //Si existe: hacer push en su arreglo parametros
             //Sino guardar todo
 
+
             controller.request('post', function (request, response, next) {
                 console.log(request.body)
-                model.find({
+                model.findOne({
                     _escuela: request.body._escuela,
                     _periodo: request.body._periodo
                 }, function (err, parametroescuela){
                   if(err) return response.status(500).send({message:err});
-                  console.log(parametroescuela);
-                  if(parametroescuela && parametroescuela.length>0){
+                  if(parametroescuela){
                       parametroescuela.parametros.push({
                           _parametro: request.body.parametro._id,
                           valor: request.body.valor
@@ -56,7 +56,8 @@ module.exports = function() {
                 model.paginate(
                     filter, {
                         page: page,
-                        limit: limit
+                        limit: limit,
+                        populate: ['parametros._parametro']
                     },
 
                     function(err, results, pageCount, itemCount) {
