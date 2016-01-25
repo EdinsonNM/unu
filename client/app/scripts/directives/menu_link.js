@@ -26,8 +26,7 @@
     .directive('menuLink',['$state',  '$mdSidenav', function ($state,  $mdSidenav) {
       return {
         scope: {
-          section: '=',
-          focusSection: '='
+          section: '='
         },
         templateUrl: 'partials/menu-link.tmpl.html',
         controller:controller
