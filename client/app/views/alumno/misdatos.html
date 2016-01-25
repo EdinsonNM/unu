@@ -1,40 +1,54 @@
 <md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
-    <h3>{{UI.title}}</h3>
+    <h3><span class="fa fa-user"></span> {{UI.title}}</h3>
   </md-subheader>
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-      <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
-      <div flex layout="row" layout-sm="row">
-        <div>
-          <md-input-container class="md-block">
-            <label>Código</label>
-
-            <input required name="codigo" ng-model="model.codigo" ng-readonly="!UI.editMode">
-            <div ng-messages="myForm.codigo.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
+      <div flex layout="row" layout-fill>
+        <div flex>
+          <div flex layout="row">
+            Mis Datos
+          </div>
+          <div flex layout="row">
+            Mi COntraseñahhh
+          </div>
         </div>
         <div flex>
-          <md-input-container class="md-block">
-            <label>Nombres</label>
-            <input required name="resolucion" ng-model="model.nombres">
-            <div ng-messages="myForm.resolucion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Apellidos</label>
-            <input required name="resolucion" ng-model="model.apellidos">
-            <div ng-messages="myForm.resolucion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
+          <div flex layout="row">
+            <md-input-container class="md-block">
+              <label>Año</label>
+              <input required name="anio" ng-model="model.anio">
+              <div ng-messages="myForm.anio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <label>Año</label>
+              <input required name="anio" ng-model="model.anio">
+              <div ng-messages="myForm.anio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <label>Año</label>
+              <input required name="anio" ng-model="model.anio">
+              <div ng-messages="myForm.anio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <label>Año</label>
+              <input required name="anio" ng-model="model.anio">
+              <div ng-messages="myForm.anio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex layout="row">
+            dsdsds
+          </div>
         </div>
       </div>
     </md-content>

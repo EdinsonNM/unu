@@ -14,7 +14,7 @@
       $templateCache.put('partials/menu-link.tmpl.html',
         '<md-button\n' +
         ' ng-click="focusSection(section)">\n' +
-        '<span ng-class="{\'fa {{section.icon}}\' : true}" "></span>' +
+        '<span ng-if="section.icon" ng-class="{\'fa {{section.icon}}\' : true}" "></span>' +
         '  {{section.title}}\n' +
         '  <span  class="md-visually-hidden "\n' +
         '    ng-if="isSelected()">\n' +
