@@ -6,33 +6,33 @@ module.exports=function(){
       var controller=baucis.rest('Periodo');
       controller.fragment('/periodos');
 
-      controller.put('updatePeriodoProcesos', function(request, response, next){
+      controller.post('/updatePeriodoProceso', function(request, response, next){
           model.findByIdAndUpdate(
-              request.params._id,
+              request.body._periodo,
               {$push: {"procesos": {
-                  _proceso: request.params._proceso,
-                  fechaInicio: request.params.fechaInicio,
-                  fechaFin: request.params.fechaFin
+                  _proceso: request.body.proceso._id,
+                  fechaInicio: request.body.fechaInicio,
+                  fechaFin: request.body.fechaFin
               }}},
               {safe: true},
               function(err, model){
-                  console.log(err);
                   if(err) return response.status(500).send({message:err});
+                  response.status(200).send(model);
               }
           );
       });
 
-      controller.put('updatePeriodoParametros', function(request, response, next){
+      controller.post('/updatePeriodoParametro', function(request, response, next){
           model.findByIdAndUpdate(
-              request.params._id,
+              request.body._periodo,
               {$push: {"parametros": {
-                  _proceso: request.params._parametro,
-                  valor: request.params.valor
+                  _parametro: request.body.parametro._id,
+                  valor: request.body.valor
               }}},
               {safe: true},
               function(err, model){
-                  console.log(err);
                   if(err) return response.status(500).send({message:err});
+                  response.status(200).send(model);
               }
           );
       });
@@ -51,6 +51,33 @@ module.exports=function(){
         });
         next();
       });
+
+      controller.get('/methods/paramproc', function(req, res){
+      	var limit = parseInt(req.query.count);
+      	var page = parseInt(req.query.page) || 1;
+      	var filter = req.query.filter;
+      	model.paginate(
+      		filter,
+      		{
+                page: page,
+                limit: limit,
+                populate:['procesos._proceso', 'parametros._parametro']
+            },
+      		function(err, results, pageCount, itemCount){
+            var obj = {
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
+              data: results.docs
+            };
+      			res.send(obj);
+      		}
+      	);
+      });
+
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;

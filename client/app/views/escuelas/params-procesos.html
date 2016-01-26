@@ -35,7 +35,7 @@
                   <div flex-item>
                     <md-input-container class="md-block">
                       <label>Periodos</label>
-                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="ListParametros()">
+                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
                         <md-option ng-repeat="periodo in periodos" ng-value="periodo">
                           {{periodo.nombre}}
                         </md-option>
@@ -111,8 +111,8 @@
                           </td>
 
                           <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item._proceso.nombre}}</td>
-                          <td class="text-left" data-title="'Fecha Inicio'" sortable="">{{item.inicio}}</td>
-                          <td class="text-left" data-title="'Fecha Fin'" sortable="">{{item.fin}}</td>
+                          <td class="text-left" data-title="'Fecha Inicio'" sortable="">{{item.inicio | date:'dd/MM/yyyy'}}</td>
+                          <td class="text-left" data-title="'Fecha Fin'" sortable="">{{item.fin | date:'dd/MM/yyyy'}}</td>
                           <td class="text-left" data-title="'Estado'" sortable="">{{item.estado}}</td>
                         </tr>
                       </tbody>

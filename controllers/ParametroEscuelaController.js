@@ -49,9 +49,7 @@ module.exports = function() {
             controller.get('/methods/paginate', function(req, res) {
                 var limit = parseInt(req.query.count);
                 var page = parseInt(req.query.page) || 1;
-                var filter = req.query.filter;
-                var _escuela = req.query._escuela;
-                var _periodo = req.query._periodo;
+                var filter = req.query.filter;                
 
                 model.paginate(
                     filter, {

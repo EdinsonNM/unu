@@ -116,7 +116,7 @@
           count: 10,
           filter: {
             _escuela: $scope.filter._escuela._id,
-            _periodo: $scope.filter._periodo._id            
+            _periodo: $scope.filter._periodo._id
           }
         }, {
           total: 0,
@@ -133,7 +133,6 @@
                       params.total(0);
                       $defer.resolve([]);
                   }
-
 
                 $scope.UI.refresh = false;
               }, 500);
