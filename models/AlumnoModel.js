@@ -15,6 +15,62 @@ var AlumnoSchema = new Schema({
     type: String,
     required: true
   },
+  documento: {
+    type: String
+    //,required: true
+  },
+  telefono: {
+    type: String
+    //,required: true
+  },
+  direccion: {
+    type: String
+    //,required: true
+  },
+  email: {
+    type: String
+    //,required: true
+  },
+  fechaNacimiento: {
+    type: Date
+    //,required: true
+  },
+  sexo: {
+    type: String,
+    enum:['Femenino','Masculino']
+    //,required: true
+  },
+  estadoCivil: {
+    type: String,
+    enum:['Soltero(a)','Casado(a)','Viudo(a)','Divorciado(a)','Conviviente','Separado(a)']
+    //,required: true
+  },
+  lugarNacimiento: {
+    type: String
+    //,required: true
+  },
+  _periodoIngreso:{
+    type:Schema.Types.ObjectId,
+    ref:'Periodo'
+  },
+  _escuela:{
+    type:Schema.Types.ObjectId,
+    ref:'Escuela'
+  },
+  _modalidadIngreso:{
+    type:Schema.Types.ObjectId,
+    ref:'ModalidadIngreso'
+  },
+  //TODO: crear modelo TipoCondicionAlumnoModel.js
+  _tipoCondicionAlumno:{
+    type:Schema.Types.ObjectId,
+    ref:'TipoCondicionAlumno'
+  },
+  //TODO: modelo SituacionAlumnoModel.js
+  _situacionAlumno:{
+    type:Schema.Types.ObjectId,
+    ref:'SituacionAlumno'
+  },
   // NOTE cuando se registra un alumno este se crea con un usuario del sistema, considerar esto en la UI
   _usuario:{
     type:Schema.Types.ObjectId,
