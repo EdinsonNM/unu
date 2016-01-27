@@ -8,7 +8,7 @@
     "start": "node  app",
     "start-all": "start nodemon app.js && start npm run client",
     "dev": "nodemon app",
-    "client":"cd client && gulp",
+    "client": "cd client && gulp",
     "debug": "node-inspector --web-port 8082 --save-live-edit true && node --debug-brk app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install-all": ".\\scripts\\install-all.sh",
@@ -33,6 +33,7 @@
     "mongoose-paginate": "^5.0.0",
     "mongoose-unique-validator": "^0.4.1",
     "passport": "^0.2.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "q": "^1.4.1"
   }
 }
