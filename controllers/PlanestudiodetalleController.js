@@ -1,4 +1,5 @@
 var model = require('../models/PlanestudiodetalleModel.js');
+var acpmodel = require('../models/AprobacionCursoPeriodoModel.js');
 var auth = require('../config/passport');
 
 module.exports=function(){
@@ -8,6 +9,8 @@ module.exports=function(){
       var controller=baucis.rest('Planestudiodetalle');
       controller.relations(true);
       controller.hints(true);
+
+
 
       // middlewares
       controller.query('get',function (request, response, next) {
@@ -42,6 +45,77 @@ module.exports=function(){
       	);
       });
 
+      controller.get('/methods/withCursos', function(req, res){
+      	var limit = parseInt(req.query.count);
+      	var page = parseInt(req.query.page) || 1;
+      	var filter = req.query.filter;
+
+      	model.paginate(
+      		filter,
+      		{
+            page: page,
+            limit: limit,
+            populate: [{path:'_planestudio'},{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}}]
+          },
+      		function(err, results){
+                var reqIdPeriodo = req.query._periodo;
+                var resultados =  [];
+                var total = results.docs.length;
+
+                if(total == 0){
+                    var obj = {
+                      total: results.total,
+                      perpage: limit*1,
+                      current_page: page*1,
+                      last_page: results.pages,
+                      from: (page-1)*limit+1,
+                      to: page*limit,
+                      data: results.docs
+                    };
+                    res.send(obj);
+                }else{
+                    results.docs.forEach(function(item, index){
+                        acpmodel.findOne({
+                            _periodo: reqIdPeriodo,
+                            _planestudios: item._planestudio._id,
+                            _curso: item._curso._id
+                        }, function(err, obj){
+                            if(obj){
+                                item.set("aprobacioncursosperiodo",obj,  { strict: false });
+                            }else{
+                                item.set("aprobacioncursosperiodo", false,  { strict: false });
+                            }
+                            //resultados.push(item);
+
+                            if(index == total-1){
+                                var obj = {
+                                  total: results.total,
+                                  perpage: limit*1,
+                                  current_page: page*1,
+                                  last_page: results.pages,
+                                  from: (page-1)*limit+1,
+                                  to: page*limit,
+                                  data: results.docs
+                                };
+                                res.send(obj);
+                            }
+
+                        });
+                    });
+                }
+
+
+
+                /*console.log("Imprimimos uno de pruea:");
+                results.docs[0].aprobacioncursosperiodo = "xxx";
+                console.log(results.docs[0]._id);
+                console.log(results.docs[0].aprobacioncursosperiodo);*/
+                console.log(resultados);
+
+      		}
+      	);
+      });
+
       controller.post('/methods/comentarios/:id',auth.ensureAuthenticated, function(req, res,next){
         model.findOne({_id:req.params.id},function(error,data){
           if(data._revisiones)
@@ -61,6 +135,23 @@ module.exports=function(){
           });
 
         });
+      });
+
+      controller.post('/methods/aprobar/', auth.ensureAuthenticated, function(req, res, next) {
+          model.findOne({
+              _periodo: req.params._periodo,
+              _planestudios: req.params._planestudios,
+              _curso: req.params._curso,
+          }, function(error, model) {
+              if (error) return res.status(500).send({
+                  error: error
+              });
+              if (model) {
+                  model.delete();
+              } else {
+                  model.save();
+              }
+          });
       });
 
     }

@@ -20,6 +20,7 @@
       title: 'Listado de Docentes',
       editMode: false,
       selected:null,
+      facultades: [],
       customActions:[],
       tiposDedicacion: [],
       condiciones: []
@@ -28,11 +29,16 @@
     var LOCAL ={
       name: 'Docente',
       form:'views/docentes/form.html',
-      route:'docentes'
+      route:'docentes',
+      route_facultades: 'facultades'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
+    var serviceFacultad = Restangular.all(LOCAL.route_facultades);
+      serviceFacultad.getList().then(function(data){
+        $scope.UI.facultades = data;
+    });
     service.customGET('model/tiposDedicacion', {}).then(function(result){
       $scope.UI.tiposDedicacion = result;
     });
@@ -79,6 +85,7 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
+          facultades: $scope.UI.facultades,
           condiciones: $scope.UI.condiciones,
           tiposDedicacion: $scope.UI.tiposDedicacion,
           grados: $scope.UI.grados,
@@ -96,7 +103,11 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          model: Restangular.copy($scope.UI.selected),
+          facultades: $scope.UI.facultades,
+          condiciones: $scope.UI.condiciones,
+          tiposDedicacion: $scope.UI.tiposDedicacion,
+          grados: $scope.UI.grados
         },
         controller: 'DocenteEditCtrl'
       });
@@ -142,18 +153,17 @@
     new List();
   }])
 
-  .controller('DocenteNewCtrl',['$scope', 'table', 'name', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, condiciones, tiposDedicacion, grados, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('DocenteNewCtrl',['$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function($scope, table, name, facultades, condiciones, tiposDedicacion, grados, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
+    $scope.facultades = facultades;
     $scope.condiciones= condiciones;
     $scope.tiposDedicacion= tiposDedicacion;
     $scope.gradosdocente = grados;
-    Restangular.all('facultades').getList().then(function(data){
-      $scope.facultades = data;
-    });
+
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -184,8 +194,14 @@
 
   }])
 
-  .controller('DocenteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('DocenteEditCtrl',[
+      '$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+      function($scope, table, name, facultades, condiciones, tiposDedicacion, grados, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
+    $scope.facultades = facultades;
+    $scope.condiciones= condiciones;
+    $scope.tiposDedicacion= tiposDedicacion;
+    $scope.gradosdocente = grados;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
