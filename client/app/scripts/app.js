@@ -199,6 +199,16 @@
       templateUrl: 'views/aprobacion/planestudios/list-detalle.html',
       controller: 'AprobacionPlanestudiosDetalleCtrl'
     })
+    .state('app.aprobacioncursosperiodo', {
+      url: '/aprobacion/cursos',
+      templateUrl: 'views/aprobacion/cursos/list.html',
+      controller: 'AprobacionCursosPeriodoCtrl'
+    })
+    .state('app.aprobacioncursosperiododetalle', {
+      url: '/aprobacion/cursos/:id',
+      templateUrl: 'views/aprobacion/cursos/list-detalle.html',
+      controller: 'AprobacionCursosPeriodoDetalleCtrl'
+    })
     .state('app.alumnomisdatos', {
       url: '/alumno/misdatos',
       templateUrl: 'views/alumno/misdatos.html',

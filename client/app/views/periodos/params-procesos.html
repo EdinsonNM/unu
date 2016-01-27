@@ -8,14 +8,14 @@
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
 
-      <md-tabs md-dynamic-height md-border-bottom>
+      <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
             <md-tab label="Parametros por Periodo">
               <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
                 <div  flex-container="row" flex-gutter="24">
                   <div flex-item>
                     <md-input-container class="md-block">
                       <label>Periodos</label>
-                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
+                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
                         <md-option ng-repeat="per in periodos" ng-value="per">
                           {{per.nombre}}
                         </md-option>
@@ -27,15 +27,15 @@
                 <!--tabla: contiene el listado de elementos-->
                 <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"  class="md-accent"></md-progress-linear>
                 <div class="table-responsive">
-                  <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                  <table ng-table="tableParamsParametros" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
                     <tbody>
                       <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
                       <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
-                        <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
-                        <td class="text-left" data-title="'Nombre de Parametro'" sortable="">{{item.nombre}}</td>
+                        <td class="text-left" data-title="'Parámetro'" sortable="">{{item._parametro.nombre}}</td>
+                        <td class="text-left" data-title="'Valor'" sortable="">{{item.valor}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -48,7 +48,7 @@
                     <div flex-item>
                       <md-input-container class="md-block">
                         <label>Periodos</label>
-                        <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" >
+                        <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
                           <md-option ng-repeat="per in periodos" ng-value="per">
                             {{per.nombre}}
                           </md-option>
@@ -60,15 +60,16 @@
                   <!--tabla: contiene el listado de elementos-->
                   <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"  class="md-accent"></md-progress-linear>
                   <div class="table-responsive">
-                    <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <table ng-table="tableParamsProcesos" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
                       <tbody>
                         <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
                         <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
                           <td style="width:30px;">
                             <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                           </td>
-                          <td class="text-left" data-title="'Código'" sortable="">{{item.codigo}}</td>
-                          <td class="text-left" data-title="'Nombre de Proceso'" sortable="">{{item.nombre}}</td>
+                          <td class="text-left" data-title="'Código'" sortable="">{{item._proceso.nombre}}</td>
+                          <td class="text-left" data-title="'Fecha Inicio'" sortable="">{{item.fechaInicio | date:'dd/MM/yyyy'}}</td>
+                          <td class="text-left" data-title="'Fecha Fin'" sortable="">{{item.fechaFin | date:'dd/MM/yyyy'}}</td>
                         </tr>
                       </tbody>
                     </table>
