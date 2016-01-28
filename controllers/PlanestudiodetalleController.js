@@ -1,9 +1,11 @@
 var model = require('../models/PlanestudiodetalleModel.js');
 var acpmodel = require('../models/AprobacionCursoPeriodoModel.js');
 var auth = require('../config/passport');
+var Q = require('q');
 
 module.exports=function(){
   var baucis=require('baucis');
+
   return{
     setup:function(){
       var controller=baucis.rest('Planestudiodetalle');
@@ -49,6 +51,7 @@ module.exports=function(){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;
       	var filter = req.query.filter;
+        var promises = [];
 
       	model.paginate(
       		filter,
@@ -59,10 +62,26 @@ module.exports=function(){
           },
       		function(err, results){
                 var reqIdPeriodo = req.query._periodo;
-                var resultados =  [];
                 var total = results.docs.length;
 
-                if(total == 0){
+                results.docs.forEach(function(item, index){
+                    promises.push(acpmodel.findOne({
+                            _periodo: reqIdPeriodo,
+                            _planestudios: item._planestudio._id,
+                            _curso: item._curso._id
+                        }).exec().then((function(item,err, obj){
+                            if(err) return err;
+                            if(obj){
+                                item._doc.aprobacioncursosperiodo = obj;
+                            }else{
+                                item._doc.aprobacioncursosperiodo = false;
+                            }
+                            return item._doc;
+                        }).bind(null, item)));
+
+                });
+
+                Q.all(promises).then(function(result){
                     var obj = {
                       total: results.total,
                       perpage: limit*1,
@@ -70,50 +89,12 @@ module.exports=function(){
                       last_page: results.pages,
                       from: (page-1)*limit+1,
                       to: page*limit,
-                      data: results.docs
+                      data: result
                     };
-                    res.send(obj);
-                }else{
-                    results.docs.forEach(function(item, index){
-                        acpmodel.findOne({
-                            _periodo: reqIdPeriodo,
-                            _planestudios: item._planestudio._id,
-                            _curso: item._curso._id
-                        }, function(err, obj){
-                            if(obj){
-                                item.set("aprobacioncursosperiodo",obj,  { strict: false });
-                            }else{
-                                item.set("aprobacioncursosperiodo", false,  { strict: false });
-                            }
-                            //resultados.push(item);
+                    res.status(200).send(obj);
+                });
 
-                            if(index == total-1){
-                                var obj = {
-                                  total: results.total,
-                                  perpage: limit*1,
-                                  current_page: page*1,
-                                  last_page: results.pages,
-                                  from: (page-1)*limit+1,
-                                  to: page*limit,
-                                  data: results.docs
-                                };
-                                res.send(obj);
-                            }
-
-                        });
-                    });
-                }
-
-
-
-                /*console.log("Imprimimos uno de pruea:");
-                results.docs[0].aprobacioncursosperiodo = "xxx";
-                console.log(results.docs[0]._id);
-                console.log(results.docs[0].aprobacioncursosperiodo);*/
-                console.log(resultados);
-
-      		}
-      	);
+      		});
       });
 
       controller.post('/methods/comentarios/:id',auth.ensureAuthenticated, function(req, res,next){
@@ -137,19 +118,30 @@ module.exports=function(){
         });
       });
 
-      controller.post('/methods/aprobar/', auth.ensureAuthenticated, function(req, res, next) {
-          model.findOne({
-              _periodo: req.params._periodo,
-              _planestudios: req.params._planestudios,
-              _curso: req.params._curso,
+      //Metodo para aprobar curso.
+      controller.post('/methods/aprobar', auth.ensureAuthenticated, function(req, res, next) {
+        
+          acpmodel.findOne({
+              _periodo: req.body._periodo,
+              _planestudios: req.body._planestudios,
+              _curso: req.body._curso
           }, function(error, model) {
-              if (error) return res.status(500).send({
-                  error: error
-              });
+              if (error) return res.status(500).send({error: error});
               if (model) {
-                  model.delete();
+                  model.remove(function(err, obj){
+                      if(err) return res.status(500).send({error: err});
+                      return res.status(200).send();
+                  });
               } else {
-                  model.save();
+                  var objAcpmodel = new acpmodel({
+                      _periodo: req.body._periodo,
+                      _planestudios: req.body._planestudios,
+                      _curso: req.body._curso
+                  });
+                  objAcpmodel.save(function(err, model){
+                      if(err) return res.status(500).send({error: err});
+                      return res.status(200).send(model);
+                  });
               }
           });
       });

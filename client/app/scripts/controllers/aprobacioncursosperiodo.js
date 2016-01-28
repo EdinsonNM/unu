@@ -105,8 +105,8 @@
         service.customPOST({
             _periodo: $scope.filter._periodo._id,
             _planestudios: $scope.filter._planestudios._id,
-            _curso: $scope.UI.selected._curso._id,
-        }, 'methods/aprobar/' + $scope.UI.selected._id).then(function(result) {
+            _curso: $scope.UI.selected._id,
+        }, 'methods/aprobar').then(function(result) {
           ToastMD.success('Estado actualizado satisfactoriamente');
           $scope.ListPlanEstudios();
         }, function(result) {

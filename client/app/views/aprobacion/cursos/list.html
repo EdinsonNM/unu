@@ -81,9 +81,9 @@
               <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
               <td data-title="'Estado'">
                 <strong>
-                    <a href ng-switch="item.aprobacioncursosperiodo" title="{{item.estado}}" ng-click="alert('dsd')">
-                      <span ng-switch-when="false" class="fa fa-pencil tc-blue-grey-500"> No Dictado</span>
-                      <span ng-switch-when="true" class="fa fa-check-circle tc-green-500"> Dictado</span>                      
+                    <a href ng-switch="item.aprobacioncursosperiodo" title="{{item.aprobacioncursosperiodo}}" >
+                      <span ng-switch-when="false" class="fa fa-pencil tc-blue-grey-500" title="No Dictado"></span>
+                      <span ng-switch-when="true" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
                     </a>
                   </strong>
               </td>
