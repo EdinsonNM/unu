@@ -110,5 +110,9 @@ gulp.task('watch', function() {
     gulp.watch('bower_components/**', ['bower']);
     gulp.watch(['app/*.html'], ['html']);
 });
+
+gulp.task('angularfiles',function(){
+    gulp.watch('app/scripts/**/*.js', ['bundle']);
+});
 gulp.task('default', ['webserver','bower','bowercss','icons','watch','stylus','bundle','jsfiles']);
 gulp.task('build', ['bower','bowercss','icons','stylus','bundle','jsfiles']);

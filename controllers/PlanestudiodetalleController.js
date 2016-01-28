@@ -65,22 +65,20 @@ module.exports=function(){
                 var total = results.docs.length;
 
                 results.docs.forEach(function(item, index){
-                    promises.push((function(item){
-                        var defer = Q.defer();
-                        acpmodel.findOne({
+                    promises.push(acpmodel.findOne({
                             _periodo: reqIdPeriodo,
                             _planestudios: item._planestudio._id,
                             _curso: item._curso._id
-                        }, function(err, obj){
+                        }).exec().then((function(item,err, obj){
+                            if(err) return err;
                             if(obj){
                                 item._doc.aprobacioncursosperiodo = obj;
                             }else{
                                 item._doc.aprobacioncursosperiodo = false;
                             }
-                            defer.resolve(item);
-                        });
-                        return defer.promise;
-                    }).bind(null, item));
+                            return item._doc;
+                        }).bind(null, item)));
+
                 });
 
                 Q.all(promises).then(function(result){
@@ -96,8 +94,7 @@ module.exports=function(){
                     res.status(200).send(obj);
                 });
 
-      		}
-      	);
+      		});
       });
 
       controller.post('/methods/comentarios/:id',auth.ensureAuthenticated, function(req, res,next){
@@ -123,6 +120,7 @@ module.exports=function(){
 
       //Metodo para aprobar curso.
       controller.post('/methods/aprobar', auth.ensureAuthenticated, function(req, res, next) {
+        
           acpmodel.findOne({
               _periodo: req.body._periodo,
               _planestudios: req.body._planestudios,
@@ -130,7 +128,7 @@ module.exports=function(){
           }, function(error, model) {
               if (error) return res.status(500).send({error: error});
               if (model) {
-                  model.delete(function(err, obj){
+                  model.remove(function(err, obj){
                       if(err) return res.status(500).send({error: err});
                       return res.status(200).send();
                   });

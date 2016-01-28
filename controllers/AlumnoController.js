@@ -10,13 +10,24 @@ module.exports = function() {
       controller.fragment('/alumnos');
 
       //custom methods
+      controller.get('/model/sexo', function(req, res, next){
+        var enumValues = model.schema.path('sexo').enumValues;
+        res.status(200).send(enumValues);
+      });
+      controller.get('/model/estadoCivil', function(req, res, next){
+        var enumValues = model.schema.path('estadoCivil').enumValues;
+        res.status(200).send(enumValues);
+      });
       controller.request('post', function (request, response, next) {
+        console.log('alumnocontroller.js');
+        console.log(request.body._usuario);
         if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
             var usuario = new Usuario(request.body._usuario);
             usuario._grupo = objGrupo._id;
+            usuario.email = request.body.email;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
               //console.log(objUsuario);
               if(usuarioErr) return next(usuarioErr);
@@ -42,7 +53,7 @@ module.exports = function() {
           filter, {
             page: page,
             limit: limit,
-            populate: ['_facultad']
+            populate: ['_periodoIngreso','_facultad','_escuela','_modalidadIngreso','_tipoCondicionAlumno','_situacionAlumno'] //Aqui corregir
           },
           function(err, results) {
             var obj = {
