@@ -59,6 +59,10 @@ var PlanestudiodetalleSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Planestudiodetalle',
     }],
+    _aprobacionesPeriodo:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Periodo',
+    }],
     created_at: Date,
     updated_at: Date
 });

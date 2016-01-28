@@ -81,9 +81,9 @@
               <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
               <td data-title="'Estado'">
                 <strong>
-                    <a href ng-switch="item.aprobacioncursosperiodo" title="{{item.aprobacioncursosperiodo}}" >
-                      <span ng-switch-when="false" class="fa fa-pencil tc-blue-grey-500" title="No Dictado"></span>
-                      <span ng-switch-when="true" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
+                    <a href  title="{{item.aprobacioncursosperiodo}}" >
+                      <span ng-if="item._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
+                      <span ng-if="item._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
                     </a>
                   </strong>
               </td>
@@ -109,6 +109,8 @@
 
 
 <md-button ng-if="UI.editMode" ng-click="AprobarCurso($event)" class="md-fab md-fab-bottom-right">
-  <md-tooltip md-direction="left">Aprobar Curso</md-tooltip>
-  <md-icon md-font-icon="fa fa-comments fa-lg tc-white"></md-icon>
+  <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length==0">Marcar como Dictado</md-tooltip>
+  <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length>0">Marcar como no Dictado</md-tooltip>
+  <md-icon md-font-icon="fa fa-thumbs-o-down fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length>0"></md-icon>
+  <md-icon md-font-icon="fa fa-thumbs-o-up fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length===0"></md-icon>
 </md-button>

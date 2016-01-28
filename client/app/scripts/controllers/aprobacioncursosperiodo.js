@@ -79,8 +79,7 @@
           count: 1000,
           filter: {
               _planestudio: $scope.filter._planestudios._id
-          },
-          _periodo: $scope.filter._periodo._id,
+          }
         }, {
           total: 0,
           groupBy: 'ciclo',
@@ -90,7 +89,7 @@
             query = params.url();
 
             $scope.UI.refresh = true;
-            service.customGET('methods/withCursos', query).then(function(result) {
+            service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
               $timeout(function() {
                 params.total(result.total);
                 $defer.resolve(result.data);
@@ -102,13 +101,12 @@
       };
 
       $scope.AprobarCurso = function() {
+        console.log($scope.UI.selected);
         service.customPOST({
-            _periodo: $scope.filter._periodo._id,
-            _planestudios: $scope.filter._planestudios._id,
-            _curso: $scope.UI.selected._id,
-        }, 'methods/aprobar').then(function(result) {
+            _periodo: $scope.filter._periodo._id
+        }, 'methods/aprobacion/'+$scope.UI.selected._id).then(function(result) {
           ToastMD.success('Estado actualizado satisfactoriamente');
-          $scope.ListPlanEstudios();
+          $scope.Refresh();
         }, function(result) {
           console.log(result.data.error);
         });
