@@ -90,5 +90,4 @@ AlumnoSchema.pre('save', function(next) {
   }
   next();
 });
-
 module.exports = mongoose.model('Alumno', AlumnoSchema).plural('alumnos');
