@@ -1,4 +1,4 @@
-<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
     <h3>{{UI.title}}</h3>
   </md-subheader>
@@ -8,33 +8,48 @@
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
       <div flex layout="row" layout-sm="row">
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Contraseña Actual</label>
+        <div flex-gt-sm="33" flex="33">
+          <div class="mt+ mr+">
+            <strong>Cambio de Contraseña:</strong>
+            <br/>
+            <small>Proporciona mayor seguridad a tu cuenta cambiando tu contraseña periódicamente</small>
+          </div>
+        </div>
+        <div flex-gt-sm="33" flex="66">
+          <div layout="row">
+            <div flex>
+              <md-input-container class="md-block">
+                <label>Contraseña Actual</label>
 
-            <input required name="contrasenia" ng-model="model.password" type="password">
-            <div ng-messages="myForm.codigo.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+                <input required name="contrasenia" ng-model="model.password" type="password">
+                <div ng-messages="myForm.codigo.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Nueva Contraseña</label>
-            <input required name="nuevacontrasenia" ng-model="model.newPassword" type="password">
-            <div ng-messages="myForm.resolucion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+          </div>         
+          <div layout="row">
+            <div flex>
+              <md-input-container class="md-block">
+                <label>Nueva Contraseña</label>
+                <input required name="nuevacontrasenia" ng-model="model.newPassword" type="password">
+                <div ng-messages="myForm.resolucion.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Repita Nueva Contraseña</label>
-            <input required name="nuevacontraseniarepetida" ng-model="model.newPasswordRepeat" type="password">
-            <div ng-messages="myForm.resolucion.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+          </div>
+          <div layout="row">
+            <div flex>
+              <md-input-container class="md-block">
+                <label>Confirma Nueva Contraseña</label>
+                <input required name="nuevacontraseniarepetida" ng-model="model.newPasswordRepeat" type="password">
+                <div ng-messages="myForm.resolucion.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
+          </div>
         </div>
       </div>
     </md-content>
@@ -42,7 +57,7 @@
 </md-content>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-click="Save($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+<md-button ng-click="Save($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}">
   <md-tooltip md-direction="left">{{UI.message.Buttons.Save}}</md-tooltip>
   <md-icon md-font-icon="fa  fa-floppy-o fa-lg tc-white"></md-icon>
 </md-button>
