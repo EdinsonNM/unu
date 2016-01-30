@@ -53,9 +53,9 @@
               </div>
               <div flex layout="row">
                   <div flex>
-                      <md-input-container class="md-icon-float md-block">
+                      <md-input-container class="md-block">
                         <label>Sexo</label>
-                        <md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon>
+                        <!--md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon-->
                         <md-select ng-model="model.sexo" name="sexo" required>
                           <md-option ng-repeat="sex in sexo" ng-value="sex">
                             {{sex}}
@@ -69,10 +69,10 @@
               </div>
               <div flex layout="row">
                   <div flex>
-                      <md-input-container class="md-icon-float md-block">
-                        <label>Fecha de Nacimiento</label>
-                        <md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="fechaNacimiento" ng-model="model.fechaNacimiento">
+                      <md-input-container class="md-block">                        
+                        <!--input required name="fechaNacimiento" ng-model="model.fechaNacimiento"-->
+                        <!--md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon-->
+                        <md-datepicker required name="fechaNacimiento" ng-model="model.fechaNacimiento" md-placeholder="Fecha de Nacimiento"></md-datepicker>
                         <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>

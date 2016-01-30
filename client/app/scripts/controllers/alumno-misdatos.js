@@ -9,10 +9,13 @@
       title: 'Mis Datos',
       editMode: false
     };
-    console.log($rootScope);
+    $scope.model = {};
+    //console.log($rootScope);
     $rootScope.$watch('ALUMNO', function(newValue, oldValue){
         $scope.model = Restangular.copy(newValue);
+        $scope.model.fechaNacimiento = new Date($scope.model.fechaNacimiento);
     },true);
+
 
     var service = Restangular.all(LOCAL.route);
 
