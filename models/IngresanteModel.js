@@ -4,7 +4,7 @@ var mongoosePaginate = require('mongoose-paginate');
 
 var IngresanteSchema = new Schema({
 	//es la modalidad de ingreso
-	codigo: {
+	codigoPostulante: {
 		type:String,
 		required:true
 	},
@@ -38,37 +38,26 @@ var IngresanteSchema = new Schema({
 		type:String,
 		enum:['Masculino','Femenino']
 	},
-	constanciaIngreso:{
-		existe: Boolean,
-		created_at: Date,
-		numero:String //nro documento de la constancia de ingreso
-	},
-	tipoIngresante:{
-		type:String,
-		enum:['Ordinario','Estudiante 4to y 5to']
-	},
-	_documentosPresentados:[{
-		type:Schema.Types.ObjectId,
-    ref:'DocumentoIngresante'
-	}],
-
-
-  _Escuela:{
+  _escuela:{
     type:Schema.Types.ObjectId,
     ref:'Escuela',
     required:true
   },
-  sexo:{
-    type:String,
-    enum:['Masculino','Femenino']
-  },
+	_pagoIngrante:{
+		activo:{
+			type:Boolean,
+			default:false
+		},
+		voucher:String
+	},
+
 	created_at:Date,
 	updated_at:Date
 });
 IngresanteSchema.plugin(mongoosePaginate);
 
 IngresanteSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updated_at = now;
 	if (!this.created_at){
 		this.created_at=now;

@@ -1,14 +1,15 @@
 var path = require('path');
 var extend = require('util')._extend;
-
+require('dotenv').config();
 var development = require('./env/development');
 var test = require('./env/test');
 var production = require('./env/production');
 
+
 var defaults = {
   root: path.normalize(__dirname + '/..')
 };
-
+console.log('connect to '+process.env.NODE_ENV);
 module.exports = {
   development: extend(development, defaults),
   test: extend(test, defaults),

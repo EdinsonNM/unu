@@ -39,7 +39,7 @@ module.exports=function(){
             limit: limit,
             populate: ['_escuela','_periodo']
           },
-      		function(err, results, pageCount, itemCount){
+      		function(err, results){
             var obj = {
               total: results.total,
               perpage: limit*1,

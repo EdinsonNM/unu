@@ -23,7 +23,7 @@ var UsuarioSchema = new Schema({
 // Bcrypt middleware
 UsuarioSchema.pre('save', function(next) {
 	var user = this;
-  var now = new Date;
+  var now = new Date();
   user.updated_at = now;
   if (!user.created_at){
     user.created_at=now;

@@ -14,41 +14,26 @@ module.exports=function(){
       //custom routes
       controller.post('/seed/data', function(req,res,next){
         model.remove({}, function(err) {
-           console.log('grupo removed');
-        });
-        Grupo.findOne({codigo:'ADMIN'},function(err,obj){
-          console.log(obj);
-          if(err) next(err);
-          var user=new model({
-            firstname:'Edinson',
-            lastname:'Nuñez More',
-            username:'admin',
-            password:'admin',
-            email:'admin@admin.com',
-            _grupo:obj._id
-          });
-          user.save(function(err,u){
+           console.log('usuario removed');
+           Grupo.findOne({codigo:'ADMIN'},function(err,obj){
+             console.log(obj);
+             if(err) next(err);
+             var user=new model({
+               firstname:'Edinson',
+               lastname:'Nuñez More',
+               username:'admin',
+               password:'admin',
+               email:'admin@admin.com',
+               _grupo:obj._id
+             });
+             user.save(function(err,u){
+               res.status(200).send(u);
+             });
+           });
 
-            next();
-          });
         });
 
-        Grupo.findOne({codigo:'MIC'},function(err,obj){
-          console.log(obj);
-          if(err) next(err);
-          var user=new model({
-            firstname:'Usuario',
-            lastname:'MIC',
-            username:'usermic',
-            password:'usermic',
-            email:'usermic@admin.com',
-            _grupo:obj._id
-          });
-          user.save(function(err,u){
-            res.send(u);
-            next();
-          });
-        });
+
 
       });
       controller.post('/auth/login', function(req,res,next){

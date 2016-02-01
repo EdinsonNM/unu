@@ -154,6 +154,11 @@
       templateUrl: 'views/cursos/list.html',
       controller: 'CursosCtrl'
     })
+    .state('app.matricula', {
+      url: '/matricula',
+      templateUrl: 'views/matricula/index.html',
+      controller: 'MatriculaCtrl'
+    })
     .state('app.planestudios', {
       url: '/planestudios',
       templateUrl: 'views/planestudios/list.html',

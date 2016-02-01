@@ -1,4 +1,5 @@
 var model = require('../models/GrupoModel.js');
+var Q = require('q');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -142,30 +143,6 @@ module.exports=function(){
         });
       });
 
-      controller.post('/seed/data', function(req,res,next){
-        model.remove({}, function(err) {
-           console.log('grupo removed');
-        });
-
-        var grupo1=new model({
-          nombre:'Administrador',
-          codigo:'ADMIN',
-          menu:[]
-        });
-
-        grupo1.save();
-        var grupo2=new model({nombre:'Jefe de Departamento',codigo:'JEFE_DPTO'});
-        grupo2.save();
-        var grupo3=new model({nombre:'Docente',codigo:'DOCENTE'});
-        grupo3.save();
-        var grupo4=new model({nombre:'Alumno',codigo:'ALUMNO'});
-        grupo4.save();
-        var grupo5=new model({nombre:'Módulo de Investigación Científica',codigo:'MIC'});
-        grupo5.save();
-
-        res.send({ok:'ok'});
-        next();
-      });
     }
   };
 };

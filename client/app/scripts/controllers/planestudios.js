@@ -73,7 +73,7 @@
     $scope.ListPlanEstudios = function ListPlanEstudios(){
       store.setItem('escuelaSelected', JSON.stringify($scope.filter._escuela));
       angular.extend($scope.tableParams.filter(), {_escuela:$scope.filter._escuela._id});
-      $scope.tableParams.reload();
+      //$scope.tableParams.reload();
     };
     new LoadFacultades();
 
