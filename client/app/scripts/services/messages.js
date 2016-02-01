@@ -32,7 +32,8 @@
         Deleted:'Se quito el elemento',
         QuestionDelete:'¿Desea eliminar el elemento seleccionado?',
         Required:'Campo es requerido',
-        validateUnique:'Valor ya se encuentra registrado'
+        validateUnique:'Valor ya se encuentra registrado',
+        AllowEdit: 'Los campos ya se permiten editar'
       }
     };
   }]);

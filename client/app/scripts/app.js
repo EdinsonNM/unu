@@ -219,6 +219,11 @@
       templateUrl: 'views/alumno/cambiocontrasenia.html',
       controller: 'AlumnoCambioContraseniaCtrl'
     })
+    .state('app.alumnoplandeestudios', {
+      url: '/alumno/planestudios',
+      templateUrl: 'views/alumno/planestudios.html',
+      controller: 'AlumnoPlanestudiosCtrl'
+    })
     .state('app.paramprocesosperiodo', {
       url: '/periodo-parametros-procesos',
       templateUrl: 'views/periodos/params-procesos.html',

@@ -5,6 +5,7 @@
     var LOCAL = {
         route:'alumnos'
     };
+    $scope.editable = false;
     $scope.UI = {
       title: 'Mis Datos',
       editMode: false
@@ -25,13 +26,17 @@
 
     $scope.Edit = function Edit($event) {
       $scope.UI.editMode = true;
+      $scope.editable = true;
+      ToastMD.success(MessageFactory.Form.AllowEdit);
       console.log('edit');
     };
 
     $scope.Save = function Save($event) {
       $scope.UI.editMode = false;
-      $scope.model.save().then(function(result){
-        console.log(result);
+      $scope.model.put().then(function(result){
+          $scope.editable = false;
+          ToastMD.success(MessageFactory.Form.Updated);
+          console.log(result);
       });
     };
 
