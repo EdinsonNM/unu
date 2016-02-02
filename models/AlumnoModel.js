@@ -61,12 +61,10 @@ var AlumnoSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'ModalidadIngreso'
   },
-  //TODO: crear modelo TipoCondicionAlumnoModel.js
   _tipoCondicionAlumno:{
     type:Schema.Types.ObjectId,
     ref:'TipoCondicionAlumno'
   },
-  //TODO: modelo SituacionAlumnoModel.js
   _situacionAlumno:{
     type:Schema.Types.ObjectId,
     ref:'SituacionAlumno'
