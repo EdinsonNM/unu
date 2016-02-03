@@ -55,6 +55,12 @@
           }
       };
 
+      $scope.ListarParamsProcesos = function(){
+        serviceParametroPeriodo.customGET('methods/paramproc/'+$scope.filter._periodo._id).then(function(result){
+          
+        });
+      };
+
       $scope.ListParametros = function() {
         console.log("ListParametros");
         $scope.tableParamsParametros = new NgTableParams({

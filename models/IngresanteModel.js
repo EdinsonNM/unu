@@ -26,6 +26,7 @@ var IngresanteSchema = new Schema({
     required:true
 	},
 	promedio:Number,
+	//no considerar en mantenimiento
 	documentoIdentidad:{
 		tipo:{
 			type:String,
@@ -43,6 +44,7 @@ var IngresanteSchema = new Schema({
     ref:'Escuela',
     required:true
   },
+	//no considerar en mantenimiento
 	_pagoIngrante:{
 		activo:{
 			type:Boolean,
@@ -50,7 +52,11 @@ var IngresanteSchema = new Schema({
 		},
 		voucher:String
 	},
-
+	estado:{
+		type:String,
+		enum:['Registrado','Aprobado'],
+		default:'Registrado'
+	},
 	created_at:Date,
 	updated_at:Date
 });
