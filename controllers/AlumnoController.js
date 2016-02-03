@@ -46,6 +46,15 @@ module.exports = function() {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
+        for (var key in filter) {
+          switch (key) {
+            case 'codigo':
+            case 'nombres':
+            case 'apellidos':
+              filter[key] = new RegExp(filter[key],'i');
+              break;
+          }
+        }
         model.paginate(
           filter, {
             page: page,
