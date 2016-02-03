@@ -129,8 +129,7 @@
     };
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
-      var model = Restangular.copy($scope.UI.selected);
-      //console.log(model);
+      var model = Restangular.copy($scope.UI.selected);//console.log(model);
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
