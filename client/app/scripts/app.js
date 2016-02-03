@@ -250,6 +250,14 @@
       controller: 'ProcesosCtrl'
     })
 
+    .state('app.aprobacioningresantes', {
+      url: '/aprobacioningresantes',
+      templateUrl: 'views/aprobacion/ingresantes/list.html',
+      controller: 'AprobacionIngresantesCtrl'
+    })
+
+
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
