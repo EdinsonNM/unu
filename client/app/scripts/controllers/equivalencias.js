@@ -170,6 +170,8 @@
              var eq = _.find(item._equivalencias,function(num){ return num === element._id; });
              if(eq){
                element.active = true;
+             }else{
+               element.active = false;
              }
            });
          });
@@ -183,6 +185,7 @@
           var service = Restangular.all('planestudiodetalles');
           service.customPOST({equivalencia:item._id},'methods/equivalencia/'+$scope.UI.selected._id).then(function(){
             ToastMD.success("equivalencia agregada satisfactoriamente");
+            $scope.tableParams.reload();
           });
 
         }
