@@ -164,8 +164,30 @@
           $scope.UI.editMode = true;
           $scope.UI.selected = item;
           $scope.UI.selected.route = LOCAL.route;
+
+          angular.forEach($scope.tableParamsEquivalente.data,function(group){
+           angular.forEach(group.data,function(element){
+             var eq = _.find(item._equivalencias,function(num){ return num === element._id; });
+             if(eq){
+               element.active = true;
+             }
+           });
+         });
         }
       };
+
+      $scope.Equivalencia = function Equivalencia(item) {
+        $scope.UI.selectedEquivalencia = null;
+        if (item.active) {
+          $scope.UI.selectedEquivalencia = item;
+          var service = Restangular.all('planestudiodetalles');
+          service.customPOST({equivalencia:item._id},'methods/equivalencia/'+$scope.UI.selected._id).then(function(){
+            ToastMD.success("equivalencia agregada satisfactoriamente");
+          });
+
+        }
+      };
+
 
     }
   ]);
