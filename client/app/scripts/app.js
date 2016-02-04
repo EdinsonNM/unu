@@ -144,6 +144,11 @@
     templateUrl: 'views/alumnos/list.html',
     controller: 'AlumnosCtrl'
     })
+    .state('app.ingresantes', {
+    url: '/ingresantes',
+    templateUrl: 'views/ingresantes/list.html',
+    controller: 'IngresantesCtrl'
+    })
     .state('app.periodos', {
       url: '/periodos',
       templateUrl: 'views/periodos/list.html',
