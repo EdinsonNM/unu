@@ -19,8 +19,6 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
       controller.request('post', function (request, response, next) {
-        console.log('alumnocontroller.js');
-        console.log(request.body._usuario);
         if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
@@ -29,7 +27,6 @@ module.exports = function() {
             usuario._grupo = objGrupo._id;
             usuario.email = request.body.email;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
-              //console.log(objUsuario);
               if(usuarioErr) return next(usuarioErr);
               if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
 
@@ -49,6 +46,15 @@ module.exports = function() {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
+        for (var key in filter) {
+          switch (key) {
+            case 'codigo':
+            case 'nombres':
+            case 'apellidos':
+              filter[key] = new RegExp(filter[key],'i');
+              break;
+          }
+        }
         model.paginate(
           filter, {
             page: page,

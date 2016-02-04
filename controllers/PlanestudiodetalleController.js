@@ -115,6 +115,18 @@ module.exports=function(){
 
       });
 
+      controller.post('/methods/equivalencia/:id', function(request, response, next){
+          model.findByIdAndUpdate(
+              request.params.id,
+              {$push: {"_equivalencias": request.body.equivalencia}},
+              {safe: true},
+              function(err, model){
+                  if(err) return response.status(500).send({message:err});
+                  response.status(200).send(model);
+              }
+          );
+      });
+
     }
   };
 };

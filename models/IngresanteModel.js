@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 
 var IngresanteSchema = new Schema({
-    //es la modalidad de ingreso
+
     codigoPostulante: {
         type: String,
         required: true

@@ -11,11 +11,29 @@ module.exports=function(){
         model.findOne({codigo: 'ADMIN'}, function(error, grupo){
           grupo.menu = [
             {
+              order:0,
+              title:'Admisión',
+              description:'Realiza el mantenimiento de las tablas generales del sistema',
+              url:'',
+              flex:'33',
+              children:[
+                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:1},
+                {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
+                {title:'Pagos Ingresantes',icon:'',url:'app.pagosingresantes',order:1}
+              ],
+              style:{
+                color: 'white',
+                bgColor:'bgc-white',
+                bgColorHead:'bgc-teal-500',
+                image:'bghome-1.jpg'
+              }
+            },
+            {
               order:1,
               title:'Mantenimiento',
               description:'Realiza el mantenimiento de las tablas generales del sistema',
               url:'',
-              flex:33,
+              flex:'67',
               children:[
                 {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
                 {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:2},
@@ -39,7 +57,7 @@ module.exports=function(){
               title: 'Apertura',
               description:'Inicia el proceso de Apertura del Periodo Académico',
               url:'',
-              flex:67,
+              flex:33,
               children:[
                 {title:'Periodos',icon:'',url:'app.periodos',order:1},
                 {title:'Parametros y Procesos por Periodo',icon:'',url:'app.paramprocesosperiodo',order:2},
@@ -95,7 +113,7 @@ module.exports=function(){
               order:5,
               title: 'Programación Académica',
               url:'',
-              flex:33,
+              flex:100,
               children:[
                 {title:'Asignar Aulas',icon:'',url:'app.asignaraulas',order:1},
               ],

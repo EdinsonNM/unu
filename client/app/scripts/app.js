@@ -169,6 +169,11 @@
       templateUrl: 'views/planestudios/list.html',
       controller: 'PlanestudiosCtrl'
     })
+    .state('app.planestudiosequivalencia', {
+      url: '/planestudios/equivalencia',
+      templateUrl: 'views/equivalencias/list.html',
+      controller: 'EquivalenciasPlanEstudioCtrl'
+    })
     .state('app.planestudiodetalles', {
       url: '/planestudiodetalles/:id/detalles',
       templateUrl: 'views/planestudiodetalles/list.html',

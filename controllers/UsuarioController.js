@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var auth = require('../config/passport');
 var config = require('../config/config');
+var Q=require('q');
 module.exports=function(){
   return{
     setup:function(){
@@ -118,6 +119,23 @@ module.exports=function(){
 
 
         //INFO considerar recepcion de los siguientes parametros req.body.password,req.body.newPassword,req.body.newPasswordRepeat
+
+      });
+
+      controller.put('/auth/genratepasswords',auth.ensureAuthenticated,function(req,res,next){
+        var promises = [];
+        model.find({},function(error,data){
+          for(var i = 0;i<data.length;i++){
+            var item = data[i];
+            if(item.username!='admin'){
+              item.password = item.username;
+              promises.push(item.save);
+            }
+          }
+          Q.all(promises).then(function(results){
+            res.status(202).send({total:results.length});
+          });
+        });
 
       });
     }

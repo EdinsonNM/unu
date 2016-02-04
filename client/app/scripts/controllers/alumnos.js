@@ -10,8 +10,8 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('AlumnosCtrl', [ 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
-  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
+  angular.module('unuApp').controller('AlumnosCtrl', ['$q', 'MessageFactory', '$rootScope','$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
+  function($q,MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
     var List, service, service_usuario;
     $scope.UI = {
       refresh: false,
@@ -57,6 +57,22 @@
         $scope.facultades = data;
       });
     };
+    $scope.LoadEscuelas = function LoadEscuelas($column) {
+      var defer = $q.defer();
+      var service = Restangular.all('escuelas');
+      var escuelas=[];
+      service.getList({sort:'nombre'}).then(function(data){
+        angular.forEach(data, function(item){
+              escuelas.push({
+                  'id': item._id,
+                  'title': item.nombre
+              });
+          });
+          defer.resolve(escuelas);
+      });
+      return defer;
+    };
+
     var LoadSituacionAlumnos = function LoadSituacionAlumnos() {
       var serviceSituaciones = Restangular.all(LOCAL.route_situacionalumnos);
       serviceSituaciones.getList().then(function(data){
@@ -129,8 +145,7 @@
     };
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
-      var model = Restangular.copy($scope.UI.selected);
-      //console.log(model);
+      var model = Restangular.copy($scope.UI.selected);//console.log(model);
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,

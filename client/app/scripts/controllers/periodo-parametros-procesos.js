@@ -45,86 +45,19 @@
       };
       new LoadPeriodos();
 
-      $scope.List = function(){
-          if($scope.selectedTab == 0){
-              $scope.ListParametros();
-              $scope.ListProcesos();
-          }else{
-              $scope.ListProcesos();
-              $scope.ListParametros();
-          }
-      };
 
-      $scope.ListParametros = function() {
-        console.log("ListParametros");
-        $scope.tableParamsParametros = new NgTableParams({
-          page: 1,
-          count: 10,
-          filter: {
-            _id: $scope.filter._periodo._id,
-          }
-        }, {
-          total: 0,
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
-            $scope.UI.refresh = true;
-            serviceParametroPeriodo.customGET('methods/paramproc', query).then(function(result) {
-              $timeout(function() {
-                if (result.data.length > 0) {
-                  params.total(result.data[0].length);
-                  $defer.resolve(result.data[0].parametros);
-                } else {
-                  params.total(0);
-                  $defer.resolve([]);
-                }
-                $scope.UI.refresh = false;
-              }, 500);
-            });
-          }
-        });
-        $scope.tableParamsParametros.settings({
-          counts: []
+      $scope.ListarParamsProcesos = function(){
+        serviceParametroPeriodo.customGET('methods/paramproc/'+$scope.filter._periodo._id).then(function(result){
+          $scope.tableParamsParametros = result.parametros;
+          $scope.tableParamsProcesos = result.procesos;
         });
       };
 
-      $scope.ListProcesos = function() {
-        $scope.tableParamsProcesos = new NgTableParams({
-          page: 1,
-          count: 10,
-          filter: {
-            _id: $scope.filter._periodo._id
-          }
-        }, {
-          total: 0,
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
-            $scope.UI.refresh = true;
-            serviceProcesoPeriodo.customGET('methods/paramproc', query).then(function(result) {
-              $timeout(function() {
-                if (result.data.length > 0) {
-                  params.total(result.data[0].length);
-                  $defer.resolve(result.data[0].procesos);
-                } else {
-                  params.total(0);
-                  $defer.resolve([]);
-                }
-
-                $scope.UI.refresh = false;
-              }, 500);
-            });
-          }
-        });
-        $scope.tableParamsProcesos.settings({
-          counts: []
-        });
-      };
 
       $scope.Refresh = function Refresh() {
         $scope.UI.selected = null;
         $scope.UI.editMode = false;
-        $scope.tableParams.reload();
+        $scope.ListarParamsProcesos();
       };
 
       $scope.filter = {};
@@ -142,7 +75,7 @@
           locals: {
             selectedTab: $scope.selectedTab,
             name: LOCAL.name,
-            table: $scope.selectedTab == 0 ? $scope.tableParamsParametros : $scope.tableParamsProcesos,
+            table: $scope.ListarParamsProcesos,
             periodo: $scope.filter._periodo,
             serviceProcesoPeriodo: serviceProcesoPeriodo,
             serviceParametroPeriodo: serviceParametroPeriodo
@@ -155,11 +88,13 @@
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,
-          templateUrl: LOCAL.form,
+          templateUrl: $scope.selectedTab == 0 ? LOCAL.formParametros : LOCAL.formProcesos,
           locals: {
+            selectedTab: $scope.selectedTab,
             name: LOCAL.name,
-            table: $scope.tableParams,
+            table:  $scope.ListarParamsProcesos,
             model: Restangular.copy($scope.UI.selected),
+            periodo: $scope.filter._periodo,
             escuela: $scope.filter._escuela
           },
           controller: 'PeriodoParametrosProcesosEditCtrl'
@@ -190,7 +125,8 @@
       $scope.EnabledEdit = function EnabledEdit(item) {
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
-        angular.forEach($scope.tableParams.data, function(element) {
+        var tabla = ($scope.selectedTab === 0)?$scope.tableParamsParametros:$scope.tableParamsProcesos;
+        angular.forEach(tabla, function(element) {
           if (item._id !== element._id) {
             element.active = false;
           }
@@ -234,7 +170,7 @@
               serviceParametroPeriodo.customPOST($scope.model, 'updatePeriodoParametro').then(function() {
                 ToastMD.info(MessageFactory.Form.Saved);
                 $mdDialog.hide();
-                table.reload();
+                table();
               });
             }
           };
@@ -249,37 +185,61 @@
               serviceProcesoPeriodo.customPOST($scope.model, 'updatePeriodoProceso').then(function() {
                 ToastMD.info(MessageFactory.Form.Saved);
                 $mdDialog.hide();
-                table.reload();
+                table();
               });
             }
           };
         }
       }
     ])
-    .controller('PeriodoParametrosProcesosEditCtrl', ['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
-      function($scope, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
+    .controller('PeriodoParametrosProcesosEditCtrl', ['selectedTab','$scope','periodo', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+      function(selectedTab,$scope, periodo, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
+        $scope._periodo = periodo;
         $scope.escuela = escuela;
-        $scope.submited = false;
         $scope.model = model;
-        $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
+        //$scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
         $scope.title = MessageFactory.Form.Edit.replace('{element}', name);
         $scope.Buttons = MessageFactory.Buttons;
-        Restangular.all('periodos').getList().then(function(data) {
-          $scope.periodos = data;
-        });
-        $scope.Save = function(form) {
-          $scope.submited = true;
-          if (form.$valid) {
-            $scope.model.put().then(function() {
-              ToastMD.info(MessageFactory.Form.Updated);
-              $mdDialog.hide();
-              table.reload();
-            });
-          }
-        };
+        $scope.submited = false;
+        $scope.message = MessageFactory.Form;
+
+
         $scope.Cancel = function() {
           $mdDialog.hide();
         };
+
+        if (selectedTab === 0) { // Parametros
+          Restangular.all('parametros').getList().then(function(data) {
+            $scope.parametros = data;
+          });
+
+          $scope.Save = function(form) {
+            $scope.submited = true;
+            if (form.$valid) {
+              serviceParametroPeriodo.customPOST($scope.model, 'updatePeriodoParametro').then(function() {
+                ToastMD.info(MessageFactory.Form.Saved);
+                $mdDialog.hide();
+                table();
+              });
+            }
+          };
+
+        } else { // Procesos
+          Restangular.all('procesos').getList().then(function(data) {
+            $scope.procesos = data;
+          });
+          $scope.Save = function(form) {
+            $scope.submited = true;
+            if (form.$valid) {
+              serviceProcesoPeriodo.customPOST($scope.model, 'updatePeriodoProceso').then(function() {
+                ToastMD.info(MessageFactory.Form.Saved);
+                $mdDialog.hide();
+                table();
+              });
+            }
+          };
+        }
+
       }
     ]);
 
