@@ -15,7 +15,7 @@ module.exports=function(){
               title:'Admisión',
               description:'Realiza el mantenimiento de las tablas generales del sistema',
               url:'',
-              flex:33,
+              flex:'33',
               children:[
                 {title:'Ingresantes',icon:'',url:'app.ingresantes',order:1},
                 {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
@@ -33,7 +33,7 @@ module.exports=function(){
               title:'Mantenimiento',
               description:'Realiza el mantenimiento de las tablas generales del sistema',
               url:'',
-              flex:33,
+              flex:'67',
               children:[
                 {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
                 {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:2},
@@ -76,7 +76,7 @@ module.exports=function(){
               title: 'Plan de Estudios',
               description:'',
               url:'',
-              flex:67,
+              flex:33,
               children:[
                 {title:'Cursos',icon:'',url:'app.cursos',order:1},
                 {title:'Plan de Estudios',icon:'',url:'app.planestudios',order:2},
@@ -113,7 +113,7 @@ module.exports=function(){
               order:5,
               title: 'Programación Académica',
               url:'',
-              flex:33,
+              flex:100,
               children:[
                 {title:'Asignar Aulas',icon:'',url:'app.asignaraulas',order:1},
               ],

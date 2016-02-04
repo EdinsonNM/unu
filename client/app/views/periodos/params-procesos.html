@@ -6,31 +6,37 @@
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
       <!--tabla: contiene el listado de elementos-->
-      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+      <div  flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodos</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="ListarParamsProcesos()">
+              <md-option ng-repeat="per in periodos" ng-value="per">
+                {{per.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
 
       <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
-            <md-tab label="Parametros por Periodo">
+            <md-tab label="Parametros por Periodo" md-on-select="alert('hi')">
               <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-                <div  flex-container="row" flex-gutter="24">
-                  <div flex-item>
-                    <md-input-container class="md-block">
-                      <label>Periodos</label>
-                      <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
-                        <md-option ng-repeat="per in periodos" ng-value="per">
-                          {{per.nombre}}
-                        </md-option>
-                      </md-select>
-                    </md-input-container>
-                  </div>
-                </div>
 
                 <!--tabla: contiene el listado de elementos-->
-                <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"  class="md-accent"></md-progress-linear>
                 <div class="table-responsive">
-                  <table ng-table="tableParamsParametros" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                  <table class="table table-hover table-condensed table-striped table-bordered ">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Parámetro</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-                      <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+                      <tr ng-repeat="item in tableParamsParametros" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
@@ -44,30 +50,22 @@
             </md-tab>
             <md-tab label="Procesos por Periodo">
                 <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-                  <div  flex-container="row" flex-gutter="24">
-                    <div flex-item>
-                      <md-input-container class="md-block">
-                        <label>Periodos</label>
-                        <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
-                          <md-option ng-repeat="per in periodos" ng-value="per">
-                            {{per.nombre}}
-                          </md-option>
-                        </md-select>
-                      </md-input-container>
-                    </div>
-                  </div>
-
                   <!--tabla: contiene el listado de elementos-->
-                  <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"  class="md-accent"></md-progress-linear>
                   <div class="table-responsive">
-                    <table ng-table="tableParamsProcesos" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <table  class="table table-hover table-condensed table-striped table-bordered ">
+                      <tr>
+                        <th></th>
+                        <th>Nombre</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                      </tr>
                       <tbody>
                         <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-                        <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+                        <tr ng-repeat="item in tableParamsProcesos" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
                           <td style="width:30px;">
                             <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                           </td>
-                          <td class="text-left" data-title="'Código'" sortable="">{{item._proceso.nombre}}</td>
+                          <td class="text-left" data-title="'Nombre'" sortable="">{{item._proceso.nombre}}</td>
                           <td class="text-left" data-title="'Fecha Inicio'" sortable="">{{item.fechaInicio | date:'dd/MM/yyyy'}}</td>
                           <td class="text-left" data-title="'Fecha Fin'" sortable="">{{item.fechaFin | date:'dd/MM/yyyy'}}</td>
                         </tr>

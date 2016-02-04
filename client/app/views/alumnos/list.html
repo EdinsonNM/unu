@@ -17,7 +17,7 @@
             <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
             <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
             <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item.apellidos}}</td>
-            <td class="text-left" data-title="'Escuela'" sortable="escuela" filter="{'escuela':'text'}">{{item._escuela.nombre}}</td>
+            <td class="text-left" data-title="'Escuela'" sortable="_escuela" filter="{'_escuela':'select'}" filter-data="LoadEscuelas($column)">{{item._escuela.nombre}}</td>
             <td class="text-left" data-title="'Situación'" sortable="situacion" filter="{'situacion':'text'}">{{item._situacionAlumno.nombre}}</td>
             <td class="text-left" data-title="'Condición'" sortable="condicion" filter="{'condicion':'text'}">{{item._tipoCondicionAlumno.nombre}}</td>
             <td class="text-left" data-title="'Modalidad Ingreso'" sortable="modalidad" filter="{'modalidad':'text'}">{{item._modalidadIngreso.nombre}}</td>

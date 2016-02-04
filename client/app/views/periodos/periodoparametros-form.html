@@ -27,7 +27,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Parametro</label>
-            <md-select ng-model="model.parametro" ng-model-options="{trackBy: '$value._id'}">
+            <md-select ng-model="model._parametro" ng-model-options="{trackBy: '$value._id'}">
               <md-option ng-repeat="param in parametros" ng-value="param">
                 {{param.nombre}}
               </md-option>

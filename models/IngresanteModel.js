@@ -71,4 +71,4 @@ IngresanteSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Escuela', IngresanteSchema).plural('escuelas');
+module.exports = mongoose.model('Ingresante', IngresanteSchema).plural('ingresantes');

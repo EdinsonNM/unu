@@ -33,7 +33,7 @@ module.exports=function(){
           model.findByIdAndUpdate(
               request.body._periodo,
               {$push: {"parametros": {
-                  _parametro: request.body.parametro._id,
+                  _parametro: request.body._parametro._id,
                   valor: request.body.valor
               }}},
               {safe: true},
@@ -62,11 +62,13 @@ module.exports=function(){
       controller.get('/methods/paramproc/:id', function(req, res){
       	var id = req.params.id;
         console.log(id);
-        model.findOne({_id:ObjectId(id)})
+        model.findOne({_id:id})
         .populate('procesos._proceso parametros._parametro')
         .exec(function(error,data){
+          console.log(data);
           if(error) return res.status(500).send({error:error});
-          res.status(200).send({procesos:data.procesos,parametros:data.parametros});
+          if(data)  return res.status(200).send({procesos:data.procesos,parametros:data.parametros});
+          return res.status(404).send();
         });
 
       });

@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var PlanestudiodetalleSchema = new Schema({
+    codigo: {
+        type: String,
+        required: true
+    },
     creditos: {
         type: Number,
         required: true

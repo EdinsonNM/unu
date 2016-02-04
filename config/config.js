@@ -9,7 +9,7 @@ var production = require('./env/production');
 var defaults = {
   root: path.normalize(__dirname + '/..')
 };
-console.log('connect to '+process.env.NODE_ENV);
+console.log('connect to Enviroment: '+process.env.NODE_ENV);
 module.exports = {
   development: extend(development, defaults),
   test: extend(test, defaults),
