@@ -12,7 +12,7 @@
           <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
           <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
             <td style="width:30px;">
-              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
             <td class="text-left" data-title="'Código'" sortable="codigoPostulante" filter="{'codigoPostulante':'text'}">{{item.codigoPostulante}}</td>
             <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
