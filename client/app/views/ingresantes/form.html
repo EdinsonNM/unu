@@ -90,7 +90,7 @@
           <div flex-item>
             <md-input-container class="md-block" >
               <label>Modalidad</label>
-              <md-select ng-model="model._modalidad" name="modalidad" required>
+              <md-select ng-model="model._modalidad" ng-model-options="{trackBy: '$value._id'}" name="modalidad" required>
                 <md-option ng-repeat="mod in modalidades" ng-value="mod">
                   {{mod.nombre}}
                 </md-option>
@@ -106,7 +106,7 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Facultad</label>
-              <md-select ng-model="model._facultad"  ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEscuelas()">
+              <md-select ng-model="model._facultad"  ng-model-options="{trackBy: '$value._id'}" name="facultad" ng-change="LoadEscuelas()">
                 <md-option ng-repeat="fac in facultades" ng-value="fac">
                   {{fac.nombre}}
                 </md-option>
@@ -116,7 +116,7 @@
           <div flex-item>
             <md-input-container class="md-block">
               <label>Escuela</label>
-              <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}" required>
+              <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
                 <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                   {{escuela.nombre}}
                 </md-option>
