@@ -30,6 +30,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "build": "npm install && ./node_modules/bower/bin/bower install && gulp build"
+    "build": "npm install && bower install && gulp build"
   }
 }
