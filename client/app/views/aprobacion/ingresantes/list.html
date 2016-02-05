@@ -1,0 +1,69 @@
+<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+
+      <div  flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEscuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" >
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodos</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                {{periodo.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear>
+      <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+        <tbody>
+          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+          <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+            <td style="width:30px;">
+              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-pink-500':item.active}"></span>
+            </td>
+            <td class="text-left" data-title="'Código'" sortable="codigoPostulante" filter="{'codigoPostulante':'text'}">{{item.codigoPostulante}}</td>
+            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
+            <td class="text-left" data-title="'Apellido Paterno'" sortable="apellidoPaterno" filter="{'apellidoPaterno':'text'}">{{item.apellidoPaterno}}</td>
+            <td class="text-left" data-title="'Apellido Materno'" sortable="apellidoMaterno" filter="{'apellidoMaterno':'text'}">{{item.apellidoMaterno}}</td>
+            <td class="text-left" data-title="'Sexo'" sortable="sexo" filter="{'sexo':'text'}">{{item.sexo}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-content>
+  </div>
+</md-content>
+
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="Approve($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+</md-button>
+
+<md-button class="md-raised md-warn" ng-click="Approve($event)">Aprobar</md-button>

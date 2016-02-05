@@ -261,9 +261,9 @@
     })
 
     .state('app.aprobacioningresantes', {
-      url: '/aprobacioningresantes',
+      url: '/aprobacion/ingresantes',
       templateUrl: 'views/aprobacion/ingresantes/list.html',
-      controller: 'AprobacionIngresantesCtrl'
+      controller: 'AprobacionIngresanteCtrl'
     })
 
 

@@ -38,6 +38,11 @@ var IngresanteSchema = new Schema({
         type: String,
         enum: ['Masculino', 'Femenino']
     },
+    estado:{
+  		type: String,
+  		enum:['Registrado','Aprobado'],
+  		default: 'Registrado'
+  	},
     _escuela: {
         type: Schema.Types.ObjectId,
         ref: 'Escuela',
