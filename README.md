@@ -47,7 +47,7 @@ Ejecutar el siguiente comando:
 #!batch
 "C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --config "D:\mongodb\mongod.cfg" --install
 ```
-## Requirements for Development
+## Requerimiento para Entorno de  Desarrollo
 
 ```
 [sudo] npm install -g nodemon
@@ -59,7 +59,7 @@ Ejecutar el siguiente comando:
 
 ```
 
-## Requirements for Production
+## Requirements para Entorno de Producción
 
 ```
 [sudo] npm install forever -g
@@ -69,28 +69,26 @@ Ejecutar el siguiente comando:
 ## Install packages in Project
 
 ```
-cd /unu-server
+cd unu
 npm install
 ```
 
 ## Inciar el Proyecto para desarrollo
 Para levantar el servidor ejecutar:
 ```
-npm start
+npm run start-all
 ```
 Para visualizar la aplicación abrir la ruta http://localhost:3000
 
-Si se desea hacer un debug del servidor
-```
-npm run debug
-```
-Para escuchar todos los cambios en el cliente:
-```
-npm run client
-```
 
 ## Pasos a tener en cuenta antes de iniciar el Proyecto
-Antes de iniciar a trabajar se recomienda ejecutar
+Antes de iniciar a trabajar se recomienda
+
+1. Todos los branchs deben crearse a partir de la rama "develop"
+2. Actualizar su rama con los ultimos cambios en develop
 ```
-git pull
-``
+git checkout develop
+git pull origin develop
+git checkout MIRAMA
+git rebase develop
+```
