@@ -21,6 +21,7 @@
         Yes:'Si',
         No:'No',
         Approve: 'Aprobar',
+        ApproveAll: 'Aprobar Todos',
         Observe:'Observar',
         Import: 'Importar',
         PaymentImport: 'Importar Pagos',

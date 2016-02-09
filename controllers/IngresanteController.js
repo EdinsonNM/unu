@@ -38,7 +38,7 @@ module.exports = function() {
                 */
               }else{
                 model.find({
-                  //_periodo: request.body._periodo,
+                  _periodo: request.body._periodo,
                   _escuela: request.body._escuela,
                   estado: 'Registrado'
                 },function(err, ingresantes){
