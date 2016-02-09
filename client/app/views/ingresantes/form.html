@@ -12,15 +12,7 @@
 
     <md-dialog-content class="window-modal-content-sm">
       <div flex layout="row" layout-sm="row">
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Código</label>
-            <input required name="codigoPostulante" ng-model="model.codigoPostulante" required>
-            <div ng-messages="myForm.codigoPostulante.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
+
         <div flex>
           <md-input-container class="md-block">
             <label>Nombres</label>
@@ -52,6 +44,15 @@
       </div>
 
       <div flex layout="row" layput-sm="column">
+          <div flex>
+            <md-input-container class="md-block">
+              <label>Código</label>
+              <input required name="codigoPostulante" ng-model="model.codigoPostulante" required>
+              <div ng-messages="myForm.codigoPostulante.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
           <div flex-item>
             <md-input-container class="md-block" >
               <label>Tipo de Documento</label>
@@ -87,20 +88,6 @@
               </div>
             </md-input-container>
           </div>
-          <div flex-item>
-            <md-input-container class="md-block" >
-              <label>Modalidad</label>
-              <md-select ng-model="model._modalidad" ng-model-options="{trackBy: '$value._id'}" name="modalidad" required>
-                <md-option ng-repeat="mod in modalidades" ng-value="mod">
-                  {{mod.nombre}}
-                </md-option>
-              </md-select>
-              <div ng-messages="myForm.sexo.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-
       </div>
       <div flex layout="row" layput-sm="column">
           <div flex-item>
@@ -126,7 +113,32 @@
               </div>
             </md-input-container>
           </div>
-          <div flex>
+      </div>
+      <div flex layout="row" layput-sm="column">
+          <div flex-item>
+            <md-input-container class="md-block">
+              <label>Periodo</label>
+              <md-select ng-model="model._periodo"  ng-model-options="{trackBy: '$value._id'}" name="periodo">
+                <md-option ng-repeat="per in periodos" ng-value="per">
+                  {{per.nombre}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block" >
+              <label>Modalidad</label>
+              <md-select ng-model="model._modalidad" ng-model-options="{trackBy: '$value._id'}" name="modalidad" required>
+                <md-option ng-repeat="mod in modalidades" ng-value="mod">
+                  {{mod.nombre}}
+                </md-option>
+              </md-select>
+              <div ng-messages="myForm.sexo.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
+            </md-input-container>
+          </div>
+          <div flex-item>
             <md-input-container class="md-block">
               <label>Voucher Pago</label>
               <input required name="voucher" ng-model="model._pagoIngresante.voucher">

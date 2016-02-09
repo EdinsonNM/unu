@@ -25,6 +25,11 @@ var IngresanteSchema = new Schema({
         ref: 'ModalidadIngreso',
         required: true
     },
+    _periodo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Periodo',
+        required: true
+    },
     promedio: Number,
     documentoIdentidad: {
         tipo: {

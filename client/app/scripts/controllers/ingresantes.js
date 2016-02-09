@@ -28,6 +28,7 @@
       name: 'Ingresante',
       form:'views/ingresantes/form.html',
       route:'ingresantes',
+      route_periodos: 'periodos',
       route_facultades: 'facultades',
       route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
@@ -46,6 +47,12 @@
       var serviceFacultad = Restangular.all(LOCAL.route_facultades);
       serviceFacultad.getList().then(function(data){
         $scope.facultades = data;
+      });
+    };
+    var LoadPeriodos = function LoadPeriodos() {
+      var servicePeriodo = Restangular.all(LOCAL.route_periodos);
+      servicePeriodo.getList().then(function(data){
+        $scope.periodos = data;
       });
     };
     var LoadModalidades = function LoadModalidades() {
@@ -94,6 +101,7 @@
           name: LOCAL.name,
           sexo: $scope.sexo,
           tipodocumento: $scope.tipodocumento,
+          periodos: $scope.periodos,
           facultades: $scope.facultades,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
@@ -104,6 +112,7 @@
     };
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
+      //console.log($scope.periodos);
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
@@ -112,6 +121,7 @@
           name: LOCAL.name,
           sexo: $scope.sexo,
           tipodocumento: $scope.tipodocumento,
+          periodos: $scope.periodos,
           facultades: $scope.facultades,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
@@ -159,15 +169,17 @@
     };
 
     new List();
+    new LoadPeriodos();
     new LoadFacultades();
     new LoadModalidades();
   }])
-  .controller('IngresanteNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'sexo', 'tipodocumento', 'facultades', 'route_escuelas', 'modalidades',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, sexo, tipodocumento, facultades, route_escuelas, modalidades){
+  .controller('IngresanteNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'sexo', 'tipodocumento', 'periodos', 'facultades', 'route_escuelas', 'modalidades',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, sexo, tipodocumento, periodos, facultades, route_escuelas, modalidades){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
+    $scope.periodos = periodos;
     $scope.facultades = facultades;
     $scope.modalidades = modalidades;
     $scope.sexo = sexo;
@@ -197,16 +209,11 @@
     };
 
   }])
-  .controller('IngresanteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'sexo', 'tipodocumento', 'facultades', 'route_escuelas', 'modalidades',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, sexo, tipodocumento, facultades, route_escuelas, modalidades){
+  .controller('IngresanteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'sexo', 'tipodocumento', 'periodos', 'facultades', 'route_escuelas', 'modalidades',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, sexo, tipodocumento, periodos, facultades, route_escuelas, modalidades){
     $scope.submited = false;
-    $scope.model = model;
-    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-    $scope.Buttons = MessageFactory.Buttons;
-    $scope.facultades = facultades;
-    $scope.modalidades = modalidades;
-    $scope.sexo = sexo;
-    $scope.tipodocumento = tipodocumento;
+
+    //console.log(model);
 
     $scope.LoadEscuelas = function LoadEscuelas(){
       var serviceEscuela = Restangular.all(route_escuelas);
@@ -214,6 +221,21 @@
         $scope.escuelas = data;
       });
     };
+    var serviceFacultad = Restangular.all('facultades');
+    serviceFacultad.getList({conditions:{_id:model._escuela._facultad}}).then(function(data){
+      model._facultad = data[0];
+      $scope.LoadEscuelas();
+    });
+
+    $scope.model = model;
+    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.periodos = periodos;
+    $scope.facultades = facultades;
+    $scope.modalidades = modalidades;
+    $scope.sexo = sexo;
+    $scope.tipodocumento = tipodocumento;
+
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {

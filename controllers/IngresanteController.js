@@ -64,7 +64,7 @@ module.exports = function() {
           filter, {
             page: page,
             limit: limit,
-            populate: ['_modalidad', '_escuela']
+            populate: ['_escuela','_periodo','_modalidad']
           },
           function(err, results) {
             var obj = {
