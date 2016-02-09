@@ -26,7 +26,8 @@
 
     var LOCAL ={
       name: 'Ingresante',
-      form:'views/ingresantes/pagos.html',
+      form_pago:'views/ingresantes/form_pago.html',
+      form_pagogrupo: 'views/ingresantes/form_pagogrupo.html',
       route:'ingresantes',
       route_facultades: 'facultades',
       route_periodos: 'periodos',
@@ -48,18 +49,28 @@
       });
     };
 
-    $scope.LoadEcuelas = function LoadEcuelas(){      
+    $scope.LoadEcuelas = function LoadEcuelas(){
       var serviceEscuela = Restangular.all('escuelas');
       serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id},populate:'_facultad'}).then(function(data){
         $scope.escuelas = data;
       });
     };
 
+    /*$scope.ListIngresantes = function ListIngresantes(){
+        service.getList().then(function(data){
+            $scope.
+        });
+    };*/
+
 
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter: {
+            _periodo: $scope.filter._periodo._id,
+            _esuela:  $scope.filter._escuela._id,
+        }
       }, {
         total: 0,
         getData: function($defer, params) {

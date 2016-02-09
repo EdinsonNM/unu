@@ -22,6 +22,7 @@
         No:'No',
         Approve: 'Aprobar',
         Observe:'Observar',
+        Import: 'Importar',
         PaymentImport: 'Importar Pagos',
         Payment: 'Pago Individual'
       },

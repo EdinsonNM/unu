@@ -30,7 +30,7 @@
         <div flex-item>
           <md-input-container class="md-block">
             <label>Periodo</label>
-            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="ListIngresantes()">
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
               <md-option ng-repeat="periodo in periodos" ng-value="periodo">
                 {{periodo.nombre}}
               </md-option>

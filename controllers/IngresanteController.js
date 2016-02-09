@@ -47,6 +47,7 @@ module.exports = function() {
     }
   };
 };
+/*
 var model = require('../models/IngresanteModel.js');
 
 module.exports = function() {
@@ -96,3 +97,4 @@ module.exports = function() {
     }
   };
 };
+*/
