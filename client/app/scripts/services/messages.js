@@ -21,7 +21,9 @@
         Yes:'Si',
         No:'No',
         Approve: 'Aprobar',
-        Observe:'Observar'
+        Observe:'Observar',
+        PaymentImport: 'Importar Pagos',
+        Payment: 'Pago Individual'
       },
       Form:{
         New:'Agregar {element}',
