@@ -194,6 +194,11 @@
       templateUrl: 'views/reports/matricula/ingresantesdetalle.html',
       controller: 'ReportsMatriculaIngresantesdetalleCtrl'
     })
+    .state('app.pagosingresantes', {
+      url: '/pagosingresantes',
+      templateUrl: 'views/ingresantes/pagos.html',
+      controller: 'PagosIngresantesCtrl'
+    })
     .state('app.asignaraulas', {
       url: '/asignaraulas',
       templateUrl: 'views/asignaraulas/list.html',

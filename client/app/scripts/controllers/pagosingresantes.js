@@ -4,13 +4,13 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:IngresantesCtrl
+    * @name unuApp.controller:PagoIngresanteCtrl
     * @description
     * # FacultadesCtrl
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('IngresantesCtrl', [
+  angular.module('unuApp').controller('PagosIngresantesCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
@@ -26,23 +26,15 @@
 
     var LOCAL ={
       name: 'Ingresante',
-      form:'views/ingresantes/form.html',
+      form_pago:'views/ingresantes/form_pago.html',
+      form_pagogrupo: 'views/ingresantes/form_pagogrupo.html',
       route:'ingresantes',
-      route_periodos: 'periodos',
       route_facultades: 'facultades',
       route_periodos: 'periodos',
-      route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
-
-    service.customGET('model/sexo', {}).then(function(result){
-      $scope.sexo = result; //sexo = result;
-    });
-    service.customGET('model/tipodocumento', {}).then(function(result){
-      $scope.tipodocumento = result;
-    });
 
     var LoadFacultades = function LoadFacultades() {
       var serviceFacultad = Restangular.all(LOCAL.route_facultades);
@@ -56,17 +48,29 @@
         $scope.periodos = data;
       });
     };
-    var LoadModalidades = function LoadModalidades() {
-      var serviceModalidad = Restangular.all(LOCAL.route_modalidades);
-      serviceModalidad.getList().then(function(data){
-        $scope.modalidades = data;
+
+    $scope.LoadEcuelas = function LoadEcuelas(){
+      var serviceEscuela = Restangular.all('escuelas');
+      serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id},populate:'_facultad'}).then(function(data){
+        $scope.escuelas = data;
       });
     };
+
+    /*$scope.ListIngresantes = function ListIngresantes(){
+        service.getList().then(function(data){
+            $scope.
+        });
+    };*/
+
 
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter: {
+            _periodo: $scope.filter._periodo._id,
+            _esuela:  $scope.filter._escuela._id,
+        }
       }, {
         total: 0,
         getData: function($defer, params) {
@@ -91,7 +95,7 @@
       $scope.tableParams.reload();
     };
 
-    $scope.New = function New($event){
+    $scope.Payment = function Payment($event){
       var parentEl = angular.element(document.body);
       $mdDialog.show({
         parent: parentEl,
@@ -102,56 +106,34 @@
           name: LOCAL.name,
           sexo: $scope.sexo,
           tipodocumento: $scope.tipodocumento,
-          periodos: $scope.periodos,
           facultades: $scope.facultades,
           periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams
         },
-        controller: 'IngresanteNewCtrl'
+        controller: 'PagoIngresanteIndividualCtrl'
       });
     };
-    $scope.Edit = function Edit($event){
+
+    $scope.GroupPayment = function GroupPayment($event){
       var parentEl = angular.element(document.body);
-      //console.log($scope.periodos);
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
         templateUrl :LOCAL.form,
         locals:{
+          service: service,
           name: LOCAL.name,
           sexo: $scope.sexo,
           tipodocumento: $scope.tipodocumento,
-          periodos: $scope.periodos,
           facultades: $scope.facultades,
           periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
-          table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          table:$scope.tableParams
         },
-        controller: 'IngresanteEditCtrl'
-      });
-    };
-
-    $scope.Delete = function Delete($event){
-      var confirm = $mdDialog.confirm()
-          .title(LOCAL.name)
-          .content(MessageFactory.Form.QuestionDelete)
-          .ariaLabel(LOCAL.name)
-          .targetEvent($event)
-          .ok(MessageFactory.Buttons.Yes)
-          .cancel(MessageFactory.Buttons.No);
-
-      var selected = Restangular.copy($scope.UI.selected);
-      $mdDialog.show(confirm).then(function() {
-        selected.remove().then(function() {
-          $scope.Refresh();
-          ToastMD.success(MessageFactory.Form.Deleted);
-        });
-      }, function() {
-
+        controller: 'PagoIngresanteGrupoCtrl'
       });
     };
 
@@ -171,26 +153,19 @@
       }
     };
 
-    new List();
-    new LoadPeriodos();
+    //new List();
     new LoadFacultades();
     new LoadPeriodos();
-    new LoadModalidades();
+
   }])
-
-  .controller('IngresanteNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'sexo', 'tipodocumento', 'periodos', 'facultades', 'route_escuelas', 'modalidades',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, sexo, tipodocumento, periodos, facultades, route_escuelas, modalidades){
-
+  .controller('PagoIngresanteIndividualCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'facultades', 'route_escuelas', 'periodos',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, facultades, route_escuelas, periodos){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-    $scope.periodos = periodos;
     $scope.facultades = facultades;
     $scope.periodos = periodos;
-    $scope.modalidades = modalidades;
-    $scope.sexo = sexo;
-    $scope.tipodocumento = tipodocumento;
 
 
     $scope.LoadEscuelas = function LoadEscuelas(){
@@ -216,37 +191,29 @@
     };
 
   }])
-
-  .controller('IngresanteEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'sexo', 'tipodocumento', 'periodos', 'facultades', 'route_escuelas', 'modalidades',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, sexo, tipodocumento, periodos, facultades, route_escuelas, modalidades){
+  .controller('PagoIngresanteGrupoCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'facultades', 'route_escuelas', 'periodos',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, facultades, route_escuelas, periodos){
     $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    $scope.facultades = facultades;
+    $scope.periodos = periodos;
+
+
     $scope.LoadEscuelas = function LoadEscuelas(){
       var serviceEscuela = Restangular.all(route_escuelas);
       serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
         $scope.escuelas = data;
       });
     };
-    var serviceFacultad = Restangular.all('facultades');
-    serviceFacultad.getList({conditions:{_id:model._escuela._facultad}}).then(function(data){
-      model._facultad = data[0];
-      $scope.LoadEscuelas();
-    });
-
-    $scope.model = model;
-    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
-    $scope.Buttons = MessageFactory.Buttons;
-    $scope.periodos = periodos;
-    $scope.facultades = facultades;
-    $scope.periodos = periodos;
-    $scope.modalidades = modalidades;
-    $scope.sexo = sexo;
-    $scope.tipodocumento = tipodocumento;
-
     $scope.Save = function(form) {
       $scope.submited = true;
+      $scope.model._escuela = $scope.model._escuela._id;
+
       if (form.$valid) {
-        $scope.model.put().then(function() {
-          ToastMD.success(MessageFactory.Form.Updated);
+        service.post($scope.model).then(function() {
+          ToastMD.success(MessageFactory.Form.Saved);
           $mdDialog.hide();
           table.reload();
         });
@@ -255,5 +222,6 @@
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
+
   }]);
 }).call(this);

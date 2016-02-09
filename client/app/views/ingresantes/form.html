@@ -92,6 +92,16 @@
       <div flex layout="row" layput-sm="column">
           <div flex-item>
             <md-input-container class="md-block">
+              <label>Periodo</label>
+              <md-select ng-model="model._periodo"  ng-model-options="{trackBy: '$value._id'}" name="periodo" >
+                <md-option ng-repeat="per in periodos" ng-value="per">
+                  {{per.nombre}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div flex-item>
+            <md-input-container class="md-block">
               <label>Facultad</label>
               <md-select ng-model="model._facultad"  ng-model-options="{trackBy: '$value._id'}" name="facultad" ng-change="LoadEscuelas()">
                 <md-option ng-repeat="fac in facultades" ng-value="fac">

@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
-
 var IngresanteSchema = new Schema({
-
     codigoPostulante: {
         type: String,
         required: true
@@ -44,10 +42,10 @@ var IngresanteSchema = new Schema({
         enum: ['Masculino', 'Femenino']
     },
     estado:{
-  		type: String,
-  		enum:['Registrado','Aprobado'],
-  		default: 'Registrado'
-  	},
+        type: String,
+        enum:['Registrado','Aprobado'],
+        default: 'Registrado'
+    },
     _escuela: {
         type: Schema.Types.ObjectId,
         ref: 'Escuela',
@@ -60,12 +58,10 @@ var IngresanteSchema = new Schema({
         },
         voucher: String
     },
-
     created_at: Date,
     updated_at: Date
 });
 IngresanteSchema.plugin(mongoosePaginate);
-
 IngresanteSchema.pre('save', function(next) {
     var now = new Date();
     this.updated_at = now;
