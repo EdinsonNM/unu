@@ -119,6 +119,7 @@
         service.customPOST(selected, 'updateEstadoAprIngresante').then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
+          console.log('Aprobación con exito!');
           $scope.Refresh();//$scope.tableParams.reload();//
         });
       }, function() {

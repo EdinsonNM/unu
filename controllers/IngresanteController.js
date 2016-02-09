@@ -17,7 +17,44 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
 
+      controller.post('/updateEstadoAprIngresante', function(request, response, next){
+              if(request.body._id){
+                model.findByIdAndUpdate(
+                  request.body._id,
+                  { estado: 'Aprobado' },
+                  { safe: true },
+                  function(err, data){
+                    if(err) return response.status(500).send({message:err});
+                    response.status(200).send(data);
+                  }
+                );
+                /*
+                var selIngresante = new Ingresante(request.body);
+                selIngresante.estado = 'Aprobado';
+                selIngresante.save(function(err, data){
+                    if(err){ return response.status(500).send({error: err}); }
+                    return response.status(202).send(data);
+                });
+                */
+              }else{
+                model.find({
+                  //_periodo: request.body._periodo,
+                  _escuela: request.body._escuela,
+                  estado: 'Registrado'
+                },function(err, ingresantes){
+                  if(err){ return response.status(500).send({error: 'No hay ingresantes registrados.'}); }
+                  ingresantes.forEach(function(objIngresante){
+                    objIngresante.estado = 'Aprobado';
+                    objIngresante.save(function(err2, data){
+                        if(err2){ return response.status(500).send({err2: err}); }
+                        return response.status(202).send(data);
+                    });
+                  });
+                });
 
+              }
+
+            });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = parseInt(req.query.count);
