@@ -3,22 +3,16 @@ var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var AvanceCurricularSchema = new Schema({
+  secuencia:Number,
   _alumno:{
     type:Schema.Types.ObjectId,
     ref:'Alumno',
     required:true
   },
-  _planEstudiosActual:{
+  _planEstudios:{
     type:Schema.Types.ObjectId,
     ref:'Planestudio',
     required:true
-  },
-  historial:{
-    _planesestudios:[{
-      type:Schema.Types.ObjectId,
-      ref:'Planestudio',
-      required:true
-    }],
   },
   detalleAvance:[{
     _planEstudiosDetalle:{
@@ -30,20 +24,29 @@ var AvanceCurricularSchema = new Schema({
       type: Number,
       default:0
     },
-    historialMatricula:[{
+    record:[{
+      secuencia:Number,
       _periodo:{
         type:Schema.Types.ObjectId,
         ref:'Periodo'
       },
       situacion:{
         type:String,
-        enum:['Matriculado','Retirado','Convalidado','Aprobado']
+        enum:['Matriculado','Retirado','Convalidado','Aprobado','Desaprobado']
       },
       notaParcial:Number,
       notaPractica:Number,
-      notaFinal:Number
+      notaLaboratorio:Number,
+      notaTrabajo:Number,
+      notaFinal:Number,
+      notaPromedio:Number,
+      notaPromedioRedondeado:Number
     }]
   }],
+  activo:{
+    type:Boolean,
+    default:true
+  },
   created_at: Date,
   updated_at: Date
 });
