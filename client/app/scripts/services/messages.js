@@ -21,7 +21,11 @@
         Yes:'Si',
         No:'No',
         Approve: 'Aprobar',
-        Observe:'Observar'
+        ApproveAll: 'Aprobar Todos',
+        Observe:'Observar',
+        Import: 'Importar',
+        PaymentImport: 'Importar Pagos',
+        Payment: 'Pago Individual'
       },
       Form:{
         New:'Agregar {element}',

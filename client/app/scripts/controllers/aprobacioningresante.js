@@ -64,7 +64,7 @@
         page: 1,
         count: 10,
         filter: {
-          //_periodo: $scope.filter._periodo._id,
+          _periodo: $scope.filter._periodo._id,
           _escuela: $scope.filter._escuela._id,
           estado: 'Registrado'
         }
@@ -98,6 +98,22 @@
       $scope.tableParams.settings({counts:[]});
     };
 
+    $scope.EnabledEdit =function EnabledEdit(item){
+      $scope.UI.editMode = false;
+      $scope.UI.selected = null;
+      angular.forEach($scope.tableParams.data,function(element){
+        if(item._id !== element._id){
+          element.active = false;
+        }
+      });
+
+      if( item.active ){
+        $scope.UI.editMode = true;
+        $scope.UI.selected = item;
+        $scope.UI.selected.route = LOCAL.route;
+      }
+    };
+
     $scope.Refresh = function Refresh(){
       $scope.UI.selected = null;
       $scope.UI.editMode = false;
@@ -119,6 +135,7 @@
         service.customPOST(selected, 'updateEstadoAprIngresante').then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
+          console.log('Aprobación con exito!');
           $scope.Refresh();//$scope.tableParams.reload();//
         });
       }, function() {
