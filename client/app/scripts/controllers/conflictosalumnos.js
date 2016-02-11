@@ -23,7 +23,6 @@
       selected: null,
       customActions:[]
     };
-
     var LOCAL ={
       name: 'Conflictos del Alumno',
       form:'views/conflictosalumnos/form.html',
