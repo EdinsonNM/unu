@@ -26,13 +26,7 @@
     var LOCAL ={
       name: 'Conflictos del Alumno',
       form:'views/conflictosalumnos/form.html',
-      route:'conflictosalumnos',
-
-      route_periodos: 'periodos',
-      route_facultades: 'facultades',
-      route_periodos: 'periodos',
-      route_modalidades: 'modalidadingresos',
-      route_escuelas: 'escuelas'
+      route:'conflictosalumnos'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
