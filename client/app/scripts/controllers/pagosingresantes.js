@@ -110,7 +110,8 @@
         locals:{
           service: service,
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          model: Restangular.copy($scope.UI.selected)
         },
         controller: 'PagoIngresanteIndividualCtrl'
       });
@@ -152,13 +153,14 @@
     new LoadPeriodos();
 
   }])
-  .controller('PagoIngresanteIndividualCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('PagoIngresanteIndividualCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'model',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, model){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-
+    $scope.model = model;
+    $scope.model.nombrecompleto = model.nombres + ' ' + model.apellidoPaterno;
     $scope.Save = function(form) {
       $scope.submited = true;
 

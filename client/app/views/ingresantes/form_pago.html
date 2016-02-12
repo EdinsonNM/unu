@@ -24,8 +24,8 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Alumno</label>
-            <input required name="nombrealumno" ng-model="model.nombrealumno" readonly>
-            <div ng-messages="myForm.nombrealumno.$error" ng-if="submited">
+            <input  ng-model="model.nombrecompleto" readonly>
+            <div ng-messages="myForm.nombrecompleto.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
