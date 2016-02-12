@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var PlanestudiodetallegrupoSchema = new Schema({	
-
+var cursoAperturadoPeriodoSchema = new Schema({
   _periodo:{
     type:Schema.Types.ObjectId,
     ref:'Periodo',
@@ -13,16 +12,16 @@ var PlanestudiodetallegrupoSchema = new Schema({
     ref:'Planestudiodetalle',
     required:true
   },
-  _distribucionauladetalle:{
-    type:Schema.Types.ObjectId,
-    ref:'Distribucionauladetalle',
-    required:true
+  creditosEfectivos: Number,
+  estado:{type: String,
+  enum: ['Activo','Cerrado'],
+  required: true
   },
 	created_at:Date,
 	updated_at:Date
 });
 
-PlanestudiodetallegrupoSchema.pre('save',function(next){
+cursoAperturadoPeriodoSchema.pre('save',function(next){
 	var now = new Date;
 	this.updated_at = now;
 	if (!this.created_at){
@@ -31,4 +30,4 @@ PlanestudiodetallegrupoSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Planestudiodetallegrupo', PlanestudiodetallegrupoSchema).plural('planestudiodetallegrupos');
+module.exports = mongoose.model('cursoAperturadoPeriodo', cursoAperturadoPeriodoSchema).plural('cursoAperturadoPeriodos');
