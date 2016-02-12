@@ -15,8 +15,11 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Seleccionar Archivo</label>
-            <input id="fileInput" name="file" type="file" class="ng-hide" multiple>
-            <md-button id="uploadButton" class="md-raised md-primary"> Choose Files </md-button>
+            <label class="md-raised md-primary md-button md-teal-theme" md-ink-ripple for="fileInput">
+                <span>Select file</span>
+              </label>
+            <input id="fileInput" name="file" type="file" ng-show="false" multiple>
+
             <div ng-messages="myForm.codigoPostulante.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -26,12 +29,8 @@
 
 
       <div flex layout="row" layout-sm="column">
-        <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-          <md-checkbox ng-model="model.activo">
-            Activo
-          </md-checkbox>
-        </div>
-        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
+
+        <div flex="100" layout="row" layout-align="end center" flex-sm="100">
           <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
           <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Import}}</md-button>
         </div>
