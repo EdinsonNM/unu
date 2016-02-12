@@ -30,7 +30,6 @@
       route:'ingresantes',
       route_periodos: 'periodos',
       route_facultades: 'facultades',
-      route_periodos: 'periodos',
       route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
     };
@@ -104,7 +103,6 @@
           tipodocumento: $scope.tipodocumento,
           periodos: $scope.periodos,
           facultades: $scope.facultades,
-          periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams
@@ -125,7 +123,6 @@
           tipodocumento: $scope.tipodocumento,
           periodos: $scope.periodos,
           facultades: $scope.facultades,
-          periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams,
@@ -235,7 +232,6 @@
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
-    $scope.periodos = periodos;
     $scope.facultades = facultades;
     $scope.periodos = periodos;
     $scope.modalidades = modalidades;

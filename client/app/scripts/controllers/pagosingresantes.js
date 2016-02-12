@@ -25,7 +25,7 @@
     };
 
     var LOCAL ={
-      name: 'Ingresante',
+      name: 'Pagos de Ingresantes',
       form_pago:'views/ingresantes/form_pago.html',
       form_pagogrupo: 'views/ingresantes/form_pagogrupo.html',
       route:'ingresantes',
@@ -35,6 +35,16 @@
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
+
+    $scope.estados = [];
+    $scope.estados.push({id: '', title:'Todos'});
+    service.customGET('model/estado', {}).then(function(result){
+      //$scope.estados = result;
+      angular.forEach(result, function(val, key){
+          $scope.estados.push({id: val, title: val});
+      });
+      console.log($scope.estados);
+    });
 
     var LoadFacultades = function LoadFacultades() {
       var serviceFacultad = Restangular.all(LOCAL.route_facultades);
@@ -49,6 +59,7 @@
       });
     };
 
+
     $scope.LoadEcuelas = function LoadEcuelas(){
       var serviceEscuela = Restangular.all('escuelas');
       serviceEscuela.getList({conditions:{_facultad:$scope.filter._facultad._id},populate:'_facultad'}).then(function(data){
@@ -56,20 +67,15 @@
       });
     };
 
-    /*$scope.ListIngresantes = function ListIngresantes(){
-        service.getList().then(function(data){
-            $scope.
-        });
-    };*/
 
-
-    List = function() {
+    $scope.List = function() {
+        console.log("List");
       $scope.tableParams = new ngTableParams({
         page: 1,
         count: 10,
         filter: {
             _periodo: $scope.filter._periodo._id,
-            _esuela:  $scope.filter._escuela._id,
+            _escuela:  $scope.filter._escuela._id,
         }
       }, {
         total: 0,
@@ -100,16 +106,10 @@
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
-        templateUrl :LOCAL.form,
+        templateUrl :LOCAL.form_pago,
         locals:{
           service: service,
           name: LOCAL.name,
-          sexo: $scope.sexo,
-          tipodocumento: $scope.tipodocumento,
-          facultades: $scope.facultades,
-          periodos: $scope.periodos,
-          modalidades: $scope.modalidades,
-          route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams
         },
         controller: 'PagoIngresanteIndividualCtrl'
@@ -121,16 +121,10 @@
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
-        templateUrl :LOCAL.form,
+        templateUrl :LOCAL.form_pagogrupo,
         locals:{
           service: service,
           name: LOCAL.name,
-          sexo: $scope.sexo,
-          tipodocumento: $scope.tipodocumento,
-          facultades: $scope.facultades,
-          periodos: $scope.periodos,
-          modalidades: $scope.modalidades,
-          route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams
         },
         controller: 'PagoIngresanteGrupoCtrl'
@@ -158,25 +152,15 @@
     new LoadPeriodos();
 
   }])
-  .controller('PagoIngresanteIndividualCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'facultades', 'route_escuelas', 'periodos',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, facultades, route_escuelas, periodos){
+  .controller('PagoIngresanteIndividualCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-    $scope.facultades = facultades;
-    $scope.periodos = periodos;
 
-
-    $scope.LoadEscuelas = function LoadEscuelas(){
-      var serviceEscuela = Restangular.all(route_escuelas);
-      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
-        $scope.escuelas = data;
-      });
-    };
     $scope.Save = function(form) {
       $scope.submited = true;
-      $scope.model._escuela = $scope.model._escuela._id;
 
       if (form.$valid) {
         service.post($scope.model).then(function() {
@@ -191,25 +175,15 @@
     };
 
   }])
-  .controller('PagoIngresanteGrupoCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'facultades', 'route_escuelas', 'periodos',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, facultades, route_escuelas, periodos){
+  .controller('PagoIngresanteGrupoCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-    $scope.facultades = facultades;
-    $scope.periodos = periodos;
 
-
-    $scope.LoadEscuelas = function LoadEscuelas(){
-      var serviceEscuela = Restangular.all(route_escuelas);
-      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
-        $scope.escuelas = data;
-      });
-    };
     $scope.Save = function(form) {
       $scope.submited = true;
-      $scope.model._escuela = $scope.model._escuela._id;
 
       if (form.$valid) {
         service.post($scope.model).then(function() {

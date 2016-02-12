@@ -43,7 +43,7 @@ var IngresanteSchema = new Schema({
     },
     estado:{
         type: String,
-        enum:['Registrado','Aprobado'],
+        enum:['Registrado', 'Aprobado', 'Matriculado'],
         default: 'Registrado'
     },
     _escuela: {

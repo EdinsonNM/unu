@@ -27,10 +27,8 @@
       name: 'Conflictos del Alumno',
       form:'views/conflictosalumnos/form.html',
       route:'conflictosalumnos',
-
       route_periodos: 'periodos',
       route_facultades: 'facultades',
-      route_periodos: 'periodos',
       route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
     };

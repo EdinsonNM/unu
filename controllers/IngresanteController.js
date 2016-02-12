@@ -17,6 +17,11 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
 
+      controller.get('/model/estado', function(req, res, next){
+        var enumValues = model.schema.path('estado').enumValues;
+        res.status(200).send(enumValues);
+      });
+
       controller.post('/updateEstadoAprIngresante', function(request, response, next){
               if(request.body._id){
                 model.findByIdAndUpdate(
