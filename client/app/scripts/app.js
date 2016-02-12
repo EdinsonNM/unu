@@ -264,15 +264,22 @@
       templateUrl: 'views/procesos/list.html',
       controller: 'ProcesosCtrl'
     })
-
     .state('app.aprobacioningresantes', {
       url: '/aprobacion/ingresantes',
       templateUrl: 'views/aprobacion/ingresantes/list.html',
       controller: 'AprobacionIngresanteCtrl'
     })
-
-
-
+    .state('app.conflictosalumnos', {
+      url: '/conflictosalumnos',
+      templateUrl: 'views/conflictosalumnos/list.html',
+      controller: 'ConflictosAlumnosCtrl'
+    })
+    .state('app.otrasdeudasalumnos', {
+      url: '/otrasdeudasalumnos',
+      templateUrl: 'views/otrasdeudasalumnos/list.html',
+      controller: 'OtrasDeudasAlumnosCtrl'
+    })
+    
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
