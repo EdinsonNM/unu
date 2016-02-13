@@ -33,32 +33,18 @@ module.exports = function() {
                     response.status(200).send(data);
                   }
                 );
-                /*
-                var selIngresante = new Ingresante(request.body);
-                selIngresante.estado = 'Aprobado';
-                selIngresante.save(function(err, data){
-                    if(err){ return response.status(500).send({error: err}); }
-                    return response.status(202).send(data);
-                });
-                */
               }else{
-                model.find({
+                var query = {
                   _periodo: request.body._periodo,
                   _escuela: request.body._escuela,
                   estado: 'Registrado'
-                },function(err, ingresantes){
-                  if(err){ return response.status(500).send({error: 'No hay ingresantes registrados.'}); }
-                  ingresantes.forEach(function(objIngresante){
-                    objIngresante.estado = 'Aprobado';
-                    objIngresante.save(function(err2, data){
-                        if(err2){ return response.status(500).send({err2: err}); }
-                        return response.status(202).send(data);
-                    });
-                  });
+                };
+                model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
+                  // numAffected is the number of updated documents
+                  if(err) return response.status(500).send({message:err});
+                  response.status(200).send('Hola');
                 });
-
               }
-
             });
 
       controller.get('/methods/paginate', function(req, res) {
