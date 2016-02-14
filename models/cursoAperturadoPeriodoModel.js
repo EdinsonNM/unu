@@ -17,17 +17,17 @@ var cursoAperturadoPeriodoSchema = new Schema({
   enum: ['Activo','Cerrado'],
   required: true
   },
-	created_at:Date,
-	updated_at:Date
+	createdAt:Date,
+	updatedAt:Date
 });
 
 cursoAperturadoPeriodoSchema.pre('save',function(next){
-	var now = new Date;
-	this.updated_at = now;
-	if (!this.created_at){
-		this.created_at=now;
+	var now = new Date();
+	this.updatedAt = now;
+	if (!this.createdAt){
+		this.createdAt=now;
 	}
 	next();
 });
 
-module.exports = mongoose.model('cursoAperturadoPeriodo', cursoAperturadoPeriodoSchema).plural('cursoAperturadoPeriodos');
+module.exports = mongoose.model('CursoAperturadoPeriodo', cursoAperturadoPeriodoSchema).plural('cursoaperturadoperiodos');

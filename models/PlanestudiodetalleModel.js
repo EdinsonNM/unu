@@ -50,7 +50,7 @@ var PlanestudiodetalleSchema = new Schema({
         default: 'Registrado'
     },
     _revisiones: [{
-        created_at: {
+        createdAt: {
             type: Date
         },
         comentario: String,
@@ -65,19 +65,19 @@ var PlanestudiodetalleSchema = new Schema({
     }],
     _aprobacionesPeriodo:[{
         type: Schema.Types.ObjectId,
-        ref: 'Periodo',
+        ref: 'CursoAperturadoPeriodo',
     }],
-    created_at: Date,
-    updated_at: Date
+    createdAt: Date,
+    updatedAt: Date
 });
 
 PlanestudiodetalleSchema.plugin(mongoosePaginate);
 
 PlanestudiodetalleSchema.pre('save', function(next) {
     var now = new Date();
-    this.updated_at = now;
-    if (!this.created_at) {
-        this.created_at = now;
+    this.updatedAt = now;
+    if (!this.createdAt) {
+        this.createdAt = now;
     }
     next();
 });
