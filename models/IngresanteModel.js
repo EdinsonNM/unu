@@ -6,28 +6,7 @@ var IngresanteSchema = new Schema({
         type: String,
         required: true
     },
-    nombres: {
-        type: String,
-        required: true
-    },
-    apellidoPaterno: {
-        type: String,
-        required: true
-    },
-    apellidoMaterno: {
-        type: String,
-        required: true
-    },
-    _modalidad: {
-        type: Schema.Types.ObjectId,
-        ref: 'ModalidadIngreso',
-        required: true
-    },
-    _periodo: {
-        type: Schema.Types.ObjectId,
-        ref: 'Periodo',
-        required: true
-    },
+
     promedio: Number,
     documentoIdentidad: {
         tipo: {
@@ -46,27 +25,40 @@ var IngresanteSchema = new Schema({
         enum:['Registrado', 'Aprobado', 'Matriculado'],
         default: 'Registrado'
     },
+    _facultad: {
+        type: Schema.Types.ObjectId,
+        ref: 'Facultad',
+        required: true
+    },
     _escuela: {
         type: Schema.Types.ObjectId,
         ref: 'Escuela',
         required: true
     },
-    _pagoIngresante: {
-        activo: {
-            type: Boolean,
-            default: false
-        },
-        voucher: String
+    _modalidad: {
+        type: Schema.Types.ObjectId,
+        ref: 'ModalidadIngreso',
+        required: true
     },
-    created_at: Date,
-    updated_at: Date
+    _periodo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Periodo',
+        required: true
+    },
+    _persona:{
+      type: Schema.Types.ObjectId,
+      ref: 'Persona',
+      required: true
+    },
+    createdAt: Date,
+    updatedAt: Date
 });
 IngresanteSchema.plugin(mongoosePaginate);
 IngresanteSchema.pre('save', function(next) {
     var now = new Date();
-    this.updated_at = now;
-    if (!this.created_at) {
-        this.created_at = now;
+    this.updatedAt = now;
+    if (!this.createdAt) {
+        this.createdAt = now;
     }
     next();
 });

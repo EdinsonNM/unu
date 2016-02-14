@@ -8,7 +8,7 @@ var grupoCursoSchema = new Schema({
     },
     _cursoAperturadoPeriodo: {
         type: Schema.Types.ObjectId,
-        ref: 'cursoAperturadoPeriodo',
+        ref: 'CursoAperturadoPeriodo',
         required: true
     },
     grupo: {
@@ -25,17 +25,17 @@ var grupoCursoSchema = new Schema({
         enum: ['Abierto', 'Cerrado'],
         default: 'Abierto'
     },
-    created_at: Date,
-    updated_at: Date
+    createdAt: Date,
+    updatedAt: Date
 });
 
 grupoCursoSchema.plugin(mongoosePaginate);
 
 grupoCursoSchema.pre('save', function(next) {
     var now = new Date();
-    this.updated_at = now;
-    if (!this.created_at) {
-        this.created_at = now;
+    this.updatedAt = now;
+    if (!this.createdAt) {
+        this.createdAt = now;
     }grupoCursoSchema
     next();
 });

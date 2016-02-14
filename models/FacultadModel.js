@@ -1,3 +1,4 @@
+var EscuelaModel = require('./EscuelaModel');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
@@ -13,20 +14,17 @@ var FacultadSchema = new Schema({
 		type:String,
 		required:true
 	},
-	_escuelas:[{
-		type:Schema.ObjectId,
-		ref:'Escuela'
-	}],
-	created_at:Date,
-	updated_at:Date
+	_escuelas:[EscuelaModel],
+	createdAt:Date,
+	updatedAt:Date
 });
 FacultadSchema.plugin(mongoosePaginate);
 FacultadSchema.plugin(uniqueValidator);
 FacultadSchema.pre('save',function(next){
 	var now = new Date();
-	this.updated_at = now;
-	if (!this.created_at){
-		this.created_at=now;
+	this.updatedAt = now;
+	if (!this.createdAt){
+		this.createdAt=now;
 	}
 	next();
 });

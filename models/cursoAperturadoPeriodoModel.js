@@ -12,12 +12,7 @@ var cursoAperturadoPeriodoSchema = new Schema({
     ref:'Planestudiodetalle',
     required:true
   },
-  creditosEfectivos: Number,
-  estado:{type: String,
-  enum: ['Activo','Cerrado'],
-  required: true
-  },
-	created_at:Date,
+  created_at:Date,
 	updated_at:Date
 });
 

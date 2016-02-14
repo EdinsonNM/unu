@@ -47,16 +47,16 @@ var AvanceCurricularSchema = new Schema({
     type:Boolean,
     default:true
   },
-  created_at: Date,
-  updated_at: Date
+  createdAt: Date,
+  updatedAt: Date
 });
 AvanceCurricularSchema.plugin(mongoosePaginate);
 AvanceCurricularSchema.plugin(uniqueValidator);
 AvanceCurricularSchema.pre('save', function(next) {
   var now = new Date();
-  this.updated_at = now;
-  if (!this.created_at) {
-    this.created_at = now;
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });
