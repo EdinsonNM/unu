@@ -32,7 +32,7 @@ var AlumnoSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Ingresante'
   },
-  _periodoIngreso:{
+  _periodoInicio:{
     type:Schema.Types.ObjectId,
     ref:'Periodo'
   },

@@ -7,18 +7,22 @@ var horarioSchema = new Schema({
     ref:'programacionGrupoCurso',
     required:true
   },
-  dia:{type: String,
-  enum: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
-  required: true
+  dia:{
+    type: String,
+    enum: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
+    required: true
   },
-  horaInicio:date,
-  duracion:{tipe:Number,enum:['1','2']}
+  horaInicio:Date,
+  duracion:{
+    type:Number,
+    enum:['1','2']
+  },
   createdAt:Date,
 	updatedAt:Date
 });
 
 horarioSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
 		this.createdAt=now;
