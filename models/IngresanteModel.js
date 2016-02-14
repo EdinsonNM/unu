@@ -6,18 +6,6 @@ var IngresanteSchema = new Schema({
         type: String,
         required: true
     },
-    nombres: {
-        type: String,
-        required: true
-    },
-    apellidoPaterno: {
-        type: String,
-        required: true
-    },
-    apellidoMaterno: {
-        type: String,
-        required: true
-    },
     promedio: Number,
     documentoIdentidad: {
         tipo: {
