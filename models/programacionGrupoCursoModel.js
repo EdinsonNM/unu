@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var programacionGrupoCursoSchema = new Schema({
+var ProgramacionGrupoCursoSchema = new Schema({
   _grupoCurso:{
     type:Schema.Types.ObjectId,
-    ref:'grupoCurso',
+    ref:'GrupoCurso',
     required:true
   },
   _aula:{
@@ -26,7 +26,7 @@ var programacionGrupoCursoSchema = new Schema({
 	updatedAt:Date
 });
 
-programacionGrupoCursoSchema.pre('save',function(next){
+ProgramacionGrupoCursoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
@@ -35,4 +35,4 @@ programacionGrupoCursoSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('programacionGrupoCurso', programacionGrupoCursoSchema).plural('programacionGrupoCursos');
+module.exports = mongoose.model('ProgramacionGrupoCurso', ProgramacionGrupoCursoSchema).plural('programacionGrupoCursos');

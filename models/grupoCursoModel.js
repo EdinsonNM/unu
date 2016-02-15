@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
-var grupoCursoSchema = new Schema({
+var GrupoCursoSchema = new Schema({
     codigo: {
         type: String,
         required: true
@@ -29,9 +29,8 @@ var grupoCursoSchema = new Schema({
     updatedAt: Date
 });
 
-grupoCursoSchema.plugin(mongoosePaginate);
-
-grupoCursoSchema.pre('save', function(next) {
+GrupoCursoSchema.plugin(mongoosePaginate);
+GrupoCursoSchema.pre('save', function(next) {
     var now = new Date();
     this.updatedAt = now;
     if (!this.createdAt) {
@@ -39,5 +38,4 @@ grupoCursoSchema.pre('save', function(next) {
     }grupoCursoSchema
     next();
 });
-
-module.exports = mongoose.model('grupoCurso', grupoCursoSchema).plural('grupoCursos');
+module.exports = mongoose.model('GrupoCurso', GrupoCursoSchema).plural('grupoCursos');
