@@ -45,7 +45,7 @@ var RegistroPagoSchema = new Schema({
   importeTotal:Number,
   importeTotalPagado:Number,
   detallePagos:[{
-    created_at: Date,
+    createdAt: Date,
     monto:Number,
     codigoOperacion:String,
     tipo:{
@@ -54,16 +54,16 @@ var RegistroPagoSchema = new Schema({
     }
   }],
 
-  created_at: Date,
-  updated_at: Date
+  createdAt: Date,
+  updatedAt: Date
 });
 RegistroPagoSchema.plugin(mongoosePaginate);
 RegistroPagoSchema.plugin(uniqueValidator);
 RegistroPagoSchema.pre('save', function(next) {
   var now = new Date();
-  this.updated_at = now;
-  if (!this.created_at) {
-    this.created_at = now;
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });

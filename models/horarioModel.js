@@ -7,21 +7,22 @@ var HorarioSchema = new Schema({
     ref:'ProgramacionGrupoCurso',
     required:true
   },
-  dia:{type: String,
-  enum: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
-  required: true
+  dia:{
+    type: String,
+    enum: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
+    required: true
   },
-  //horaInicio:date,definir tipo de dato
-  duracion:{tipe:Number,enum:['1','2']},
-  created_at:Date,
-	updated_at:Date
+
+  createdAt:Date,
+	updatedAt:Date
 });
 
+
 HorarioSchema.pre('save',function(next){
-	var now = new Date;
-	this.updated_at = now;
-	if (!this.created_at){
-		this.created_at=now;
+	var now = new Date();
+	this.updatedAt = now;
+	if (!this.createdAt){
+		this.createdAt=now;
 	}
 	next();
 });

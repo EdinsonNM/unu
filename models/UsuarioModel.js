@@ -15,8 +15,8 @@ var UsuarioSchema = new Schema({
     required:true
   },
   salt:String,
-	created_at:Date,
-	updated_at:Date
+	createdAt:Date,
+	updatedAt:Date
 });
 
 
@@ -24,9 +24,9 @@ var UsuarioSchema = new Schema({
 UsuarioSchema.pre('save', function(next) {
 	var user = this;
   var now = new Date();
-  user.updated_at = now;
-  if (!user.created_at){
-    user.created_at=now;
+  user.updatedAt = now;
+  if (!user.createdAt){
+    user.createdAt=now;
   }
 
 	if(!user.isModified('password')) return next();
