@@ -30,7 +30,6 @@
 
       route_periodos: 'periodos',
       route_facultades: 'facultades',
-      route_periodos: 'periodos',
       route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
     };

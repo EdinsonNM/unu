@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var cursoAperturadoPeriodoSchema = new Schema({
+var CursoAperturadoPeriodoSchema = new Schema({
   _periodo:{
     type:Schema.Types.ObjectId,
     ref:'Periodo',
@@ -20,8 +20,7 @@ var cursoAperturadoPeriodoSchema = new Schema({
 	created_at:Date,
 	updated_at:Date
 });
-
-cursoAperturadoPeriodoSchema.pre('save',function(next){
+CursoAperturadoPeriodoSchema.pre('save',function(next){
 	var now = new Date;
 	this.updated_at = now;
 	if (!this.created_at){
@@ -29,5 +28,4 @@ cursoAperturadoPeriodoSchema.pre('save',function(next){
 	}
 	next();
 });
-
-module.exports = mongoose.model('cursoAperturadoPeriodo', cursoAperturadoPeriodoSchema).plural('cursoAperturadoPeriodos');
+module.exports = mongoose.model('CursoAperturadoPeriodo', CursoAperturadoPeriodoSchema).plural('cursoAperturadoPeriodos');
