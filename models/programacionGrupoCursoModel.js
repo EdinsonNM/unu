@@ -26,7 +26,7 @@ var ProgramacionGrupoCursoSchema = new Schema({
 	updatedAt:Date
 });
 
-programacionGrupoCursoSchema.pre('save',function(next){
+ProgramacionGrupoCursoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
