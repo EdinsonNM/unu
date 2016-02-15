@@ -16,7 +16,7 @@ var CursoAperturadoPeriodoSchema = new Schema({
 	updated_at:Date
 });
 
-cursoAperturadoPeriodoSchema.pre('save',function(next){
+CursoAperturadoPeriodoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updated_at = now;
 	if (!this.created_at){
@@ -24,4 +24,5 @@ cursoAperturadoPeriodoSchema.pre('save',function(next){
 	}
 	next();
 });
-module.exports = mongoose.model('CursoAperturadoPeriodo', CursoAperturadoPeriodoSchema).plural('cursoAperturadoPeriodos');
+
+module.exports = mongoose.model('CursoAperturadoPeriodo', CursoAperturadoPeriodoSchema).plural('cursoaperturadoperiodos');
