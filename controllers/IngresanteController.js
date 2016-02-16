@@ -1,5 +1,6 @@
 var model = require('../models/IngresanteModel.js');
-
+var Validator = require('jsonschema').Validator;
+var schemaPago  = require('../schemas/ingresante-pagos');
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -55,7 +56,7 @@ module.exports = function() {
           filter, {
             page: page,
             limit: limit,
-            populate: ['_modalidad', '_escuela', '_facultad', '_periodo']
+            populate: ['_modalidad', '_escuela', '_facultad', '_periodo','_persona']
           },
           function(err, results) {
             var obj = {
@@ -72,6 +73,75 @@ module.exports = function() {
         );
       });
 
+      var ProcesoPago = {
+        BuscarIngresante: function BuscarIngresante(idIngresante,next){
+          var errorData = {
+            status:null,
+            message:''
+          };
+          model.find({_id:idIngresante},function(error,ingresante){
+            if(error){
+              errorData.status = 500;
+              errorData.message = "Ocurrio un error mientras se buscaba el ingresante";
+              error.detalle = error;
+              return next(errorData);
+            }
+            if(!ingresante){
+              errorData.status = 404;
+              errorData.message = "No se encontro el ingresante";
+              return next(errorData);
+            }
+            return next(null,ingresante);
+          });
+        },
+        ValidarTasa: function ValidarTasa(){
+        },
+        RegistrarAlumno: function RegistrarAlumno(){
+
+        },
+        CrearAvanceCurricular:function CrearAvanceCurricular(){
+
+        },
+        RegistrarPago:function RegistrarPago(){
+
+        },
+        EnviarEmail:function EnviarEmail(){
+
+        }
+      };
+      controller.post('/methods/procesarpago',function(req,res){
+        var v = new Validator();
+        var result = v.validate(req.body, schemaPago);
+        if(result.errors.length>0) return res.status(400).send(result.errors);
+        ProcesoPago.BuscarIngresante(req.body._ingresante,function(error,ingresante){
+          if(error) return res.status(error.status).send(error);
+          ProcesoPago.ValidarTasa(ingresante._modalidadIngresa,req.body.monto,function(error,result){
+            if(error) return res.status(500).send(error);
+            if(result){
+              var detallepago = {
+                voucher:req.body.voucher,
+                fecha:req.body.fecha,
+                monto: req.body.monto
+              };
+              ProcesoPago.RegistrarPago(detallepago,function(error,detallepago){
+                if(error) return res.status(500).send(error);
+                ProcesoPago.RegistrarAlumno(ingresante,function(error,alumno){
+                  if(error) return res.status(500).send(error);
+                  ProcesoPago.CrearAvanceCurricular(alumno,function(error,avance){
+                    if(error) return res.status(500).send(error);
+                    ProcesoPago.EnviarEmail(function(error,data){
+                      return res.status(202).send(alumno);
+                    });
+                  });
+                });
+              });
+            }else{
+
+            }
+          });
+        });
+
+      });
     }
   };
 };

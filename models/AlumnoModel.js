@@ -3,21 +3,9 @@ var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var AlumnoSchema = new Schema({
-  codigo: {
+  codigoUniversitario: {
     type: String,
     required: true
-  },
-  nombres: {
-    type: String,
-    required: true
-  },
-  apellidos: {
-    type: String,
-    required: true
-  },
-  documento: {
-    type: String
-    //,required: true
   },
   telefono: {
     type: String
@@ -31,35 +19,30 @@ var AlumnoSchema = new Schema({
     type: String
     //,required: true
   },
-  fechaNacimiento: {
-    type: Date
-    //,required: true
-  },
-  sexo: {
-    type: String,
-    enum:['Femenino','Masculino']
-    //,required: true
-  },
   estadoCivil: {
     type: String,
     enum:['Soltero(a)','Casado(a)','Viudo(a)','Divorciado(a)','Conviviente','Separado(a)']
     //,required: true
   },
-  lugarNacimiento: {
-    type: String
-    //,required: true
+  _persona:{
+    type:Schema.Types.ObjectId,
+    ref:'Persona'
   },
-  _periodoIngreso:{
+  _ingresante:{
+    type:Schema.Types.ObjectId,
+    ref:'Ingresante'
+  },
+  _periodoInicio:{
     type:Schema.Types.ObjectId,
     ref:'Periodo'
+  },
+  _facultad:{
+    type:Schema.Types.ObjectId,
+    ref:'Facultad'
   },
   _escuela:{
     type:Schema.Types.ObjectId,
     ref:'Escuela'
-  },
-  _modalidadIngreso:{
-    type:Schema.Types.ObjectId,
-    ref:'ModalidadIngreso'
   },
   _tipoCondicionAlumno:{
     type:Schema.Types.ObjectId,
@@ -69,27 +52,26 @@ var AlumnoSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'SituacionAlumno'
   },
-  // NOTE cuando se registra un alumno este se crea con un usuario del sistema, considerar esto en la UI
   _usuario:{
     type:Schema.Types.ObjectId,
     ref:'Usuario',
     required:true
   },
-  _avanceCurricular:{
+  _avanceCurricular:[{
     type:Schema.Types.ObjectId,
     ref:'AvanceCurricular',
     required:true
-  },
-  created_at: Date,
-  updated_at: Date
+  }],
+  createdAt: Date,
+  updatedAt: Date
 });
 AlumnoSchema.plugin(mongoosePaginate);
 AlumnoSchema.plugin(uniqueValidator);
 AlumnoSchema.pre('save', function(next) {
   var now = new Date();
-  this.updated_at = now;
-  if (!this.created_at) {
-    this.created_at = now;
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });

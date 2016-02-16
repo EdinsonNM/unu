@@ -107,7 +107,7 @@ gulp.task('webserver', function() {
 gulp.task('watch', function() {
     gulp.watch('app/styles/styls/*.styl', ['stylus']);
     gulp.watch('app/scripts/**/*.js', ['bundle']);
-    gulp.watch('bower_components/**', ['bower']);
+    //gulp.watch('bower_components/**', ['bower']);
     gulp.watch(['app/*.html'], ['html']);
 });
 

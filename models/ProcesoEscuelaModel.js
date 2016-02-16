@@ -30,16 +30,16 @@ var ProcesoEscuelaSchema = new Schema({
             default: 'No Ejecutado'
         }
     }],
-    created_at: Date,
-    updated_at: Date
+    createdAt: Date,
+    updatedAt: Date
 });
 ProcesoEscuelaSchema.plugin(mongoosePaginate);
 ProcesoEscuelaSchema.plugin(uniqueValidator);
 ProcesoEscuelaSchema.pre('save', function(next) {
     var now = new Date();
-    this.updated_at = now;
-    if (!this.created_at) {
-        this.created_at = now;
+    this.updatedAt = now;
+    if (!this.createdAt) {
+        this.createdAt = now;
     }
     next();
 });
