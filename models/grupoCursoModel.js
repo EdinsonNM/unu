@@ -2,18 +2,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var GrupoCursoSchema = new Schema({
-    codigo: {
-        type: String,
-        required: true
-    },
     _cursoAperturadoPeriodo: {
         type: Schema.Types.ObjectId,
         ref: 'CursoAperturadoPeriodo',
         required: true
     },
-    grupo: {
-        type: String,
-        enum: ['A', 'B', 'C']
+    _seccion:{
+        type: Schema.Types.ObjectId,
+        ref: 'Seccion',
+        required: true
     },
     matriculados:Number,
     inscritos:Number,
@@ -26,7 +23,12 @@ var GrupoCursoSchema = new Schema({
         default: 'Abierto'
     },
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    programaciones:[{
+      type: Schema.Types.ObjectId,
+      ref: 'ProgramacionGrupoCurso',
+      required: true
+    }]
 });
 
 GrupoCursoSchema.plugin(mongoosePaginate);
@@ -35,7 +37,7 @@ GrupoCursoSchema.pre('save', function(next) {
     this.updatedAt = now;
     if (!this.createdAt) {
         this.createdAt = now;
-    }grupoCursoSchema
+    }
     next();
 });
-module.exports = mongoose.model('GrupoCurso', GrupoCursoSchema).plural('grupoCursos');
+module.exports = mongoose.model('GrupoCurso', GrupoCursoSchema).plural('grupocursos');

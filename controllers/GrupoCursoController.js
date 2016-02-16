@@ -6,6 +6,8 @@ module.exports=function(){
       var controller=baucis.rest('GrupoCurso');
       controller.relations(true);
       controller.hints(true);
+      //nombre servicio
+      controller.fragment('/grupocursos');
     }
   };
 };

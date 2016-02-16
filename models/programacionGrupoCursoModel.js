@@ -22,6 +22,14 @@ var ProgramacionGrupoCursoSchema = new Schema({
     enum: ['Teoria','Practica','Seminario','Laboratorio','Otros'],
     required: true
   },
+  horarios:[{
+    dia:{
+      type: String,
+      enum: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']
+    },
+    horaInicio:Date,
+    horaFin:Date
+  }],
 	createdAt:Date,
 	updatedAt:Date
 });
@@ -35,4 +43,4 @@ ProgramacionGrupoCursoSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('ProgramacionGrupoCurso', ProgramacionGrupoCursoSchema).plural('programacionGrupoCursos');
+module.exports = mongoose.model('ProgramacionGrupoCurso', ProgramacionGrupoCursoSchema).plural('programaciongrupocursos');
