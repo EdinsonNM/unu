@@ -8,16 +8,6 @@ module.exports = function() {
       var controller = baucis.rest('Ingresante');
       controller.fragment('/ingresantes');
 
-      controller.get('/model/sexo', function(req, res, next){
-        var enumValues = model.schema.path('sexo').enumValues;
-        res.status(200).send(enumValues);
-      });
-
-      controller.get('/model/tipodocumento', function(req, res, next){
-        var enumValues = model.schema.path('documentoIdentidad.tipo').enumValues;
-        res.status(200).send(enumValues);
-      });
-
       controller.get('/model/estado', function(req, res, next){
         var enumValues = model.schema.path('estado').enumValues;
         res.status(200).send(enumValues);
