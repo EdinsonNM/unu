@@ -6,20 +6,7 @@ var IngresanteSchema = new Schema({
         type: String,
         required: true
     },
-
     promedio: Number,
-    documentoIdentidad: {
-        tipo: {
-            type: String,
-            enum: ['DNI', 'CARNET EXTRANJERIA'],
-            default: 'DNI'
-        },
-        numero: String
-    },
-    sexo: {
-        type: String,
-        enum: ['Masculino', 'Femenino']
-    },
     estado:{
         type: String,
         enum:['Registrado', 'Aprobado', 'Matriculado'],

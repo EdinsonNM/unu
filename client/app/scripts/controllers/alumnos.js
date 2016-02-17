@@ -26,6 +26,7 @@
       name: 'Alumno',
       form:'views/alumnos/form.html',
       route:'alumnos',
+      route_personas:'personas',
       route_usuarios:'usuarios',
       route_periodos: 'periodos',
       route_facultades: 'facultades',
@@ -37,8 +38,8 @@
     service = Restangular.all(LOCAL.route);
     service_usuario = Restangular.all(LOCAL.route_usuarios);
 
-    //var sexo = [];
-    service.customGET('model/sexo', {}).then(function(result){
+    var servicePersona = Restangular.all(LOCAL.route_personas);
+    servicePersona.customGET('model/sexo', {}).then(function(result){
       $scope.sexo = result; //sexo = result;
     });
     service.customGET('model/estadoCivil', {}).then(function(result){

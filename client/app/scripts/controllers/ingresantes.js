@@ -28,6 +28,7 @@
       name: 'Ingresante',
       form:'views/ingresantes/form.html',
       route:'ingresantes',
+      route_personas:'personas',
       route_periodos: 'periodos',
       route_facultades: 'facultades',
       route_modalidades: 'modalidadingresos',
@@ -36,10 +37,11 @@
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
-    service.customGET('model/sexo', {}).then(function(result){
-      $scope.sexo = result; //sexo = result;
+    var servicePersona = Restangular.all(LOCAL.route_personas);
+    servicePersona.customGET('model/sexo', {}).then(function(result){
+      $scope.sexo = result;
     });
-    service.customGET('model/tipodocumento', {}).then(function(result){
+    servicePersona.customGET('model/tipodocumento', {}).then(function(result){
       $scope.tipodocumento = result;
     });
 
