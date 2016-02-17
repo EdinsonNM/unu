@@ -22,6 +22,11 @@ var ProgramacionGrupoCursoSchema = new Schema({
     enum: ['Teoria','Practica','Seminario','Laboratorio','Otros'],
     required: true
   },
+  modalidadDocente:{
+    type: String,
+    enum: ['Titular','Auxiliar','Otro'],
+    required: true
+  },
   horarios:[{
     dia:{
       type: String,
