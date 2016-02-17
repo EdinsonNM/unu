@@ -19,9 +19,13 @@ var PersonaSchema = new Schema({
     type: String,
     required: true
   },
-  documento: {
-    type: String
-    //,required: true
+  documentoIdentidad: {
+      tipo: {
+          type: String,
+          enum: ['DNI', 'CARNET EXTRANJERIA'],
+          default: 'DNI'
+      },
+      numero: String
   },
   fechaNacimiento: {
     type: Date
@@ -29,11 +33,23 @@ var PersonaSchema = new Schema({
   },
   sexo: {
     type: String,
-    enum:['Femenino','Masculino']
+    enum:['Femenino', 'Masculino']
   },
   lugarNacimiento: {
     nacionalidad:String,
     ubigeo:String,
+  },
+  telefono: {
+    type: String
+    //,required: true
+  },
+  direccion: {
+    type: String
+    //,required: true
+  },
+  email: {
+    type: String
+    //,required: true
   },
   _alumno:[{
       type:Schema.Types.ObjectId,

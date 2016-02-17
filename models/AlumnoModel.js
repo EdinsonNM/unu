@@ -6,19 +6,7 @@ var AlumnoSchema = new Schema({
   codigoUniversitario: {
     type: String,
     required: true
-  },
-  telefono: {
-    type: String
-    //,required: true
-  },
-  direccion: {
-    type: String
-    //,required: true
-  },
-  email: {
-    type: String
-    //,required: true
-  },
+  },  
   estadoCivil: {
     type: String,
     enum:['Soltero(a)','Casado(a)','Viudo(a)','Divorciado(a)','Conviviente','Separado(a)']

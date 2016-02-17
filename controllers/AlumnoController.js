@@ -59,7 +59,15 @@ module.exports = function() {
           filter, {
             page: page,
             limit: limit,
-            populate: ['_periodoIngreso','_facultad','_escuela','_modalidadIngreso','_tipoCondicionAlumno','_situacionAlumno'] //Aqui corregir
+            populate: [
+                '_persona',
+                '_periodoIngreso',
+                '_facultad',
+                '_escuela',
+                '_modalidadIngreso',
+                '_tipoCondicionAlumno',
+                '_situacionAlumno'
+            ] //Aqui corregir
           },
           function(err, results) {
             var obj = {
