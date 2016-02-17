@@ -51,6 +51,7 @@ var AlumnoSchema = new Schema({
     }],
     createdAt: Date,
     updatedAt: Date
+
 });
 AlumnoSchema.plugin(mongoosePaginate);
 AlumnoSchema.plugin(uniqueValidator);

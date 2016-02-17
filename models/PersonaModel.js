@@ -52,6 +52,18 @@ var PersonaSchema = new Schema({
     type: String
     //,required: true
   },
+  telefono: {
+    type: String
+    //,required: true
+  },
+  direccion: {
+    type: String
+    //,required: true
+  },
+  email: {
+    type: String
+    //,required: true
+  },
   _alumno:[{
       type:Schema.Types.ObjectId,
       ref:'Alumno',

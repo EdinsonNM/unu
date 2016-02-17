@@ -20,6 +20,7 @@
                 <label>Nombres</label>
                 <input required name="nombres" ng-model="model._persona.nombres">
                 <div ng-messages="myForm._persona.nombres.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -29,6 +30,7 @@
                 <label>Ap. Paterno</label>
                 <input required name="apellidoPaterno" ng-model="model._persona.apellidoPaterno">
                 <div ng-messages="myForm._persona.apellidoPaterno.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -38,6 +40,7 @@
                 <label>Ap. Materno</label>
                 <input required name="apellidoMaterno" ng-model="model._persona.apellidoMaterno">
                 <div ng-messages="myForm._persona.apellidoMaterno.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -77,6 +80,7 @@
                 </md-select>
               </md-input-container>
             </div>
+
           </div>
 
           <div flex-container="row" flex-gutter="24">
@@ -84,6 +88,7 @@
               <md-input-container class="md-block">
                 <md-datepicker required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" md-placeholder="Fecha Nacimiento"></md-datepicker>
                 <div ng-messages="myForm._persona.fechaNacimiento.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -93,6 +98,7 @@
                 <label>Lugar Nac.</label>
                 <input required name="lugarNacimiento" ng-model="model._persona.lugarNacimiento">
                 <div ng-messages="myForm._persona.lugarNacimiento.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -106,6 +112,7 @@
                     {{civil}}
                   </md-option>
                 </md-select>
+
               </md-input-container>
             </div>
           </div>
@@ -123,6 +130,7 @@
                 <div ng-messages="myForm._persona.direccion.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
+
               </md-input-container>
             </diV>
             <div flex-item>
@@ -130,6 +138,7 @@
                 <label>Email</label>
                 <input required name="email" ng-model="model._persona.email">
                 <div ng-messages="myForm._persona.email.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -140,6 +149,7 @@
                 <label>Telefono</label>
                 <input required name="telefono" ng-model="model._persona.telefono">
                 <div ng-messages="myForm._persona.telefono.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -261,6 +271,7 @@
                 </div>
               </md-input-container>
             </div>
+
           </div>
         </md-content>
       </md-tab>
