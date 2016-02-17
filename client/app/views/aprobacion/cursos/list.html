@@ -10,7 +10,7 @@
         <div flex-item>
           <md-input-container class="md-block">
             <label>Periodo</label>
-            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}"  ng-change="ListDetallePlanEstudios()">
               <md-option ng-repeat="periodo in periodos" ng-value="periodo">
                 {{periodo.nombre}}
               </md-option>
@@ -107,10 +107,12 @@
  </md-fab-trigger-->
 </md-fab-speed-dial>
 
-
-<md-button ng-if="UI.editMode" ng-click="AprobarCurso($event)" class="md-fab md-fab-bottom-right">
+<md-button ng-if="UI.editMode&&UI.selected._aprobacionesPeriodo.length==0" ng-click="AprobarCurso($event)" class="md-fab md-fab-bottom-right">
   <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length==0">Marcar como Dictado</md-tooltip>
+  <md-icon md-font-icon="fa fa-thumbs-o-up fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length===0"></md-icon>
+</md-button>
+
+<md-button ng-if="UI.editMode&&UI.selected._aprobacionesPeriodo.length>0" ng-click="QuitarCurso($event)" class="md-fab md-fab-bottom-right">
   <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length>0">Marcar como no Dictado</md-tooltip>
   <md-icon md-font-icon="fa fa-thumbs-o-down fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length>0"></md-icon>
-  <md-icon md-font-icon="fa fa-thumbs-o-up fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length===0"></md-icon>
 </md-button>
