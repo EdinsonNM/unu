@@ -25,12 +25,12 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
   '$state',
 
   function($mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var service,
-    service1,
-    service2,
+
+    var List,
+    service,
+    serviceGrupo,
     serviceFacultad,
-    servicePeriodo,
-    idcurso
+    servicePeriodo
     ;
 
     $scope.UI = {
@@ -47,15 +47,10 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     var LOCAL = {
       name: 'Grupos por Cursos de Plan de Estudios',
       form: 'views/aprobacion/cursos/form-grupo.html',
-      route: 'planestudiodetalles',
-      route1: 'grupocursos',
-      route2: 'cursoaperturadoperiodos'
+      route: 'planestudiodetalles'
     };
 
 service = Restangular.all(LOCAL.route);
-service1 = Restangular.all(LOCAL.route1);
-service2 = Restangular.all(LOCAL.route2);
-
 $rootScope.app.module = ' > ' + LOCAL.name;
 
 $scope.Detail = function Detail() {
@@ -107,46 +102,7 @@ nm.getList().then(function (response) {
 });
 */
 
-// $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
-//   $scope.tableParams = new NgTableParams({
-//     page: 1,
-//     count: 1000,
-//     filter: {
-//       _planestudio: $scope.filter._planestudios._id
-//     }
-//   }, {
-//     total: 0,
-//     groupBy: 'ciclo',
-//     counts: [],
-//     getData: function($defer, params) {
-//       var query;
-//       query = params.url();
-//       $scope.UI.refresh = true;
-//
-//       /********/
-//          var serviceCursos = Restangular.all('cursoaperturadoperiodos');
-//          serviceCursos.getList({
-//             conditions: {
-//                _periodo: $scope.filter._periodo._id
-//             }
-//          }).then(function (data) {
-//             $scope.cursosaprobadosperiodo = data;
-//          });
-//       /*******/
-//
-//       service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
-//       //service.customGET('methods/aprobacion/'+$scope.cursosaprobadosperiodo._id, query).then(function(result) {
-//         $timeout(function() {
-//           params.total(result.total);
-//           $defer.resolve(result.data);
-//           $scope.UI.refresh = false;
-//         }, 500);
-//       });
-//     }
-//   });
-// };
-// //
-$scope.ListDetallePlanEstudios = function () {
+$scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
   $scope.tableParams = new NgTableParams({
     page: 1,
     count: 1000,
@@ -160,8 +116,9 @@ $scope.ListDetallePlanEstudios = function () {
     getData: function($defer, params) {
       var query;
       query = params.url();
+
       $scope.UI.refresh = true;
-      service2.customGET($scope.filter._periodo._id, query).then(function(result) {
+      service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
         $timeout(function() {
           params.total(result.total);
           $defer.resolve(result.data);
@@ -193,7 +150,7 @@ $scope.Refresh = function Refresh() {
 
 
 $scope.New = function New($event){
-   console.log('IDCURSO:'+idcurso);
+
   var parentEl = angular.element(document.body);
   $mdDialog.show({
     parent: parentEl,
@@ -202,9 +159,8 @@ $scope.New = function New($event){
     locals:{
       name: LOCAL.name,
       table:$scope.tableParams,
-      service: service1,
-      curso: idcurso
 
+      service: service
     },
     controller: 'GrupoNewCtrl'
   });
@@ -222,8 +178,6 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
       if(item._id !== element._id){
-         console.log('Idcursoselecc:'+item._curso._id);
-         idcurso = item._curso._id;
         element.active = false;
       }
     });
@@ -235,22 +189,22 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
     $scope.UI.selected.route = LOCAL.route;
   }
 };
+
+
+
 }
 ])
 
-.controller('GrupoNewCtrl', ['$scope', 'table', 'curso', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
-  function($scope, table, curso, name, MessageFactory, service, ToastMD, $mdDialog){
+.controller('GrupoNewCtrl', ['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
+  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
-    $scope.model = {};
-    $scope.model._cursoAperturadoPeriodo = curso;
-
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
         //declaro el servicio con la ruta correcta del endpoint.
-         console.log($scope.model);
+
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
@@ -262,16 +216,14 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
               break;
             default:
           }
-       },function(result){
-          ToastMD.error(result.data.message);
 
-
-       });
+        });
       }
     };
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
+
 }]);
 
 }).call(this);

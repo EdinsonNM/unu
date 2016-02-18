@@ -52,6 +52,7 @@
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
 
+
       <!-- Agregar las pestañas -->
       <md-tabs md-dynamic-height md-border-bottom>
       <md-tab label="CURSOS APERTURADOS">
@@ -79,8 +80,7 @@
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
 
-                <!-- <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td> -->
-                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._id}}</td>
+                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
                 <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
                 <td data-title="'N° Creditos'">{{item.creditos}}</td>
                 <td data-title="'N° Horas'">{{item.horas_total}}</td>
@@ -104,6 +104,7 @@
         </div>
 
        </md-content>
+
     </md-tab>
     <!-- segunda pestaña-->
     <md-tab label="GRUPOS APERTURADOS">
@@ -111,10 +112,10 @@
 
         <!-- CONTENIDO -->
 
-<!-- <div class="table-responsive">
-          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered "> -->
+<div class="table-responsive">
+          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
             <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-            <!-- <tbody ng-repeat="group in $groups">
+            <tbody ng-repeat="group in $groups">
               <tr class="ng-table-group">
                 <td colspan="2">
                   <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
@@ -153,7 +154,8 @@
             </tbody>
             <tbody>
           </table>
-        </div> -->
+
+        </div>
         <!-- FIN DE CONTENIDO -->
 
 
