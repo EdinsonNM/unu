@@ -27,6 +27,8 @@
         form: 'views/aprobacion/cursos/form.html',
         route: 'planestudiodetalles'
       };
+
+
       service = Restangular.all(LOCAL.route);
       $rootScope.app.module = ' > ' + LOCAL.name;
 

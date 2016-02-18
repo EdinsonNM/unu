@@ -52,6 +52,10 @@
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
 
+      <!-- Agregar las pestañas --> 
+      <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="CURSOS APERTURADOS">
+        <md-content class="md-padding">
 
         <div class="table-responsive">
           <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
@@ -97,57 +101,70 @@
           </table>
         </div>
 
+       </md-content>
+    </md-tab> 
+    <!-- segunda pestaña-->
+    <md-tab label="GRUPOS APERTURADOS">
+        <md-content class="md-padding">
+          
+        <!-- CONTENIDO -->
+        
+<div class="table-responsive">
+          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+            <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+            <tbody ng-repeat="group in $groups">
+              <tr class="ng-table-group">
+                <td colspan="2">
+                  <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                    <strong>Ciclo: {{group.value}} </strong>
+                  </a>
+                </td>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
+                <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
+                <td colspan="{{$columns.length-5}}"></td>
+              </tr>
+
+              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+                <td style="width:30px;">
+                  <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                </td>
+                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
+                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
+                <td data-title="'N° Creditos'">{{item.creditos}}</td>
+                <td data-title="'N° Horas'">{{item.horas_total}}</td>
+                <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
+                <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
+                <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
+                <td data-title="'Estado'">
+                  <strong>
+                      <a href  title="{{item.aprobacioncursosperiodo}}" >
+                        <span ng-if="item._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
+                        <span ng-if="item._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
+                      </a>
+                    </strong>
+                </td>
+
+              </tr>
+
+            </tbody>
+            <tbody>
+          </table>
+        </div>
+        <!-- FIN DE CONTENIDO -->
+
+
+     </md-content>
+     </md-tab>
+     </md-tabs>
       <!-- fin de pestañas -->
     </md-content>
   </div>
 </md-content>
 
-<md-fab-speed-dial ng-if="!UI.editMode&&UI.planestudios.estado=='Pendiente'" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
-  <!--md-fab-trigger>
-   <md-button aria-label="menu" class="md-fab md-accent">
-     <md-tooltip md-direction="left">Opciones de Aprobación Plan de Estudios</md-tooltip>
-     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
-   </md-button>
- </md-fab-trigger-->
-</md-fab-speed-dial>
-
-
-<md-button ng-if="UI.editMode" ng-click="AprobarCurso($event)" class="md-fab md-fab-bottom-right">
-  <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length==0">Marcar como Dictado</md-tooltip>
-  <md-tooltip md-direction="left" ng-if="UI.selected._aprobacionesPeriodo.length>0">Marcar como no Dictado</md-tooltip>
-  <md-icon md-font-icon="fa fa-thumbs-o-down fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length>0"></md-icon>
-  <md-icon md-font-icon="fa fa-thumbs-o-up fa-lg tc-white" ng-if="UI.selected._aprobacionesPeriodo.length===0"></md-icon>
+<md-button ng-if="UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
 </md-button>
 
-<!-- pestañas -->
-<!-- 
-<div ng-cloak>
-  <md-content class="md-padding">
-    <md-tabs class="md-accent" md-selected="data.selectedIndex" md-align-tabs="{{data.bottom}}">
-      <md-tab id="tab1">
-        <md-tab-label>Item One</md-tab-label>
-        <md-tab-body>
-          View for Item #1 <br/>
-          data.selectedIndex = 0;
-        </md-tab-body>
-      </md-tab>
-      <md-tab id="tab2">
-        <md-tab-label>{{data.secondLabel}}</md-tab-label>
-        <md-tab-body>
-          View for Item #2 <br/>
-          data.selectedIndex = 1;
-        </md-tab-body>
-      </md-tab>
-      <md-tab id="tab3">
-        <md-tab-label>Item Three</md-tab-label>
-        <md-tab-body>
-          View for Item #3 <br/>
-          data.selectedIndex = 2;
-        </md-tab-body>
-      </md-tab>
-    </md-tabs>
-  </md-content>
-  <div class="md-padding" layout="row" layout-sm="column" layout-align="left center"
-       style="padding-top: 0;">
-  </div>
-</div> -->
