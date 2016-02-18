@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var SeccionSchema = new Schema({
 	codigo: {
@@ -10,15 +12,25 @@ var SeccionSchema = new Schema({
 		type:String,
 		required:true
 	},
+	_facultad: {
+			type: Schema.Types.ObjectId,
+			ref: 'Facultad',
+			required: true
+	},
   _escuela:{
     type: Schema.Types.ObjectId,
     ref: 'Escuela',
     required: true
   },
+	activo: {
+    type: Boolean,
+    default: true
+  },
 	createdAt:Date,
 	updatedAt:Date
 });
-
+SeccionSchema.plugin(mongoosePaginate);
+SeccionSchema.plugin(uniqueValidator);
 SeccionSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;

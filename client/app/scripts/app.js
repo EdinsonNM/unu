@@ -279,7 +279,12 @@
       templateUrl: 'views/otrasdeudasalumnos/list.html',
       controller: 'OtrasDeudasAlumnosCtrl'
     })
-    
+    .state('app.secciones', {
+      url: '/secciones',
+      templateUrl: 'views/secciones/list.html',
+      controller: 'SeccionesCtrl'
+    })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
