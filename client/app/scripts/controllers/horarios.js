@@ -39,7 +39,7 @@
       var LOCAL = {
         name: 'Gestión de Horarios',
         form: 'views/aprobacion/cursos/form.html',
-        route: 'cursoaperturadoperiodos'
+        route: 'planestudiodetalles'
       };
       $scope.UI = {
         refresh: false,
@@ -118,7 +118,10 @@
         return false;*/
         $scope.tableParams = new NgTableParams({
           page: 1,
-          count: 1000
+          count: 1000,
+          filter: {
+              _planestudio: $scope.filter._planestudios._id
+          }
         }, {
           total: 0,
           groupBy: 'ciclo',
@@ -128,9 +131,8 @@
             query = params.url();
 
             $scope.UI.refresh = true;
-            service.customGET('methods/paginate', query).then(function(result) {
+            service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
               $timeout(function() {
-                console.log(result);
                 params.total(result.total);
                 $defer.resolve(result.data);
                 $scope.UI.refresh = false;

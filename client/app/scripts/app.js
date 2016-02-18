@@ -296,6 +296,7 @@
       controller: 'HorariosCtrl',
       parent: 'app'
     })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
