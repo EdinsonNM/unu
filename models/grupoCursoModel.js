@@ -17,14 +17,13 @@ var GrupoCursoSchema = new Schema({
     retiroParcial:Number,
     retiroTotal:Number,
     nivel:Number,//Definir Variable
-    estado: {
-        type: String,
-        enum: ['Abierto', 'Cerrado'],
-        default: 'Abierto'
+    abierto: {
+        type: Boolean,
+      default: true
     },
     createdAt: Date,
     updatedAt: Date,
-    programaciones:[{
+    _programaciones:[{
       type: Schema.Types.ObjectId,
       ref: 'ProgramacionGrupoCurso',
       required: true
