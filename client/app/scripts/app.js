@@ -293,8 +293,7 @@
     .state('app.horarios', {
       url: '/horarios',
       templateUrl: 'views/horarios/index.html',
-      controller: 'HorariosCtrl',
-      parent: 'app'
+      controller: 'HorariosCtrl'
     })
 
     //inicio mic
