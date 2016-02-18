@@ -6,7 +6,6 @@ module.exports = function() {
     setup: function() {
       var controller = baucis.rest('Seccion');
       controller.fragment('/secciones');
-
       //custom methods
       controller.get('/methods/validate-unique', function(req, res){
         var obj={};
