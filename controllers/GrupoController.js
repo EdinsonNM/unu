@@ -57,7 +57,8 @@ module.exports=function(){
                 {title:'Equivalencias',icon:'',url:'app.planestudiosequivalencia',order:3},
                 {title:'Aprobación Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:4},
                 {title:'Aprobación Cursos Periodo',icon:'',url:'app.aprobacioncursosperiodo',order:5},
-                {title:'Reportes',icon:'',url:'app.',order:6}
+                {title:'Reportes',icon:'',url:'app.',order:6},
+                {title:'Gestionar Grupos por Curso',icon:'',url:'app.grupocursoperiodo',order:7}
               ],
               style:{
                 color: 'white',

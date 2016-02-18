@@ -28,6 +28,8 @@
         route: 'planestudiodetalles',
         routeAprobacion:'cursoaperturadoperiodos'
       };
+
+
       service = Restangular.all(LOCAL.route);
       $rootScope.app.module = ' > ' + LOCAL.name;
 

@@ -169,6 +169,7 @@
       templateUrl: 'views/planestudios/list.html',
       controller: 'PlanestudiosCtrl'
     })
+
     .state('app.planestudiosequivalencia', {
       url: '/planestudios/equivalencia',
       templateUrl: 'views/equivalencias/list.html',
@@ -228,6 +229,11 @@
       url: '/aprobacion/cursos/:id',
       templateUrl: 'views/aprobacion/cursos/list-detalle.html',
       controller: 'AprobacionCursosPeriodoDetalleCtrl'
+    })
+     .state('app.grupocursoperiodo', {
+      url: '/aprobacion/grupocurso',
+        templateUrl: 'views/aprobacion/cursos/list-grupo.html',
+        controller: 'CursoGrupoCrtl'
     })
     .state('app.alumnomisdatos', {
       url: '/alumno/misdatos',
