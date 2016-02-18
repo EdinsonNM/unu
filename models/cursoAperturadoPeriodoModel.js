@@ -12,6 +12,11 @@ var CursoAperturadoPeriodoSchema = new Schema({
     ref:'Planestudiodetalle',
     required:true
   },
+  aperturados:[{
+    type: Schema.Types.ObjectId,
+    ref: 'GrupoCursos',
+    required: true
+  }],
   createdAt:Date,
 	updatedAt:Date
 });
