@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var SeccionSchema = new Schema({
 	codigo: {
@@ -18,7 +20,8 @@ var SeccionSchema = new Schema({
 	createdAt:Date,
 	updatedAt:Date
 });
-
+SeccionSchema.plugin(mongoosePaginate);
+SeccionSchema.plugin(uniqueValidator);
 SeccionSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
