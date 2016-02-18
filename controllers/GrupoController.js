@@ -76,8 +76,8 @@ module.exports=function(){
                 {title:'Aulas',icon:'',url:'app.aulas',order:2},
                 {title:'Secciones',icon:'',url:'app.secciones',order:3},
                 {title:'Docentes',icon:'',url:'app.docentes',order:4},
-                {title:'Curso - Grupo',icon:'',url:'app.grupocursoperiodo',order:5},
-                {title:'Horario',icon:'',url:'app.',order:6},
+                {title:'Curso - Grupo',icon:'',url:'app.',order:5},
+                {title:'Horario',icon:'',url:'app.horarios',order:6},
                 {title:'Reportes',icon:'',url:'app.',order:7}
               ],
               style:{

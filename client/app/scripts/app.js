@@ -289,8 +289,12 @@
       url: '/secciones',
       templateUrl: 'views/secciones/list.html',
       controller: 'SeccionesCtrl'
+    .state('app.horarios', {
+      url: '/horarios',
+      templateUrl: 'views/horarios/index.html',
+      controller: 'HorariosCtrl',
+      parent: 'app'
     })
-
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
