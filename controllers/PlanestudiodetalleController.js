@@ -90,7 +90,6 @@ module.exports=function(){
           });
         });
       });
-
       controller.put('/methods/change/:estado/:id',auth.ensureAuthenticated, function(req, res,next){
         model.findOne({_id:req.params.id},function(error,data){
           if(error) return res.status(500).send({error:error});
@@ -98,12 +97,8 @@ module.exports=function(){
           data.save(function(error,data){
             return res.status(200).send(data);
           });
-
         });
       });
-
-
-
       controller.post('/methods/equivalencia/:id', function(request, response, next){
           model.findByIdAndUpdate(
               request.params.id,
@@ -115,7 +110,6 @@ module.exports=function(){
               }
           );
       });
-
     }
   };
 };
