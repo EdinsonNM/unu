@@ -12,10 +12,19 @@ var SeccionSchema = new Schema({
 		type:String,
 		required:true
 	},
+	_facultad: {
+			type: Schema.Types.ObjectId,
+			ref: 'Facultad',
+			required: true
+	},
   _escuela:{
     type: Schema.Types.ObjectId,
     ref: 'Escuela',
     required: true
+  },
+	activo: {
+    type: Boolean,
+    default: true
   },
 	createdAt:Date,
 	updatedAt:Date

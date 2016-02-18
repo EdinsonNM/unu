@@ -39,7 +39,11 @@
             </td>
             <td class="text-left" data-title="'CÓDIGO'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
             <td class="text-left" data-title="'NOMBRE'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
-            <td class="text-left" data-title="'ESCUELA'" sortable="escuela" filter="{'tipo':'text'}">{{item._escuela.nombre}}</td>
+            <td class="text-left" data-title="'ESCUELA'" sortable="escuela" filter="{'escuela':'text'}">{{item._escuela.nombre}}</td>
+            <td class="text-center" data-title="'Activo'">
+              <span href title="Activo" ng-if="item.activo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
+              <span href title="Inactivo" ng-if="!item.activo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
+            </td>
           </tr>
         </tbody>
       </table>

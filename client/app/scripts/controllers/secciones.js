@@ -34,7 +34,6 @@
     var LoadFacultades = function LoadFacultades() {
       var serviceFacultad = Restangular.all(LOCAL.routeFacultades);
       serviceFacultad.getList().then(function(data){
-        console.log(data);
         $scope.facultadesFilter = data;
       });
     };
@@ -51,7 +50,6 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     $scope.List = function() {
-      console.log('listando.......');
       $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10,
@@ -91,15 +89,20 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          service:service
-          //escuelas: $scope.escuelas
+          service:service,
+          facultades: $scope.facultadesFilter,
+          selFacultad: $scope.filter._facultadFilter,
+          selEscuela: $scope.filter._escuelaFilter
         },
         controller: 'SeccionNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
-      var model = Restangular.copy($scope.UI.selected);//console.log(model);
+      var model = Restangular.copy($scope.UI.selected);
+      console.log('inicio seleccionado');
+      console.log($scope.filter);
+      console.log('fin seleccionado');
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
@@ -107,8 +110,8 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: model
-          //escuela: $scope.filter._escuela
+          model: model,
+          facultades: $scope.facultadesFilter
         },
         controller: 'SeccionEditCtrl'
       });
@@ -150,29 +153,27 @@
 
     new LoadFacultades();
   }])
-  .controller('SeccionNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog', 'Restangular',
-  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog, Restangular){
-    $scope.includeUserData = true;
+  .controller('SeccionNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog', 'Restangular', 'facultades', 'selFacultad','selEscuela',
+  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog, Restangular, facultades, selFacultad, selEscuela){
+    $scope.includeActive = false;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
-    Restangular.all('escuelas').getList().then(function(data){
-      $scope.escuelas = data;
-    });
-    /*
-    var serviceFacultad = Restangular.all('facultades');
-    serviceFacultad.getList().then(function(data){
-      $scope.facultades = data;
-    });
-    $scope.LoadEscuelasFrm = function LoadEscuelas(){
+    $scope.facultades = facultades;
+    $scope.model = {};
+
+    $scope.LoadEscuelasFrm = function LoadEscuelasFrm(){
       var serviceEscuela = Restangular.all('escuelas');
-      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+      serviceEscuela.getList({ conditions:{ _facultad:$scope.model._facultad._id }, populate:'_facultad' }).then(function(data){
         $scope.escuelas = data;
       });
     };
-    */
-    $scope.model = {};
+
+    $scope.model._facultad = selFacultad;
+    $scope.LoadEscuelasFrm();
+    $scope.model._escuela = selEscuela;
+
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -187,29 +188,32 @@
       $mdDialog.hide();
     };
   }])
-  .controller('AlumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog','Restangular',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular){
-    $scope.includeUserData = false;
+  .controller('SeccionEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog','Restangular', 'facultades',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, facultades){
+    $scope.includeActive = true;
     $scope.submited = false;
-    $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
-    Restangular.all('escuelas').getList().then(function(data){
-      $scope.escuelas = data;
-    });
-    /*
-    $scope.LoadEscuelas = function LoadEscuelas(){
-      var serviceEscuela = Restangular.all(route_escuelas);
-      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+
+    $scope.LoadEscuelasFrm = function LoadEscuelasFrm(){
+      var serviceEscuelas = Restangular.all('escuelas');
+      serviceEscuelas.getList({ conditions:{ _facultad:$scope.model._facultad._id }, populate:'_escuela' }).then(function(data){
         $scope.escuelas = data;
       });
     };
-    var serviceFacultad = Restangular.all('facultades');
-    serviceFacultad.getList({conditions:{_id:model._escuela._facultad}}).then(function(data){
+    var serviceFacultad2 = Restangular.all('facultades');
+    serviceFacultad2.getList({ conditions:{ _id: model._facultad } }).then(function(data){
       model._facultad = data[0];
-      $scope.LoadEscuelas();
+      $scope.LoadEscuelasFrm();
     });
-    */
+    var serviceEscuela = Restangular.all('escuelas');
+    serviceEscuela.getList({ conditions:{ _id: model._escuela } }).then(function(data){
+      model._escuela = data[0];
+    });
+
+    $scope.model = model;
+    $scope.facultades = facultades;
+
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
