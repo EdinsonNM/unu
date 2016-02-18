@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var ProgramacionGrupoCursoSchema = new Schema({
   _grupoCurso:{
@@ -39,6 +41,8 @@ var ProgramacionGrupoCursoSchema = new Schema({
 	updatedAt:Date
 });
 
+ProgramacionGrupoCursoSchema.plugin(mongoosePaginate);
+ProgramacionGrupoCursoSchema.plugin(uniqueValidator);
 ProgramacionGrupoCursoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;

@@ -1,5 +1,7 @@
 var model = require('../models/GrupoCursoModel.js');
-var CursoAperturadoPeriodo=require('../models/CursoAperturadoPeriodoModel.js');
+var Parent=require('../models/CursoAperturadoPeriodoModel.js');
+var message = require('../commons/messages');
+var _ = require('underscore');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -8,23 +10,45 @@ module.exports=function(){
       controller.fragment('/grupocursos');
 
       controller.request('post', function (request, response, next) {
-        //var fileId = new ObjectID(request.body._cursoAperturadoPeriodo);
-      var fileId = new ObjectID(request.body._cursoAperturadoPeriodo);
-        //var fileType = req.header('X-File-Type');
-        //var fileName = req.header('X-File-Name');
-        //var uniqId = req.param('uniqId', request.body._cursoAperturadoPeriodo);
-
-        CursoAperturadoPeriodo.findOne({_id:fileId},function(err,aperturados){
-          if(err) return response.status(500).send({message:'Ocurrio un error interno del servidor',detail:err});
-          if(!aperturados) return response.status(404).send({message:'Curso no fue aperturado para este periodo'});
+        Parent.findOne({_id:request.body._cursoAperturadoPeriodo},function(err,cursoAperturado){
+          if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
+          if(!cursoAperturado) return response.status(404).send({message:'No se encontro el curso aperturado'});
           model.find({_cursoAperturadoPeriodo:request.body._cursoAperturadoPeriodo},function(err,data){
-            if(err) return response.status(500).send({message:'Ocurrio un error interno del servidor',detail:err});
+            if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
             var seccion = _.findWhere(data, {_seccion:request.body._seccion});
             if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});
             next();
           });
         });
+
+        request.baucis.outgoing(function (context, callback) {
+          Parent.update({
+            _id: context.doc._cursoAperturadoPeriodo},
+            {$push: {_grupos:context.doc}},
+            function(err){
+                if(err) return response.status(500).send({message:err});
+                callback(null, context);
+            });
+
+        });
       });
+
+      controller.request('delete', function (request, response, next) {
+        model.findById(request.params.id, function (err, detalle){
+          var detalles = [];
+          detalles.push(detalle._id );
+          Parent.update(
+            { _id: detalle._planestudiodetalle },
+            { $pull: { '_grupos':  {$in:detalles } } },
+            {safe:true},
+            function(err, obj){
+                if(err) return response.status(500).send({message:err});
+                next();
+            });
+        });
+
+      });
+
       controller.get('/methods/paginate', function(req, res) {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
@@ -32,7 +56,11 @@ module.exports=function(){
         model.paginate(
           filter, {
             page: page,
-            limit: limit
+            limit: limit,
+            populate: [
+            {path:'_programaciones'},
+            {path:'_cursoAperturadoPeriodo'},
+            {path:'_seccion'}]
           },
 
           function(err, results, pageCount, itemCount) {
