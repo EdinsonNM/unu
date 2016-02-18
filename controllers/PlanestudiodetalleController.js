@@ -53,15 +53,15 @@ module.exports=function(){
       	var page = parseInt(req.query.page) || 1;
       	var filter = req.query.filter;
         var promises = [];
-        var _periodo = req.params._periodo;
-
+        var periodos = [];
+        periodos.push(req.params.periodo);
       	model.paginate(
       		filter,
       		{
             page: page,
             limit: limit,
             populate: [
-            {path:'_aprobacionesPeriodo',populate:{path:'_periodo',match:{_id:_periodo}}},
+            {path:'_aprobacionesPeriodo',match:{_periodo:req.params.periodo}},
             {path:'_planestudio'},
             {path:'_curso'},
             {path:'_requisitos',populate:{path:'_curso'}}]
