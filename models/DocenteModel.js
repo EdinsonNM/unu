@@ -27,6 +27,10 @@ var DocenteSchema = new Schema({
     type:String,
     enum:['Tiempo Completo','Dedicación Exclusiva','Tiempo Parcial']
   },
+  categoria:{
+    type:'String',
+    enum:['Principal','Asociado','Auxiliar','Jefe de Practica']
+  },
   _facultad:{
     type:Schema.Types.ObjectId,
     ref:'Facultad',
