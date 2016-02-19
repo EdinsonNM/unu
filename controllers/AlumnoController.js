@@ -2,7 +2,7 @@ var model = require('../models/AlumnoModel.js');
 var Persona = require('../models/PersonaModel.js');
 var Usuario = require('../models/UsuarioModel.js');
 var Grupo = require('../models/GrupoModel.js');
-
+var Q = require('q');
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -21,7 +21,30 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
       controller.request('post', function (request, response, next) {
-        if(request.body._usuario){
+        Q.fcall(function(){
+          var defer = Q.defer();
+          Grupo.findOne({codigo:'ALUMNO'}).exec(function(err,data){
+            if(err) return defer.reject(err);
+            if(!data) return  defer.reject("No se encontro");
+            defer.resolve(data);
+
+          });
+          return defer.promise;
+        })
+        .then(function(err,grupo){
+          var usuario = new Usuario(request.body._usuario);
+          var persona = new Persona(request.body._persona);
+        },function(err){
+          response.status(500).send(err);
+        });
+        .then(function(err,data){
+          console.log("err:",err,'data:',data);
+          response.status(200).send();
+        },function(err){
+          console.log("err:"+err);
+          response.status(500).send();
+        });
+        /*if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
@@ -48,7 +71,7 @@ module.exports = function() {
           });
         }else{
           return response.status(500).send({message:"No se ha enviado el usuario"});
-        }
+        }*/
       });
 
       controller.get('/methods/paginate', function(req, res) {
