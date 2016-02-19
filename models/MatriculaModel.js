@@ -23,6 +23,11 @@ var MatriculaSchema = new Schema({
       ref:'Escuela',
       required:true
     },
+    _detalleMatricula:[{
+      type:Schema.Types.ObjectId,
+      ref:'DetalleMatricula',
+      required:true
+    }],
     totalCursos:Number,
     totalCreditos:Number,
     createdAt: Date,
