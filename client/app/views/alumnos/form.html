@@ -88,17 +88,16 @@
               <md-input-container class="md-block">
                 <md-datepicker required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" md-placeholder="Fecha Nacimiento"></md-datepicker>
                 <div ng-messages="myForm._persona.fechaNacimiento.$error" ng-if="submited">
-
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
             </div>
+
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Lugar Nac.</label>
                 <input required name="lugarNacimiento" ng-model="model._persona.lugarNacimiento">
                 <div ng-messages="myForm._persona.lugarNacimiento.$error" ng-if="submited">
-
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>

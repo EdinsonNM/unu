@@ -39,18 +39,7 @@ var PersonaSchema = new Schema({
       type: String
     //nacionalidad:String,
     //ubigeo:String,
-  },
-  telefono: {
-    type: String
-    //,required: true
-  },
-  direccion: {
-    type: String
-    //,required: true
-  },
-  email: {
-    type: String
-    //,required: true
+
   },
   telefono: {
     type: String
