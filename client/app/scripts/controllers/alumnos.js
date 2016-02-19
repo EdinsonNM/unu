@@ -42,6 +42,9 @@
     servicePersona.customGET('model/sexo', {}).then(function(result){
       $scope.sexo = result; //sexo = result;
     });
+    servicePersona.customGET('model/tipodocumento', {}).then(function(result){
+      $scope.tipodocumento = result;
+    });
     service.customGET('model/estadoCivil', {}).then(function(result){
       $scope.estadoCivil = result;
     });
@@ -133,6 +136,7 @@
           table:$scope.tableParams,
           service:service,
           sexo: $scope.sexo,
+          tipodocumento: $scope.tipodocumento,
           estadoCivil: $scope.estadoCivil,
           periodos: $scope.periodos,
           facultades : $scope.facultades,
@@ -156,6 +160,7 @@
           table:$scope.tableParams,
           model: model,
           sexo: $scope.sexo,
+          tipodocumento: $scope.tipodocumento,
           estadoCivil: $scope.estadoCivil,
           periodos: $scope.periodos,
           facultades : $scope.facultades,
@@ -212,14 +217,15 @@
     new LoadTipoCondicionAlumnos();
     new LoadModalidadIngresos();
   }])
-  .controller('AlumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'sexo', 'estadoCivil', 'periodos','facultades', 'situaciones','condiciones','modalidades','route_escuelas', 'ToastMD', '$mdDialog', 'Restangular',
-  function($scope, table, name, MessageFactory, service, sexo, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular){
+  .controller('AlumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', 'service', 'sexo', 'tipodocumento', 'estadoCivil', 'periodos','facultades', 'situaciones','condiciones','modalidades','route_escuelas', 'ToastMD', '$mdDialog', 'Restangular',
+  function($scope, table, name, MessageFactory, service, sexo, tipodocumento, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular){
     $scope.includeUserData = true;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
     $scope.sexo = sexo;
+    $scope.tipodocumento = tipodocumento;
     $scope.estadoCivil = estadoCivil;
     $scope.periodos = periodos;
     $scope.facultades = facultades;
@@ -228,6 +234,7 @@
     $scope.modalidades = modalidades;
     $scope.model = {};
     $scope.model._usuario = {username: '', password: '', email: ''};
+    $scope.model._persona = {nombres: '', apellidoPaterno: '', apellidoMaterno:'', documentoIdentidad:{}, fechaNacimiento: '', sexo:'', telefono:'', direccion:'', email:''};
     $scope.LoadEscuelas = function LoadEscuelas(){
       var serviceEscuela = Restangular.all(route_escuelas);
       serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
@@ -252,8 +259,8 @@
       $mdDialog.hide();
     };
   }])
-  .controller('AlumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'sexo', 'estadoCivil','periodos','facultades', 'situaciones','condiciones','modalidades','route_escuelas', 'ToastMD', '$mdDialog', 'Restangular',
-  function($scope, table, name, MessageFactory, model, sexo, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular){
+  .controller('AlumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'sexo', 'tipodocumento', 'estadoCivil','periodos','facultades', 'situaciones','condiciones','modalidades','route_escuelas', 'ToastMD', '$mdDialog', 'Restangular',
+  function($scope, table, name, MessageFactory, model, sexo, tipodocumento, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular){
     $scope.includeUserData = false;
     $scope.submited = false;
 
@@ -272,6 +279,7 @@
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.sexo = sexo;
+    $scope.tipodocumento = tipodocumento;
     $scope.estadoCivil = estadoCivil;
     $scope.model.fechaNacimiento = new Date($scope.model.fechaNacimiento);
     $scope.periodos = periodos;

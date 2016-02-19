@@ -13,30 +13,40 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
 
+      controller.request('post', function (request, response, next) {
+          var persona = new Persona(request.body._persona);
+          console.log(persona);
+          persona.save(function(error, data){
+              console.log(data);
+              request.body._persona = data._id;
+          });
+          next();
+      });
+
       controller.post('/updateEstadoAprIngresante', function(request, response, next){
-              if(request.body._id){
-                model.findByIdAndUpdate(
-                  request.body._id,
-                  { estado: 'Aprobado' },
-                  { safe: true },
-                  function(err, data){
-                    if(err) return response.status(500).send({message:err});
-                    response.status(200).send(data);
-                  }
-                );
-              }else{
-                var query = {
-                  _periodo: request.body._periodo,
-                  _escuela: request.body._escuela,
-                  estado: 'Registrado'
-                };
-                model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
-                  // numAffected is the number of updated documents
-                  if(err) return response.status(500).send({message:err});
-                  response.status(200).send('Hola');
-                });
+          if(request.body._id){
+            model.findByIdAndUpdate(
+              request.body._id,
+              { estado: 'Aprobado' },
+              { safe: true },
+              function(err, data){
+                if(err) return response.status(500).send({message:err});
+                response.status(200).send(data);
               }
+            );
+          }else{
+            var query = {
+              _periodo: request.body._periodo,
+              _escuela: request.body._escuela,
+              estado: 'Registrado'
+            };
+            model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
+              // numAffected is the number of updated documents
+              if(err) return response.status(500).send({message:err});
+              response.status(200).send('Hola');
             });
+          }
+        });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = parseInt(req.query.count);
