@@ -28,6 +28,7 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
 
     var service,
     service1,
+    service2,
     serviceFacultad,
     servicePeriodo,
     idcurso
@@ -48,11 +49,14 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
       name: 'Grupos por Cursos de Plan de Estudios',
       form: 'views/aprobacion/cursos/form-grupo.html',
       route: 'planestudiodetalles',
-      route1: 'grupocursos'
+      route1: 'grupocursos',
+      route2: 'cursoaperturadoperiodos'
     };
 
 service = Restangular.all(LOCAL.route);
 service1 = Restangular.all(LOCAL.route1);
+service2 = Restangular.all(LOCAL.route2);
+
 $rootScope.app.module = ' > ' + LOCAL.name;
 
 $scope.Detail = function Detail() {
@@ -104,7 +108,46 @@ nm.getList().then(function (response) {
 });
 */
 
-$scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
+// $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
+//   $scope.tableParams = new NgTableParams({
+//     page: 1,
+//     count: 1000,
+//     filter: {
+//       _planestudio: $scope.filter._planestudios._id
+//     }
+//   }, {
+//     total: 0,
+//     groupBy: 'ciclo',
+//     counts: [],
+//     getData: function($defer, params) {
+//       var query;
+//       query = params.url();
+//       $scope.UI.refresh = true;
+//
+//       /********/
+//          var serviceCursos = Restangular.all('cursoaperturadoperiodos');
+//          serviceCursos.getList({
+//             conditions: {
+//                _periodo: $scope.filter._periodo._id
+//             }
+//          }).then(function (data) {
+//             $scope.cursosaprobadosperiodo = data;
+//          });
+//       /*******/
+//
+//       service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
+//       //service.customGET('methods/aprobacion/'+$scope.cursosaprobadosperiodo._id, query).then(function(result) {
+//         $timeout(function() {
+//           params.total(result.total);
+//           $defer.resolve(result.data);
+//           $scope.UI.refresh = false;
+//         }, 500);
+//       });
+//     }
+//   });
+// };
+// //
+$scope.ListDetallePlanEstudios = function () {
   $scope.tableParams = new NgTableParams({
     page: 1,
     count: 1000,
@@ -118,9 +161,8 @@ $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
     getData: function($defer, params) {
       var query;
       query = params.url();
-
       $scope.UI.refresh = true;
-      service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
+      service2.customGET($scope.filter._periodo._id, query).then(function(result) {
         $timeout(function() {
           params.total(result.total);
           $defer.resolve(result.data);
@@ -181,8 +223,8 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
       if(item._id !== element._id){
-         console.log(item._id);
-         idcurso = item._id;
+         console.log('Idcursoselecc:'+item._curso._id);
+         idcurso = item._curso._id;
         element.active = false;
       }
     });
