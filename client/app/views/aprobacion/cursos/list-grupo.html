@@ -78,7 +78,9 @@
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
-                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
+
+                <!-- <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td> -->
+                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._id}}</td>
                 <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
                 <td data-title="'N° Creditos'">{{item.creditos}}</td>
                 <td data-title="'N° Horas'">{{item.horas_total}}</td>
