@@ -29,8 +29,7 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     service1,
     serviceFacultad,
     servicePeriodo,
-    idcurso
-    ;
+    idcurso;
 
     $scope.UI = {
       refresh: false,
@@ -162,7 +161,6 @@ $scope.New = function New($event){
       table:$scope.tableParams,
       service: service1,
       curso: idcurso
-
     },
     controller: 'GrupoNewCtrl'
   });
@@ -209,6 +207,7 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
       if (form.$valid) {
         //declaro el servicio con la ruta correcta del endpoint.
          console.log($scope.model);
+
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
@@ -231,5 +230,4 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
       $mdDialog.hide();
     };
 }]);
-
 }).call(this);
