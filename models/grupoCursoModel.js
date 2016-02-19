@@ -12,6 +12,8 @@ var GrupoCursoSchema = new Schema({
         ref: 'Seccion',
         required: true
     },
+    cupos:Number,
+    totalCupos:Number,
     matriculados:Number,
     inscritos:Number,
     retiroParcial:Number,

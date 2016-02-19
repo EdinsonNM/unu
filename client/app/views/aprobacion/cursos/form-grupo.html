@@ -15,7 +15,7 @@
                <div flex>
                    <md-input-container class="md-block">
                      <label>Cupos</label>
-                     <input required name="cupos" ng-model="model.cupo" validate-unique query-model='cursos'  attribute='codigo'>
+                     <input required name="cupos" ng-model="model.totalCupos">
                      <div ng-messages="myForm.codigo.$error"  ng-if="submited">
                        <div ng-message="required">{{message.Required}}</div>
                        <div ng-message="validateUnique">{{message.validateUnique}}</div>
@@ -28,10 +28,10 @@
                <div flex>
                  <md-input-container class="md-block">
                    <label>Grupo</label>
-                  <md-select ng-model="model.grupo">
-                   <md-option value="A">A</md-option>
-                   <md-option value="B">B</md-option>
-                   <md-option value="C">C</md-option>
+                  <md-select ng-model="model._seccion">
+                   <md-option value="56c2d26ff484a8c7400a06e7">C</md-option>
+                   <md-option value="56c2d26ff484a8c7400a06e8">D</md-option>
+                   <md-option value="56c2d26ff484a8c7400a06e9">E</md-option>
                  </md-select>
                  <div ng-messages="myForm.codigo.$error"  ng-if="submited">
                        <div ng-message="required">{{message.Required}}</div>
