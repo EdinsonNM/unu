@@ -123,7 +123,7 @@ nm.getList().then(function (response) {
 //       query = params.url();
 //       $scope.UI.refresh = true;
 //
-//       /********/
+//
 //          var serviceCursos = Restangular.all('cursoaperturadoperiodos');
 //          serviceCursos.getList({
 //             conditions: {
@@ -132,7 +132,7 @@ nm.getList().then(function (response) {
 //          }).then(function (data) {
 //             $scope.cursosaprobadosperiodo = data;
 //          });
-//       /*******/
+//
 //
 //       service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
 //       //service.customGET('methods/aprobacion/'+$scope.cursosaprobadosperiodo._id, query).then(function(result) {
@@ -146,6 +146,7 @@ nm.getList().then(function (response) {
 //   });
 // };
 // //
+
 $scope.ListDetallePlanEstudios = function () {
   $scope.tableParams = new NgTableParams({
     page: 1,
@@ -171,18 +172,6 @@ $scope.ListDetallePlanEstudios = function () {
     }
   });
 };
-
-// $scope.AprobarCurso = function() {
-//   console.log($scope.UI.selected);
-//   service.customPOST({
-//     _periodo: $scope.filter._periodo._id
-//   }, 'methods/aprobacion/'+$scope.UI.selected._id).then(function(result) {
-//     ToastMD.success('Estado actualizado satisfactoriamente');
-//     $scope.Refresh();
-//   }, function(result) {
-//     console.log(result.data.error);
-//   });
-// };
 
 $scope.Refresh = function Refresh() {
   $scope.UI.selected = null;
