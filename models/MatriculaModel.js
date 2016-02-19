@@ -23,11 +23,6 @@ var MatriculaSchema = new Schema({
       ref:'Escuela',
       required:true
     },
-    _detalleMatricula:[{
-      type:Schema.Types.ObjectId,
-      ref:'GrupoCurso',
-      required:true
-    }],
     totalCursos:Number,
     totalCreditos:Number,
     createdAt: Date,
@@ -43,4 +38,4 @@ MatriculaSchema.pre('save', function(next) {
   }
   next();
 });
-module.exports = mongoose.model('Matricula', MatriculaSchema).plural('matricula');
+module.exports = mongoose.model('Matricula', MatriculaSchema).plural('matriculas');
