@@ -18,7 +18,7 @@ var GrupoSchema = new Schema({
 
 
 GrupoSchema.pre('save',function(next){
-	var now = new Date;
+	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
 		this.createdAt=now;

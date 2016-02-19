@@ -16,7 +16,7 @@ var CursoAperturadoPeriodoSchema = new Schema({
   },
   _grupos:[{
     type: Schema.Types.ObjectId,
-    ref: 'GrupoCursos',
+    ref: 'GrupoCurso',
     required: true
   }],
   createdAt:Date,
