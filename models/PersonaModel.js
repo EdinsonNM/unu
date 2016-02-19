@@ -36,8 +36,9 @@ var PersonaSchema = new Schema({
     enum:['Femenino', 'Masculino']
   },
   lugarNacimiento: {
-    nacionalidad:String,
-    ubigeo:String,
+      type: String
+    //nacionalidad:String,
+    //ubigeo:String,
   },
   telefono: {
     type: String

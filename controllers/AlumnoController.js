@@ -1,6 +1,8 @@
 var model = require('../models/AlumnoModel.js');
+var Persona = require('../models/PersonaModel.js');
 var Usuario = require('../models/UsuarioModel.js');
 var Grupo = require('../models/GrupoModel.js');
+
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -24,8 +26,10 @@ module.exports = function() {
           Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
             if(grupoErr) next(grupoErr);
             var usuario = new Usuario(request.body._usuario);
+            var persona = new Persona(request.body._persona);
+            console.log(persona);
             usuario._grupo = objGrupo._id;
-            usuario.email = request.body.email;
+            usuario.email = request.body._persona.email;
             Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
               if(usuarioErr) return next(usuarioErr);
               if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
@@ -33,6 +37,11 @@ module.exports = function() {
               usuario.save(function(error, data){
                 if(error) return response.status(500).send(error);
                 request.body._usuario = data._id;
+
+                persona.save(function(error, data){
+                    console.log(data);
+                    request.body._persona = data._id;
+                });
                 next();
               });
             });

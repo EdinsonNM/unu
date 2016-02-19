@@ -18,8 +18,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Nombres</label>
-                <input required name="nombres" ng-model="model.nombres">
-                <div ng-messages="myForm.nombres.$error" ng-if="submited">
+                <input required name="nombres" ng-model="model._persona.nombres">
+                <div ng-messages="myForm._persona.nombres.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -27,8 +27,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Ap. Paterno</label>
-                <input required name="apellidoPaterno" ng-model="model.apellidoPaterno">
-                <div ng-messages="myForm.apellidoPaterno.$error" ng-if="submited">
+                <input required name="apellidoPaterno" ng-model="model._persona.apellidoPaterno">
+                <div ng-messages="myForm._persona.apellidoPaterno.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -36,8 +36,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Ap. Materno</label>
-                <input required name="apellidoMaterno" ng-model="model.apellidoMaterno">
-                <div ng-messages="myForm.apellidoMaterno.$error" ng-if="submited">
+                <input required name="apellidoMaterno" ng-model="model._persona.apellidoMaterno">
+                <div ng-messages="myForm._persona.apellidoMaterno.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -47,17 +47,43 @@
           <div flex-container="row" flex-gutter="24">
             <div flex-item>
               <md-input-container class="md-block">
-                <label>Docuemnto Indentidad</label>
-                <input required name="documento" ng-model="model.documento">
-                <div ng-messages="myForm.documento.$error" ng-if="submited">
+                <label>Tipo de Documento</label>
+                <md-select ng-model="model._persona.documentoIdentidad.tipo" name="tipo" required>
+                  <md-option ng-repeat="td in tipodocumento" ng-value="td">
+                    {{td}}
+                  </md-option>
+                </md-select>
+                <div ng-messages="myForm.tipodocumento.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
             </div>
             <div flex-item>
               <md-input-container class="md-block">
-                <md-datepicker required name="fechaNacimiento" ng-model="model.fechaNacimiento" md-placeholder="Fecha Nacimiento"></md-datepicker>
-                <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
+                <label>Documento Identidad</label>
+                <input required name="documento" ng-model="model._persona.documentoIdentidad.numero">
+                <div ng-messages="myForm._persona.documentoIdentidad.numero.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Sexo</label>
+                <md-select ng-model="model._persona.sexo" name="sexo" required>
+                  <md-option ng-repeat="sex in sexo" ng-value="sex">
+                    {{sex}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+          </div>
+
+          <div flex-container="row" flex-gutter="24">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <md-datepicker required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" md-placeholder="Fecha Nacimiento"></md-datepicker>
+                <div ng-messages="myForm._persona.fechaNacimiento.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -65,25 +91,13 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Lugar Nac.</label>
-                <input required name="lugarNacimiento" ng-model="model.lugarNacimiento">
-                <div ng-messages="myForm.lugarNacimiento.$error" ng-if="submited">
+                <input required name="lugarNacimiento" ng-model="model._persona.lugarNacimiento">
+                <div ng-messages="myForm._persona.lugarNacimiento.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
             </div>
-          </div>
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
-              <md-input-container class="md-block">
-                <label>Sexo</label>
-                <md-select ng-model="model.sexo" name="sexo" required>
-                  <md-option ng-repeat="sex in sexo" ng-value="sex">
-                    {{sex}}
-                  </md-option>
-                </md-select>
-              </md-input-container>
-            </div>
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Estado Civil</label>
@@ -105,8 +119,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Dirección</label>
-                <input required name="direccion" ng-model="model.direccion" ng-readonly="nombreFound">
-                <div ng-messages="myForm.direccion.$error" ng-if="submited">
+                <input required name="direccion" ng-model="model._persona.direccion" ng-readonly="nombreFound">
+                <div ng-messages="myForm._persona.direccion.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -114,8 +128,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Email</label>
-                <input required name="email" ng-model="model.email">
-                <div ng-messages="myForm.email.$error" ng-if="submited">
+                <input required name="email" ng-model="model._persona.email">
+                <div ng-messages="myForm._persona.email.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -124,8 +138,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Telefono</label>
-                <input required name="telefono" ng-model="model.telefono">
-                <div ng-messages="myForm.telefono.$error" ng-if="submited">
+                <input required name="telefono" ng-model="model._persona.telefono">
+                <div ng-messages="myForm._persona.telefono.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -220,33 +234,33 @@
           </div>
 
           <div flex-container="row" flex-gutter="24" ng-if="includeUserData">
-              <div flex-item>
-                <md-input-container class="md-block">
-                  <label>Código</label>
-                  <input required name="codigo" ng-model="model.codigo">
-                  <div ng-messages="myForm.codigo.$error" ng-if="submited">
-                    <div ng-message="required">{{message.Required}}</div>
-                  </div>
-                </md-input-container>
-              </div>
-              <div flex-item>
-                <md-input-container class="md-block">
-                  <label>Usuario</label>
-                  <input required ng-model="model._usuario.username">
-                  <div ng-messages="myForm._usuario.username.$error" ng-if="submited">
-                    <div ng-message="required">{{message.Required}}</div>
-                  </div>
-                </md-input-container>
-              </div>
-              <div flex-item>
-                <md-input-container class="md-block">
-                  <label>Contraseña</label>
-                  <input required type="password" ng-model="model._usuario.password">
-                  <div ng-messages="myForm._usuario.password.$error" ng-if="submited">
-                    <div ng-message="required">{{message.Required}}</div>
-                  </div>
-                </md-input-container>
-              </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Código</label>
+                <input required name="codigo" ng-model="model.codigo">
+                <div ng-messages="myForm.codigo.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Usuario</label>
+                <input required ng-model="model._usuario.username">
+                <div ng-messages="myForm._usuario.username.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Contraseña</label>
+                <input required type="password" ng-model="model._usuario.password">
+                <div ng-messages="myForm._usuario.password.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
           </div>
         </md-content>
       </md-tab>
