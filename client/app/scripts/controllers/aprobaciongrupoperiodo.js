@@ -30,8 +30,8 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     service2,
     serviceFacultad,
     servicePeriodo,
-    idcurso
-    ;
+    idcurso;
+
 
     $scope.UI = {
       refresh: false,
@@ -123,7 +123,9 @@ nm.getList().then(function (response) {
 //       query = params.url();
 //       $scope.UI.refresh = true;
 //
-//
+
+//       /********/
+
 //          var serviceCursos = Restangular.all('cursoaperturadoperiodos');
 //          serviceCursos.getList({
 //             conditions: {
@@ -132,7 +134,8 @@ nm.getList().then(function (response) {
 //          }).then(function (data) {
 //             $scope.cursosaprobadosperiodo = data;
 //          });
-//
+
+//       /*******/
 //
 //       service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
 //       //service.customGET('methods/aprobacion/'+$scope.cursosaprobadosperiodo._id, query).then(function(result) {
@@ -193,7 +196,6 @@ $scope.New = function New($event){
       table:$scope.tableParams,
       service: service1,
       curso: idcurso
-
     },
     controller: 'GrupoNewCtrl'
   });
@@ -262,5 +264,4 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
       $mdDialog.hide();
     };
 }]);
-
 }).call(this);
