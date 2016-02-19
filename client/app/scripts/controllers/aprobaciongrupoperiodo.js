@@ -26,11 +26,11 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
 
   function($mdSidenav, $q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
 
-    var List,
-    service,
-    serviceGrupo,
+    var service,
+    service1,
     serviceFacultad,
-    servicePeriodo
+    servicePeriodo,
+    idcurso
     ;
 
     $scope.UI = {
@@ -47,10 +47,12 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     var LOCAL = {
       name: 'Grupos por Cursos de Plan de Estudios',
       form: 'views/aprobacion/cursos/form-grupo.html',
-      route: 'planestudiodetalles'
+      route: 'planestudiodetalles',
+      route1: 'grupocursos'
     };
 
 service = Restangular.all(LOCAL.route);
+service1 = Restangular.all(LOCAL.route1);
 $rootScope.app.module = ' > ' + LOCAL.name;
 
 $scope.Detail = function Detail() {
@@ -151,6 +153,7 @@ $scope.Refresh = function Refresh() {
 
 $scope.New = function New($event){
 
+   console.log('IDCURSO:'+idcurso);
   var parentEl = angular.element(document.body);
   $mdDialog.show({
     parent: parentEl,
@@ -159,8 +162,8 @@ $scope.New = function New($event){
     locals:{
       name: LOCAL.name,
       table:$scope.tableParams,
-
-      service: service
+      service: service1,
+      curso: idcurso
     },
     controller: 'GrupoNewCtrl'
   });
@@ -178,6 +181,8 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
       if(item._id !== element._id){
+         console.log(item._id);
+         idcurso = item._id;
         element.active = false;
       }
     });
@@ -190,21 +195,23 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   }
 };
 
-
-
 }
 ])
 
-.controller('GrupoNewCtrl', ['$scope', 'table', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, service, ToastMD, $mdDialog){
+.controller('GrupoNewCtrl', ['$scope', 'table', 'curso', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
+  function($scope, table, curso, name, MessageFactory, service, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    $scope.model = {};
+    $scope.model._cursoAperturadoPeriodo = curso;
+
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
         //declaro el servicio con la ruta correcta del endpoint.
 
+         console.log($scope.model);
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
@@ -217,7 +224,11 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
             default:
           }
 
-        });
+       },function(result){
+          ToastMD.error(result.data.message);
+
+
+       });
       }
     };
     $scope.Cancel = function(){
