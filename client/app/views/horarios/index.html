@@ -51,38 +51,53 @@
 
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
-      <div class="table-responsive">
-        <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
-          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-          <tbody ng-repeat="group in $groups">
-            <tr class="ng-table-group">
-              <td colspan="2">
-                <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
-                  <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                  <strong>Ciclo: {{group.value}} </strong>
-                </a>
-              </td>
-              <td><strong>TOTAL</strong></td>
-              <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
-              <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
-              <td colspan="{{$columns.length-5}}"></td>
-            </tr>
+      <div ng-cloak>
+        <md-content>
+          <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="GRUPOS APERTURADOS">
+              <md-content class="md-padding">
+                <div class="table-responsive">
+                  <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+                    <tbody ng-repeat="group in $groups">
+                      <tr class="ng-table-group">
+                        <td colspan="2">
+                          <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                            <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                            <strong>Ciclo: {{group.value}} </strong>
+                          </a>
+                        </td>
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
+                        <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
+                        <td colspan="{{$columns.length-5}}"></td>
+                      </tr>
 
-            <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
-              <td style="width:30px;">
-                <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
-              </td>
-              <td class="text-left" data-title="'Curso / Grupo'" sortable="curso">{{item._curso.nombre}}</td>
-              <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-              <td data-title="'Ciclo'">{{item.creditos}}</td>
-              <td data-title="'Nro Cupos'">{{item.horas_total}}</td>
-              <td data-title="'N° Matriculados'">{{item.horas_teoria}}</td>
-              <td data-title="'N° Retiros Parciales'">{{item.horas_practica}}</td>
-              <td data-title="'N° Retiros Totales'">{{item.horas_laboratorio}}</td>
-            </tr>
-          </tbody>
-          <tbody>
-        </table>
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+                        <td style="width:30px;">
+                          <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                        </td>
+                        <td class="text-left" data-title="'Curso / Grupo'" sortable="curso">{{item._curso.nombre}}</td>
+                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
+                        <td data-title="'Ciclo'">{{item.creditos}}</td>
+                        <td data-title="'Nro Cupos'">{{item.horas_total}}</td>
+                        <td data-title="'N° Matriculados'">{{item.horas_teoria}}</td>
+                        <td data-title="'N° Retiros Parciales'">{{item.horas_practica}}</td>
+                        <td data-title="'N° Retiros Totales'">{{item.horas_laboratorio}}</td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                  </table>
+                </div>
+              </md-content>
+            </md-tab>
+            <md-tab label="HORARIOS">
+              <md-content class="md-padding">
+
+              </md-content>
+            </md-tab>
+          </md-tabs>
+        </md-content>
       </div>
     </md-content>
   </div>

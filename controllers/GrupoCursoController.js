@@ -69,7 +69,7 @@ module.exports=function(){
                   }
                }
             },
-            {path:'_seccion'}]
+            {path:'_seccion', model:'Seccion'}]
 
           },
 
