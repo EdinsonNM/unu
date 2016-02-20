@@ -150,6 +150,7 @@ nm.getList().then(function (response) {
 // };
 // //
 
+
 $scope.ListDetallePlanEstudios = function () {
   $scope.tableParams = new NgTableParams({
     page: 1,
@@ -165,7 +166,8 @@ $scope.ListDetallePlanEstudios = function () {
       var query;
       query = params.url();
       $scope.UI.refresh = true;
-      service2.customGET($scope.filter._periodo._id, query).then(function(result) {
+      service2.getList().then(function(result) {
+         console.log(result);
         $timeout(function() {
           params.total(result.total);
           $defer.resolve(result.data);
