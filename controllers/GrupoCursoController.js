@@ -58,9 +58,10 @@ module.exports=function(){
             page: page,
             limit: limit,
             populate: [
-            {path:'_programaciones'},
-            {path:'_cursoAperturadoPeriodo'},
-            {path:'_seccion'}]
+              {path:'_programaciones'},
+              {path:'_cursoAperturadoPeriodo'},
+              {path:'_seccion', model:'Seccion'}
+            ]
           },
 
           function(err, results, pageCount, itemCount) {
