@@ -7,7 +7,6 @@ module.exports=function(){
     setup:function(){
       var controller=baucis.rest('CursoAperturadoPeriodo');
       controller.fragment('/cursoaperturadoperiodos');
-
       // controller.query('get',function(request,response,next){
       //    request.baucis.query.populate([{path:'grupos',populate:{path:'_programaciones'}},{path:'_planestudiodetalle',populate:{path:'_curso'}}]);
       //    next();
