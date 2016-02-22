@@ -11,7 +11,7 @@
           <md-input-container class="md-block">
             <label>Periodo</label>
             <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
-              <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo" >
                 {{periodo.nombre}}
               </md-option>
             </md-select>
@@ -30,7 +30,7 @@
         <div flex-item>
           <md-input-container class="md-block">
             <label>Escuela</label>
-            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()" >
               <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                 {{escuela.nombre}}
               </md-option>
@@ -40,7 +40,7 @@
         <div flex-item>
           <md-input-container class="md-block">
             <label>Plan Estudios</label>
-            <md-select ng-model="filter._planestudios" ng-model-options="{trackBy: '$value._id'}" ng-change="ListDetallePlanEstudios()">
+            <md-select ng-model="filter._planestudios" ng-model-options="{trackBy: '$value._id'}" ng-change="ListGruposAprobados()" >
               <md-option ng-repeat="plan in planestudios" ng-value="plan">
                 {{plan.nombre}}
               </md-option>
@@ -73,29 +73,29 @@
                 <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
                 <td colspan="{{$columns.length-5}}"></td>
               </tr>
+              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
 
-              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+
+
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
 
-                <!-- <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td> -->
-                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._id}}</td>
-                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-                <td data-title="'N° Creditos'">{{item.creditos}}</td>
-                <td data-title="'N° Horas'">{{item.horas_total}}</td>
-                <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
-                <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
-                <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
+                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._planestudiodetalle._curso.nombre}}</td>
+                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._planestudiodetalle._curso.codigo}}</td>
+                <td data-title="'N° Creditos'">{{item._planestudiodetalle.creditos}}</td>
+                <td data-title="'N° Horas'">{{item._planestudiodetalle.horas_total}}</td>
+                <td data-title="'N° Horas Teoria'">{{item._planestudiodetalle.horas_teoria}}</td>
+                <td data-title="'N° Horas Práctica'">{{item._planestudiodetalle.horas_practica}}</td>
+                <td data-title="'N° Horas Laboratorio'">{{item._planestudiodetalle.horas_laboratorio}}</td>
                 <td data-title="'Estado'">
                   <strong>
                       <a href  title="{{item.aprobacioncursosperiodo}}" >
-                        <span ng-if="item._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
-                        <span ng-if="item._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
+                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
+                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
                       </a>
                     </strong>
                 </td>
-
               </tr>
 
             </tbody>
