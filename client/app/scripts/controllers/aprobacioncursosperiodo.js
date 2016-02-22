@@ -104,6 +104,7 @@
 
               $scope.UI.refresh = true;
               service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
+                 console.log(result);
                 $timeout(function() {
                   params.total(result.total);
                   $defer.resolve(result.data);
@@ -147,8 +148,8 @@
 
 
       $scope.EnabledEdit = function EnabledEdit(item, $groups) {
-          console.log(item);
-          console.log($groups);
+          console.log('iTEM:'+item);
+          console.log('GRUPO:'+$groups);
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
 

@@ -28,9 +28,10 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     var service,
     service1,
     service2,
+    service3,
     serviceFacultad,
     servicePeriodo,
-    idcurso;
+    idcursoAprobado;
 
 
     $scope.UI = {
@@ -85,7 +86,7 @@ $scope.LoadEcuelas = function LoadEcuelas() {
     }
   }).then(function(data) {
     $scope.escuelas = data;
-  });
+});
 };
 $scope.ListPlanEstudios = function ListPlanEstudios() {
   var servicePlanestudios = Restangular.all('planestudios');
@@ -96,83 +97,40 @@ $scope.ListPlanEstudios = function ListPlanEstudios() {
   })
   .then(function(data) {
     $scope.planestudios = data;
+    console.log('PLanes de estudio:'+data);
   });
 };
 new LoadFacultades();
 new LoadPeriodos();
-/*
-var nm = Restangular.all('grupocursos');
-nm.getList().then(function (response) {
-  console.log(response);
-});
-*/
 
-// $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
-//   $scope.tableParams = new NgTableParams({
-//     page: 1,
-//     count: 1000,
-//     filter: {
-//       _planestudio: $scope.filter._planestudios._id
-//     }
-//   }, {
-//     total: 0,
-//     groupBy: 'ciclo',
-//     counts: [],
-//     getData: function($defer, params) {
-//       var query;
-//       query = params.url();
-//       $scope.UI.refresh = true;
-//
-
-//       /********/
-
-//          var serviceCursos = Restangular.all('cursoaperturadoperiodos');
-//          serviceCursos.getList({
-//             conditions: {
-//                _periodo: $scope.filter._periodo._id
-//             }
-//          }).then(function (data) {
-//             $scope.cursosaprobadosperiodo = data;
-//          });
-
-//       /*******/
-//
-//       service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
-//       //service.customGET('methods/aprobacion/'+$scope.cursosaprobadosperiodo._id, query).then(function(result) {
-//         $timeout(function() {
-//           params.total(result.total);
-//           $defer.resolve(result.data);
-//           $scope.UI.refresh = false;
-//         }, 500);
-//       });
-//     }
-//   });
-// };
-// //
-
-
-$scope.ListDetallePlanEstudios = function () {
+$scope.ListGruposAprobados = function () {
   $scope.tableParams = new NgTableParams({
     page: 1,
     count: 1000,
-    filter: {
-      _planestudio: $scope.filter._planestudios._id
-    }
+     filter: {
+       _periodo: $scope.filter._periodo._id
+     }
   }, {
     total: 0,
-    groupBy: 'ciclo',
+    groupBy: function(item) {
+           return item._planestudiodetalle.ciclo;
+      },
     counts: [],
     getData: function($defer, params) {
       var query;
-      query = params.url();
+            query = params.url();
+            $scope.UI.refresh = true;
+      console.log('entra a la funcion');
       $scope.UI.refresh = true;
-      service2.getList().then(function(result) {
-         console.log(result);
-        $timeout(function() {
-          params.total(result.total);
-          $defer.resolve(result.data);
-          $scope.UI.refresh = false;
-        }, 500);
+      service2.customGET('methods/paginate', query).then(function(result) {
+
+         $timeout(function() {
+           params.total(result.total);
+           $defer.resolve(result.data);
+           console.log(result);
+           $scope.UI.refresh = false;
+         }, 500);
+
       });
     }
   });
@@ -187,7 +145,7 @@ $scope.Refresh = function Refresh() {
 
 
 $scope.New = function New($event){
-   console.log('IDCURSO:'+idcurso);
+   //console.log('IDCURSO:'+idcurso);
   var parentEl = angular.element(document.body);
   $mdDialog.show({
     parent: parentEl,
@@ -197,7 +155,9 @@ $scope.New = function New($event){
       name: LOCAL.name,
       table:$scope.tableParams,
       service: service1,
-      curso: idcurso
+      curso: idcursoAprobado,
+      idFacultad: $scope.filter._facultad,
+      idEscuela: $scope.filter._escuela
     },
     controller: 'GrupoNewCtrl'
   });
@@ -215,8 +175,6 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
       if(item._id !== element._id){
-         console.log('Idcursoselecc:'+item._curso._id);
-         idcurso = item._curso._id;
         element.active = false;
       }
     });
@@ -225,19 +183,36 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
   if (item.active) {
     $scope.UI.editMode = true;
     $scope.UI.selected = item;
-    $scope.UI.selected.route = LOCAL.route;
+   idcursoAprobado = item._id;
   }
 };
 }
 ])
 
-.controller('GrupoNewCtrl', ['$scope', 'table', 'curso', 'name', 'MessageFactory', 'service', 'ToastMD', '$mdDialog',
-  function($scope, table, curso, name, MessageFactory, service, ToastMD, $mdDialog){
+.controller('GrupoNewCtrl', ['$scope', 'table', 'name', 'curso', 'idFacultad', 'idEscuela', 'MessageFactory', 'service', 'ToastMD', '$mdDialog','NgTableParams', '$timeout', 'Restangular',
+  function($scope, table, name, curso, idFacultad, idEscuela, MessageFactory, service, ToastMD, $mdDialog, NgTableParams, $timeout, Restangular){
+
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.model = {};
-    $scope.model._cursoAperturadoPeriodo = curso;
+    $scope.model._cursoAperturadoPeriodo =curso;
+    console.log('Modelo Curso Aperturado ID'+ $scope.model._cursoAperturadoPeriodo);
+
+
+    var LoadSecciones = function() {
+      var serviceSecciones = Restangular.all('secciones');
+      serviceSecciones.getList({
+        conditions: {
+           _facultad: idFacultad,
+           _escuela: idEscuela
+        }
+      }).then(function(data) {
+        $scope.secciones = data;
+    });
+    };
+
+    new LoadSecciones();
 
     $scope.Save = function(form) {
       $scope.submited = true;
@@ -265,5 +240,6 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
+
 }]);
 }).call(this);

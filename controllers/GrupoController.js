@@ -57,8 +57,7 @@ module.exports=function(){
                 {title:'Equivalencias',icon:'',url:'app.planestudiosequivalencia',order:3},
                 {title:'Aprobación Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:4},
                 {title:'Aprobación Cursos Periodo',icon:'',url:'app.aprobacioncursosperiodo',order:5},
-                {title:'Reportes',icon:'',url:'app.',order:6},
-                {title:'Gestionar Grupos por Curso',icon:'',url:'app.grupocursoperiodo',order:7}
+                {title:'Reportes',icon:'',url:'app.',order:6}
               ],
               style:{
                 color: 'white',
@@ -77,7 +76,7 @@ module.exports=function(){
                 {title:'Aulas',icon:'',url:'app.aulas',order:2},
                 {title:'Secciones',icon:'',url:'app.secciones',order:3},
                 {title:'Docentes',icon:'',url:'app.docentes',order:4},
-                {title:'Curso - Grupo',icon:'',url:'app.',order:5},
+                {title:'Curso - Grupo',icon:'',url:'app.grupocursoperiodo',order:5},
                 {title:'Horario',icon:'',url:'app.',order:6},
                 {title:'Reportes',icon:'',url:'app.',order:7}
               ],
