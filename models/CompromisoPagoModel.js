@@ -14,12 +14,20 @@ var CompromisopagoSchema = new Schema({
       ref:'Persona',
       required:true
     },
+    codigoPago:{
+      type:String//dni o cu
+    },
+    codigoUniversitario:{
+      type:String
+    },
     _tasa:{
       type:Schema.Types.ObjectId,
       ref:'Tasa',
       required:true
     },
-    _identificador:{//PARA LAS DEUDAS GENERALES QUE PUEDEN SER MULTIPLES PERO QUE EL DEUDOR AL MOMENTO DE PAGAR PUEDE ESCOGER CUALES PAGAR COMO LOS EXAMENES SUSTITUTORIOS -> IRIA EN EL CAMPO "Campo de Identificación Adicional" DEL ARCHIVO DE ENTRADA AL BANCO
+    //PARA LAS DEUDAS GENERALES QUE PUEDEN SER MULTIPLES PERO QUE EL DEUDOR AL MOMENTO DE PAGAR
+    //PUEDE ESCOGER CUALES PAGAR COMO LOS EXAMENES SUSTITUTORIOS -> IRIA EN EL CAMPO "Campo de Identificación Adicional" DEL ARCHIVO DE ENTRADA AL BANCO
+    _identificador:{
       type: Number,
       required:true,
       default:1
@@ -36,10 +44,7 @@ var CompromisopagoSchema = new Schema({
         fechaImportacion:Date//FECHA EN LA QUE SE REALIZO LA IMPORTACION DE LOS PAGOS
       }
     ],
-    descripcion:{//PODRIA TOMARSE COMO EL IDENTIFICADOR
-      type:String,
-  		required:true
-    },
+
     pagado:{
       type:Boolean,
   		required:true,
@@ -65,6 +70,11 @@ CompromisopagoSchema.pre('save',function(next){
 	if (!this.createdAt){
 		this.createdAt=now;
 	}
+  var totalPagado = 0;
+  this._detallePago.forEach(function(item){
+    totalPagado+=item.montoPago;
+  });
+  this.importeTotalPagado=totalPagado;
 	next();
 });
 CompromisopagoSchema.plugin(mongoosePaginate);
