@@ -15,7 +15,6 @@
                <div flex>
                    <md-input-container class="md-block">
                      <label>Cupos</label>
-
                      <input required name="cupos" ng-model="model.totalCupos">
                      <div ng-messages="myForm.codigo.$error"  ng-if="submited">
                        <div ng-message="required">{{message.Required}}</div>
@@ -29,6 +28,7 @@
                <div flex>
                  <md-input-container class="md-block">
                    <label>Grupo</label>
+
                    <md-select ng-model="model._seccion" ng-model-options="{trackBy: '$value._id'}">
                     <md-option ng-repeat="seccion in secciones" ng-value="seccion" >
                       {{seccion.nombre}}
