@@ -31,14 +31,16 @@
       serviceEscuela,
       serviceDocente,
       serviceAula,
-      sevicePabellon;
-      
+      sevicePabellon,
+      serviceProgramacionGrupoCurso;
+
       var docentes = [];
       var aulas = [];
       var pabellones = [];
       var LOCAL = {
         name: 'Horarios',
-        form: 'views/horarios/form.html'
+        form: 'views/horarios/form.html',
+        horario_form : 'views/horarios/form-horario.html'
       };
       $scope.UI = {
         refresh: false,
@@ -48,6 +50,7 @@
         selected: null,
         customActions: []
       };
+      $scope.current_menu = 'grupos';
 
       /**
        * lista a todos los docentes
@@ -72,6 +75,10 @@
        */
       service = Restangular.all(LOCAL.route);
       $rootScope.app.module = ' > ' + LOCAL.name;
+
+      $scope.showHorariosMenu = function(menu){
+        $scope.current_menu = menu;
+      };
 
       /**
        * obtienes los datos iniciales para el filtro
@@ -127,7 +134,7 @@
       /**
        * permite abrir las opciones múltiples al lado inferior derecho
        */
-      $scope.EnabledAdd =function EnabledEdit(item){
+      $scope.EnabledAdd =function(item){
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
         angular.forEach($scope.tableParams.data,function(element){
@@ -138,6 +145,23 @@
 
         if( item.active ){
           $scope.UI.editMode = true;
+          $scope.UI.editModeHorario = false;
+          $scope.UI.selected = item;
+          $scope.UI.selected.route = LOCAL.route;
+        }
+      };
+      $scope.EnabledAddHorario =function(item){
+        $scope.UI.editMode = false;
+        $scope.UI.selected = null;
+        angular.forEach($scope.tableParamsHorarios.data,function(element){
+          if(item._id !== element._id){
+            element.active = false;
+          }
+        });
+
+        if( item.active ){
+          $scope.UI.editMode = false;
+          $scope.UI.editModeHorario = true;
           $scope.UI.selected = item;
           $scope.UI.selected.route = LOCAL.route;
         }
@@ -148,6 +172,7 @@
        */
       $scope.ListaCursosGrupos = function () {
         serviceGrupoCurso = Restangular.all('grupocursos');
+        serviceProgramacionGrupoCurso = Restangular.all('programaciongrupocursos');
         $scope.tableParams = new NgTableParams({
           page: 1,
           count: 1000
@@ -163,7 +188,27 @@
             $scope.UI.refresh = true;
             serviceGrupoCurso.customGET('methods/paginate', query).then(function(result) {
               $timeout(function() {
-                console.log(result);
+                $defer.resolve(result.data);
+                $scope.UI.refresh = false;
+              }, 500);
+            });
+          }
+        });
+        $scope.tableParamsHorarios = new NgTableParams({
+          page: 1,
+          count: 1000
+        }, {
+          total: 0,
+          groupBy: function(dato){
+            return dato._nombre_curso + '-' + dato._codigo_curso + '-' + dato._grupo_curso;
+          },
+          counts: [],
+          getData: function($defer, params) {
+            var query;
+            query = params.url();
+            $scope.UI.refresh = true;
+            serviceProgramacionGrupoCurso.customGET('methods/paginate', query).then(function(result) {
+              $timeout(function() {
                 $defer.resolve(result.data);
                 $scope.UI.refresh = false;
               }, 500);
@@ -185,13 +230,28 @@
           locals:{
             name : LOCAL.name,
             table : $scope.tableParams,
-            serviceGrupoCurso : serviceGrupoCurso,
             groupCurso : groupCurso,
             aulas : aulas,
             pabellones : pabellones,
-            docentes : docentes
+            docentes : docentes,
+            serviceProgramacionGrupoCurso: serviceProgramacionGrupoCurso
           },
           controller : 'CursoHorarioCtrl'
+        });
+      };
+      $scope.NewHorario = function ($event){
+        var parentEl = angular.element(document.body);
+        var horarioCurso = Restangular.copy($scope.UI.selected);
+        $mdDialog.show({
+          parent: parentEl,
+          targetEvent: $event,
+          templateUrl : LOCAL.horario_form,
+          locals:{
+            name : LOCAL.name,
+            table : $scope.tableParamsHorarios,
+            horarioCurso : horarioCurso
+          },
+          controller : 'CursoHorarioFechaCtrl'
         });
       };
 
@@ -205,13 +265,13 @@
       table,
       name,
       MessageFactory,
-      serviceGrupoCurso,
       ToastMD,
       $mdDialog,
       aulas,
       pabellones,
       docentes,
-      groupCurso
+      groupCurso,
+      serviceProgramacionGrupoCurso
     ){
 
       /**
@@ -225,7 +285,6 @@
       $scope.model = {};
       $scope.modalidadCurso = ['Teoria', 'Practica', 'Seminario', 'Laboratorio', 'Otros'];
       $scope.modalidadDocente = ['Titular', 'Auxiliar', 'Otro'];
-      $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
       $scope.aulas = aulas;
       $scope.pabellones = pabellones;
       $scope.docentes = docentes;
@@ -239,10 +298,65 @@
       $scope.Save = function(form) {
         $scope.submited = true;
         if (form.$valid) {
-          console.log($scope.model);
-          return;
-          serviceGrupoCurso.post($scope.model).then(function() {
+          var horario = {
+            _grupoCurso : groupCurso._id,
+            _aula : $scope.model.aula._id,
+            _docente : $scope.model.docente._id,
+            modalidadClaseGrupo : $scope.model.modalidad_curso,
+            modalidadDocente : $scope.model.modalidad_docente,
+            horarios : []
+          };
+          serviceProgramacionGrupoCurso.post(horario).then(function() {
             ToastMD.success(MessageFactory.Form.Saved);
+            $mdDialog.hide();
+            table.reload();
+          });
+        }
+      };
+      $scope.Cancel = function(){
+        $mdDialog.hide();
+      };
+    })
+
+    /**
+     * controlador para agregar fechas al horario
+     */
+    .controller('CursoHorarioFechaCtrl', function(
+      $scope,
+      table,
+      name,
+      MessageFactory,
+      ToastMD,
+      $mdDialog,
+      horarioCurso
+    ){
+
+      /**
+       * parámetros iniciales
+       */
+      $scope.includeActive = false;
+      $scope.submited = false;
+      $scope.title = MessageFactory.Form.New.replace('{element}',name);
+      $scope.Buttons = MessageFactory.Buttons;
+      $scope.message = MessageFactory.Form;
+      $scope.model = {};
+      $scope.horario = horarioCurso;
+      $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+
+      /**
+       * registra el horario
+       */
+      $scope.Save = function(form) {
+        $scope.horario.route = 'programaciongrupocursos';
+        $scope.horario.horarios.push({
+          dia : $scope.model.dia,
+          horaInicio : $scope.model.horaInicio,
+          horaFin : $scope.model.horaFin
+        });
+        $scope.submited = true;
+        if (form.$valid) {
+          $scope.horario.put().then(function() {
+            ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();
             table.reload();
           });

@@ -92,7 +92,50 @@
             </md-tab>
             <md-tab label="HORARIOS">
               <md-content class="md-padding">
-
+                <div class="table-responsive">
+                  <table ng-table="tableParamsHorarios" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+                    <tbody ng-repeat="group in $groups">
+                      <tr class="ng-table-group">
+                        <td colspan="2">
+                          <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                            <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                            <strong>{{ group.value.split('-')[0] }}</strong>
+                          </a>
+                        </td>
+                        <td><strong>{{ group.value.split('-')[1] }}</strong></td>
+                        <td><strong>{{ group.value.split('-')[2] }} </strong></td>
+                        <td></td>
+                        <td colspan="{{ $columns.length-5 }}"></td>
+                      </tr>
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAddHorario(item,$groups)">
+                        <td style="width:30px;">
+                          <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                        </td>
+                        <td class="text-left" data-title="'Curso / Docente'" sortable="curso">{{ item._docente.nombres }} {{ item._docente.apellidos }}</td>
+                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"></td>
+                        <td data-title="'Grupo'"></td>
+                        <td data-title="'Pabellón'">{{ item._aula._pabellon.abreviatura }}</td>
+                        <td data-title="'Aula'">{{ item._aula.abreviatura }}</td>
+                        <td data-title="'Día'">
+                          <md-list>
+                            <md-list-item ng-repeat="horario in item.horarios">
+                              <p> {{ horario.dia }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                        <td data-title="'Hora Inicio / Hora Fin'">
+                          <md-list>
+                            <md-list-item ng-repeat="horario in item.horarios">
+                              <p> {{ horario.horaInicio | date : 'hh:mm' }} / {{ horario.horaFin | date : 'hh:mm' }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                  </table>
+                </div>
               </md-content>
             </md-tab>
           </md-tabs>
@@ -136,6 +179,30 @@
    <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="Delete($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
      <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+   </md-button>
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>
+
+<md-fab-speed-dial ng-if="UI.editModeHorario" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
+   <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
+     <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-building fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+   </md-button>
+   <!--end custom actions-->
+
+   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="NewHorario($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
    </md-button>
    <!--end default actions-->
  </md-fab-actions>
