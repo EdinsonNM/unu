@@ -24,8 +24,8 @@ module.exports = function() {
         Q.fcall(function(){
           var defer = Q.defer();
           Grupo.findOne({codigo:'ALUMNO'}).exec(function(err,data){
-            if(err) return defer.reject(err);
-            if(!data) return  defer.reject("No se encontro");
+            if(err) return defer.reject({status:500,err:err});
+            if(!data) return  defer.reject({status:500,err:"No se encontro el grupo correspondiente al usuario"});
             defer.resolve(data);
 
           });
@@ -33,37 +33,43 @@ module.exports = function() {
         })
         .then(function(grupo){
           var defer = Q.defer();
-          var usuario = new Usuario(request.body._usuario);
-          usuario._grupo = grupo._id;
-          usuario.save(function(err,usuario){
-            if(err) return defer.reject(err);
-            defer.resolve(usuario);
+
+          Usuario.findOne({username: request.body._usuario.username}, function(err, usuario){
+            if(err) return defer.reject({status:500,err:err});
+            if(usuario) return defer.reject({status:412,message:'Usuario ya existe'});
+            usuario = new Usuario(request.body._usuario);
+            usuario._grupo = grupo._id;
+            usuario.save(function(err,usuario){
+              if(err) return defer.reject({status:500,err:err});
+              defer.resolve(usuario);
+            });
           });
+
           return defer.promise;
         },function(err){
-          response.status(500).send(err);
+          response.status(err.status).send(err);
         })
         .then(function(usuario){
           var defer = Q.defer();
           Persona.findOne({'documento':request.body._persona.documento},function(err,persona){
             var defer = Q.defer();
-            if(err) return defer.reject(err);
+            if(err) return defer.reject({status:500,err:err});
             if(!persona) persona = new Persona(request.body._persona);
             persona.save(function(err,per){
-              if(err) return defer.reject(err);
+              if(err) return defer.reject({status:500,err:err});
               defer.resolve({usuario:usuario,persona:per});
             });
           });
           return defer.promise;
         },function(err){
-          response.status(500).send(err);
+          response.status(err.status).send(err);
         })
         .then(function(data){
           request.body._usuario = data.usuario._id;
           request.body._persona = data.persona._id;
           next();
         },function(err){
-          response.status(500).send();
+          response.status(err.status).send();
         });
         /*if(request.body._usuario){
           //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
