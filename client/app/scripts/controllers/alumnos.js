@@ -232,9 +232,9 @@
     $scope.situaciones = situaciones;
     $scope.condiciones = condiciones;
     $scope.modalidades = modalidades;
-    $scope.model = {};
-    $scope.model._usuario = {username: '', password: '', email: ''};
-    $scope.model._persona = {nombres: '', apellidoPaterno: '', apellidoMaterno:'', documentoIdentidad:{}, fechaNacimiento: '', sexo:'', telefono:'', direccion:'', email:''};
+    $scope.model = {_usuario:{},_persona:{}};
+    //$scope.model._usuario = {username: '', password: '', email: ''};
+    //$scope.model._persona = {nombres: '', apellidoPaterno: '', apellidoMaterno:'', tipoDocumento:'DNI',documento:'', fechaNacimiento: '', sexo:'', telefono:'', direccion:'', email:''};
     $scope.LoadEscuelas = function LoadEscuelas(){
       var serviceEscuela = Restangular.all(route_escuelas);
       serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){

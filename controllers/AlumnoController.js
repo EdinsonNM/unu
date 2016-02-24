@@ -31,17 +31,38 @@ module.exports = function() {
           });
           return defer.promise;
         })
-        .then(function(err,grupo){
+        .then(function(grupo){
+          var defer = Q.defer();
           var usuario = new Usuario(request.body._usuario);
-          var persona = new Persona(request.body._persona);
+          usuario._grupo = grupo._id;
+          usuario.save(function(err,usuario){
+            if(err) return defer.reject(err);
+            defer.resolve(usuario);
+          });
+          return defer.promise;
         },function(err){
           response.status(500).send(err);
-        });
-        .then(function(err,data){
-          console.log("err:",err,'data:',data);
-          response.status(200).send();
+        })
+        .then(function(usuario){
+          var defer = Q.defer();
+          Persona.findOne({'documento':request.body._persona.documento},function(err,persona){
+            var defer = Q.defer();
+            if(err) return defer.reject(err);
+            if(!persona) persona = new Persona(request.body._persona);
+            persona.save(function(err,per){
+              if(err) return defer.reject(err);
+              defer.resolve({usuario:usuario,persona:per});
+            });
+          });
+          return defer.promise;
         },function(err){
-          console.log("err:"+err);
+          response.status(500).send(err);
+        })
+        .then(function(data){
+          request.body._usuario = data.usuario._id;
+          request.body._persona = data.persona._id;
+          next();
+        },function(err){
           response.status(500).send();
         });
         /*if(request.body._usuario){

@@ -13,7 +13,7 @@ module.exports = function() {
                 res.status(200).send(enumValues);
             });
             controller.get('/model/tipodocumento', function(req, res, next){
-              var enumValues = model.schema.path('documentoIdentidad.tipo').enumValues;
+              var enumValues = model.schema.path('tipoDocumento').enumValues;
               res.status(200).send(enumValues);
             });
 
