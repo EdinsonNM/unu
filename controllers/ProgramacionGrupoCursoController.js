@@ -51,7 +51,7 @@ module.exports=function(){
       });
 
       controller.get('/methods/paginate', function(req, res) {
-        var limit = parseInt(req.query.count);
+        var limit = parseInt(req.query.count) || 1000;
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
         model.paginate(
@@ -96,6 +96,74 @@ module.exports=function(){
               item._doc._codigo_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
               item._doc._grupo_curso = item._grupoCurso._seccion.nombre;
               return item;
+            });
+            var obj = {
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
+              data: datos
+            };
+            res.send(obj);
+          }
+        );
+      });
+
+      /**
+       * nuevo endpoint para los filtros
+       */
+      controller.get('/methods/paginate/filter', function(req, res) {
+        var limit = parseInt(req.query.count);
+        var page = parseInt(req.query.page) || 1;
+        var filter = req.query.filter;
+        var conditions = req.query.conditions;
+        model.paginate(
+          conditions, {
+            page: page,
+            limit: limit,
+            populate: [{
+              path : '_grupoCurso',
+              model : 'GrupoCurso',
+              populate : [{
+                path :'_cursoAperturadoPeriodo',
+                model : 'CursoAperturadoPeriodo',
+                populate : [{
+                  path : '_planestudiodetalle',
+                  model : 'Planestudiodetalle',
+                  populate : [{
+                    path : '_curso',
+                    model : 'Curso'
+                  }]
+                }]
+              },{
+                path : '_seccion',
+                model : 'Seccion'
+              }]
+            },{
+              path : '_aula',
+              model : 'Aula',
+              populate : [{
+                path : '_pabellon',
+                model : 'Pabellon'
+              }]
+            },{
+              path : '_docente',
+              model : 'Docente'
+            }
+            ]
+          },
+
+          function(err, results, pageCount, itemCount) {
+            var datos = [];
+            results.docs.forEach(function(item){
+              if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
+                item._doc._nombre_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+                item._doc._codigo_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+                item._doc._grupo_curso = item._grupoCurso._seccion.nombre;
+                datos.push(item);
+              }
             });
             var obj = {
               total: results.total,
