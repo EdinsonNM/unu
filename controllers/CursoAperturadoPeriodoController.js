@@ -49,9 +49,10 @@ module.exports=function(){
             limit: limit,
             populate:[
                {
-                  path:'grupos',
+                  path:'_grupos',
                   populate:{
-                  path:'_programaciones'
+                  path:'_seccion',
+                  model: "Seccion"
                   }
                },
                {
