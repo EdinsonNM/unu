@@ -19,14 +19,12 @@ var PersonaSchema = new Schema({
     type: String,
     required: true
   },
-  documentoIdentidad: {
-      tipo: {
-          type: String,
-          enum: ['DNI', 'CARNET EXTRANJERIA'],
-          default: 'DNI'
-      },
-      numero: String
+  tipoDocumento: {
+      type: String,
+      enum: ['DNI', 'CARNET EXTRANJERIA'],
+      default: 'DNI'
   },
+  documento: String,
   fechaNacimiento: {
     type: Date
     //,required: true

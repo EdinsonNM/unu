@@ -48,7 +48,7 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Tipo de Documento</label>
-                <md-select ng-model="model._persona.documentoIdentidad.tipo" name="tipo" required>
+                <md-select ng-model="model._persona.tipoDocumento" name="tipo" required>
                   <md-option ng-repeat="td in tipodocumento" ng-value="td">
                     {{td}}
                   </md-option>
@@ -61,8 +61,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Documento Identidad</label>
-                <input required name="documento" ng-model="model._persona.documentoIdentidad.numero">
-                <div ng-messages="myForm._persona.documentoIdentidad.numero.$error" ng-if="submited">
+                <input required name="documento" ng-model="model._persona.documento">
+                <div ng-messages="myForm._persona.documento.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -128,8 +128,8 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Email</label>
-                <input required name="email" ng-model="model._persona.email">
-                <div ng-messages="myForm._persona.email.$error" ng-if="submited">
+                <input required name="email" ng-model="model._usuario.email">
+                <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
