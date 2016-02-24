@@ -55,7 +55,7 @@ module.exports=function(){
         var filter = req.query.filter;
         var conditions = req.query.conditions;
         model.paginate(
-          filter, {
+          {}, {
             page: page,
             limit: limit,
             populate: [

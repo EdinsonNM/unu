@@ -350,6 +350,8 @@
             $mdDialog.hide();
             table.reload();
             tableHorarios.reload();
+          },function(result){
+            ToastMD.error(result.data.message);
           });
         }
       };
