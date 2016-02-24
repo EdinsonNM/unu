@@ -66,14 +66,6 @@ module.exports=function(){
           },
 
           function(err, results, pageCount, itemCount) {
-            //  var datos = results.docs.map(function(item){
-            //   item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-            //   item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-            //   item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
-            //   item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
-            //   return item;
-            // });
-
             var obj = {
               total: results.total,
               perpage: limit*1,
@@ -87,6 +79,57 @@ module.exports=function(){
           }
         );
       });
+
+      controller.get('/methods/paginate/filtrado', function(req, res) {
+        var limit = parseInt(req.query.count);
+        var page = parseInt(req.query.page) || 1;
+        var filter = req.query.filter;
+        var conditional = req.query.conditional;
+        model.paginate(
+          conditional, {
+            page: page,
+            limit: limit,
+            populate:[
+               {
+                  path:'_grupos',
+                  populate:{
+                  path:'_seccion',
+                  model: "Seccion"
+                  }
+               },
+               {
+                  path:'_planestudiodetalle',
+                  populate:{
+                     path:'_curso',
+                     model:"Curso"
+                  }
+               }
+            ]
+          },
+
+          function(err, results, pageCount, itemCount) {
+             var datos = [];
+             results.docs.forEach(function(item){
+               if(filter._periodo == item._doc._periodo && filter._planestudio == item._doc._planestudiodetalle._planestudio ){
+                  datos.push(item);
+               }
+             });
+
+            var obj = {
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
+            //   data: results.docs
+              data: datos
+            };
+            res.send(obj);
+          }
+        );
+      });
+
     }
   };
 };
