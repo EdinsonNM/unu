@@ -95,7 +95,7 @@
                 <div class="table-responsive">
                   <table ng-table="tableParamsHorarios" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
                     <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-                    <tbody ng-repeat="group in $groups">
+                    <tbody ng-repeat="group in $groups" ng-show="currentHorario(group)">
                       <tr class="ng-table-group">
                         <td colspan="2">
                           <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
@@ -108,7 +108,7 @@
                         <td></td>
                         <td colspan="{{ $columns.length-5 }}"></td>
                       </tr>
-                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAddHorario(item)">
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAddHorario(item)" ng-show="currentItemHorario(item)">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
