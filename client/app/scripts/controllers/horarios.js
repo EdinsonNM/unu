@@ -52,6 +52,8 @@
       };
       $scope.current_menu = 'grupos';
 
+      serviceProgramacionGrupoCurso = Restangular.all('programaciongrupocursos');
+
       /**
        * lista a todos los docentes
        */
@@ -132,6 +134,31 @@
       $scope.filter = {};
 
       /**
+       * obtiene los datos iniciales para la pestaña de horarios
+       */
+      $scope.tableParamsHorarios = new NgTableParams({
+        page: 1,
+        count: 1000
+      }, {
+        total: 0,
+        groupBy: function(dato){
+          return dato._nombre_curso + '-' + dato._codigo_curso + '-' + dato._grupo_curso;
+        },
+        counts: [],
+        getData: function($defer, params) {
+          var query;
+          query = params.url();
+          $scope.UI.refresh = true;
+          serviceProgramacionGrupoCurso.customGET('methods/paginate', query).then(function(result) {
+            $timeout(function() {
+              $defer.resolve(result.data);
+              $scope.UI.refresh = false;
+            }, 500);
+          });
+        }
+      });
+
+      /**
        * permite abrir las opciones múltiples al lado inferior derecho
        */
       $scope.EnabledAdd =function(item){
@@ -176,10 +203,12 @@
        */
       $scope.ListaCursosGrupos = function () {
         serviceGrupoCurso = Restangular.all('grupocursos');
-        serviceProgramacionGrupoCurso = Restangular.all('programaciongrupocursos');
         $scope.tableParams = new NgTableParams({
           page: 1,
-          count: 1000
+          count: 1000,
+          filter : {
+            _planestudio : $scope.filter._planestudios._id
+          }
         }, {
           total: 0,
           groupBy: function(dato){
@@ -200,7 +229,10 @@
         });
         $scope.tableParamsHorarios = new NgTableParams({
           page: 1,
-          count: 1000
+          count: 1000,
+          filter : {
+            _planestudio : $scope.filter._planestudios._id
+          }
         }, {
           total: 0,
           groupBy: function(dato){
@@ -211,7 +243,7 @@
             var query;
             query = params.url();
             $scope.UI.refresh = true;
-            serviceProgramacionGrupoCurso.customGET('methods/paginate', query).then(function(result) {
+            serviceProgramacionGrupoCurso.customGET('methods/paginate/filter', query).then(function(result) {
               $timeout(function() {
                 $defer.resolve(result.data);
                 $scope.UI.refresh = false;

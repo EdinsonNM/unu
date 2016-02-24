@@ -53,6 +53,7 @@ module.exports=function(){
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
+        var conditions = req.query.conditions;
         model.paginate(
           filter, {
             page: page,
@@ -70,13 +71,15 @@ module.exports=function(){
                }
             },
             {path:'_seccion', model:'Seccion'}]
-
           },
           function(err, results, pageCount, itemCount) {
-            var datos = results.docs.map(function(item){
-              item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-              item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-              return item;
+            var datos = [];
+            results.docs.forEach(function(item){
+              if(item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
+                item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+                item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+                datos.push(item);
+              }
             });
             var obj = {
               total: results.total,
