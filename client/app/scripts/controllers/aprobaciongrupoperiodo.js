@@ -29,7 +29,6 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
     var service,
     service1,
     service2,
-    service3,
     serviceFacultad,
     servicePeriodo,
     idcursoAprobado;
@@ -137,6 +136,39 @@ $scope.ListGruposAprobados = function () {
   });
 };
 
+$scope.ListGruposCursos = function () {
+  $scope.tableParamsGrupo = new NgTableParams({
+    page: 1,
+    count: 1000,
+     filter: {
+       //_periodo: $scope.filter._periodo._id
+     }
+  }, {
+    total: 0,
+    groupBy: function(item) {
+           return item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+      },
+    counts: [],
+    getData: function($defer, params) {
+      var query;
+            query = params.url();
+            $scope.UI.refresh = true;
+      console.log('entra a la funcion');
+      $scope.UI.refresh = true;
+      service1.customGET('methods/paginate', query).then(function(result) {
+
+         $timeout(function() {
+         //  params.total(result.total);
+           $defer.resolve(result.data);
+           console.log(result);
+           $scope.UI.refresh = false;
+         }, 500);
+
+      });
+    }
+  });
+};
+
 $scope.Refresh = function Refresh() {
   $scope.UI.selected = null;
   $scope.UI.editMode = false;
@@ -146,8 +178,6 @@ $scope.Refresh = function Refresh() {
 
 
 $scope.New = function New($event){
-
-   //console.log('IDCURSO:'+idcurso);
   var parentEl = angular.element(document.body);
   $mdDialog.show({
     parent: parentEl,

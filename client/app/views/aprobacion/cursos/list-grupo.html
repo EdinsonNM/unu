@@ -107,57 +107,45 @@
 
     </md-tab>
     <!-- segunda pestaña-->
-    <md-tab label="GRUPOS APERTURADOS">
+    <md-tab label="GRUPOS APERTURADOS" ng-click="ListGruposCursos()">
         <md-content class="md-padding">
-
         <!-- CONTENIDO -->
+        <div class="table-responsive">
+          <table ng-table="tableParamsGrupo" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
 
-<!-- <div class="table-responsive">
-          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered "> -->
-            <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-            <!-- <tbody ng-repeat="group in $groups">
-              <tr class="ng-table-group">
+           <tbody ng-repeat="group in $groups">
+             <tr class="ng-table-group">
                 <td colspan="2">
                   <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                     <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                    <strong>Ciclo: {{group.value}} </strong>
+                    <strong>Curso: {{group.value}} </strong>
                   </a>
                 </td>
-                <td><strong>TOTAL</strong></td>
-                <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
-                <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
+                <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo}}</strong></td>
+                <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</strong></td>
                 <td colspan="{{$columns.length-5}}"></td>
-              </tr>
+             </tr>
 
-              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data" ng-click="item.active=!item.active">
+
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
-                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
-                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-                <td data-title="'N° Creditos'">{{item.creditos}}</td>
-                <td data-title="'N° Horas'">{{item.horas_total}}</td>
-                <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
-                <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
-                <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
-                <td data-title="'Estado'">
-                  <strong>
-                      <a href  title="{{item.aprobacioncursosperiodo}}" >
-                        <span ng-if="item._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
-                        <span ng-if="item._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
-                      </a>
-                    </strong>
-                </td>
 
-              </tr>
+                <td class="text-left" data-title="'Curso/Grupo'" sortable="curso">Grupo {{item._seccion.nombre}}</td>
+                <td data-title="'Código'" sortable="codigo"></td>
+                <td data-title="'Ciclo'"></td>
+                <td data-title="'N° Cupos'">{{item.totalCupos}}</td>
+                <td data-title="'N° Matriculados'">{{item.matriculados}}</td>
+                <td data-title="'Retiros Parciales'">{{item.retiroParcial}}</td>
+                <td data-title="'Retiros Totales'">{{item.retiroTotal}}</td>
+             </tr>
 
-            </tbody>
-            <tbody>
+           </tbody>
+           <tbody>
           </table>
-
-        </div> -->
+        </div>
         <!-- FIN DE CONTENIDO -->
-
 
      </md-content>
      </md-tab>

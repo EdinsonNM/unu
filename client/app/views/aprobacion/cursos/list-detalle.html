@@ -1,4 +1,4 @@
-<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
     <h3><a ui-sref="app.aprobacionplanestudios"><i class="fa fa-arrow-left tc-green-500"></i></a> {{UI.title}} {{UI.planestudios._escuela.nombre}} {{UI.planestudios._periodo.anio}}-{{UI.planestudios._periodo.periodo}}</h3>
   </md-subheader>
@@ -14,8 +14,8 @@
             <tr class="ng-table-group">
               <td colspan="2">
                 <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
-                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                    <strong>Ciclo: {{group.value}} </strong>
+                  <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                  <strong>Ciclo: {{group.value}} </strong>
                 </a>
               </td>
               <td><strong>TOTAL</strong></td>
@@ -56,28 +56,28 @@
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-fab-speed-dial ng-if="!UI.editMode&&UI.planestudios.estado=='Pendiente'" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
- <md-fab-trigger>
-   <md-button aria-label="menu" class="md-fab md-accent">
-     <md-tooltip md-direction="left">Opciones de Aprobación Plan de Estudios</md-tooltip>
-     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
-   </md-button>
- </md-fab-trigger>
+  <md-fab-trigger>
+    <md-button aria-label="menu" class="md-fab md-accent">
+      <md-tooltip md-direction="left">Opciones de Aprobación Plan de Estudios</md-tooltip>
+      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+    </md-button>
+  </md-fab-trigger>
 
- <md-fab-actions>
+  <md-fab-actions>
 
 
-   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
-   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="UpdateStatusPlan('Aprobado')">
-     <md-tooltip md-direction="left">{{UI.message.Buttons.Approve}} Plan de Estudios</md-tooltip>
-     <md-icon md-font-icon="fa fa-check fa-lg tc-{{$root.color.primary}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
-   </md-button>
-   <md-button  aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="UpdateStatusPlan('Observado')">
-     <md-tooltip md-direction="left">{{UI.message.Buttons.Observe}} Plan de Estudios</md-tooltip>
-     <md-icon md-font-icon="fa fa-eye fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
-   </md-button>
+    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+    <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="UpdateStatusPlan('Aprobado')">
+      <md-tooltip md-direction="left">{{UI.message.Buttons.Approve}} Plan de Estudios</md-tooltip>
+      <md-icon md-font-icon="fa fa-check fa-lg tc-{{$root.color.primary}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+    </md-button>
+    <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="UpdateStatusPlan('Observado')">
+      <md-tooltip md-direction="left">{{UI.message.Buttons.Observe}} Plan de Estudios</md-tooltip>
+      <md-icon md-font-icon="fa fa-eye fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+    </md-button>
 
-   <!--end default actions-->
- </md-fab-actions>
+    <!--end default actions-->
+  </md-fab-actions>
 </md-fab-speed-dial>
 
 <md-button ng-if="UI.editMode&&UI.planestudios.estado=='Pendiente'" ng-click="ShowEvaluacion($event)" class="md-fab md-fab-bottom-right">
@@ -86,9 +86,9 @@
 </md-button>
 
 
-<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" >
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
 
-  <md-content layout="column" ng-include="'views/aprobacion/planestudios/detalle.html'"  layout-fill>
+  <md-content layout="column" ng-include="'views/aprobacion/planestudios/detalle.html'" layout-fill>
 
-</md-content>
+  </md-content>
 </md-sidenav>

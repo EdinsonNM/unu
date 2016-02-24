@@ -59,7 +59,16 @@ module.exports=function(){
             limit: limit,
             populate: [
             {path:'_programaciones'},
-            {path:'_cursoAperturadoPeriodo'},
+            {path:'_cursoAperturadoPeriodo',
+               populate:{
+                  path:'_planestudiodetalle',
+                  model:"Planestudiodetalle",
+                  populate:{
+                     path:'_curso',
+                     model:"Curso"
+                  }
+               }
+            },
             {path:'_seccion'}]
           },
 
