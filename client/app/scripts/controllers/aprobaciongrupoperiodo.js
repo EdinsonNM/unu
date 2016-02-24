@@ -137,12 +137,14 @@ $scope.ListGruposAprobados = function () {
 };
 
 
-$scope.ListGruposCursos = function () {
+$scope.ListGruposCursos = function (idcursoAperturado) {
   $scope.tableParamsGrupo = new NgTableParams({
     page: 1,
     count: 1000,
      filter: {
-       //_periodo: $scope.filter._periodo._id
+       _idcursoAperturadoPeriodo: idcursoAperturado
+       //_idPlanestudio: $scope.filter._planestudio._id
+
      }
   }, {
     total: 0,
