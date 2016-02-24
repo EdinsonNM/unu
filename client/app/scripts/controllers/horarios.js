@@ -137,10 +137,12 @@
       $scope.EnabledAdd =function(item){
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
-        angular.forEach($scope.tableParams.data,function(element){
-          if(item._id !== element._id){
-            element.active = false;
-          }
+        angular.forEach($scope.tableParams.data, function(element){
+          angular.forEach(element.data, function(elem){
+            if(item._id !== elem._id){
+              elem.active = false;
+            }
+          });
         });
 
         if( item.active ){
@@ -153,10 +155,12 @@
       $scope.EnabledAddHorario =function(item){
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
-        angular.forEach($scope.tableParamsHorarios.data,function(element){
-          if(item._id !== element._id){
-            element.active = false;
-          }
+        angular.forEach($scope.tableParamsHorarios.data, function(element){
+          angular.forEach(element.data, function(elem){
+            if(item._id !== elem._id){
+              elem.active = false;
+            }
+          });
         });
 
         if( item.active ){
