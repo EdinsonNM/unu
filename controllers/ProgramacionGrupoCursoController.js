@@ -58,13 +58,45 @@ module.exports=function(){
           filter, {
             page: page,
             limit: limit,
-            populate: [
-            {path:'_grupoCurso'},
-            {path:'_aula'},
-            {path:'_docente'}]
+            populate: [{
+              path : '_grupoCurso',
+              model : 'GrupoCurso',
+              populate : [{
+                path :'_cursoAperturadoPeriodo',
+                model : 'CursoAperturadoPeriodo',
+                populate : [{
+                  path : '_planestudiodetalle',
+                  model : 'Planestudiodetalle',
+                  populate : [{
+                    path : '_curso',
+                    model : 'Curso'
+                  }]
+                }]
+              },{
+                path : '_seccion',
+                model : 'Seccion'
+              }]
+            },{
+              path : '_aula',
+              model : 'Aula',
+              populate : [{
+                path : '_pabellon',
+                model : 'Pabellon'
+              }]
+            },{
+              path : '_docente',
+              model : 'Docente'
+            }
+            ]
           },
 
           function(err, results, pageCount, itemCount) {
+            var datos = results.docs.map(function(item){
+              item._doc._nombre_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+              item._doc._codigo_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+              item._doc._grupo_curso = item._grupoCurso._seccion.nombre;
+              return item;
+            });
             var obj = {
               total: results.total,
               perpage: limit*1,
@@ -72,7 +104,7 @@ module.exports=function(){
               last_page: results.pages,
               from: (page-1)*limit+1,
               to: page*limit,
-              data: results.docs
+              data: datos
             };
             res.send(obj);
           }

@@ -28,9 +28,9 @@
         <div flex-item>
           <md-input-container class="md-block">
             <label>Modalidad Curso</label>
-            <md-select ng-model="model.modalidad" name="modalidad" required>
-              <md-option ng-repeat="modalidad in modalidadCurso" ng-value="modalidad">
-                {{ modalidad }}
+            <md-select ng-model="model.modalidad_curso" name="modalidad_curso" required>
+              <md-option ng-repeat="modalidad_curso in modalidadCurso" ng-value="modalidad_curso">
+                {{ modalidad_curso }}
               </md-option>
             </md-select>
             <div ng-messages="myForm.modalidad.$error" ng-if="submited">
@@ -40,29 +40,15 @@
         </div>
         <div flex-item>
           <md-input-container class="md-block">
-            <label>Día</label>
-            <md-select ng-model="model.dia" name="dia" required>
-              <md-option ng-repeat="dia in dias" ng-value="dia">
-                {{ dia }}
+            <label>Modalidad Docente</label>
+            <md-select ng-model="model.modalidad_docente" name="modalidad_docente" required>
+              <md-option ng-repeat="modalidad_docente in modalidadDocente" ng-value="modalidad_docente">
+                {{ modalidad_docente }}
               </md-option>
             </md-select>
-            <div ng-messages="myForm.dia.$error" ng-if="submited">
+            <div ng-messages="myForm.modalidad.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
-          </md-input-container>
-        </div>
-      </div>
-      <div flex layout="row" layout-sm="row">
-        <div flex>
-            <md-input-container class="md-block">
-              <label>Hora Inicio</label>
-              <input type="time" placeholder="HH:mm" ng-model="model.horaInicio">
-            </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Hora Final</label>
-            <input type="time" placeholder="HH:mm" ng-model="model.horaFin">
           </md-input-container>
         </div>
       </div>
