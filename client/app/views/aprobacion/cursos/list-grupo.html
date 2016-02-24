@@ -122,9 +122,9 @@
                     <strong>Curso: {{group.value}} </strong>
                   </a>
                 </td>
-                <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo}}</strong></td>
+                <td><strong>{{group.data[0]._codigo_curso}}</strong></td>
                 <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</strong></td>
-                <td colspan="{{$columns.length-5}}"></td>
+                <td colspan="{{$columns.length-4}}"></td>
              </tr>
 
              <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data" ng-click="item.active=!item.active">
