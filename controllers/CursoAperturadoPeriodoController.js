@@ -66,14 +66,6 @@ module.exports=function(){
           },
 
           function(err, results, pageCount, itemCount) {
-            //  var datos = results.docs.map(function(item){
-            //   item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-            //   item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-            //   item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
-            //   item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
-            //   return item;
-            // });
-
             var obj = {
               total: results.total,
               perpage: limit*1,
