@@ -64,26 +64,25 @@
                         <td colspan="2">
                           <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                             <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                            <strong>Ciclo: {{group.value}} </strong>
+                            <strong>{{ group.value.split('-')[0] }}</strong>
                           </a>
                         </td>
-                        <td><strong>TOTAL</strong></td>
-                        <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
-                        <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
-                        <td colspan="{{$columns.length-5}}"></td>
+                        <td><strong>{{ group.value.split('-')[1] }}</strong></td>
+                        <td><strong>{{ group.value.ciclo }} </strong></td>
+                        <td></td>
+                        <td colspan="{{ $columns.length-5 }}"></td>
                       </tr>
-
-                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAdd(item,$groups)">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
-                        <td class="text-left" data-title="'Curso / Grupo'" sortable="curso">{{item._curso.nombre}}</td>
-                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-                        <td data-title="'Ciclo'">{{item.creditos}}</td>
-                        <td data-title="'Nro Cupos'">{{item.horas_total}}</td>
-                        <td data-title="'N° Matriculados'">{{item.horas_teoria}}</td>
-                        <td data-title="'N° Retiros Parciales'">{{item.horas_practica}}</td>
-                        <td data-title="'N° Retiros Totales'">{{item.horas_laboratorio}}</td>
+                        <td class="text-left" data-title="'Curso / Grupo'" sortable="curso">{{ item._seccion.nombre }}</td>
+                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"></td>
+                        <td data-title="'Ciclo'"></td>
+                        <td data-title="'Nro Cupos'">{{ }}</td>
+                        <td data-title="'N° Matriculados'">{{ }}</td>
+                        <td data-title="'N° Retiros Parciales'">{{ }}</td>
+                        <td data-title="'N° Retiros Totales'">{{ }}</td>
                       </tr>
                     </tbody>
                     <tbody>
@@ -103,17 +102,41 @@
   </div>
 </md-content>
 
-<md-fab-speed-dial ng-if="!UI.editMode&&UI.planestudios.estado=='Pendiente'" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
-  <!--md-fab-trigger>
-   <md-button aria-label="menu" class="md-fab md-accent">
-     <md-tooltip md-direction="left">Opciones de Aprobación Plan de Estudios</md-tooltip>
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
+</md-button>
+
+<!--acciones: se mostraran al seleccionar un elemento del listado-->
+<md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
- </md-fab-trigger-->
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
+   <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
+     <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-building fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+   </md-button>
+   <!--end custom actions-->
+
+   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="New($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="Edit($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-pencil fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="Delete($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+   </md-button>
+   <!--end default actions-->
+ </md-fab-actions>
 </md-fab-speed-dial>
-
-
-<md-button aria-label="{{UI.message.Buttons.New}}" ng-if="UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" >
-  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg tc-white" aria-label="{{UI.message.Buttons.New}}"></md-icon>
-</md-button>

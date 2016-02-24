@@ -55,16 +55,29 @@ module.exports=function(){
         var filter = req.query.filter;
         model.paginate(
           filter, {
-            page: page,
-            limit: limit,
-            populate: [
-              {path:'_programaciones'},
-              {path:'_cursoAperturadoPeriodo'},
-              {path:'_seccion', model:'Seccion'}
-            ]
+            page : page,
+            limit : limit,
+            populate:  [{
+              path :'_cursoAperturadoPeriodo',
+              model : 'CursoAperturadoPeriodo',
+              populate : [{
+                path : '_planestudiodetalle',
+                model : 'Planestudiodetalle',
+                populate : [{
+                  path : '_curso',
+                  model : 'Curso'
+                }]
+              }]
+            },{
+              path : '_seccion'
+            }]
           },
-
           function(err, results, pageCount, itemCount) {
+            var datos = results.docs.map(function(item){
+              item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+              item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+              return item;
+            });
             var obj = {
               total: results.total,
               perpage: limit*1,
@@ -72,7 +85,7 @@ module.exports=function(){
               last_page: results.pages,
               from: (page-1)*limit+1,
               to: page*limit,
-              data: results.docs
+              data: datos
             };
             res.send(obj);
           }
