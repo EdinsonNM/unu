@@ -4,8 +4,7 @@ var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var PersonaSchema = new Schema({
   nombreCompleto: {
-    type: String,
-    required: true
+    type: String
   },
   nombres: {
     type: String,
@@ -37,7 +36,6 @@ var PersonaSchema = new Schema({
       type: String
     //nacionalidad:String,
     //ubigeo:String,
-
   },
   telefono: {
     type: String
