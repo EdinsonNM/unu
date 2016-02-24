@@ -137,20 +137,23 @@ $scope.ListGruposAprobados = function () {
 };
 
 
-$scope.ListGruposCursos = function (idcursoAperturado) {
+$scope.ListGruposCursos = function (idCurso) {
+   console.log('entra a listGruposCursos');
+   console.log('Id del curso: grupos'+idCurso);
   $scope.tableParamsGrupo = new NgTableParams({
     page: 1,
     count: 1000,
      filter: {
-       _idcursoAperturadoPeriodo: idcursoAperturado
-       //_idPlanestudio: $scope.filter._planestudio._id
-
+       //_idcursoAperturadoPeriodo: idcursoAperturado
+       _periodo: $scope.filter._periodo._id,
+       _id: idCurso
      }
   }, {
     total: 0,
     groupBy: function(item) {
 
-           return item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+         //   return item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+         return item._planestudiodetalle._curso.nombre;
       },
     counts: [],
     getData: function($defer, params) {
@@ -160,7 +163,7 @@ $scope.ListGruposCursos = function (idcursoAperturado) {
       console.log('entra a la funcion');
       $scope.UI.refresh = true;
 
-      service1.customGET('methods/paginate', query).then(function(result) {
+      service2.customGET('methods/paginate', query).then(function(result) {
 
          $timeout(function() {
          //  params.total(result.total);
