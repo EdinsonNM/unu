@@ -133,30 +133,28 @@
 
       $scope.filter = {};
 
-      /**
-       * obtiene los datos iniciales para la pestaña de horarios
-       */
-      $scope.tableParamsHorarios = new NgTableParams({
-        page: 1,
-        count: 1000
-      }, {
-        total: 0,
-        groupBy: function(dato){
-          return dato._nombre_curso + '-' + dato._codigo_curso + '-' + dato._grupo_curso;
-        },
-        counts: [],
-        getData: function($defer, params) {
-          var query;
-          query = params.url();
-          $scope.UI.refresh = true;
-          serviceProgramacionGrupoCurso.customGET('methods/paginate', query).then(function(result) {
-            $timeout(function() {
-              $defer.resolve(result.data);
-              $scope.UI.refresh = false;
-            }, 500);
-          });
+      $scope.currentHorario = function(group){
+        if(!$scope.selected_horario){
+          return true;
+        }else{
+          if(group.value.indexOf($scope.selected_horario._codigo_curso) >= 0){
+            return true;
+          }else{
+            return false;
+          }
         }
-      });
+      };
+      $scope.currentItemHorario = function(group){
+        if(!$scope.selected_horario){
+          return true;
+        }else{
+          if(group._codigo_curso === $scope.selected_horario._codigo_curso){
+            return true;
+          }else{
+            return false;
+          }
+        }
+      };
 
       /**
        * permite abrir las opciones múltiples al lado inferior derecho
@@ -176,7 +174,10 @@
           $scope.UI.editMode = true;
           $scope.UI.editModeHorario = false;
           $scope.UI.selected = item;
+          $scope.selected_horario = item;
           $scope.UI.selected.route = LOCAL.route;
+        }else{
+          $scope.selected_horario = null;
         }
       };
       $scope.EnabledAddHorario =function(item){
@@ -266,6 +267,7 @@
           locals:{
             name : LOCAL.name,
             table : $scope.tableParams,
+            tableHorarios : $scope.tableParamsHorarios,
             groupCurso : groupCurso,
             aulas : aulas,
             pabellones : pabellones,
@@ -299,6 +301,7 @@
     .controller('CursoHorarioCtrl', function(
       $scope,
       table,
+      tableHorarios,
       name,
       MessageFactory,
       ToastMD,
@@ -346,6 +349,7 @@
             ToastMD.success(MessageFactory.Form.Saved);
             $mdDialog.hide();
             table.reload();
+            tableHorarios.reload();
           });
         }
       };
