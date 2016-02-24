@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var AlumnoSchema = new Schema({
-    codigoUniversitario: {
+    codigo: {
         type: String,
         required: true
     },

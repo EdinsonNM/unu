@@ -4,8 +4,7 @@ var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var PersonaSchema = new Schema({
   nombreCompleto: {
-    type: String,
-    required: true
+    type: String
   },
   nombres: {
     type: String,
@@ -75,3 +74,4 @@ PersonaSchema.pre('save', function(next) {
   next();
 });
 module.exports = mongoose.model('Persona', PersonaSchema).plural('personas');
+

@@ -31,28 +31,39 @@ module.exports = function() {
           });
           return defer.promise;
         })
+        //validate user
         .then(function(grupo){
-          var defer = Q.defer();
-
-          Usuario.findOne({username: request.body._usuario.username}, function(err, usuario){
-            if(err) return defer.reject({status:500,err:err});
-            if(usuario) return defer.reject({status:412,message:'Usuario ya existe'});
+            var defer = Q.defer();
+            Usuario.findOne({username: request.body._usuario.username}, function(err, usuario){
+              if(err) return defer.reject({status:500,err:err});
+              if(usuario) return defer.reject({status:412,message:'Usuario ya existe'});
+              defer.resolve(grupo);
+            });
+            return defer.promise;
+          })
+          //validate alumno
+        .then(function(grupo){
+            var defer = Q.defer();
+            model.findOne({'codigo':request.body.codigo},function(err,alumno){
+              if(err) return defer.reject({status:500,err:err});
+              if(alumno) return defer.reject({status:412,message:'Código de Alumno ya se encuentra registrado'});
+              defer.resolve(grupo);
+            });
+            return defer.promise;
+          })
+        //create user
+        .then(function(grupo){
             usuario = new Usuario(request.body._usuario);
             usuario._grupo = grupo._id;
             usuario.save(function(err,usuario){
               if(err) return defer.reject({status:500,err:err});
               defer.resolve(usuario);
             });
-          });
-
-          return defer.promise;
-        },function(err){
-          response.status(err.status).send(err);
-        })
+            return defer.promise;
+          })
         .then(function(usuario){
           var defer = Q.defer();
           Persona.findOne({'documento':request.body._persona.documento},function(err,persona){
-            var defer = Q.defer();
             if(err) return defer.reject({status:500,err:err});
             if(!persona) persona = new Persona(request.body._persona);
             persona.save(function(err,per){
@@ -61,44 +72,16 @@ module.exports = function() {
             });
           });
           return defer.promise;
-        },function(err){
-          response.status(err.status).send(err);
         })
         .then(function(data){
           request.body._usuario = data.usuario._id;
           request.body._persona = data.persona._id;
           next();
-        },function(err){
-          response.status(err.status).send();
-        });
-        /*if(request.body._usuario){
-          //TODO verificar exitencia de usuario, si existe devolver error 400: BAD REQUEST message: Usuario ya existe
-          Grupo.findOne({codigo:'ALUMNO'},function(grupoErr, objGrupo){
-            if(grupoErr) next(grupoErr);
-            var usuario = new Usuario(request.body._usuario);
-            var persona = new Persona(request.body._persona);
-            console.log(persona);
-            usuario._grupo = objGrupo._id;
-            usuario.email = request.body._persona.email;
-            Usuario.findOne({username: usuario.username}, function(usuarioErr, objUsuario){
-              if(usuarioErr) return next(usuarioErr);
-              if(objUsuario) return response.status(412).send({message:"El usuario ya existe"});
-
-              usuario.save(function(error, data){
-                if(error) return response.status(500).send(error);
-                request.body._usuario = data._id;
-
-                persona.save(function(error, data){
-                    console.log(data);
-                    request.body._persona = data._id;
-                });
-                next();
-              });
-            });
-          });
-        }else{
-          return response.status(500).send({message:"No se ha enviado el usuario"});
-        }*/
+        })
+        .catch(function (error) {
+          response.status(err.status||500).send(err);
+        })
+        .done();
       });
 
       controller.get('/methods/paginate', function(req, res) {
