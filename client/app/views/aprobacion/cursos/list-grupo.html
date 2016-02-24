@@ -107,13 +107,14 @@
 
     </md-tab>
     <!-- segunda pestaña-->
-    <md-tab label="GRUPOS APERTURADOS">
+    <md-tab label="GRUPOS APERTURADOS" ng-click="ListGruposCursos()">
         <md-content class="md-padding">
         <!-- CONTENIDO -->
         <div class="table-responsive">
           <table ng-table="tableParamsGrupo" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
 
-           <tbody ng-repeat="group in $groups" >
+
+           <tbody ng-repeat="group in $groups">
              <tr class="ng-table-group">
                 <td colspan="2">
                   <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
@@ -121,12 +122,13 @@
                     <strong>Curso: {{group.value}} </strong>
                   </a>
                 </td>
-                <td><strong>{{group.data[0]._planestudiodetalle._curso.codigo}}</strong></td>
-                <td><strong>{{group.data[0]._planestudiodetalle.ciclo}}</strong></td>
-                <td colspan="{{$columns.length-4}}"></td>
+
+                <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo}}</strong></td>
+                <td><strong>{{group.data[0]._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</strong></td>
+                <td colspan="{{$columns.length-5}}"></td>
              </tr>
 
-             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active" ng-if="item._grupos.length != '0'">
+             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data" ng-click="item.active=!item.active">
 
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
