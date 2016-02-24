@@ -72,7 +72,7 @@
                         <td></td>
                         <td colspan="{{ $columns.length-5 }}"></td>
                       </tr>
-                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAdd(item,$groups)">
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAdd(item)">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
@@ -108,7 +108,7 @@
                         <td></td>
                         <td colspan="{{ $columns.length-5 }}"></td>
                       </tr>
-                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAddHorario(item,$groups)">
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAddHorario(item)">
                         <td style="width:30px;">
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
