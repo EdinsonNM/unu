@@ -136,61 +136,28 @@ $scope.ListGruposAprobados = function () {
   });
 };
 
-
-$scope.ListAllGruposCursos = function () {
+$scope.ListGruposCursos = function () {
   $scope.tableParamsGrupo = new NgTableParams({
     page: 1,
     count: 1000,
      filter: {
-       _periodo: $scope.filter._periodo._id,
-       _planestudio: $scope.filter._planestudios._id
+
      }
   }, {
     total: 0,
     groupBy: function(item) {
-        return item._planestudiodetalle._curso.nombre;
-     },
-    counts: [],
-    getData: function($defer, params) {
-      var query;
-            query = params.url();
-            $scope.UI.refresh = true;
-      $scope.UI.refresh = true;
-      service2.customGET('methods/paginate/filtrado', query).then(function(result) {
 
-         $timeout(function() {
-          // params.total(result.total);
-           $defer.resolve(result.data);
-           console.log(result);
-           $scope.UI.refresh = false;
-         }, 500);
-
-      });
-    }
-  });
-};
-
-$scope.ListGruposCursos = function (idCurso) {
-  $scope.tableParamsGrupo = new NgTableParams({
-    page: 1,
-    count: 1000,
-     filter: {
-       _periodo: $scope.filter._periodo._id,
-       _id: idCurso
-     }
-  }, {
-    total: 0,
-    groupBy: function(item) {
-         return item._planestudiodetalle._curso.nombre;
+           return item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
       },
     counts: [],
     getData: function($defer, params) {
       var query;
             query = params.url();
             $scope.UI.refresh = true;
-      $scope.UI.refresh = true;
 
-      service2.customGET('methods/paginate', query).then(function(result) {
+      console.log('entra a la funcion');
+      $scope.UI.refresh = true;
+      service1.customGET('methods/paginate', query).then(function(result) {
 
          $timeout(function() {
          //  params.total(result.total);

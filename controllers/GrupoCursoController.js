@@ -70,7 +70,7 @@ module.exports=function(){
                   }
                }
             },
-            {path:'_seccion', model:'Seccion'}]
+            {path:'_seccion'}]
           },
           function(err, results, pageCount, itemCount) {
             var datos = [];
