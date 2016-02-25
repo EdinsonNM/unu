@@ -39,7 +39,7 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
       message: MessageFactory,
       title: 'Aprobación de Grupos por Cursos',
       editMode: false,
-      grupoEditMode: false,
+      editModeGrupo: false,
       selected: null,
       customActions: []
     };
@@ -209,8 +209,9 @@ $scope.ListGruposCursos = function (idCurso) {
 $scope.Refresh = function Refresh() {
   $scope.UI.selected = null;
   $scope.UI.editMode = false;
-  $scope.UI.grupoEditMode = false;
+  $scope.UI.editModeGrupo = false;
   $scope.tableParams.reload();
+  $scope.tableParamsGrupo.reload();
 };
 
 
@@ -224,6 +225,7 @@ $scope.New = function New($event){
     locals:{
       name: LOCAL.name,
       table:$scope.tableParams,
+      tableGrupos: $scope.tableParamsGrupo,
       service: service1,
       curso: idcursoAprobado,
       idFacultad: $scope.filter._facultad,
@@ -242,7 +244,7 @@ $scope.Edit = function Edit($event){
     templateUrl :LOCAL.form,
     locals:{
       name: LOCAL.name,
-      table:$scope.tableParams,
+      table:$scope.tableParamsGrupo,
       model: model,
       idFacultad: $scope.filter._facultad,
       idEscuela: $scope.filter._escuela
@@ -321,11 +323,35 @@ $scope.EnabledGroupEdit = function EnabledGroupEdit(item) {
 
 };
 
+$scope.EnabledEditGrupo = function(item) {
+
+  $scope.UI.editModeGrupo = false;
+  $scope.UI.editMode = false;
+  $scope.UI.selected = null;
+
+ angular.forEach($scope.tableParamsGrupo.data,function(element){
+    angular.forEach(element.data, function(elem){
+      angular.forEach(elem._grupos, function(elm){
+         if(item._id !== elm._id){
+           elm.active = false;
+         }
+      });
+   });
+});
+
+  if (item.active) {
+    $scope.UI.editMode = false;
+    $scope.UI.editModeGrupo = true;
+    $scope.UI.selected = item;
+    $scope.UI.selected.route = 'grupocursos';
+   }
+};
+
 }
 ])
 
-.controller('GrupoNewCtrl', ['$scope', 'table', 'name', 'curso', 'idFacultad', 'idEscuela', 'MessageFactory', 'service', 'ToastMD', '$mdDialog','NgTableParams', '$timeout', 'Restangular',
-  function($scope, table, name, curso, idFacultad, idEscuela, MessageFactory, service, ToastMD, $mdDialog, NgTableParams, $timeout, Restangular){
+.controller('GrupoNewCtrl', ['$scope', 'table', 'tableGrupos', 'name', 'curso', 'idFacultad', 'idEscuela', 'MessageFactory', 'service', 'ToastMD', '$mdDialog','NgTableParams', '$timeout', 'Restangular',
+  function($scope, table, tableGrupos, name, curso, idFacultad, idEscuela, MessageFactory, service, ToastMD, $mdDialog, NgTableParams, $timeout, Restangular){
 
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
@@ -358,7 +384,8 @@ $scope.EnabledGroupEdit = function EnabledGroupEdit(item) {
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
-          table.reload();
+          //table.reload();
+          tableGrupos.reload();
         }, function(error){
           switch (error.status) {
             case 422:
