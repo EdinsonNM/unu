@@ -13,14 +13,38 @@ module.exports = function() {
         res.status(200).send(enumValues);
       });
 
+
       controller.request('post', function (request, response, next) {
-          var persona = new Persona(request.body._persona);
-          console.log(persona);
-          persona.save(function(error, data){
-              console.log(data);
-              request.body._persona = data._id;
+        Q.fcall(function(){
+            var defer = Q.defer();
+            model.findOne({'codigo':request.body.codigoPostulante},function(err,postulante){
+              if(err) return defer.reject({status:500,err:err});
+              if(postulante) return defer.reject({status:412,message:'Código de Postulante ya se encuentra registrado'});
+              defer.resolve(true);
+            });
+            return defer.promise;
+          })
+
+        .then(function(result){
+          var defer = Q.defer();
+          Persona.findOne({'documento':request.body._persona.documento},function(err,persona){
+            if(err) return defer.reject({status:500,err:err});
+            if(!persona) persona = new Persona(request.body._persona);
+            persona.save(function(err,per){
+              if(err) return defer.reject({status:500,err:err});
+              defer.resolve(per);
+
+            });
           });
+          return defer.promise;
+        })
+        .then(function(persona){
+          request.body._persona = persona._id;
           next();
+        })
+        .catch(function (error) {
+          response.status(error.status||500).send(error);
+        });
       });
 
       controller.post('/updateEstadoAprIngresante', function(request, response, next){

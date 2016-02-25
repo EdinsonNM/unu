@@ -4,6 +4,7 @@ var Usuario = require('../models/UsuarioModel.js');
 var Grupo = require('../models/GrupoModel.js');
 var Q = require('q');
 
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -53,6 +54,7 @@ module.exports = function() {
           })
         //create user
         .then(function(grupo){
+            var defer = Q.defer();
             usuario = new Usuario(request.body._usuario);
             usuario._grupo = grupo._id;
             usuario.save(function(err,usuario){
@@ -69,6 +71,7 @@ module.exports = function() {
             persona.save(function(err,per){
               if(err) return defer.reject({status:500,err:err});
               defer.resolve({usuario:usuario,persona:per});
+
             });
           });
           return defer.promise;
@@ -79,9 +82,8 @@ module.exports = function() {
           next();
         })
         .catch(function (error) {
-          response.status(err.status||500).send(err);
-        })
-        .done();
+          response.status(error.status||500).send(error);
+        });
       });
 
       controller.get('/methods/paginate', function(req, res) {
