@@ -290,6 +290,11 @@
       templateUrl: 'views/secciones/list.html',
       controller: 'SeccionesCtrl'
     })
+    .state('app.horarios', {
+      url: '/horarios',
+      templateUrl: 'views/horarios/index.html',
+      controller: 'HorariosCtrl'
+    })
 
     //inicio mic
     .state('app.mic_asignaturas', {

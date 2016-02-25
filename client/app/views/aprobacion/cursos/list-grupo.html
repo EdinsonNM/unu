@@ -126,8 +126,7 @@
                 <td colspan="{{$columns.length-4}}"></td>
              </tr>
 
-             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active;EnabledGroupEdit(item)">
-
+             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active">
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>

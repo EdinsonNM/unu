@@ -1,0 +1,244 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <div flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodo</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                {{periodo.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEscuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()">
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Plan Estudios</label>
+            <md-select ng-model="filter._planestudios" ng-model-options="{trackBy: '$value._id'}" ng-change="ListaCursosGrupos()">
+              <md-option ng-repeat="plan in planestudios" ng-value="plan">
+                {{plan.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+      <div ng-cloak>
+        <md-content>
+          <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="GRUPOS APERTURADOS">
+              <md-content class="md-padding">
+                <div class="table-responsive">
+                  <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+                    <tbody ng-repeat="group in $groups">
+                      <tr class="ng-table-group">
+                        <td colspan="2">
+                          <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                            <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                            <strong>{{ group.value.split('-')[0] }}</strong>
+                          </a>
+                        </td>
+                        <td><strong>{{ group.value.split('-')[1] }}</strong></td>
+                        <td><strong>{{ group.value.ciclo }} </strong></td>
+                        <td></td>
+                        <td colspan="{{ $columns.length-5 }}"></td>
+                      </tr>
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledAdd(item)">
+                        <td style="width:30px;">
+                          <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                        </td>
+                        <td class="text-left" data-title="'Curso / Grupo'" sortable="curso">{{ item._seccion.nombre }}</td>
+                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"></td>
+                        <td data-title="'Ciclo'"></td>
+                        <td data-title="'Nro Cupos'">{{ }}</td>
+                        <td data-title="'N° Matriculados'">{{ }}</td>
+                        <td data-title="'N° Retiros Parciales'">{{ }}</td>
+                        <td data-title="'N° Retiros Totales'">{{ }}</td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                  </table>
+                </div>
+              </md-content>
+            </md-tab>
+            <md-tab label="HORARIOS">
+              <md-content class="md-padding">
+                <div class="table-responsive">
+                  <table ng-table="tableParamsHorarios" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+                    <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+                    <tbody ng-repeat="group in $groups" ng-show="currentHorario(group)">
+                      <tr class="ng-table-group">
+                        <td colspan="2">
+                          <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                            <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                            <strong>{{ group.value.split('-')[0] }}</strong>
+                          </a>
+                        </td>
+                        <td><strong>{{ group.value.split('-')[1] }}</strong></td>
+                        <td><strong>{{ group.value.split('-')[2] }} </strong></td>
+                        <td></td>
+                        <td colspan="{{ $columns.length-5 }}"></td>
+                      </tr>
+                      <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-show="currentItemHorario(item)">
+                        <td style="width:30px;">
+                          <span ng-click="item.active=!item.active;EnabledAddHorario(item)" class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                          <md-list>
+                            <md-list-item ng-repeat="(key, horario) in item.horarios">
+                              <span ng-click="horario.active=!horario.active;EnabledAddHorarioHora(key, item, horario)" class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':horario.active}"></span>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                        <td class="text-left" data-title="'Curso / Docente'" sortable="curso">{{ item._docente.nombres }} {{ item._docente.apellidos }}</td>
+                        <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"></td>
+                        <td data-title="'Grupo'"></td>
+                        <td data-title="'Pabellón'">{{ item._aula._pabellon.abreviatura }}</td>
+                        <td data-title="'Aula'">{{ item._aula.abreviatura }}</td>
+                        <td data-title="'Día'">
+                          <span>-</span>
+                          <md-list>
+                            <md-list-item ng-repeat="horario in item.horarios">
+                              <p> {{ horario.dia }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                        <td data-title="'Hora Inicio / Hora Fin'">
+                          <span>-</span>
+                          <md-list>
+                            <md-list-item ng-repeat="horario in item.horarios">
+                              <p> {{ horario.horaInicio | date : 'hh:mm' }} / {{ horario.horaFin | date : 'hh:mm' }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                  </table>
+                </div>
+              </md-content>
+            </md-tab>
+          </md-tabs>
+        </md-content>
+      </div>
+    </md-content>
+  </div>
+</md-content>
+
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
+</md-button>
+
+<!--acciones: se mostraran al seleccionar un elemento del listado-->
+<md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
+   <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
+     <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-building fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+   </md-button>
+   <!--end custom actions-->
+
+   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="New($event)">
+     <md-tooltip md-direction="left">Nuevo Horario</md-tooltip>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+   </md-button>
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>
+
+<md-fab-speed-dial ng-if="UI.editModeHorario" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
+   <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
+     <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-building fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+   </md-button>
+   <!--end custom actions-->
+
+   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="NewHorario($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-plus fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="EditHorario($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-pencil fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="DeleteHorario($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+   </md-button>
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>
+
+<md-fab-speed-dial ng-if="UI.editModeHorarioHora" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
+   <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
+     <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-building fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+   </md-button>
+   <!--end custom actions-->
+
+   <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="EditHorarioHora($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-pencil fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-fab md-raised md-mini" ng-click="DeleteHorarioHora($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-trash fa-lg tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+   </md-button>
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>

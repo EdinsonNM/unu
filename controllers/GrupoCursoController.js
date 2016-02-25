@@ -53,8 +53,9 @@ module.exports=function(){
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
+        var conditions = req.query.conditions;
         model.paginate(
-          filter, {
+          {}, {
             page: page,
             limit: limit,
             populate: [
@@ -69,16 +70,19 @@ module.exports=function(){
                   }
                }
             },
-            {path:'_seccion'}]
-          },
 
+            {path:'_seccion', model:'Seccion'}]
+
+          },
           function(err, results, pageCount, itemCount) {
-             var datos = results.docs.map(function(item){
-              item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-              item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-              item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
-              item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
-              return item;
+
+            var datos = [];
+            results.docs.forEach(function(item){
+              if(item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
+                item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+                item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+                datos.push(item);
+              }
             });
 
             var obj = {
@@ -88,7 +92,6 @@ module.exports=function(){
               last_page: results.pages,
               from: (page-1)*limit+1,
               to: page*limit,
-            //   data: results.docs
               data: datos
             };
             res.send(obj);

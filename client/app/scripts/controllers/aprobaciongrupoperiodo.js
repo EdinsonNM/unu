@@ -189,6 +189,7 @@ $scope.ListGruposCursos = function (idCurso) {
             query = params.url();
             $scope.UI.refresh = true;
       $scope.UI.refresh = true;
+
       service2.customGET('methods/paginate', query).then(function(result) {
 
          $timeout(function() {
@@ -293,29 +294,6 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
 } else {
    $scope.ListAllGruposCursos();
 }
-
-};
-
-$scope.EnabledGroupEdit = function EnabledGroupEdit(item) {
-  $scope.UI.grupoEditMode = false;
-  $scope.UI.selected = null;
-  // angular.forEach($groups,function(group){
-   //   console.log('Group'+group);
-    angular.forEach( $scope.tableParamsGrupo.data,function(element){
-      console.log('item._id'+item._id);
-      console.log('itemData:'+item.active);
-      console.log('element:'+ element);
-      if(item._id !== element._id){
-        element.active = false;
-      }
-    });
-  // });
-
-  if (item.active) {
-    $scope.UI.grupoEditMode = true;
-    $scope.UI.selected = item;
-}
-
 };
 
 }
