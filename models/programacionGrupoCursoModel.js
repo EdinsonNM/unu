@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var ProgramacionGrupoCursoSchema = new Schema({
   _grupoCurso:{
@@ -22,6 +24,11 @@ var ProgramacionGrupoCursoSchema = new Schema({
     enum: ['Teoria','Practica','Seminario','Laboratorio','Otros'],
     required: true
   },
+  modalidadDocente:{
+    type: String,
+    enum: ['Titular','Auxiliar','Otro'],
+    required: true
+  },
   horarios:[{
     dia:{
       type: String,
@@ -34,6 +41,8 @@ var ProgramacionGrupoCursoSchema = new Schema({
 	updatedAt:Date
 });
 
+ProgramacionGrupoCursoSchema.plugin(mongoosePaginate);
+ProgramacionGrupoCursoSchema.plugin(uniqueValidator);
 ProgramacionGrupoCursoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;

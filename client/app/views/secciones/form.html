@@ -1,0 +1,75 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="window-modal-content-sm">
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+            <md-input-container class="md-block">
+              <label>Código</label>
+              <input required name="codigo" ng-model="model.codigo" validate-unique query-model='secciones'  attribute='codigo'>
+              <div ng-messages="myForm.codigo.$error"  ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+                <div ng-message="validateUnique">{{message.validateUnique}}</div>
+              </div>
+              <div ng-if="ValidationError['codigo'].kind" >
+                {{ValidationError['codigo'].message}}
+              </div>
+            </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Nombre</label>
+            <input required name="nombre" ng-model="model.nombre">
+            <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="row">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="model._facultad"  ng-model-options="{trackBy: '$value._id'}" name="facultad" ng-change="LoadEscuelasFrm()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm._escuela.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="column">
+        <div flex="30" layout-align="start start" flex-sm="100" class="text-left" ng-if="includeActive">
+          <md-checkbox ng-model="model.activo">
+            Activo
+          </md-checkbox>
+        </div>
+        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
+          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+        </div>
+      </div>
+    </md-dialog-content>
+  </form>
+</md-dialog>

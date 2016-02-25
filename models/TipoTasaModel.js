@@ -1,23 +1,21 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var GrupoSchema = new Schema({
+var TipotasaSchema = new Schema({
 	nombre : {
 		type:String,
 		required:true
 	},
-  codigo:{
-		type:String,
+  activo:{
+    type:Boolean,
 		required:true,
-    uppercase:true
-	},
-	menu:[],
+    default:true
+  },
 	createdAt:Date,
 	updatedAt:Date
 });
 
-
-GrupoSchema.pre('save',function(next){
+TipotasaSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
@@ -26,4 +24,4 @@ GrupoSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('Grupo', GrupoSchema).plural('grupos');
+module.exports = mongoose.model('Tipotasa', TipotasaSchema).plural('tipotasa');

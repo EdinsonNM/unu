@@ -22,6 +22,10 @@ module.exports = function() {
         var enumValues = model.schema.path('grado').enumValues;
         res.status(200).send(enumValues);
       });
+      controller.get('/model/categorias', function(req, res, next){
+        var enumValues = model.schema.path('categoria').enumValues;
+        res.status(200).send(enumValues);
+      });
       controller.request('post', function (request, response, next) {
         if(request.body._usuario){
           Grupo.findOne({codigo:'DOCENTE'},function(grupoErr, objGrupo){

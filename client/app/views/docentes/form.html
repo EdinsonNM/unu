@@ -87,6 +87,19 @@
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
+            <label>Categoria</label>
+            <md-select ng-model="model.categoria" >
+              <md-option ng-repeat="categoria in categorias" ng-value="grado">
+                {{categoria}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm._grado.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
             <label>Facultad</label>
             <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}">
               <md-option ng-repeat="fac in facultades" ng-value="fac">

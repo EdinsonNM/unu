@@ -169,6 +169,7 @@
       templateUrl: 'views/planestudios/list.html',
       controller: 'PlanestudiosCtrl'
     })
+
     .state('app.planestudiosequivalencia', {
       url: '/planestudios/equivalencia',
       templateUrl: 'views/equivalencias/list.html',
@@ -229,6 +230,11 @@
       templateUrl: 'views/aprobacion/cursos/list-detalle.html',
       controller: 'AprobacionCursosPeriodoDetalleCtrl'
     })
+     .state('app.grupocursoperiodo', {
+      url: '/aprobacion/grupocurso',
+        templateUrl: 'views/aprobacion/cursos/list-grupo.html',
+        controller: 'CursoGrupoCrtl'
+    })
     .state('app.alumnomisdatos', {
       url: '/alumno/misdatos',
       templateUrl: 'views/alumno/misdatos.html',
@@ -279,7 +285,17 @@
       templateUrl: 'views/otrasdeudasalumnos/list.html',
       controller: 'OtrasDeudasAlumnosCtrl'
     })
-    
+    .state('app.secciones', {
+      url: '/secciones',
+      templateUrl: 'views/secciones/list.html',
+      controller: 'SeccionesCtrl'
+    })
+    .state('app.horarios', {
+      url: '/horarios',
+      templateUrl: 'views/horarios/index.html',
+      controller: 'HorariosCtrl'
+    })
+
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',

@@ -25,8 +25,11 @@
       var LOCAL = {
         name: 'Aprobación de Cursos de Plan de Estudios',
         form: 'views/aprobacion/cursos/form.html',
-        route: 'planestudiodetalles'
+        route: 'planestudiodetalles',
+        routeAprobacion:'cursoaperturadoperiodos'
       };
+
+
       service = Restangular.all(LOCAL.route);
       $rootScope.app.module = ' > ' + LOCAL.name;
 
@@ -73,42 +76,67 @@
       new LoadFacultades();
       new LoadPeriodos();
 
-      $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
-        $scope.tableParams = new NgTableParams({
-          page: 1,
-          count: 1000,
-          filter: {
-              _planestudio: $scope.filter._planestudios._id
-          }
-        }, {
-          total: 0,
-          groupBy: 'ciclo',
-          counts: [],
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
+      $scope.filter ={
+        _planestudios:{_id:0},
+        _periodo:{_id:0}
+      };
 
-            $scope.UI.refresh = true;
-            service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
-              $timeout(function() {
-                params.total(result.total);
-                $defer.resolve(result.data);
-                $scope.UI.refresh = false;
-              }, 500);
-            });
-          }
-        });
+      $scope.ListDetallePlanEstudios = function ListDetallePlanEstudios() {
+        if($scope.filter._planestudios._id===0||$scope.filter._periodo._id===0){
+          return;
+        }
+        if($scope.tableParams){
+          $scope.tableParams.reload();
+        }else{
+          $scope.tableParams = new NgTableParams({
+            page: 1,
+            count: 1000,
+            filter: {
+                _planestudio: $scope.filter._planestudios._id
+            }
+          }, {
+            total: 0,
+            groupBy: 'ciclo',
+            counts: [],
+            getData: function($defer, params) {
+              var query;
+              query = params.url();
+
+              $scope.UI.refresh = true;
+              service.customGET('methods/aprobacion/'+$scope.filter._periodo._id, query).then(function(result) {
+                 console.log(result);
+                $timeout(function() {
+                  params.total(result.total);
+                  $defer.resolve(result.data);
+                  $scope.UI.refresh = false;
+                }, 500);
+              });
+            }
+          });
+        }
+
       };
 
       $scope.AprobarCurso = function() {
-        console.log($scope.UI.selected);
-        service.customPOST({
-            _periodo: $scope.filter._periodo._id
-        }, 'methods/aprobacion/'+$scope.UI.selected._id).then(function(result) {
-          ToastMD.success('Estado actualizado satisfactoriamente');
+        var service=Restangular.all(LOCAL.routeAprobacion);
+        service.post({
+          _periodo: $scope.filter._periodo._id,
+          _planestudiodetalle:$scope.UI.selected._id
+        }).then(function() {
+          ToastMD.success('Se aprobó curso satisfactoriamente');
           $scope.Refresh();
         }, function(result) {
-          console.log(result.data.error);
+          $scope.ListDetallePlanEstudios();
+        });
+      };
+
+      $scope.QuitarCurso = function() {
+        var aprobacion=Restangular.one(LOCAL.routeAprobacion,$scope.UI.selected._aprobacionesPeriodo[0]._id);
+        aprobacion.remove().then(function() {
+          ToastMD.success('Se quito aprobación del curso satisfactoriamente');
+          $scope.Refresh();
+        }, function(result) {
+          $scope.ListDetallePlanEstudios();
         });
       };
 
@@ -118,11 +146,10 @@
         $scope.tableParams.reload();
       };
 
-      $scope.filter = {};
 
       $scope.EnabledEdit = function EnabledEdit(item, $groups) {
-          console.log(item);
-          console.log($groups);
+          console.log('iTEM:'+item);
+          console.log('GRUPO:'+$groups);
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
 
@@ -140,6 +167,8 @@
           $scope.UI.selected.route = LOCAL.route;
         }
       };
+
+      $scope.ListDetallePlanEstudios();
 
     }
   ]);

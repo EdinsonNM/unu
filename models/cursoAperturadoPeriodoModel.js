@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var CursoAperturadoPeriodoSchema = new Schema({
   _periodo:{
@@ -12,15 +14,23 @@ var CursoAperturadoPeriodoSchema = new Schema({
     ref:'Planestudiodetalle',
     required:true
   },
-  created_at:Date,
-	updated_at:Date
+  _grupos:[{
+    type: Schema.Types.ObjectId,
+    ref: 'GrupoCurso',
+    required: true
+  }],
+  createdAt:Date,
+	updatedAt:Date
 });
+
+CursoAperturadoPeriodoSchema.plugin(mongoosePaginate);
+CursoAperturadoPeriodoSchema.plugin(uniqueValidator);
 
 CursoAperturadoPeriodoSchema.pre('save',function(next){
 	var now = new Date();
-	this.updated_at = now;
-	if (!this.created_at){
-		this.created_at=now;
+	this.updatedAt = now;
+	if (!this.createdAt){
+		this.createdAt=now;
 	}
 	next();
 });

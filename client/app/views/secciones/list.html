@@ -1,10 +1,33 @@
 <md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
-    <h3>{{UI.title}}</h3>
+      <h3>{{UI.title}}</h3>
   </md-subheader>
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+
+      <div  flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultadFilter" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEscuelas()">
+              <md-option ng-repeat="fac in facultadesFilter" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuelaFilter" ng-model-options="{trackBy: '$value._id'}" ng-change="List()">
+              <md-option ng-repeat="esc in escuelasFilter" ng-value="esc">
+                {{esc.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
       <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
@@ -14,12 +37,13 @@
             <td style="width:30px;">
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
-            <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
-            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
-            <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item.apellidos}}</td>
-            <td class="text-left" data-title="'Facultad'" sortable="facultad" filter="{'facultad':'text'}">{{item._facultad.nombre}}</td>
-            <td class="text-left" data-title="'Condición'" sortable="condicion" filter="{'condicion':'text'}">{{item.condicion}}</td>
-            <td class="text-left" data-title="'Categoria'" sortable="categotia" filter="{'categotia':'text'}">{{item.categoria}}</td>
+            <td class="text-left" data-title="'CÓDIGO'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
+            <td class="text-left" data-title="'NOMBRE'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
+            <td class="text-left" data-title="'ESCUELA'" sortable="escuela" filter="{'escuela':'text'}">{{item._escuela.nombre}}</td>
+            <td class="text-center" data-title="'Activo'">
+              <span href title="Activo" ng-if="item.activo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
+              <span href title="Inactivo" ng-if="!item.activo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
+            </td>
           </tr>
         </tbody>
       </table>

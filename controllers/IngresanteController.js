@@ -8,45 +8,69 @@ module.exports = function() {
       var controller = baucis.rest('Ingresante');
       controller.fragment('/ingresantes');
 
-      controller.get('/model/sexo', function(req, res, next){
-        var enumValues = model.schema.path('sexo').enumValues;
-        res.status(200).send(enumValues);
-      });
-
-      controller.get('/model/tipodocumento', function(req, res, next){
-        var enumValues = model.schema.path('documentoIdentidad.tipo').enumValues;
-        res.status(200).send(enumValues);
-      });
-
       controller.get('/model/estado', function(req, res, next){
         var enumValues = model.schema.path('estado').enumValues;
         res.status(200).send(enumValues);
       });
 
-      controller.post('/updateEstadoAprIngresante', function(request, response, next){
-              if(request.body._id){
-                model.findByIdAndUpdate(
-                  request.body._id,
-                  { estado: 'Aprobado' },
-                  { safe: true },
-                  function(err, data){
-                    if(err) return response.status(500).send({message:err});
-                    response.status(200).send(data);
-                  }
-                );
-              }else{
-                var query = {
-                  _periodo: request.body._periodo,
-                  _escuela: request.body._escuela,
-                  estado: 'Registrado'
-                };
-                model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
-                  // numAffected is the number of updated documents
-                  if(err) return response.status(500).send({message:err});
-                  response.status(200).send('Hola');
-                });
-              }
+
+      controller.request('post', function (request, response, next) {
+        Q.fcall(function(){
+            var defer = Q.defer();
+            model.findOne({'codigo':request.body.codigoPostulante},function(err,postulante){
+              if(err) return defer.reject({status:500,err:err});
+              if(postulante) return defer.reject({status:412,message:'Código de Postulante ya se encuentra registrado'});
+              defer.resolve(true);
             });
+            return defer.promise;
+          })
+
+        .then(function(result){
+          var defer = Q.defer();
+          Persona.findOne({'documento':request.body._persona.documento},function(err,persona){
+            if(err) return defer.reject({status:500,err:err});
+            if(!persona) persona = new Persona(request.body._persona);
+            persona.save(function(err,per){
+              if(err) return defer.reject({status:500,err:err});
+              defer.resolve(per);
+
+            });
+          });
+          return defer.promise;
+        })
+        .then(function(persona){
+          request.body._persona = persona._id;
+          next();
+        })
+        .catch(function (error) {
+          response.status(error.status||500).send(error);
+        });
+      });
+
+      controller.post('/updateEstadoAprIngresante', function(request, response, next){
+          if(request.body._id){
+            model.findByIdAndUpdate(
+              request.body._id,
+              { estado: 'Aprobado' },
+              { safe: true },
+              function(err, data){
+                if(err) return response.status(500).send({message:err});
+                response.status(200).send(data);
+              }
+            );
+          }else{
+            var query = {
+              _periodo: request.body._periodo,
+              _escuela: request.body._escuela,
+              estado: 'Registrado'
+            };
+            model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
+              // numAffected is the number of updated documents
+              if(err) return response.status(500).send({message:err});
+              response.status(200).send('Hola');
+            });
+          }
+        });
 
       controller.get('/methods/paginate', function(req, res) {
         var limit = parseInt(req.query.count);

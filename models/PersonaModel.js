@@ -4,8 +4,7 @@ var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var PersonaSchema = new Schema({
   nombreCompleto: {
-    type: String,
-    required: true
+    type: String
   },
   nombres: {
     type: String,
@@ -19,21 +18,36 @@ var PersonaSchema = new Schema({
     type: String,
     required: true
   },
-  documento: {
-    type: String
-    //,required: true
+  tipoDocumento: {
+      type: String,
+      enum: ['DNI', 'CARNET EXTRANJERIA'],
+      default: 'DNI'
   },
+  documento: String,
   fechaNacimiento: {
     type: Date
     //,required: true
   },
   sexo: {
     type: String,
-    enum:['Femenino','Masculino']
+    enum:['Femenino', 'Masculino']
   },
   lugarNacimiento: {
-    nacionalidad:String,
-    ubigeo:String,
+      type: String
+    //nacionalidad:String,
+    //ubigeo:String,
+  },
+  telefono: {
+    type: String
+    //,required: true
+  },
+  direccion: {
+    type: String
+    //,required: true
+  },
+  email: {
+    type: String
+    //,required: true
   },
   _alumno:[{
       type:Schema.Types.ObjectId,

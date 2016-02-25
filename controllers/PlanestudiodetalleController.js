@@ -2,6 +2,8 @@ var model = require('../models/PlanestudiodetalleModel.js');
 var auth = require('../config/passport');
 var Q = require('q');
 var _ = require('underscore');
+var ObjectId = require('mongoose').Types.ObjectId;
+
 module.exports=function(){
   var baucis=require('baucis');
 
@@ -51,14 +53,18 @@ module.exports=function(){
       	var page = parseInt(req.query.page) || 1;
       	var filter = req.query.filter;
         var promises = [];
-        var reqIdPeriodo = req.params._periodo;
-
+        var periodos = [];
+        periodos.push(req.params.periodo);
       	model.paginate(
       		filter,
       		{
             page: page,
             limit: limit,
-            populate: [{path:'_aprobacionesPeriodo', match: { _id: reqIdPeriodo}},{path:'_planestudio'},{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}}]
+            populate: [
+            {path:'_aprobacionesPeriodo',match:{_periodo:req.params.periodo}},
+            {path:'_planestudio'},
+            {path:'_curso'},
+            {path:'_requisitos',populate:{path:'_curso'}}]
           },
       		function(err, results){
             var obj = {
@@ -84,7 +90,6 @@ module.exports=function(){
           });
         });
       });
-
       controller.put('/methods/change/:estado/:id',auth.ensureAuthenticated, function(req, res,next){
         model.findOne({_id:req.params.id},function(error,data){
           if(error) return res.status(500).send({error:error});
@@ -92,29 +97,8 @@ module.exports=function(){
           data.save(function(error,data){
             return res.status(200).send(data);
           });
-
         });
       });
-
-      //Metodo para aprobar curso.
-      controller.post('/methods/aprobacion/:id', auth.ensureAuthenticated, function(req, res, next) {
-          model.findOne({_id:req.params.id},function(error,data){
-            var index = _.indexOf(data._aprobacionesPeriodo,req.body._periodo);
-            if(index!=-1){
-                data._aprobacionesPeriodo = data._aprobacionesPeriodo.splice(index,1);
-            }else{
-              data._aprobacionesPeriodo.push(req.body._periodo);
-
-            }
-            data.save(function(err, model){
-                if(err) return res.status(500).send({error: err});
-                return res.status(200).send(model);
-            });
-
-          });
-
-      });
-
       controller.post('/methods/equivalencia/:id', function(request, response, next){
           model.findByIdAndUpdate(
               request.params.id,
@@ -126,7 +110,6 @@ module.exports=function(){
               }
           );
       });
-
     }
   };
 };
