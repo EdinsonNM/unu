@@ -39,6 +39,7 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
       message: MessageFactory,
       title: 'Aprobación de Grupos por Cursos',
       editMode: false,
+      grupoEditMode: false,
       selected: null,
       customActions: []
     };
@@ -208,6 +209,7 @@ $scope.ListGruposCursos = function (idCurso) {
 $scope.Refresh = function Refresh() {
   $scope.UI.selected = null;
   $scope.UI.editMode = false;
+  $scope.UI.grupoEditMode = false;
   $scope.tableParams.reload();
 };
 
@@ -231,17 +233,55 @@ $scope.New = function New($event){
   });
 };
 
+$scope.Edit = function Edit($event){
+  var parentEl = angular.element(document.body);
+  var model = Restangular.copy($scope.UI.selected);
+  $mdDialog.show({
+    parent: parentEl,
+    targetEvent: $event,
+    templateUrl :LOCAL.form,
+    locals:{
+      name: LOCAL.name,
+      table:$scope.tableParams,
+      model: model,
+      idFacultad: $scope.filter._facultad,
+      idEscuela: $scope.filter._escuela
+    },
+    controller: 'GrupoEditCtrl'
+  });
+};
 
-$scope.filter = {};
+$scope.Delete = function Delete($event){
+  var confirm = $mdDialog.confirm()
+      .title(LOCAL.name)
+      .content(MessageFactory.Form.QuestionDelete)
+      .ariaLabel(LOCAL.name)
+      .targetEvent($event)
+      .ok(MessageFactory.Buttons.Yes)
+      .cancel(MessageFactory.Buttons.No);
+
+  var selected = Restangular.copy($scope.UI.selected);
+  $mdDialog.show(confirm).then(function() {
+    selected.remove().then(function() {
+      $scope.Refresh();
+      ToastMD.success(MessageFactory.Form.Deleted);
+    });
+  }, function() {
+
+  });
+};
+
+
+// $scope.filter = {};
 
 $scope.EnabledEdit = function EnabledEdit(item, $groups) {
-  console.log(item);
-  console.log($groups);
+   console.log('Grupos'+$groups);
   $scope.UI.editMode = false;
   $scope.UI.selected = null;
 
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
+      console.log('element:'+element);
       if(item._id !== element._id){
         element.active = false;
       }
@@ -255,6 +295,28 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
    $scope.ListGruposCursos(idcursoAprobado);
 } else {
    $scope.ListAllGruposCursos();
+}
+
+};
+
+$scope.EnabledGroupEdit = function EnabledGroupEdit(item) {
+  $scope.UI.grupoEditMode = false;
+  $scope.UI.selected = null;
+  // angular.forEach($groups,function(group){
+   //   console.log('Group'+group);
+    angular.forEach( $scope.tableParamsGrupo.data,function(element){
+      console.log('item._id'+item._id);
+      console.log('itemData:'+item.active);
+      console.log('element:'+ element);
+      if(item._id !== element._id){
+        element.active = false;
+      }
+    });
+  // });
+
+  if (item.active) {
+    $scope.UI.grupoEditMode = true;
+    $scope.UI.selected = item;
 }
 
 };
@@ -316,6 +378,42 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
       $mdDialog.hide();
     };
 
+}])
+
+.controller('GrupoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'idFacultad', 'idEscuela',
+function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, idFacultad, idEscuela){
+  $scope.submited = false;
+  $scope.model = model;
+  $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+  $scope.Buttons = MessageFactory.Buttons;
+
+  var LoadSecciones = function() {
+    var serviceSecciones = Restangular.all('secciones');
+    serviceSecciones.getList({
+      conditions: {
+         _facultad: idFacultad,
+         _escuela: idEscuela
+      }
+    }).then(function(data) {
+      $scope.secciones = data;
+  });
+  };
+
+  new LoadSecciones();
+
+  $scope.Save = function(form) {
+    $scope.submited = true;
+    if (form.$valid) {
+      $scope.model.put().then(function() {
+        ToastMD.success(MessageFactory.Form.Updated);
+        $mdDialog.hide();
+        table.reload();
+      });
+    }
+  };
+  $scope.Cancel = function(){
+    $mdDialog.hide();
+  };
 }]);
 
 }).call(this);
