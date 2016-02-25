@@ -126,7 +126,7 @@
                 <td colspan="{{$columns.length-4}}"></td>
              </tr>
 
-             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active">
+             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active;EnabledEditGrupo(item)">
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
@@ -160,7 +160,7 @@
 </md-button>
 
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
-<md-fab-speed-dial ng-if="UI.grupoEditMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+<md-fab-speed-dial ng-if="UI.editModeGrupo" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
    <md-button aria-label="menu" class="md-fab">
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
@@ -176,10 +176,10 @@
    <!--end custom actions-->
 
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
-   <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="NewHorario($event)">
+   <!-- <md-button aria-label="{{UI.message.Buttons.New}}" class="md-fab md-raised md-mini" ng-click="NewHorario($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
      <md-icon  md-font-icon="fa fa-plus fa-lg  tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.New}}"></md-icon>
-   </md-button>
+   </md-button> -->
    <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="Edit($event)">
      <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
      <md-icon class="md-accent" md-font-icon="fa fa-pencil fa-lg  tc-{{$root.color.accent}}-500 " aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
