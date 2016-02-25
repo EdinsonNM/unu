@@ -114,6 +114,16 @@
       templateUrl: 'views/login.html',
       controller: 'LoginCtrl'
     })
+    .state('getcode', {
+      url: '/getCode',
+      templateUrl: 'views/getcode.html',
+      controller: 'GetCodeCtrl'
+    })
+    .state('recoverpass', {
+      url: '/recoverPass',
+      templateUrl: 'views/recoverpass.html',
+      controller: 'RecoverPassCtrl'
+    })
     .state('app.facultad', {
       url: '/facultades',
       templateUrl: 'views/facultades/list.html',
