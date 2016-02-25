@@ -4,6 +4,7 @@ var Usuario = require('../models/UsuarioModel.js');
 var Grupo = require('../models/GrupoModel.js');
 var Q = require('q');
 
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -69,6 +70,7 @@ module.exports = function() {
             persona.save(function(err,per){
               if(err) return defer.reject({status:500,err:err});
               defer.resolve({usuario:usuario,persona:per});
+
             });
           });
           return defer.promise;

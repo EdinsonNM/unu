@@ -63,6 +63,7 @@
                 <label>Documento Identidad</label>
                 <input required name="documento" ng-model="model._persona.documento">
                 <div ng-messages="myForm._persona.documento.$error" ng-if="submited">
+
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
