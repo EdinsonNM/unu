@@ -8,7 +8,6 @@ module.exports=function(){
     setup:function(){
       var controller=baucis.rest('GrupoCurso');
       controller.fragment('/grupocursos');
-
       controller.request('post', function (request, response, next) {
         Parent.findOne({_id:request.body._cursoAperturadoPeriodo},function(err,cursoAperturado){
           if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
@@ -17,10 +16,10 @@ module.exports=function(){
             if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
             var seccion = _.find(data,function(item){ return item._seccion.toString() == request.body._seccion._id; });
             if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});
+
             next();
           });
         });
-
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
             _id: context.doc._cursoAperturadoPeriodo},
