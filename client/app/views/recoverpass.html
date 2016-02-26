@@ -1,0 +1,25 @@
+<div class="bg-login" layout="column" layout-fill>
+  <div class="ct-app">
+    <div class="ct-login z-depth-1">
+      <span class="fs-headline display-block">{{app.name}}</span>
+      <span class="fs-caption display-block">{{app.corporation}}</span>
+
+      <form ng-submit="Login()" class="text-left fs-body-1">
+        <lx-text-field label="Ingrese su Codigo Universitario">
+          <input type="text" ng-model="alumno.codigo">
+        </lx-text-field>
+
+        <br>
+        <p>
+            <md-button ng-href="/#/">Iniciar Sesión</md-button>
+        </p>
+        <br>
+        <md-button class="md-raised md-warn tc-white" aria-label="Recuperar Clave" style="float:right;">
+          <md-icon md-font-icon="fa fa-key fa-lg tc-white"></md-icon>
+          Recuperar Clave
+        </md-button>
+      </form>
+
+    </div>
+  </div>
+</div>
