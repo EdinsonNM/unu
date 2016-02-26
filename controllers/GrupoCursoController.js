@@ -8,19 +8,21 @@ module.exports=function(){
     setup:function(){
       var controller=baucis.rest('GrupoCurso');
       controller.fragment('/grupocursos');
-
       controller.request('post', function (request, response, next) {
         Parent.findOne({_id:request.body._cursoAperturadoPeriodo},function(err,cursoAperturado){
           if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
           if(!cursoAperturado) return response.status(404).send({message:'No se encontro el curso aperturado'});
           model.find({_cursoAperturadoPeriodo:request.body._cursoAperturadoPeriodo},function(err,data){
             if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
+            /*model.find({$and:[{_cursoAperturadoPeriodo:request.body._cursoAperturadoPeriodo},{_seccion:request.body._seccion}]},function(err,grupoAperturado){
+              if(grupoAperturado)return response.status(404).send({message:'Grupo ya fue aperturado'});
+              next();
+            });*/
             var seccion = _.findWhere(data, {_seccion:request.body._seccion});
-            if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});
+            if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});*/
             next();
           });
         });
-
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
             _id: context.doc._cursoAperturadoPeriodo},
@@ -38,7 +40,7 @@ module.exports=function(){
           var detalles = [];
           detalles.push(detalle._id );
           Parent.update(
-            { _id: detalle._planestudiodetalle },
+            { _id: detalle._cursoAperturadoPeriodo },
             { $pull: { '_grupos':  {$in:detalles } } },
             {safe:true},
             function(err, obj){
