@@ -47,7 +47,7 @@
         refresh: false,
         message: MessageFactory,
         title: 'Registro de Horarios para Cursos Aprobados',
-        editMode: true,
+        editMode: false,
         selected: null,
         customActions: []
       };
@@ -129,9 +129,14 @@
       $scope.Refresh = function Refresh() {
         $scope.UI.selected = null;
         $scope.UI.editMode = false;
+        $scope.UI.editModeHorario = false;
+        $scope.UI.editModeHorarioHora = false;
         $scope.tableParams.reload();
         $scope.tableParamsHorarios.reload();
       };
+      $rootScope.$on('user:crudaction', function(){
+        $scope.Refresh();
+      });
 
       $scope.filter = {};
 
@@ -415,6 +420,7 @@
      */
     .controller('CursoHorarioCtrl', function(
       $scope,
+      $rootScope,
       table,
       tableHorarios,
       name,
@@ -463,8 +469,7 @@
           serviceProgramacionGrupoCurso.post(horario).then(function() {
             ToastMD.success(MessageFactory.Form.Saved);
             $mdDialog.hide();
-            table.reload();
-            tableHorarios.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           },function(result){
             ToastMD.error(result.data.message);
           });
@@ -480,6 +485,7 @@
      */
     .controller('CursoHorarioFechaCtrl', function(
       $scope,
+      $rootScope,
       table,
       name,
       MessageFactory,
@@ -515,7 +521,7 @@
           $scope.horario.put().then(function() {
             ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();
-            table.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           });
         }
       };
@@ -529,6 +535,7 @@
      */
     .controller('EditHorarioCtrl', function(
       $scope,
+      $rootScope,
       table,
       tableHorarios,
       name,
@@ -575,8 +582,7 @@
           $scope.model.put().then(function() {
             ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();
-            table.reload();
-            tableHorarios.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           });
         }
       };
@@ -591,6 +597,7 @@
      */
     .controller('EditHorarioHoraCtrl', function(
       $scope,
+      $rootScope,
       table,
       tableHorarios,
       name,
@@ -626,8 +633,7 @@
           $scope.model.put().then(function() {
             ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();
-            table.reload();
-            tableHorarios.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           });
         }
       };
