@@ -8,7 +8,7 @@ var TasaSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Tipotasa'
   },
-  _historial:[
+  historial:[
     {
       desde:{
         type:Date,
@@ -49,4 +49,4 @@ TasaSchema.pre('save',function(next){
 });
 TasaSchema.plugin(mongoosePaginate);
 TasaSchema.plugin(uniqueValidator);
-module.exports = mongoose.model('Tasa', TasaSchema).plural('tasa');
+module.exports = mongoose.model('Tasa', TasaSchema).plural('tasas');
