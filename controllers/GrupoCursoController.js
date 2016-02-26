@@ -15,7 +15,7 @@ module.exports=function(){
           if(!cursoAperturado) return response.status(404).send({message:'No se encontro el curso aperturado'});
           model.find({_cursoAperturadoPeriodo:request.body._cursoAperturadoPeriodo},function(err,data){
             if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
-            var seccion = _.findWhere(data, {_seccion:request.body._seccion});
+            var seccion = _.find(data,function(item){ return item._seccion.toString() == request.body._seccion._id; });
             if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});
             next();
           });
@@ -38,7 +38,7 @@ module.exports=function(){
           var detalles = [];
           detalles.push(detalle._id );
           Parent.update(
-            { _id: detalle._planestudiodetalle },
+            { _id: detalle._cursoAperturadoPeriodo },
             { $pull: { '_grupos':  {$in:detalles } } },
             {safe:true},
             function(err, obj){
