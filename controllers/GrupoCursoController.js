@@ -19,7 +19,9 @@ module.exports=function(){
               next();
             });*/
             var seccion = _.findWhere(data, {_seccion:request.body._seccion});
-            if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});*/
+            if(seccion) {
+              return response.status(412).send({message:'Grupo ya fue aperturado'});
+            }
             next();
           });
         });

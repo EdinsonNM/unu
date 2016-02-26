@@ -152,12 +152,6 @@
   </div>
 </md-content>
 
-<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
-  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
-</md-button>
-
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
