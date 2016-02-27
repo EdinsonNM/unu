@@ -5,12 +5,40 @@ var fs = require('fs'); //permite escribir y leer en disco
 var lockFile = require('lockfile');
 var Q = require('q');
 
-var processItem = function processItem(item,index){
+var crearAlumno = function crearAlumno(ingresante){
+  return alumno;
+};
+var crearAvanceCurricular = function crearAvanceCurricular(alumno){
+  return true;
+};
+
+var procesarIngresante = function(ingresante){
   var defer = Q.defer();
-  console.log(index+"-",item);
-  setTimeout(function(){
-    defer.resolve(true);
-  },1000);
+  crearAlumno(ingresante,function(err,alumno){
+    if(err) defer.reject(err);
+    crearAvanceCurricular(alumno,function(err,alumno){
+      if(err) defer.reject(err);
+      return defer.resolve(true);
+    });
+  });
+  return defer.promise;
+};
+var procesarIngresantes = function(ingresantes,next){
+  var promises=[];
+  ingresantes.forEach(function(ingresante){
+    promises.push(procesarIngresante(ingresante));
+  });
+  Q.all(promises).then(function(result){
+    next(null,result);
+  });
+};
+
+var procesarPago = function procesarPago(item,index){
+  var defer = Q.defer();
+  //NOTE si el pago pertenece a un ingresante entonces retorna ingresante defe.resolve(ingresante) si no defer.resolve(null)
+  //NOTE si el proceso falla defer.reject(error);
+  defer.resolve(true);
+  //proceso de actualización de pagos
   return defer.promise;
 };
 module.exports  = function(filename,next){
@@ -30,13 +58,22 @@ module.exports  = function(filename,next){
         var promises = [];
         console.log(dataArchivo.length);
         dataArchivo.forEach(function(item,index){
-          promises.push(processItem(item,index));
+          promises.push(procesarPago(item,index));
         });
         Q.all(promises).then(
           function(result){
-            console.log(result);
+            console.log(result);//[ingresante,null,null,ingresante];
+            var ingresantes =  _.reject(result, function(item){ return item === null; });
+            procesarIngresantes(ingresantes,function(err,data){
+              if(err){
+                console.log(err);
+              }else{
+                console.log('importación es OK');
+              }
+            });
           },
           function(result){
+            //si falla el proceso de un pago
             console.log(result);
           });
       });
