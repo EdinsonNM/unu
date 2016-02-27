@@ -10,11 +10,11 @@ var TasaSchema = new Schema({
   },
   historial:[
     {
-      desde:{
+      createdAt:{
         type:Date,
     		required:true
       },
-      hasta:{
+      updateAt:{
         type:Date,
     		required:true
       },
