@@ -310,11 +310,16 @@
       templateUrl: 'views/horarios/index.html',
       controller: 'HorariosCtrl'
     })
+<<<<<<< ff0210234a9953339bc64a21022b897e99995efe
     .state('app.matricularevision', {
+=======
+    .state('app.matricula.revision', {
+>>>>>>> prepare menu, controllers and views
       url: '/testing/matricula/revision',
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
+<<<<<<< ff0210234a9953339bc64a21022b897e99995efe
     .state('app.matriculainscripcion', {
       url: '/matricula/inscripcion',
       templateUrl: 'views/matricula/inscripcion.html',
@@ -327,6 +332,9 @@
       controller: 'MatriculaRevisionCtrl'
     })
     .state('app.matriculacursos', {
+=======
+    .state('app.matricula.cursos', {
+>>>>>>> prepare menu, controllers and views
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
