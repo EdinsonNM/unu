@@ -10,12 +10,13 @@
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('RecoverPassCtrl',[
-    '$scope', 'UserFactory', '$rootScope',
-    function($scope, UserFactory, $rootScope) {
-    $scope.Login = function() {
-      UserFactory.login($scope.user);
-    };
-    $scope.Reset = function() {};
+    '$scope', 'Restangular', '$rootScope',
+    function($scope, Restangular, $rootScope) {
+
+        var service = Restangular.all("alumnos");
+        service.customPOST('recoverPass', {codigo: model.codigo}).then(function(result){
+            console.log(result);
+        });
   }]);
 
 }).call(this);
