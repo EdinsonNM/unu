@@ -15,7 +15,9 @@ module.exports=function(){
           if(!grupo) return response.status(404).send({message:'Grupo no existe'});
           model.find({_grupoCurso:request.body._grupoCurso},function(err,data){
             if(err) return response.status(500).send({message:'Ocurrio un error interno del servidor',detail:err});
-            var titular = _.findWhere(data, {modalidadDocente:request.body.modalidadDocente});
+            var titular;
+            if(request.body.modalidadDocente==='Titular')
+              titular = _.findWhere(data, {modalidadDocente:'Titular'});
             if(titular) return response.status(412).send({message:'Solo puede asignarse un docente como titular'});
             next();
           });
