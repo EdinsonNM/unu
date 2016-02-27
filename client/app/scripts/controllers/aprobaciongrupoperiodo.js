@@ -39,6 +39,7 @@ angular.module('unuApp').controller('CursoGrupoCrtl',
       message: MessageFactory,
       title: 'Aprobación de Grupos por Cursos',
       editMode: false,
+      editModeGrupo: false,
       selected: null,
       customActions: []
     };
@@ -136,7 +137,6 @@ $scope.ListGruposAprobados = function () {
   });
 };
 
-
 $scope.ListAllGruposCursos = function () {
   $scope.tableParamsGrupo = new NgTableParams({
     page: 1,
@@ -175,12 +175,14 @@ $scope.ListGruposCursos = function (idCurso) {
     page: 1,
     count: 1000,
      filter: {
+
        _periodo: $scope.filter._periodo._id,
        _id: idCurso
      }
   }, {
     total: 0,
     groupBy: function(item) {
+
          return item._planestudiodetalle._curso.nombre;
       },
     counts: [],
@@ -188,8 +190,8 @@ $scope.ListGruposCursos = function (idCurso) {
       var query;
             query = params.url();
             $scope.UI.refresh = true;
-      $scope.UI.refresh = true;
 
+      $scope.UI.refresh = true;
       service2.customGET('methods/paginate', query).then(function(result) {
 
          $timeout(function() {
@@ -207,7 +209,9 @@ $scope.ListGruposCursos = function (idCurso) {
 $scope.Refresh = function Refresh() {
   $scope.UI.selected = null;
   $scope.UI.editMode = false;
+  $scope.UI.editModeGrupo = false;
   $scope.tableParams.reload();
+  $scope.tableParamsGrupo.reload();
 };
 
 
@@ -221,6 +225,7 @@ $scope.New = function New($event){
     locals:{
       name: LOCAL.name,
       table:$scope.tableParams,
+      tableGrupos: $scope.tableParamsGrupo,
       service: service1,
       curso: idcursoAprobado,
       idFacultad: $scope.filter._facultad,
@@ -230,17 +235,55 @@ $scope.New = function New($event){
   });
 };
 
+$scope.Edit = function Edit($event){
+  var parentEl = angular.element(document.body);
+  var model = Restangular.copy($scope.UI.selected);
+  $mdDialog.show({
+    parent: parentEl,
+    targetEvent: $event,
+    templateUrl :LOCAL.form,
+    locals:{
+      name: LOCAL.name,
+      table:$scope.tableParamsGrupo,
+      model: model,
+      idFacultad: $scope.filter._facultad,
+      idEscuela: $scope.filter._escuela
+    },
+    controller: 'GrupoEditCtrl'
+  });
+};
 
-$scope.filter = {};
+$scope.Delete = function Delete($event){
+  var confirm = $mdDialog.confirm()
+      .title(LOCAL.name)
+      .content(MessageFactory.Form.QuestionDelete)
+      .ariaLabel(LOCAL.name)
+      .targetEvent($event)
+      .ok(MessageFactory.Buttons.Yes)
+      .cancel(MessageFactory.Buttons.No);
+
+  var selected = Restangular.copy($scope.UI.selected);
+  $mdDialog.show(confirm).then(function() {
+    selected.remove().then(function() {
+      $scope.Refresh();
+      ToastMD.success(MessageFactory.Form.Deleted);
+    });
+  }, function() {
+
+  });
+};
+
+
+// $scope.filter = {};
 
 $scope.EnabledEdit = function EnabledEdit(item, $groups) {
-  console.log(item);
-  console.log($groups);
+   console.log('Grupos'+$groups);
   $scope.UI.editMode = false;
   $scope.UI.selected = null;
 
   angular.forEach($groups,function(group){
     angular.forEach(group.data,function(element){
+      console.log('element:'+element);
       if(item._id !== element._id){
         element.active = false;
       }
@@ -258,11 +301,57 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
 
 };
 
+$scope.EnabledGroupEdit = function EnabledGroupEdit(item) {
+  $scope.UI.grupoEditMode = false;
+  $scope.UI.selected = null;
+  // angular.forEach($groups,function(group){
+   //   console.log('Group'+group);
+    angular.forEach( $scope.tableParamsGrupo.data,function(element){
+      console.log('item._id'+item._id);
+      console.log('itemData:'+item.active);
+      console.log('element:'+ element);
+      if(item._id !== element._id){
+        element.active = false;
+      }
+    });
+  // });
+
+  if (item.active) {
+    $scope.UI.grupoEditMode = true;
+    $scope.UI.selected = item;
+}
+
+};
+
+$scope.EnabledEditGrupo = function(item) {
+
+  $scope.UI.editModeGrupo = false;
+  $scope.UI.editMode = false;
+  $scope.UI.selected = null;
+
+ angular.forEach($scope.tableParamsGrupo.data,function(element){
+    angular.forEach(element.data, function(elem){
+      angular.forEach(elem._grupos, function(elm){
+         if(item._id !== elm._id){
+           elm.active = false;
+         }
+      });
+   });
+});
+
+  if (item.active) {
+    $scope.UI.editMode = false;
+    $scope.UI.editModeGrupo = true;
+    $scope.UI.selected = item;
+    $scope.UI.selected.route = 'grupocursos';
+   }
+};
+
 }
 ])
 
-.controller('GrupoNewCtrl', ['$scope', 'table', 'name', 'curso', 'idFacultad', 'idEscuela', 'MessageFactory', 'service', 'ToastMD', '$mdDialog','NgTableParams', '$timeout', 'Restangular',
-  function($scope, table, name, curso, idFacultad, idEscuela, MessageFactory, service, ToastMD, $mdDialog, NgTableParams, $timeout, Restangular){
+.controller('GrupoNewCtrl', ['$scope', 'table', 'tableGrupos', 'name', 'curso', 'idFacultad', 'idEscuela', 'MessageFactory', 'service', 'ToastMD', '$mdDialog','NgTableParams', '$timeout', 'Restangular',
+  function($scope, table, tableGrupos, name, curso, idFacultad, idEscuela, MessageFactory, service, ToastMD, $mdDialog, NgTableParams, $timeout, Restangular){
 
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
@@ -295,7 +384,8 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
           $mdDialog.hide();
-          table.reload();
+          //table.reload();
+          tableGrupos.reload();
         }, function(error){
           switch (error.status) {
             case 422:
@@ -315,6 +405,42 @@ $scope.EnabledEdit = function EnabledEdit(item, $groups) {
       $mdDialog.hide();
     };
 
+}])
+
+.controller('GrupoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'idFacultad', 'idEscuela',
+function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, idFacultad, idEscuela){
+  $scope.submited = false;
+  $scope.model = model;
+  $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+  $scope.Buttons = MessageFactory.Buttons;
+
+  var LoadSecciones = function() {
+    var serviceSecciones = Restangular.all('secciones');
+    serviceSecciones.getList({
+      conditions: {
+         _facultad: idFacultad,
+         _escuela: idEscuela
+      }
+    }).then(function(data) {
+      $scope.secciones = data;
+  });
+  };
+
+  new LoadSecciones();
+
+  $scope.Save = function(form) {
+    $scope.submited = true;
+    if (form.$valid) {
+      $scope.model.put().then(function() {
+        ToastMD.success(MessageFactory.Form.Updated);
+        $mdDialog.hide();
+        table.reload();
+      });
+    }
+  };
+  $scope.Cancel = function(){
+    $mdDialog.hide();
+  };
 }]);
 
 }).call(this);

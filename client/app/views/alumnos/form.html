@@ -241,7 +241,7 @@
             </div>
           </div>
 
-          <div flex-container="row" flex-gutter="24" ng-if="includeUserData">
+          <div flex-container="row" flex-gutter="24">
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Código</label>
@@ -251,7 +251,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex-item ng-if="includeUserData">
               <md-input-container class="md-block">
                 <label>Usuario</label>
                 <input required ng-model="model._usuario.username">
@@ -260,7 +260,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex-item ng-if="includeUserData">
               <md-input-container class="md-block">
                 <label>Contraseña</label>
                 <input required type="password" ng-model="model._usuario.password">

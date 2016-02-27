@@ -17,7 +17,8 @@
       $rootScope,
       $timeout,
       NgTableParams,
-      $mdDialog
+      $mdDialog,
+      ToastMD
     ) {
 
       /**
@@ -46,7 +47,7 @@
         refresh: false,
         message: MessageFactory,
         title: 'Registro de Horarios para Cursos Aprobados',
-        editMode: true,
+        editMode: false,
         selected: null,
         customActions: []
       };
@@ -128,8 +129,14 @@
       $scope.Refresh = function Refresh() {
         $scope.UI.selected = null;
         $scope.UI.editMode = false;
+        $scope.UI.editModeHorario = false;
+        $scope.UI.editModeHorarioHora = false;
         $scope.tableParams.reload();
+        $scope.tableParamsHorarios.reload();
       };
+      $rootScope.$on('user:crudaction', function(){
+        $scope.Refresh();
+      });
 
       $scope.filter = {};
 
@@ -173,9 +180,10 @@
         if( item.active ){
           $scope.UI.editMode = true;
           $scope.UI.editModeHorario = false;
+          $scope.UI.editModeHorarioHora = false;
           $scope.UI.selected = item;
           $scope.selected_horario = item;
-          $scope.UI.selected.route = LOCAL.route;
+          $scope.UI.selected.route = 'grupocurso';
         }else{
           $scope.selected_horario = null;
         }
@@ -188,16 +196,128 @@
             if(item._id !== elem._id){
               elem.active = false;
             }
+            angular.forEach(elem.horarios, function(n_horario){
+              n_horario.active = false;
+            });
           });
         });
 
         if( item.active ){
           $scope.UI.editMode = false;
           $scope.UI.editModeHorario = true;
+          $scope.UI.editModeHorarioHora = false;
           $scope.UI.selected = item;
-          $scope.UI.selected.route = LOCAL.route;
+          $scope.UI.selected.route = 'programaciongrupocursos';
         }
       };
+      $scope.EnabledAddHorarioHora =function(key, item, horario){
+        $scope.UI.editMode = false;
+        $scope.UI.selected = null;
+        angular.forEach($scope.tableParamsHorarios.data, function(element){
+          angular.forEach(element.data, function(elem){
+            elem.active = false;
+            angular.forEach(elem.horarios, function(n_horario, index){
+              if(index !== key){
+                n_horario.active = false;
+              }
+            });
+          });
+        });
+
+        if( horario.active ){
+          $scope.UI.editMode = false;
+          $scope.UI.editModeHorario = false;
+          $scope.UI.editModeHorarioHora = true;
+          $scope.UI.selected = item;
+          $scope.UI.selected.route = 'programaciongrupocursos';
+          $scope.UI.selected_key = key;
+        }
+      };
+
+      /**
+       * update
+       */
+       $scope.EditHorario = function Edit($event){
+         var parentEl = angular.element(document.body);
+         var model = Restangular.copy($scope.UI.selected);
+         $mdDialog.show({
+           parent: parentEl,
+           targetEvent: $event,
+           templateUrl :LOCAL.form,
+           locals:{
+             name : LOCAL.name,
+             table : $scope.tableParams,
+             tableHorarios : $scope.tableParamsHorarios,
+             model: model,
+             aulas : aulas,
+             pabellones : pabellones,
+             docentes : docentes
+           },
+           controller: 'EditHorarioCtrl'
+         });
+       };
+       $scope.EditHorarioHora = function Edit($event){
+         var parentEl = angular.element(document.body);
+         var model = Restangular.copy($scope.UI.selected);
+         var selected_key = $scope.UI.selected_key;
+         $mdDialog.show({
+           parent: parentEl,
+           targetEvent: $event,
+           templateUrl :LOCAL.horario_form,
+           locals:{
+             name : LOCAL.name,
+             table : $scope.tableParams,
+             tableHorarios : $scope.tableParamsHorarios,
+             model: model,
+             selected_key: selected_key
+           },
+           controller: 'EditHorarioHoraCtrl'
+         });
+       };
+
+      /**
+       * delete
+       */
+       $scope.DeleteHorario = function Delete($event){
+         var confirm = $mdDialog.confirm()
+             .title(LOCAL.name)
+             .content(MessageFactory.Form.QuestionDelete)
+             .ariaLabel(LOCAL.name)
+             .targetEvent($event)
+             .ok(MessageFactory.Buttons.Yes)
+             .cancel(MessageFactory.Buttons.No);
+
+         var selected = Restangular.copy($scope.UI.selected);
+
+         $mdDialog.show(confirm).then(function() {
+           selected.remove().then(function() {
+             $scope.Refresh();
+             ToastMD.success(MessageFactory.Form.Deleted);
+           });
+         }, function(error) {
+         });
+       };
+       $scope.DeleteHorarioHora = function Delete($event){
+         var confirm = $mdDialog.confirm()
+             .title(LOCAL.name)
+             .content(MessageFactory.Form.QuestionDelete)
+             .ariaLabel(LOCAL.name)
+             .targetEvent($event)
+             .ok(MessageFactory.Buttons.Yes)
+             .cancel(MessageFactory.Buttons.No);
+
+         var selected = Restangular.copy($scope.UI.selected);
+
+         selected.horarios.splice($scope.UI.selected_key, 1);
+
+         $mdDialog.show(confirm).then(function() {
+           selected.put().then(function() {
+             $scope.Refresh();
+             ToastMD.success(MessageFactory.Form.Deleted);
+           });
+         }, function(error) {
+         });
+       };
 
       /**
        * lista los cursos, se ejecuta en el ng-change de "Plan Estudios"
@@ -300,6 +420,7 @@
      */
     .controller('CursoHorarioCtrl', function(
       $scope,
+      $rootScope,
       table,
       tableHorarios,
       name,
@@ -348,8 +469,7 @@
           serviceProgramacionGrupoCurso.post(horario).then(function() {
             ToastMD.success(MessageFactory.Form.Saved);
             $mdDialog.hide();
-            table.reload();
-            tableHorarios.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           },function(result){
             ToastMD.error(result.data.message);
           });
@@ -365,6 +485,7 @@
      */
     .controller('CursoHorarioFechaCtrl', function(
       $scope,
+      $rootScope,
       table,
       name,
       MessageFactory,
@@ -400,13 +521,126 @@
           $scope.horario.put().then(function() {
             ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();
-            table.reload();
+            $rootScope.$broadcast('user:crudaction', {});
           });
         }
       };
       $scope.Cancel = function(){
         $mdDialog.hide();
       };
+    })
+
+    /**
+     * controlador para editar los horarios
+     */
+    .controller('EditHorarioCtrl', function(
+      $scope,
+      $rootScope,
+      table,
+      tableHorarios,
+      name,
+      MessageFactory,
+      ToastMD,
+      $mdDialog,
+      model,
+      aulas,
+      pabellones,
+      docentes
+    ){
+
+      $scope.includeActive = false;
+      $scope.submited = false;
+      $scope.title = MessageFactory.Form.New.replace('{element}',name);
+      $scope.Buttons = MessageFactory.Buttons;
+      $scope.message = MessageFactory.Form;
+      $scope.modalidadCurso = ['Teoria', 'Practica', 'Seminario', 'Laboratorio', 'Otros'];
+      $scope.modalidadDocente = ['Titular', 'Auxiliar', 'Otro'];
+      $scope.aulas = aulas;
+      $scope.pabellones = pabellones;
+      $scope.docentes = docentes;
+
+      $scope.model = model;
+      console.log('model', model);
+
+      $scope.model.codigo = model._codigo_curso;
+      $scope.model.curso = model._nombre_curso;
+
+      $scope.model.aula = model._aula;
+      $scope.model.docente = model._docente;
+      $scope.model.modalidad_curso = model.modalidadClaseGrupo;
+      $scope.model.modalidad_curso = model.modalidadClaseGrupo;
+      $scope.model.modalidad_docente = model.modalidadDocente;
+      //$scope.model.pabellon = model._pabellon;
+
+      $scope.Save = function(form) {
+        $scope.submited = true;
+        $scope.model._aula = $scope.model.aula._id;
+        $scope.model._docente = $scope.model.docente._id;
+        $scope.model.modalidadClaseGrupo = $scope.model.modalidad_curso;
+        $scope.model.modalidadDocente = $scope.model.modalidad_docente;
+        if (form.$valid) {
+          $scope.model.put().then(function() {
+            ToastMD.success(MessageFactory.Form.Updated);
+            $mdDialog.hide();
+            $rootScope.$broadcast('user:crudaction', {});
+          });
+        }
+      };
+      $scope.Cancel = function(){
+        $mdDialog.hide();
+      };
+
+    })
+
+    /**
+     * controlador para editar los horarios
+     */
+    .controller('EditHorarioHoraCtrl', function(
+      $scope,
+      $rootScope,
+      table,
+      tableHorarios,
+      name,
+      MessageFactory,
+      ToastMD,
+      $mdDialog,
+      model,
+      selected_key
+    ){
+
+      $scope.includeActive = false;
+      $scope.submited = false;
+      $scope.title = MessageFactory.Form.New.replace('{element}',name);
+      $scope.Buttons = MessageFactory.Buttons;
+      $scope.message = MessageFactory.Form;
+      $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+
+      $scope.model = model;
+      console.log(model);
+      var current_horario = $scope.model.horarios[selected_key];
+      $scope.model.dia = current_horario.dia;
+      $scope.model.horaInicio = new Date(current_horario.horaInicio);
+      $scope.model.horaFin = new Date(current_horario.horaFin);
+
+      $scope.Save = function(form) {
+        $scope.model.horarios[selected_key] = {
+          dia : $scope.model.dia,
+          horaInicio : $scope.model.horaInicio,
+          horaFin : $scope.model.horaFin
+        };
+        $scope.submited = true;
+        if (form.$valid) {
+          $scope.model.put().then(function() {
+            ToastMD.success(MessageFactory.Form.Updated);
+            $mdDialog.hide();
+            $rootScope.$broadcast('user:crudaction', {});
+          });
+        }
+      };
+      $scope.Cancel = function(){
+        $mdDialog.hide();
+      };
+
     });
 
 }).call(this);

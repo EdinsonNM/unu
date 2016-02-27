@@ -8,19 +8,18 @@ module.exports=function(){
     setup:function(){
       var controller=baucis.rest('GrupoCurso');
       controller.fragment('/grupocursos');
-
       controller.request('post', function (request, response, next) {
         Parent.findOne({_id:request.body._cursoAperturadoPeriodo},function(err,cursoAperturado){
           if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
           if(!cursoAperturado) return response.status(404).send({message:'No se encontro el curso aperturado'});
           model.find({_cursoAperturadoPeriodo:request.body._cursoAperturadoPeriodo},function(err,data){
             if(err) return response.status(500).send({message:message.ERROR.INTERNAL_SERVER,detail:err});
-            var seccion = _.findWhere(data, {_seccion:request.body._seccion});
+            var seccion = _.find(data,function(item){ return item._seccion.toString() == request.body._seccion._id; });
             if(seccion) return response.status(412).send({message:'Grupo ya fue aperturado'});
+
             next();
           });
         });
-
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
             _id: context.doc._cursoAperturadoPeriodo},
@@ -38,7 +37,7 @@ module.exports=function(){
           var detalles = [];
           detalles.push(detalle._id );
           Parent.update(
-            { _id: detalle._planestudiodetalle },
+            { _id: detalle._cursoAperturadoPeriodo },
             { $pull: { '_grupos':  {$in:detalles } } },
             {safe:true},
             function(err, obj){
@@ -70,17 +69,18 @@ module.exports=function(){
                   }
                }
             },
-            {path:'_seccion', model:'Seccion'}]
+            {path:'_seccion'}]
           },
           function(err, results, pageCount, itemCount) {
-            var datos = [];
-            results.docs.forEach(function(item){
-              if(item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
-                item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-                item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-                datos.push(item);
-              }
+
+             var datos = results.docs.map(function(item){
+              item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+              item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+              item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
+              item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
+              return item;
             });
+
             var obj = {
               total: results.total,
               perpage: limit*1,

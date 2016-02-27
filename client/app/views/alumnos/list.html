@@ -15,8 +15,8 @@
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
             <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
-            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
-            <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item.apellidos}}</td>
+            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item._persona.nombres}}</td>
+            <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item._persona.apellidoPaterno}}</td>
             <td class="text-left" data-title="'Escuela'" sortable="_escuela" filter="{'_escuela':'select'}" filter-data="LoadEscuelas($column)">{{item._escuela.nombre}}</td>
             <td class="text-left" data-title="'Situación'" sortable="situacion" filter="{'situacion':'text'}">{{item._situacionAlumno.nombre}}</td>
             <td class="text-left" data-title="'Condición'" sortable="condicion" filter="{'condicion':'text'}">{{item._tipoCondicionAlumno.nombre}}</td>
@@ -37,7 +37,7 @@
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
-   <md-button aria-label="menu" class="md-fab md-warn">
+   <md-button aria-label="menu" class="md-fab">
      <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
  </md-fab-trigger>
