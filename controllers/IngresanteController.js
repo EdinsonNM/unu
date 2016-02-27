@@ -1,8 +1,10 @@
+var Persona = require('../models/PersonaModel.js');
 var model = require('../models/IngresanteModel.js');
 var Persona = require('../models/PersonaModel.js');
 var Q = require('q');
 var Validator = require('jsonschema').Validator;
 var schemaPago  = require('../schemas/ingresante-pagos');
+var Q = require('q');
 module.exports = function() {
   var baucis = require('baucis');
   return {

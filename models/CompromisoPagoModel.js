@@ -9,6 +9,10 @@ var CompromisopagoSchema = new Schema({
       type:Number,
       required:true
     },
+    referenciAlumno:{//un simple correlativo como identificador del compromiso
+      type:Number,
+      required:true
+    },
     pagado:{
       type:Boolean,
       required:true,
