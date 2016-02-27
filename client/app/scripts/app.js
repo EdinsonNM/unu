@@ -310,6 +310,16 @@
       templateUrl: 'views/horarios/index.html',
       controller: 'HorariosCtrl'
     })
+    .state('app.matricula.revision', {
+      url: '/testing/matricula/revision',
+      templateUrl: 'views/matricula/revision.html',
+      controller: 'MatriculaRevisionCtrl'
+    })
+    .state('app.matricula.cursos', {
+      url: '/testing/matricula/cursos',
+      templateUrl: 'views/matricula/cursos.html',
+      controller: 'MatriculaCursosCtrl'
+    })
 
     .state('app.matricularevision', {
       url: '/testing/matricula/revision',
