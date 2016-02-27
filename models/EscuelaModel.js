@@ -25,6 +25,11 @@ var EscuelaSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'ParametroEscuela'
     }],
+    _correlativosAnio:[{
+        anio:Number,
+        correlativo:Number
+      }
+    ],
     createdAt: Date,
     updatedAt: Date
 });

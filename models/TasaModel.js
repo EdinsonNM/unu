@@ -15,7 +15,7 @@ var TasaSchema = new Schema({
         type:Date,
     		required:true
       },
-      updatedAt:{
+      updateAt:{
         type:Date,
     		required:true
       },

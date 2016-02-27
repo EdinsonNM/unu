@@ -77,6 +77,16 @@ CompromisopagoSchema.pre('save',function(next){
 	if (!this.createdAt){
 		this.createdAt=now;
 	}
+  //TODO recorrido de los detalles para el calculo de los totales y saldos
+  var montoTotalPagado = 0, montoTotalMora = 0, totalDeuda = 0;
+  totalDeuda = this.importe;
+  for (var i = 0; i < this.detallePago.length; i++) {
+    montoTotalPagado = this.detallePago[i].montoPago;
+    montoTotalMora = this.detallePago[i].montoMora;
+  }
+  this.moratotal = montoTotalMora;
+  this.saldo = (totalDeuda - montoTotalPagado <= 0)?0:totalDeuda - montoTotalPagado;
+  this.pagado = (totalDeuda - montoTotalPagado <= 0)?true:false;
 	next();
 });
 
