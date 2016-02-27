@@ -8,13 +8,14 @@ var TasaSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Tipotasa'
   },
+  codigo:String,
   historial:[
     {
-      desde:{
+      createdAt:{
         type:Date,
     		required:true
       },
-      hasta:{
+      updatedAt:{
         type:Date,
     		required:true
       },
