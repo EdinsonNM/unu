@@ -2,6 +2,7 @@ var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
 var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
+
 module.exports=function(){
   var baucis=require('baucis');
   return{
