@@ -30,4 +30,4 @@ ConflictosalumnoSchema.pre('save', function(next) {
   }
   next();
 });
-module.exports = mongoose.model('Conflictosalumno', ConflictosalumnoSchema).plural('conflictosalumnos');
+module.exports = mongoose.model('ConflictosAlumno', ConflictosalumnoSchema).plural('conflictosalumnos');
