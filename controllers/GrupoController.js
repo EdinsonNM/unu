@@ -123,11 +123,7 @@ module.exports=function(){
               },{
                 title:'Matrícula Revisión',
                 icon:'',
-<<<<<<< HEAD
-                url:'app.',
-=======
                 url:'app.matricularevision',
->>>>>>> be9a370eb25b2c21620b91f0142471f2601aac8c
                 order:2
               },{
                 title:'Matrícula Cursos',
