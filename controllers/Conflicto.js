@@ -1,10 +1,10 @@
-var model = require('../models/ConflictosAlumnoModel.js');
+var model = require('../models/ConflictoModel.js');
 module.exports=function(){
   var baucis=require('baucis');
   return{
     setup:function(){
-      var controller=baucis.rest('Conflictosalumno');
-      controller.fragment('/conflictosalumnos');
+      var controller=baucis.rest('Conflicto');
+      controller.fragment('/conflicto');
       //custom methods
       controller.get('/methods/validate-unique', function(req, res){
         var obj={};
