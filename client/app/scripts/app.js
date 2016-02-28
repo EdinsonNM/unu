@@ -285,10 +285,10 @@
       templateUrl: 'views/aprobacion/ingresantes/list.html',
       controller: 'AprobacionIngresanteCtrl'
     })
-    .state('app.conflictosalumnos', {
-      url: '/conflictosalumnos',
-      templateUrl: 'views/conflictosalumnos/list.html',
-      controller: 'ConflictosAlumnosCtrl'
+    .state('app.conflicto', {
+      url: '/conflictos',
+      templateUrl: 'views/conflictos/list.html',
+      controller: 'ConflictosCtrl'
     })
     .state('app.otrasdeudasalumnos', {
       url: '/otrasdeudasalumnos',
