@@ -319,6 +319,7 @@
       templateUrl: 'views/matricula/inscripcion.html',
       controller: 'MatriculaInscripcionCtrl'
     })
+
     .state('app.matriculacursos', {
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
