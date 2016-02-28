@@ -108,6 +108,39 @@ module.exports=function(){
                 bgColorHead:'bgc-teal-500',
                 image:'bghome-2.jpg'
               }
+            },
+            {
+              order:5,
+              title: 'Matrícula Test',
+              description:'Inicia el proceso de matrícula de cada alumno',
+              url:'',
+              flex:33,
+              children:[{
+                title:'Matricula',
+                icon:'',
+                url:'app.matricula',
+                order:1
+              },{
+                title:'Matrícula Revisión',
+                icon:'',
+<<<<<<< HEAD
+                url:'app.',
+=======
+                url:'app.matricularevision',
+>>>>>>> be9a370eb25b2c21620b91f0142471f2601aac8c
+                order:2
+              },{
+                title:'Matrícula Cursos',
+                icon:'',
+                url:'app.matriculacursos',
+                order:3
+              }],
+              style:{
+                color: 'white',
+                bgColor:'bgc-white',
+                bgColorHead:'bgc-teal-500',
+                image:'bghome-2.jpg'
+              }
             }
 
           ];
