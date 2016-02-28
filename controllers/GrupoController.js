@@ -108,35 +108,6 @@ module.exports=function(){
                 bgColorHead:'bgc-teal-500',
                 image:'bghome-2.jpg'
               }
-            },
-            {
-              order:5,
-              title: 'Matrícula Test',
-              description:'Inicia el proceso de matrícula de cada alumno',
-              url:'',
-              flex:33,
-              children:[{
-                title:'Matricula',
-                icon:'',
-                url:'app.matricula',
-                order:1
-              },{
-                title:'Matrícula Revisión',
-                icon:'',
-                url:'app.matricularevision',
-                order:2
-              },{
-                title:'Matrícula Cursos',
-                icon:'',
-                url:'app.matricula.cursos',
-                order:3
-              }],
-              style:{
-                color: 'white',
-                bgColor:'bgc-white',
-                bgColorHead:'bgc-teal-500',
-                image:'bghome-2.jpg'
-              }
             }
 
           ];
@@ -171,6 +142,44 @@ module.exports=function(){
           ];
           grupo.save(function(error, data){
             res.status(200).send(data);
+          });
+        });
+
+        model.findOne({codigo: 'ALUMNO'}, function(error, grupo){
+          grupo.menu = [
+            {
+              order:5,
+              title: 'Matrícula',
+              description:'Inicia el proceso de matrícula de cada alumno',
+              url:'',
+              flex:33,
+              children:[{
+                title:'Matricula',
+                icon:'',
+                url:'app.matricula',
+                order:1
+              },{
+                title:'Matrícula Revisión',
+                icon:'',
+                url:'app.matricularevision',
+                order:2
+              },{
+                title:'Matrícula Incripción',
+                icon:'',
+                url:'app.matriculainscripcion',
+                order:3
+              }],
+              style:{
+                color: 'white',
+                bgColor:'bgc-white',
+                bgColorHead:'bgc-teal-500',
+                image:'bghome-2.jpg'
+              }
+            }
+
+          ];
+          grupo.save(function(error, data){
+            //res.status(200).send(data);
           });
         });
       });
