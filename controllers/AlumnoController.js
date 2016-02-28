@@ -13,6 +13,15 @@ module.exports = function() {
       controller.fragment('/alumnos');
 
       //custom methods
+      controller.query('get', function(req, res, next){
+        req.baucis.query.populate(
+          [{
+            path: '_persona',
+            model: 'Persona'
+          }]
+        );
+        next();
+      });
       controller.get('/model/sexo', function(req, res, next){
         var enumValues = model.schema.path('sexo').enumValues;
         res.status(200).send(enumValues);

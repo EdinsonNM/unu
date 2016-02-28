@@ -94,6 +94,26 @@ module.exports=function(){
       		}
       	);
       });
+
+      /**
+       * devuelve el último periodo registradoº
+       */
+       controller.get('/lastPeriodo', function(req, res){
+       	var filter;
+       	model.paginate(
+       		filter,
+       		{
+            limit: 1,
+            sort:{
+              $natural: -1
+            }
+          },
+       		function(err, results, pageCount, itemCount){
+       			res.send(results.docs);
+       		}
+       	);
+       });
+
     }
   };
 };

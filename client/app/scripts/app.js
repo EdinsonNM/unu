@@ -315,10 +315,10 @@
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
-    .state('app.matricula.cursos', {
-      url: '/testing/matricula/cursos',
-      templateUrl: 'views/matricula/cursos.html',
-      controller: 'MatriculaCursosCtrl'
+    .state('app.matriculainscripcion', {
+      url: '/matricula/inscripcion',
+      templateUrl: 'views/matricula/inscripcion.html',
+      controller: 'MatriculaInscripcionCtrl'
     })
 
     .state('app.matricularevision', {
