@@ -21,6 +21,46 @@ module.exports = function() {
         var enumValues = model.schema.path('estadoCivil').enumValues;
         res.status(200).send(enumValues);
       });
+
+      controller.post('/recoverPass', function(req, res, next){
+          if(request.body.codigo){
+            model.findOne(
+              {codigo: request.body.codigo},
+              function(err, alumno){
+                if(err) return response.status(500).send({message:err});
+                Usuario.findById(alumno._usuario, function(err, usuario){
+                    if(err) return response.status(500).send({message:err});
+                    response.status(200).send(usuario.password);
+                });
+              }
+            );
+          }else{
+              return response.status(412).send({message:err});
+          }
+      });
+      controller.post('/getCode', function(req, res, next){
+          if(request.body.email){
+              Persona.findOne(
+                  {email: request.body.email},
+                  function(err, persona){
+                      if(err) return response.status(500).send({message:err});
+                      console.log(persona);
+                      //response.status(200).send(persona);
+                      model.findOne(
+                          {_persona: persona._id},
+                          function(err, alumno){
+                              if(err) return response.status(500).send({message:err});
+                              response.status(200).send(alumno.codigo);
+                          }
+                      );
+                  }
+              );
+
+          }else{
+              return response.status(412).send({message:err});
+          }
+      });
+
       controller.request('post', function (request, response, next) {
         Q.fcall(function(){
           var defer = Q.defer();
