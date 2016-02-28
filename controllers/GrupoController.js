@@ -128,7 +128,7 @@ module.exports=function(){
               },{
                 title:'Matrícula Cursos',
                 icon:'',
-                url:'app.matricula.cursos',
+                url:'app.matriculacursos',
                 order:3
               }],
               style:{
