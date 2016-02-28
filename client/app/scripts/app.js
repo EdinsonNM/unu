@@ -325,7 +325,6 @@
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
     })
-
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
