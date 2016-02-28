@@ -8,6 +8,7 @@
       <div flex layout="row" layout-fill>
          {{UI.title}}
       </div>
+
          <!-- Imagen del usuario -->
          <div flex layout="row" layout-fill>
              <div flex-gt-sm="10" flex="10">
@@ -44,7 +45,7 @@
         <div class="table-responsive">
           <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
             <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-<<<<<<< 53c575be1299c218d4fbc95a2d509ecb5132c6d4
+
             <tbody ng-repeat="group in $groups">
               <tr class="ng-table-group">
                 <td colspan="2">
@@ -60,10 +61,10 @@
               </tr>
               <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
 
-=======
+
             <tbody>
               <tr>
->>>>>>> se agrega la funcionalidad de agregar curso a la matricula, validar que un curso ya fue seleccionado
+
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>

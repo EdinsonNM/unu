@@ -309,33 +309,22 @@
       templateUrl: 'views/horarios/index.html',
       controller: 'HorariosCtrl'
     })
-<<<<<<< 09a910027fd73a8417db30b0fab82ba888087e99
     .state('app.matricularevision', {
-=======
-    .state('app.matricula.revision', {
->>>>>>> prepare menu, controllers and views
       url: '/testing/matricula/revision',
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
-<<<<<<< 09a910027fd73a8417db30b0fab82ba888087e99
     .state('app.matriculainscripcion', {
       url: '/matricula/inscripcion',
       templateUrl: 'views/matricula/inscripcion.html',
       controller: 'MatriculaInscripcionCtrl'
     })
     .state('app.matriculacursos', {
-=======
-    .state('app.matricula.cursos', {
->>>>>>> prepare menu, controllers and views
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
     })
-<<<<<<< 09a910027fd73a8417db30b0fab82ba888087e99
-=======
 
->>>>>>> prepare menu, controllers and views
     //inicio mic
     .state('app.mic_asignaturas', {
       url: '/mic/asignaturas',
