@@ -33,29 +33,21 @@
 
          </div>
 
+         <p>Bienvenidos al proceso de matricula. Para iniciar el proceso es necesario que se asegure de levantar todas las observaciones y cancelar todas sus deudas pendientes con la universidad.</p>
+
+
+         <div flex layout="row" layout-fill>
+            <strong>Pendientes del Alumno:</strong>
+         </div>
+
       <!-- Agregar las pestañas -->
         <md-content class="md-padding">
 
         <div class="table-responsive">
           <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
             <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-            <tbody ng-repeat="group in $groups">
-              <tr class="ng-table-group">
-                <td colspan="2">
-                  <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
-                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                    <strong>Ciclo: {{group.value}} </strong>
-                  </a>
-                </td>
-                <td><strong>TOTAL</strong></td>
-                <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
-                <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
-                <td colspan="{{$columns.length-5}}"></td>
-              </tr>
-              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
-
-
-
+            <tbody>
+              <tr>
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
@@ -71,9 +63,7 @@
                     </strong>
                 </td>
               </tr>
-
             </tbody>
-            <tbody>
           </table>
         </div>
 
