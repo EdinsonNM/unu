@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('MatriculaCtrl', [
+  angular.module('unuApp').controller('MatriculaCursosCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;

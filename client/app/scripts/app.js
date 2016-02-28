@@ -315,7 +315,7 @@
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
-    .state('app.matricula.cursos', {
+    .state('app.matriculacursos', {
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
