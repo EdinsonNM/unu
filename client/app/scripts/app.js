@@ -65,7 +65,6 @@
           controller: 'AppCtrl as vm'
         }
       },
-
       resolve: {
         DataResolve: ResolveSessionController
       }
