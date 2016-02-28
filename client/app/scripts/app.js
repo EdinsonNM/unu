@@ -305,12 +305,12 @@
       templateUrl: 'views/horarios/index.html',
       controller: 'HorariosCtrl'
     })
-    .state('app.matricula.revision', {
+    .state('app.matricularevision', {
       url: '/testing/matricula/revision',
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
-    .state('app.matricula.cursos', {
+    .state('app.matriculacursos', {
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
