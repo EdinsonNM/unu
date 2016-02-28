@@ -305,7 +305,7 @@
       templateUrl: 'views/horarios/index.html',
       controller: 'HorariosCtrl'
     })
-    .state('app.matricula.revision', {
+    .state('app.matricularevision', {
       url: '/testing/matricula/revision',
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
