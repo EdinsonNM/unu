@@ -21,7 +21,7 @@ var crearCodigoAlumno = function crearAlumno(escuelaID, anioPeriodo){
   var codigo="";
   escuelas.findOne({_id:escuelaID},function(err,escuela){
     var correlativo = 0;//parseInt(_.find(escuela._correlativosAnio, function(data){ return data.anio == anioPeriodo; })) + 1;
-    if(escuela._correlativosAnio.length === 0){
+    if(escuela._correlativosAnio.length === 0 || escuela._correlativoAnio === null){
       for (var i = 0; i < escuela._correlativosAnio.length; i++) {
         if(escuela._correlativosAnio[i].anio == anioPeriodo){
           correlativo = escuela._correlativosAnio[i].correlativo + 1;
@@ -45,22 +45,27 @@ var crearCodigoAlumno = function crearAlumno(escuelaID, anioPeriodo){
 
 var crearAlumno = function crearAlumno(ingresante){
   planestudio.find({estado:'Aprobado'}).populate({path: '_periodo', options: { sort: [['anio', 'desc']] }}).exec(function(err,planesdeestudio){
-    objPlanEstudioVigente = planesdeestudio[0];
+    var objPlanEstudioVigente = planesdeestudio[0];
     var codigoAlumno = crearCodigoAlumno(ingresante._escuela, objPlanEstudioVigente._periodo.anio);
     tipocondicionalumno.findOne({codigo:'I'},function(err,tipocondicion){
       situacionalumno.findOne({codigo:'01'},function(err,situacion){
-        alumno.codigo = codigoAlumno;
-        alumno.estadoCivil = 'Soltero(a)';
-        alumno._persona = ingresante._persona;
-        alumno._ingresante = ingresante._id;
-        alumno._periodoInicio = objPlanEstudioVigente._periodo;
-        alumno._facultad = ingresante._facultad;
-        alumno._escuela = ingresante._escuela;
-        alumno._tipoCondicionAlumno = tipocondicion._id;
-        alumno._situacionAlumno = situacion._id;
-        alumno._usuario = codigoAlumno;
-        alumno.save(function(err,objAlumno){
-          if(err) return null;
+        //SE MARCA AL INGRESANTE COMO MATRICULADO
+        ingresante.estado = 'Matriculado';
+        ingresante.save(function(err, objIngresante){
+          //SE INGRESA LA DATA DEL ALUMNO
+          alumno.codigo = codigoAlumno;
+          alumno.estadoCivil = 'Soltero(a)';
+          alumno._persona = objIngresante._persona;
+          alumno._ingresante = objIngresante._id;
+          alumno._periodoInicio = objPlanEstudioVigente._periodo;
+          alumno._facultad = objIngresante._facultad;
+          alumno._escuela = objIngresante._escuela;
+          alumno._tipoCondicionAlumno = tipocondicion._id;
+          alumno._situacionAlumno = situacion._id;
+          alumno._usuario = codigoAlumno;
+          alumno.save(function(err,objAlumno){
+            if(err) return null;
+          });
         });
       });
     });
@@ -152,7 +157,7 @@ var procesarPago = function procesarPago(item,index){
       fechaImportacion: new Date(),
       _archivobanco: ArchivoBanco._id
     });
-    compromisopago.save(function(err,data){
+    compromisopago.save(function(err,objCompromisoPago){
       if(err){
         console.log(err);
         defer.reject(err);
@@ -163,7 +168,10 @@ var procesarPago = function procesarPago(item,index){
             defer.reject(err);
           }else{
             if(!ingresante) defe.resolve(null);
-            else defe.resolve(ingresante);
+            else{
+              if(objCompromisoPago.pagado) defe.resolve(ingresante);
+              else defe.resolve(null);
+            }
           }
         });
       }
@@ -195,7 +203,6 @@ var procesarPago = function procesarPago(item,index){
     );
     */
   });
-
   //defer.resolve(true);
   //proceso de actualización de pagos
   return defer.promise;

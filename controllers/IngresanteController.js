@@ -1,5 +1,16 @@
 var Persona = require('../models/PersonaModel.js');
 var model = require('../models/IngresanteModel.js');
+//var mdoelTipoTasa = require('../models/TipoTasaModel.js');
+//var modelTasa = require('../models/TasaModel.js');
+var modelCompromisoPago = require('../models/CompromisoPagoModel.js');
+var modelPlanEstudio = require('../models/PlanestudioModel.js');
+var modelEscuela = require('../models/EscuelaModel.js');
+var modelTipoCondicionAlumno = require('../models/TipoCondicionAlumnoModel.js');
+var modelSituacionAlumno = require('../models/SituacionAlumnoModel.js');
+var modelAlumno = require('../models/AlumnoModel.js');
+var modelPlanEstudioDetalle = require('../models/PlanestudiodetalleModel.js');
+var modelAvanceCurricular = require('../models/AvanceCurricularModel.js');
+
 var Validator = require('jsonschema').Validator;
 var schemaPago  = require('../schemas/ingresante-pagos');
 var Q = require('q');
@@ -105,7 +116,8 @@ module.exports = function() {
             status:null,
             message:''
           };
-          model.find({_id:idIngresante},function(error,ingresante){
+          //model.find({_id:idIngresante},function(error,ingresante){
+          model.findOne({_id:idIngresante}).populate({path:'Persona'}).exec(function(error,ingresante){
             if(error){
               errorData.status = 500;
               errorData.message = "Ocurrio un error mientras se buscaba el ingresante";
@@ -120,16 +132,118 @@ module.exports = function() {
             return next(null,ingresante);
           });
         },
-        ValidarTasa: function ValidarTasa(){
-        },
-        RegistrarAlumno: function RegistrarAlumno(){
+        ValidarTasa: function ValidarTasa(objIngresante, codigoCompromisoPago, montoPagado, montoMora, fechaDelPago){
 
         },
-        CrearAvanceCurricular:function CrearAvanceCurricular(){
-
+        crearCodigoAlumno: function crearAlumno(escuelaID, anioPeriodo){
+          var codigo="";
+          modelEscuela.findOne({_id:escuelaID},function(err,escuela){
+            var correlativo = 0;//parseInt(_.find(escuela._correlativosAnio, function(data){ return data.anio == anioPeriodo; })) + 1;
+            if(escuela._correlativosAnio.length === 0 || escuela._correlativoAnio === null){
+              for (var i = 0; i < escuela._correlativosAnio.length; i++) {
+                if(escuela._correlativosAnio[i].anio == anioPeriodo){
+                  correlativo = escuela._correlativosAnio[i].correlativo + 1;
+                  codigo = escuela.codigo + anioPeriodo.toString() + utils.pad(correlativo.toString(),3,'0');
+                  escuela._correlativosAnio[i].correlativo = correlativo;
+                  break;
+                }
+              }
+            }
+            else {
+              correlativo = correlativo + 1;
+              codigo = escuela.codigo + anioPeriodo.toString() + utils.pad(correlativo.toString(),3,'0');
+              escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:correlativo});
+            }
+            escuela.save(function(err,objEscuela){
+              if(err){ console.log(err); return null; }
+            });
+            return codigo;
+          });
         },
-        RegistrarPago:function RegistrarPago(){
+        RegistrarAlumno: function RegistrarAlumno(objIngresante){
+          modelPlanEstudio.find({estado:'Aprobado'}).populate({path: '_periodo', options: { sort: [['anio', 'desc']] }}).exec(function(err,planesdeestudio){
+            var objPlanEstudioVigente = planesdeestudio[0];
+            var codigoAlumno = crearCodigoAlumno(objIngresante._escuela, objPlanEstudioVigente._periodo.anio);
+            modelTipoCondicionAlumno.findOne({codigo:'I'},function(err,tipocondicion){
+              modelSituacionAlumno.findOne({codigo:'01'},function(err,situacion){
+                //SE MARCA AL INGRESANTE COMO MATRICULADO
+                objIngresante.estado = 'Matriculado';
+                objIngresante.save(function(err, dataIngresante){
+                  //SE INGRESA LA DATA DEL ALUMNO
+                  modelAlumno.codigo = codigoAlumno;
+                  modelAlumno.estadoCivil = 'Soltero(a)';
+                  modelAlumno._persona = dataIngresante._persona;
+                  modelAlumno._ingresante = dataIngresante._id;
+                  modelAlumno._periodoInicio = objPlanEstudioVigente._periodo;
+                  modelAlumno._facultad = dataIngresante._facultad;
+                  modelAlumno._escuela = dataIngresante._escuela;
+                  modelAlumno._tipoCondicionAlumno = tipocondicion._id;
+                  modelAlumno._situacionAlumno = situacion._id;
+                  modelAlumno._usuario = codigoAlumno;
+                  modelAlumno.save(function(err,objAlumno){
+                    if(err) return null;
+                    else return objAlumno;
+                  });
+                });
+              });
+            });
+          });
+        },
+        CrearAvanceCurricular:function CrearAvanceCurricular(alumno){
+          modelPlanEstudio.findOne({_periodo:alumno._periodoInicio, _escuela:alumno._escuela}, function(err,objPlanEstudio){
+            modelPlanEstudioDetalle.find({_planestudio:objPlanEstudio._id},function(err,listaDetallesPlan){
+              var itemDetalle = {};
+              var listaDetalles = [];
+              modelAvanceCurricular.secuencia = 1;
+              modelAvanceCurricular._alumno = alumno._id;
+              modelAvanceCurricular._planEstudios = objPlanEstudio._id;
+              modelAvanceCurricular.activo = true;
+              modelAvanceCurricular.createdAt = new Date();
 
+              for (var i = 0; i < listaDetallesPlan.length; i++) {
+                itemDetalle = {};
+                itemDetalle._planEstudiosDetalle = listaDetallesPlan[i]._id;
+                itemDetalle.numeroVeces = 1;
+                itemDetalle.record = [];
+                listaDetalles.push(itemDetalle);
+              }
+              modelAvanceCurricular.detalleAvance = listaDetalles;
+              modelAvanceCurricular.save(function(err,avance){
+                if(err){
+                  console.log(err);
+                  return err;
+                }
+                else{
+                  return true;
+                }
+              });
+            });
+          });
+        },
+        RegistrarPago:function RegistrarPago(informacionPago, objIngresante){
+          modelCompromisoPago.findOne({codigo:informacionPago.compomisoPago},function(err, objCompromisoPago){
+            objCompromisoPago.detallePago.push({
+              nroMovimiento: informacionPago.nroOperacion,
+              fechaPago: informacionPago.fechaPago,
+              totalPagado: informacionPago.totalPagado,
+              montoPago: informacionPago.totalPagado - informacionPago.montoMora,
+              montoMora: informacionPago.montoMora,
+              oficinaPago: informacionPago.oficina,
+              institucion: '',
+              cuenta: informacionPago.nroCuentaAbono,
+              fechaImportacion: new Date(),
+              _archivobanco: null
+            });
+            objCompromisoPago.save(function(err,dataCompromisoPago){
+              if(err){
+                console.log(err);
+                return null;
+              }else{
+                if(dataCompromisoPago.pagado) return dataCompromisoPago;
+                else return null;
+              }
+            });
+          });
         },
         EnviarEmail:function EnviarEmail(){
 
@@ -141,15 +255,19 @@ module.exports = function() {
         if(result.errors.length>0) return res.status(400).send(result.errors);
         ProcesoPago.BuscarIngresante(req.body._ingresante,function(error,ingresante){
           if(error) return res.status(error.status).send(error);
-          ProcesoPago.ValidarTasa(ingresante._modalidadIngresa,req.body.monto,function(error,result){
+          /*ProcesoPago.ValidarTasa(ingresante, req.body.compromisoPago, req.body.monto, req.body.mora, req.body.fechaPago, function(error,result){
             if(error) return res.status(500).send(error);
-            if(result){
+            if(result){*/
               var detallepago = {
-                voucher:req.body.voucher,
-                fecha:req.body.fecha,
-                monto: req.body.monto
+                compomisoPago: req.body.compromisoPagoId,
+                nroOperacion: req.body.nroOperacion,
+                fechaPago: req.body.fechaPago,
+                totalPagado: req.body.montoPagado,
+                montoMora: req.body.mora,
+                oficina: req.body.oficinaPago,
+                nroCuentaAbono: req.body.cuentaAbono
               };
-              ProcesoPago.RegistrarPago(detallepago,function(error,detallepago){
+              ProcesoPago.RegistrarPago(detallepago, ingresante, function(error,detallepago){
                 if(error) return res.status(500).send(error);
                 ProcesoPago.RegistrarAlumno(ingresante,function(error,alumno){
                   if(error) return res.status(500).send(error);
@@ -161,10 +279,10 @@ module.exports = function() {
                   });
                 });
               });
-            }else{
+            /*}else{
 
             }
-          });
+          });*/
         });
 
       });
