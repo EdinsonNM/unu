@@ -37,6 +37,11 @@ var IngresanteSchema = new Schema({
       ref: 'Persona',
       required: true
     },
+    tipoColegio:{
+      type:String,
+      enum:['Estatal','Particular'],
+      default:'Estatal'
+    },
     createdAt: Date,
     updatedAt: Date
 });
