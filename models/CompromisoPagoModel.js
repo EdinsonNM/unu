@@ -58,7 +58,6 @@ var CompromisopagoSchema = new Schema({
     createdAt:Date,
   	updatedAt:Date
 });
-
 CompromisopagoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
