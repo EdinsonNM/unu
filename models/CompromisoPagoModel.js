@@ -6,12 +6,11 @@ var uniqueValidator = require('mongoose-unique-validator');
 var CompromisopagoSchema = new Schema({
 
     codigo:{//un simple correlativo como identificador del compromiso
-      type:Number,
+      type:String,
       required:true
     },
     referenciAlumno:{//un simple correlativo como identificador del compromiso
-      type:Number,
-      required:true
+      type:String
     },
     pagado:{
       type:Boolean,
@@ -30,7 +29,6 @@ var CompromisopagoSchema = new Schema({
     },
     moratotal:{
       type:Number,
-      required:true,
       default:0
     },
     fechavenc:Date,

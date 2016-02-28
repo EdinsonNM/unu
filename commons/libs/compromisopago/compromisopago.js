@@ -69,7 +69,7 @@ class CompromisoPago{
         promises.push(self.generarIngresante(ingresante));
       });
       Q.all(promises).then(function(result){
-        next(result);
+        next(null,result);
       });
 
     });
@@ -125,3 +125,4 @@ class CompromisoPago{
 }
 
 module.exports= CompromisoPago;
+
