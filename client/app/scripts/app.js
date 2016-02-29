@@ -310,10 +310,17 @@
       templateUrl: 'views/matricula/revision.html',
       controller: 'MatriculaRevisionCtrl'
     })
+<<<<<<< HEAD
     .state('app.matriculacursos', {
       url: '/testing/matricula/cursos',
       templateUrl: 'views/matricula/cursos.html',
       controller: 'MatriculaCursosCtrl'
+=======
+    .state('app.matriculainscripcion', {
+      url: '/matricula/inscripcion',
+      templateUrl: 'views/matricula/inscripcion.html',
+      controller: 'MatriculaInscripcionCtrl'
+>>>>>>> a9baa61e59334d69d6eb6270c70b2738c02bfc88
     })
 
     //inicio mic

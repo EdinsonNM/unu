@@ -69,4 +69,4 @@ CompromisoPagoSchema.pre('save',function(next){
 });
 CompromisoPagoSchema.plugin(mongoosePaginate);
 CompromisoPagoSchema.plugin(uniqueValidator);
-module.exports = mongoose.model('CompromisoPago',CompromisoPagoSchema).plural('compromisopago');
+module.exports = mongoose.model('Compromisopago',CompromisopagoSchema).plural('compromisopagos');
