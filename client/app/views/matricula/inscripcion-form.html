@@ -20,33 +20,27 @@
                   <td colspan="2">
                     <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
                       <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
-                      <strong>Ciclo: {{group.value}} </strong>
+                      <strong>{{ group.value.split('-')[0] }}</strong>
                     </a>
                   </td>
-                  <td><strong>TOTAL</strong></td>
-                  <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
-                  <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
-                  <td colspan="{{$columns.length-5}}"></td>
+                  <td><strong>{{ group.value.split('-')[1] }}</strong></td>
+                  <td><strong>{{ group.value.ciclo }} </strong></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
                 <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)">
                   <td style="width:30px;">
                     <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                   </td>
-                  <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
-                  <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
-                  <td data-title="'N° Creditos'">{{item.creditos}}</td>
-                  <td data-title="'N° Horas'">{{item.horas_total}}</td>
-                  <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
-                  <td data-title="'N° Horas Práctica'">{{item.horas_practica}}</td>
-                  <td data-title="'N° Horas Laboratorio'">{{item.horas_laboratorio}}</td>
-                  <td data-title="'Estado'">
-                    <strong>
-                        <a href  title="{{item.aprobacioncursosperiodo}}" >
-                          <span ng-if="item._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
-                          <span ng-if="item._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
-                        </a>
-                      </strong>
-                  </td>
+                  <td class="text-left" data-title="'Curso/Grupo'" sortable="curso">{{ item._seccion.nombre }}</td>
+                  <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{ item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
+                  <td data-title="'N° Creditos'">{{ item._cursoAperturadoPeriodo._planestudiodetalle.creditos }}</td>
+                  <td data-title="'N° Horas'">{{ item._cursoAperturadoPeriodo._planestudiodetalle.horas_total }}</td>
+                  <td data-title="'N° Horas Teoria'">{{ item._cursoAperturadoPeriodo._planestudiodetalle.horas_teoria }}</td>
+                  <td data-title="'N° Horas Práctica'">{{ item._cursoAperturadoPeriodo._planestudiodetalle.horas_practica }}</td>
+                  <td data-title="'N° Horas Laboratorio'">{{ item._cursoAperturadoPeriodo._planestudiodetalle.horas_laboratorio }}</td>
                 </tr>
               </tbody>
             </table>
