@@ -6,6 +6,12 @@ module.exports=function(){
       var controller=baucis.rest('Conflictosalumno');
       controller.fragment('/conflictosalumnos');
 
+      //custom methods
+      controller.get('/model/estado', function(req, res, next){
+        var enumValues = model.schema.path('estado').enumValues;
+        res.status(200).send(enumValues);
+      });
+
       controller.get('/methods/paginate', function(req, res){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;

@@ -36,7 +36,11 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Estado</label>
-            <input required name="estado" ng-model="model.estado">
+            <md-select ng-model="model.estado" name="estado" required>
+              <md-option ng-repeat="est in estados" ng-value="est">
+                {{est}}
+              </md-option>
+            </md-select>
             <div ng-messages="myForm.estado.$error"  ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>

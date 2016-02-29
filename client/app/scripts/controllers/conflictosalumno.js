@@ -32,6 +32,10 @@
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
+    service.customGET('model/estado', {}).then(function(result){
+      $scope.estados = result;
+    });
+
     List = function() {
       $scope.tableParams = new ngTableParams({
         page: 1,
@@ -69,7 +73,8 @@
         locals:{
           service: service,
           name: LOCAL.name,
-          table:$scope.tableParams
+          table:$scope.tableParams,
+          estados: $scope.estados
         },
         controller: 'ConflictoNewCtrl'
       });
@@ -83,7 +88,8 @@
         locals:{
           name: LOCAL.name,
           table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
+          model: Restangular.copy($scope.UI.selected),
+          estados: $scope.estados
         },
         controller: 'ConflictoEditCtrl'
       });
@@ -126,12 +132,13 @@
     new List();
   }])
 
-  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, estados){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
+    $scope.estados = estados;
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -147,12 +154,13 @@
     };
   }])
 
-  .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular){
+  .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'estados',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
+    $scope.estados = estados;
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
