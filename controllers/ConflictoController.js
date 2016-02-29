@@ -4,7 +4,7 @@ module.exports=function(){
   return{
     setup:function(){
       var controller=baucis.rest('Conflicto');
-      controller.fragment('/conflictos');
+      controller.fragment('/conflicto');
       //custom methods
       controller.get('/methods/validate-unique', function(req, res){
         var obj={};
@@ -45,7 +45,6 @@ module.exports=function(){
       		}
       	);
       });
-
     }
   };
 };
