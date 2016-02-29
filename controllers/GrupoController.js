@@ -175,7 +175,7 @@ module.exports=function(){
           });
         });
 
-        model.findOne({codigo: 'ALUMNO'}, function(error, grupo){
+        /*model.findOne({codigo: 'ALUMNO'}, function(error, grupo){
           grupo.menu = [
             {
               order:5,
@@ -183,22 +183,22 @@ module.exports=function(){
               description:'Inicia el proceso de matrícula de cada alumno',
               url:'',
               flex:33,
-            //   children:[{
-            //     title:'Matricula',
-            //     icon:'',
-            //     url:'app.matricula',
-            //     order:1
-            //   },{
-            //     title:'Matrícula Revisión',
-            //     icon:'',
-            //     url:'app.matricularevision',
-            //     order:2
-            //   },{
-            //     title:'Matrícula Incripción',
-            //     icon:'',
-            //     url:'app.matriculainscripcion',
-            //     order:3
-            //   }],
+               children:[{
+                 title:'Matricula',
+                 icon:'',
+                 url:'app.matricula',
+                 order:1
+               },{
+                 title:'Matrícula Revisión',
+                 icon:'',
+                 url:'app.matricularevision',
+                 order:2
+               },{
+                 title:'Matrícula Incripción',
+                 icon:'',
+                 url:'app.matriculainscripcion',
+                 order:3
+               }],
               style:{
                 color: 'white',
                 bgColor:'bgc-white',
@@ -211,7 +211,8 @@ module.exports=function(){
           grupo.save(function(error, data){
             //res.status(200).send(data);
           });
-        });
+        });*/
+
       });
 
     }
