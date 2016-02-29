@@ -48,9 +48,9 @@
 
       serviceMatricula = Restangular.all('matriculas');
       var getMatricula = function(){
-        serviceMatricula.one('56d3c785d07094f9246cbeb2').get().then(function(response){
-          matricula = response;
-          $scope.cursos_selected = response._detalleMatricula;
+        serviceMatricula.customGET('lastMatricula').then(function(response){
+          matricula = response[0];
+          $scope.cursos_selected = matricula._detalleMatricula;
           console.log($scope.cursos_selected);
         });
       }
@@ -140,8 +140,8 @@
              serviceGrupoCurso.customGET('methods/paginate', query).then(function(result) {
                $timeout(function() {
                  angular.forEach(result.data, function(item){
-                   angular.forEach($scope.groups_selected, function(curso){
-                     if(item._id === curso._id){
+                   angular.forEach(matricula._detalleMatricula, function(curso){
+                     if(item._id === curso._grupoCurso._id){
                        item.active = true;
                      }
                    });
@@ -156,8 +156,8 @@
 
       var findIndex = function(item){
         var index;
-        angular.forEach($scope.groups_selected, function(curso, k){
-          if(item._id === curso._id){
+        angular.forEach(matricula._detalleMatricula, function(curso, k){
+          if(item._id === curso._grupoCurso._id){
             index= k;
           }
         });
@@ -170,13 +170,27 @@
           _grupoCurso : item._id,
           order: 1
         };
+        var test;
         if(item.active){
-          $scope.groups_selected.push(item);
-          serviceDetalleMatricula.post(params).then(function() {});
+          angular.forEach(matricula._detalleMatricula, function(curso){
+            if(item._codigo_curso === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo){
+              item.active = !item.active;
+              ToastMD.warning("Solo puede matricularse en un grupo por curso");
+              test = true;
+            }
+          });
+          if(!test){
+            $scope.groups_selected.push(item);
+            serviceDetalleMatricula.post(params).then(function() {});
+          }
         }else{
           var index = findIndex(item);
-          $scope.groups_selected.splice(index, 1);
-          serviceDetalleMatricula.delete(params).then(function() {});
+          angular.forEach(matricula._detalleMatricula, function(curso){
+            if(item._id === curso._grupoCurso._id){
+              serviceDetalleMatricula.one(curso._id).remove();
+            }
+          });
+          matricula._detalleMatricula.splice(index, 1);
         }
 
         if( $scope.groups_selected.length !== initial_count ){

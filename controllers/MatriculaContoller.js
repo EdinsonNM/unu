@@ -37,6 +37,48 @@ module.exports = function() {
         next();
       });
 
+      /**
+       * devuelve el último periodo registradoº
+       */
+       controller.get('/lastMatricula', function(req, res){
+       	var filter;
+       	model.paginate(
+       		filter,
+       		{
+            limit: 1,
+            sort:{
+              $natural: -1
+            },
+            populate: [{
+              path: '_detalleMatricula',
+              model: 'DetalleMatricula',
+              populate: [{
+                path: '_grupoCurso',
+                model: 'GrupoCurso',
+                populate: [{
+                  path: '_seccion',
+                  model: 'Seccion'
+                },{
+                  path: '_cursoAperturadoPeriodo',
+                  model: 'CursoAperturadoPeriodo',
+                  populate: [{
+                    path: '_planestudiodetalle',
+                    model: 'Planestudiodetalle',
+                    populate: [{
+                      path: '_curso',
+                      model: 'Curso'
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          },
+       		function(err, results, pageCount, itemCount){
+       			res.send(results.docs);
+       		}
+       	);
+       });
+
     }
   };
 };
