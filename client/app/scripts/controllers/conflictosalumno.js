@@ -15,6 +15,7 @@
   function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
+    $scope.estadosFilter = [];
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
@@ -36,7 +37,13 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     service.customGET('model/estado', {}).then(function(result){
-      $scope.estados = result;
+        $scope.estados = result;
+        angular.forEach(data, function(item) {
+        $scope.estadosFilter.push({
+            'id': item,
+            'title': item
+            });
+        });
     });
 
     var LoadConflictos = function LoadConflictos() {
@@ -173,21 +180,25 @@
     $scope.conflictos = conflictos;
     $scope.facultades = facultades;
     $scope.periodos = periodos;
+    $scope.model = {};
 
     $scope.ListAlumnos = function(){
-        var filter = {
-            _escuela: $scope.model._escuela._id,
-            _periodo: $scope.model._periodo._id
-        };
-        service.customGET('methods/paginate', {filter: filter}).then(function(result) {
-            $scope.alumnos = result.data;
+        var serviceAlumno = Restangular.all('alumnos');
+        serviceAlumno.getList({conditions:{
+            _escuela:$scope.model._escuela._id
+            //,_periodoInicio: $scope.model._periodo._id
+            }, populate: '_persona'}).then(function(data){
+                console.log(data);
+            $scope.alumnos = data;
         });
     };
     $scope.LoadEcuelas = function LoadEcuelas(){
-      var serviceEscuela = Restangular.all('escuelas');
-      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id},populate:'_facultad'}).then(function(data){
-        $scope.escuelas = data;
-      });
+        console.log("facultad");
+        console.log($scope.model._facultad);
+        var serviceEscuela = Restangular.all('escuelas');
+        serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id}, populate:'_facultad'}).then(function(data){
+            $scope.escuelas = data;
+        });
     };
     $scope.Save = function(form) {
       $scope.submited = true;
@@ -216,12 +227,13 @@
     $scope.periodos = periodos;
 
     $scope.ListAlumnos = function(){
-        var filter = {
-            _escuela: $scope.model._escuela._id,
-            _periodo: $scope.model._periodo._id
-        };
-        service.customGET('methods/paginate', {filter: filter}).then(function(result) {
-            $scope.alumnos = result.data;
+        var serviceAlumno = Restangular.all('alumnos');
+        serviceAlumno.getList({conditions:{
+            _escuela:$scope.model._escuela._id
+            //,_periodoInicio: $scope.model._periodo._id
+            }, populate: '_persona'}).then(function(data){
+                console.log(data);
+            $scope.alumnos = data;
         });
     };
     $scope.LoadEcuelas = function LoadEcuelas(){

@@ -14,7 +14,7 @@
           <div flex>
               <md-input-container class="md-block">
                   <label>Facultad</label>
-                  <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+                  <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
                     <md-option ng-repeat="fac in facultades" ng-value="fac">
                       {{fac.nombre}}
                     </md-option>
@@ -26,7 +26,7 @@
           <div flex>
               <md-input-container class="md-block">
                   <label>Escuela</label>
-                  <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}">
+                  <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}">
                     <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                       {{escuela.nombre}}
                     </md-option>
@@ -36,7 +36,7 @@
           <div flex>
               <md-input-container class="md-block">
                 <label>Periodo</label>
-                <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="ListAlumnos()">
+                <md-select ng-model="model._periodo" ng-model-options="{trackBy: '$value._id'}" ng-change="ListAlumnos()">
                   <md-option ng-repeat="periodo in periodos" ng-value="periodo">
                     {{periodo.nombre}}
                   </md-option>

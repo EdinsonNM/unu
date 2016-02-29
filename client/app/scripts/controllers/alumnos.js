@@ -17,7 +17,7 @@
       $scope.situacionesFilter = [];
       $scope.condicionesFilter = [];
       $scope.modalidadesFilter = [];
-      
+
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
@@ -178,6 +178,7 @@
       $scope.Edit = function Edit($event) {
         var parentEl = angular.element(document.body);
         var model = Restangular.copy($scope.UI.selected); //console.log(model);
+        console.log("Click en Editar");
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,
@@ -306,7 +307,7 @@
     function($scope, table, name, MessageFactory, model, sexo, tipodocumento, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular) {
       $scope.includeUserData = false;
       $scope.submited = false;
-
+      console.log("controlador vista alumno");
       $scope.LoadEscuelas = function LoadEscuelas() {
         var serviceEscuela = Restangular.all(route_escuelas);
         serviceEscuela.getList({

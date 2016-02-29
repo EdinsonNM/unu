@@ -26,7 +26,11 @@ module.exports=function(){
         }
       	model.paginate(
       		filter,
-      		{page: page, limit: limit},
+      		{
+                page: page,
+                limit: limit,
+                populate: ['_alumno', '_conflicto']
+            },
       		function(err, results, pageCount, itemCount){
                 var obj = {
                   total: results.total,

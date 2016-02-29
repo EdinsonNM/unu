@@ -136,7 +136,7 @@
               <md-input-container class="md-block">
                 <label>Email</label>
                 <input required name="email" ng-model="model._usuario.email">
-                <div ng-messages="myForm._usuario.email.$error" ng-if="submited" required>
+                <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
