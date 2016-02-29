@@ -63,7 +63,11 @@
 
 
             <tbody>
-              <tr>
+            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
+                <td class="text-left" data-title="'Código'">{{}}</td>
+                <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
+                <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
+            </tr>
 
                 <td style="width:30px;">
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
@@ -86,7 +90,9 @@
 
        </md-content>
 
-      <!-- fin de pestañas -->
-    </md-content>
-  </div>
+<div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2" ng-click="RegisterMatricula()" >
+   <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion">
+ <button class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Iniciar el proceso de matricula</button>
+ </a>
+ </div>
 </md-content>
