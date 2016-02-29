@@ -91,8 +91,8 @@
           table:$scope.tableParams,
           service:service,
           facultades: $scope.facultadesFilter,
-          selFacultad: $scope.filter._facultadFilter,
-          selEscuela: $scope.filter._escuelaFilter
+          selFacultad: $scope.filter ? $scope.filter._facultadFilter : null,
+          selEscuela: $scope.filter ? $scope.filter._escuelaFilter : null
         },
         controller: 'SeccionNewCtrl'
       });
@@ -170,9 +170,11 @@
       });
     };
 
-    $scope.model._facultad = selFacultad;
-    $scope.LoadEscuelasFrm();
-    $scope.model._escuela = selEscuela;
+    if (selFacultad) {
+      $scope.model._facultad = selFacultad;
+      $scope.LoadEscuelasFrm();
+      $scope.model._escuela = selEscuela;
+    }
 
     $scope.Save = function(form) {
       $scope.submited = true;
