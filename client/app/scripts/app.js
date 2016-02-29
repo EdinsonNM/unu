@@ -291,8 +291,8 @@
       controller: 'ConflictosCtrl'
     })
     .state('app.conflictosalumno', {
-      url: '/conflictosalumno',
-      templateUrl: 'views/conflictosalumno/list.html',
+      url: '/conflictosalumnos',
+      templateUrl: 'views/conflictosalumnos/list.html',
       controller: 'ConflictosalumnoCtrl'
     })
     .state('app.otrasdeudasalumnos', {

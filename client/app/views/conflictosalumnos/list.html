@@ -14,12 +14,9 @@
             <td style="width:30px;">
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
-            <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
-            <td class="text-left" data-title="'Nombre'" sortable="nombres" filter="{'nombre':'text'}">{{item.nombre}}</td>
-            <td class="text-center" data-title="'Activo'">
-              <span href title="Activo" ng-if="item.activo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
-              <span href title="Inactivo" ng-if="!item.activo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
-            </td>
+            <td class="text-left" data-title="'Alumno'" sortable="_alumno" filter="{'_alumno':'text'}">{{item._alumno}}</td>
+            <td class="text-left" data-title="'Conflicto'" sortable="_conflicto" filter="{'_conclicto':'text'}">{{item._conflicto}}</td>
+            <td class="text-left" data-title="'Estado'" sortable="estado" filter="{'estado':'text'}">{{item.estado}}</td>
           </tr>
         </tbody>
       </table>

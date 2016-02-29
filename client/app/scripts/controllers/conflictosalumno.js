@@ -10,7 +10,7 @@
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('ConflictosCtrl', [
+  angular.module('unuApp').controller('ConflictosalumnoCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
@@ -25,8 +25,8 @@
     };
     var LOCAL ={
       name: 'Conflictosalumno',
-      form:'views/conflictosalumno/form.html',
-      route:'conflictosalumno'
+      form:'views/conflictosalumnos/form.html',
+      route:'conflictosalumnos'
 
     };
     service = Restangular.all(LOCAL.route);
