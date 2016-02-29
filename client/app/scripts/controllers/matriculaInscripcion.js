@@ -48,9 +48,9 @@
 
       serviceMatricula = Restangular.all('matriculas');
       var getMatricula = function(){
-        serviceMatricula.one('56d3c785d07094f9246cbeb2').get().then(function(response){
-          matricula = response;
-          $scope.cursos_selected = response._detalleMatricula;
+        serviceMatricula.customGET('lastMatricula').then(function(response){
+          matricula = response[0];
+          $scope.cursos_selected = matricula._detalleMatricula;
           console.log($scope.cursos_selected);
         });
       }
