@@ -13,11 +13,17 @@
   angular.module('unuApp').controller('MatriculaRevisionCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var servicePendientes, serviceDeudas;
+    var service, servicePendientes, serviceDeudas;
+
+    console.log('Mostrar'+$rootScope.ALUMNO.codigo);
 
     $timeout(function(){
+      console.log('root'+$rootScope.ALUMNO.codigo);
      $scope.ALUMNO = $rootScope.ALUMNO;
+     console.log('SCOPE'+$scope.ALUMNO);
      $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+     ListPendientesAlumno();
+     ListDeudasAlumno();
     }, 500);
 
     $scope.UI = {
@@ -35,19 +41,22 @@
       nextStage2: false
     };
 
-   //  var LOCAL ={
-   //    name: 'Matrícula'
-   //    // form:'views/facultades/form.html',
-   //    // route:'facultades'
-   //  };
+    var LOCAL = {
+      name: 'Registrar Matricula',
+      //form: 'views/aprobacion/cursos/form-grupo.html',
+      route: 'planestudiodetalles',
 
+    };
+
+    service = Restangular.all(LOCAL.route);
      servicePendientes = Restangular.all('conflictosalumnos');
      serviceDeudas = Restangular.all('compromisopagos');
-    //
+
     var ListPendientesAlumno = function() {
    //   if(id_alumno === 0){
    //      return;
    //   }
+   console.log('id'+$scope.ALUMNO._id);
      $scope.tableParamsPendientes = new NgTableParams({
         page: 1,
         count: 1000,
@@ -80,16 +89,12 @@
     };
 
     var ListDeudasAlumno = function() {
-   //   if(id_alumno === 0){
-   //      return;
-   //   }
-      var idalumno = '56c2ce24f484a8c740092c94';
+      console.log('Codigo de alumno:'+$rootScope.ALUMNO.codigo);
      $scope.tableParamsDeudas = new NgTableParams({
         page: 1,
         count: 1000,
         filter: {
-         //  _id: $scope.ALUMNO._id
-          _id: idalumno,
+          codigo: $scope.ALUMNO.codigo,
           pagado: false
 
         }
@@ -99,11 +104,11 @@
         getData: function($defer, params) {
           var query;
           query = params.url();
-
           serviceDeudas.customGET('methods/deudas', query).then(function(result) {
             $timeout(function() {
              params.total(result.total);
              $defer.resolve(result.data);
+             console.log(result.data);
              if(result.data.length !== 0){
                 $scope.UI.deudasValue = true;
                 $scope.UI.nextStage2=false;
@@ -119,8 +124,29 @@
 
     };
 
-new  ListPendientesAlumno();
-new  ListDeudasAlumno();
+    $scope.New = function New($event){
+     var parentEl = angular.element(document.body);
+     $mdDialog.show({
+       parent: parentEl,
+       targetEvent: $event,
+       templateUrl :LOCAL.form,
+       locals:{
+         name: LOCAL.name,
+         table:$scope.tableParams,
+         tableGrupos: $scope.tableParamsGrupo,
+         service: service,
+         idFacultad: $scope.filter._facultad,
+         idEscuela: $scope.filter._escuela
+       },
+       controller: 'MatriculaNewCtrl'
+     });
+   };
+
+   $scope.RegisterMatricula = function (){
+
+   };
+
+
 
   }]);
 }).call(this);
