@@ -16,7 +16,6 @@ module.exports = function() {
       controller.request('post', function (request, response, next) {
         next();
         request.baucis.outgoing(function (context, callback) {
-          console.log(context);
           Parent.update({
             _id: context.doc._matricula
           },{
