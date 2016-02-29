@@ -156,8 +156,8 @@
 
       var findIndex = function(item){
         var index;
-        angular.forEach($scope.groups_selected, function(curso, k){
-          if(item._id === curso._id){
+        angular.forEach(matricula._detalleMatricula, function(curso, k){
+          if(item._id === curso._grupoCurso._id){
             index= k;
           }
         });
@@ -170,17 +170,27 @@
           _grupoCurso : item._id,
           order: 1
         };
+        var test;
         if(item.active){
-          $scope.groups_selected.push(item);
-          serviceDetalleMatricula.post(params).then(function() {});
+          angular.forEach(matricula._detalleMatricula, function(curso){
+            if(item._codigo_curso === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo){
+              item.active = !item.active;
+              ToastMD.warning("Solo puede matricularse en un grupo por curso");
+              test = true;
+            }
+          });
+          if(!test){
+            $scope.groups_selected.push(item);
+            serviceDetalleMatricula.post(params).then(function() {});
+          }
         }else{
           var index = findIndex(item);
-          $scope.groups_selected.splice(index, 1);
           angular.forEach(matricula._detalleMatricula, function(curso){
             if(item._id === curso._grupoCurso._id){
               serviceDetalleMatricula.one(curso._id).remove();
             }
           });
+          matricula._detalleMatricula.splice(index, 1);
         }
 
         if( $scope.groups_selected.length !== initial_count ){
