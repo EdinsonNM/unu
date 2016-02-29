@@ -15,7 +15,7 @@ module.exports=function(){
           if(!grupo) return response.status(404).send({message:'Grupo no existe'});
           model.find({_grupoCurso:request.body._grupoCurso},function(err,data){
             if(err) return response.status(500).send({message:'Ocurrio un error interno del servidor',detail:err});
-            var titular = _.findWhere(data, {modalidadDocente:'Titular'});
+            var titular = _.findWhere(data, {modalidadDocente:request.body.modalidadDocente});
             if(titular) return response.status(412).send({message:'Solo puede asignarse un docente como titular'});
             next();
           });
@@ -23,7 +23,7 @@ module.exports=function(){
 
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
-            _id: context.doc._grupoCurso},
+            _id: context.doc._grupoCugrso},
             {$push: {_programaciones:context.doc}},
             function(err){
                 if(err) return response.status(500).send({message:err});
