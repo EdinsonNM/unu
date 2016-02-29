@@ -290,6 +290,11 @@
       templateUrl: 'views/conflictos/list.html',
       controller: 'ConflictosCtrl'
     })
+    .state('app.conflictosalumno', {
+      url: '/conflictosalumno',
+      templateUrl: 'views/conflictosalumno/list.html',
+      controller: 'ConflictosalumnoCtrl'
+    })
     .state('app.otrasdeudasalumnos', {
       url: '/otrasdeudasalumnos',
       templateUrl: 'views/otrasdeudasalumnos/list.html',

@@ -1,0 +1,59 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="window-modal-content-sm">
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Alumno</label>
+            <input required name="_alumno" ng-model="model._alumno">
+            <div ng-messages="myForm._alumno.$error"  ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+    </div>
+    <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Conflicto</label>
+            <input required name="_conflicto" ng-model="model._conflicto">
+            <div ng-messages="myForm._conflicto.$error"  ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+    </div>
+    <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Estado</label>
+            <input required name="estado" ng-model="model.estado">
+            <div ng-messages="myForm.estado.$error"  ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="column">
+        <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
+          <!--md-checkbox ng-model="model.activo">
+            Activo
+        </md-checkbox-->
+        </div>
+        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
+          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+        </div>
+      </div>
+    </md-dialog-content>
+  </form>
+</md-dialog>
