@@ -33,7 +33,6 @@
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
               <tbody>
                 <tr class="ng-table-group">
-                  <td colspan="2"></td>
                   <td><strong>Código</strong></td>
                   <td><strong>Nombre Curso</strong></td>
                   <td><strong>Ciclo</strong></td>
@@ -42,11 +41,8 @@
                   <td><strong>Grupo</strong></td>
                 </tr>
                 <tr ng-repeat="item in cursos_selected" ng-click="item.active=!item.active;EnabledAdd(item)">
-                  <td style="width:30px;">
-                    <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
-                  </td>
                   <td>{{ item.codigo }}</td>
-                  <td class="text-left">{{ item.nombre_curso }}</td>
+                  <td class="text-left">{{ item._curso.nombre }}</td>
                   <td class="text-left">{{ item.ciclo }}</td>
                   <td class="text-left">{{ item.creditos }}</td>
                   <td class="text-left">{{ item.tipo }}</td>
