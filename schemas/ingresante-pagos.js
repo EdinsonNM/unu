@@ -6,16 +6,25 @@ module.exports = {
         _ingresante: {
             "type": "String"
         },
-        voucher:{
-          type:'String'
+        compromisoPagoId: {
+            "type": "String"
         },
-        monto:{
-          type:'Number'
+        nroOperacion: {
+            "type": "String"
         },
-        fecha:{
-          type:'Date'
+        fechaPago: {
+            "type": "String"
+        },
+        montoPagado: {
+            "type": "String"
+        },
+        mora: {
+            "type": "String"
+        },
+        oficinaPago: {
+            "type": "String"
         }
 
     },
-    required: ["_ingresante","monto","voucher","fecha"]
+    required: ["_ingresante","compromisoPagoId","nroOperacion","fechaPago","montoPagado","mora","oficinaPago"]
 };

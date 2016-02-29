@@ -1,7 +1,5 @@
 var Persona = require('../models/PersonaModel.js');
 var model = require('../models/IngresanteModel.js');
-var Persona = require('../models/PersonaModel.js');
-var Q = require('q');
 //var mdoelTipoTasa = require('../models/TipoTasaModel.js');
 //var modelTasa = require('../models/TasaModel.js');
 var modelCompromisoPago = require('../models/CompromisoPagoModel.js');
@@ -163,14 +161,33 @@ module.exports = function() {
           });
         },
         RegistrarAlumno: function RegistrarAlumno(objIngresante){
+          var errorData = {
+            status:null,
+            message:''
+          };
           modelPlanEstudio.find({estado:'Aprobado'}).populate({path: '_periodo', options: { sort: [['anio', 'desc']] }}).exec(function(err,planesdeestudio){
             var objPlanEstudioVigente = planesdeestudio[0];
             var codigoAlumno = crearCodigoAlumno(objIngresante._escuela, objPlanEstudioVigente._periodo.anio);
             modelTipoCondicionAlumno.findOne({codigo:'I'},function(err,tipocondicion){
+              if(err){
+                errorData.status = 500;
+                errorData.message = 'Error buscando el Tipo de Condición del Alumno.';
+                return next(errorData);
+              }
               modelSituacionAlumno.findOne({codigo:'01'},function(err,situacion){
+                if(err){
+                  errorData.status = 500;
+                  errorData.message = 'Error buscando la Situación del Alumno.';
+                  return next(errorData);
+                }
                 //SE MARCA AL INGRESANTE COMO MATRICULADO
                 objIngresante.estado = 'Matriculado';
                 objIngresante.save(function(err, dataIngresante){
+                  if(err){
+                    errorData.status = 500;
+                    errorData.message = 'Error al cambiar el estado del ingresante a Matriculado.';
+                    return next(errorData);
+                  }
                   //SE INGRESA LA DATA DEL ALUMNO
                   modelAlumno.codigo = codigoAlumno;
                   modelAlumno.estadoCivil = 'Soltero(a)';
@@ -183,8 +200,13 @@ module.exports = function() {
                   modelAlumno._situacionAlumno = situacion._id;
                   modelAlumno._usuario = codigoAlumno;
                   modelAlumno.save(function(err,objAlumno){
-                    if(err) return null;
-                    else return objAlumno;
+                    if(err){
+                      errorData.status = 500;
+                      errorData.message = 'Error guardando los datos del Alumno.';
+                    }
+                    else{
+                      return next(null,objAlumno);
+                    }
                   });
                 });
               });
@@ -192,8 +214,22 @@ module.exports = function() {
           });
         },
         CrearAvanceCurricular:function CrearAvanceCurricular(alumno){
+          var errorData = {
+            status:null,
+            message:''
+          };
           modelPlanEstudio.findOne({_periodo:alumno._periodoInicio, _escuela:alumno._escuela}, function(err,objPlanEstudio){
+            if(err){
+              errorData.status = 500;
+              errorData.message = 'No se encontró Plan de Estudio para el Alumno';
+              return next(errData);
+            }
             modelPlanEstudioDetalle.find({_planestudio:objPlanEstudio._id},function(err,listaDetallesPlan){
+              if(err){
+                errorData.status = 500;
+                errorData.message = 'No se encontró Detalles para el Plan de Estudio del alumno';
+                return next(errData);
+              }
               var itemDetalle = {};
               var listaDetalles = [];
               modelAvanceCurricular.secuencia = 1;
@@ -212,17 +248,22 @@ module.exports = function() {
               modelAvanceCurricular.detalleAvance = listaDetalles;
               modelAvanceCurricular.save(function(err,avance){
                 if(err){
-                  console.log(err);
-                  return err;
+                  errorData.status = 500;
+                  errorData.message = 'Error al gurdar los datos del Avance Curricular.';
+                  return next(errData);
                 }
                 else{
-                  return true;
+                  return next(null, avance);
                 }
               });
             });
           });
         },
         RegistrarPago:function RegistrarPago(informacionPago, objIngresante){
+          var errorData = {
+            status:null,
+            message:''
+          };
           modelCompromisoPago.findOne({codigo:informacionPago.compomisoPago},function(err, objCompromisoPago){
             objCompromisoPago.detallePago.push({
               nroMovimiento: informacionPago.nroOperacion,
@@ -238,12 +279,17 @@ module.exports = function() {
             });
             objCompromisoPago.save(function(err,dataCompromisoPago){
               if(err){
-                console.log(err);
-                return null;
+                errorData.status = 500;
+                errorData.message = err;
+                return next(errorData);
               }else{
-                if(dataCompromisoPago.pagado) return dataCompromisoPago;
-                else return null;
+                if(!dataCompromisoPago.pagado){
+                  errorData.status = 500;
+                  errorData.message = 'Deuda no pagada completamente.';
+                  return next(errorData);
+                }
               }
+              return next(null,dataCompromisoPago);
             });
           });
         },
@@ -252,6 +298,7 @@ module.exports = function() {
         }
       };
       controller.post('/methods/procesarpago',function(req,res){
+        //debug
         var v = new Validator();
         var result = v.validate(req.body, schemaPago);
         if(result.errors.length>0) return res.status(400).send(result.errors);
@@ -267,9 +314,9 @@ module.exports = function() {
                 totalPagado: req.body.montoPagado,
                 montoMora: req.body.mora,
                 oficina: req.body.oficinaPago,
-                nroCuentaAbono: req.body.cuentaAbono
+                nroCuentaAbono: ''//req.body.cuentaAbono
               };
-              ProcesoPago.RegistrarPago(detallepago, ingresante, function(error,detallepago){
+              ProcesoPago.RegistrarPago(detallepago, ingresante, function(error,compromisopago){
                 if(error) return res.status(500).send(error);
                 ProcesoPago.RegistrarAlumno(ingresante,function(error,alumno){
                   if(error) return res.status(500).send(error);

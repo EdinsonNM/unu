@@ -48,7 +48,7 @@ var CompromisopagoSchema = new Schema({
         _archivobanco:{
           type:Schema.Types.ObjectId,
           ref:'ArchivoBanco',
-          required:true
+          required:false
         }
       }
     ],
