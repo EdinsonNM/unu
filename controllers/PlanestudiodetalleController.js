@@ -1,4 +1,5 @@
 var model = require('../models/PlanestudiodetalleModel.js');
+var alumnomodel = require('../models/AlumnoModel.js');
 var auth = require('../config/passport');
 var Q = require('q');
 var _ = require('underscore');
@@ -13,11 +14,23 @@ module.exports=function(){
       controller.relations(true);
       controller.hints(true);
 
-
-
       // middlewares
       controller.query('get',function (request, response, next) {
-        request.baucis.query.populate([{path:'_curso'},{path:'_requisitos',populate:{path:'_curso'}},{path:'_revisiones',populate:{path:'_user'}}]);
+        request.baucis.query.populate(
+          [{
+            path:'_curso'
+          },{
+            path:'_requisitos',
+            populate:{
+              path:'_curso'
+            }
+          },{
+            path:'_revisiones',
+            populate:{
+              path:'_user'
+            }
+          }]
+        );
         next();
       });
 
@@ -79,6 +92,61 @@ module.exports=function(){
             res.status(200).send(obj);
 
       		});
+      });
+
+      /**
+       * retorna los cursos que le toca al usuario enviado
+       */
+      controller.get('/methods/permitidos/:periodo', function(req, res){
+      	var limit = parseInt(req.query.count);
+      	var page = parseInt(req.query.page) || 1;
+      	var alumno = req.query.alumno;
+      	var filter = req.query.filter;
+        var promises = [];
+        var periodos = [];
+        periodos.push(req.params.periodo);
+
+        alumnomodel.findOne({_id:alumno}, function(error,data){
+          if(error)
+            return res.status(500).send({error:error});
+
+          model.paginate(
+        		filter,
+        		{
+              page: page,
+              limit: limit,
+              populate: [{
+                path:'_aprobacionesPeriodo',
+                match:{
+                  _periodo:req.params.periodo
+                }
+              },{
+                path: '_planestudio'
+              },{
+                path: '_curso',
+                model: 'Curso'
+              }]
+            },
+        		function(err, results){
+              var datos = [];
+              results.docs.forEach(function(item){
+                /**
+                 * falta validar si el curso está aperturado para el periodo
+                 */
+              });
+              var obj = {
+                total: results.total,
+                perpage: limit*1,
+                current_page: page*1,
+                last_page: results.pages,
+                from: (page-1)*limit+1,
+                to: page*limit,
+                data: results.docs
+              };
+              res.status(200).send(obj);
+
+        		});
+        });
       });
 
       controller.post('/methods/comentarios/:id',auth.ensureAuthenticated, function(req, res,next){
