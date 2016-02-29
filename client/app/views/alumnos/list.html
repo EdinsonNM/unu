@@ -18,9 +18,9 @@
             <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item._persona.nombres}}</td>
             <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item._persona.apellidoPaterno}}</td>
             <td class="text-left" data-title="'Escuela'" sortable="_escuela" filter="{'_escuela':'select'}" filter-data="LoadEscuelas($column)">{{item._escuela.nombre}}</td>
-            <td class="text-left" data-title="'Situación'" sortable="situacion" filter="{'situacion':'text'}">{{item._situacionAlumno.nombre}}</td>
-            <td class="text-left" data-title="'Condición'" sortable="condicion" filter="{'condicion':'text'}">{{item._tipoCondicionAlumno.nombre}}</td>
-            <td class="text-left" data-title="'Modalidad Ingreso'" sortable="modalidad" filter="{'modalidad':'text'}">{{item._modalidadIngreso.nombre}}</td>
+            <td class="text-left" data-title="'Situación'" sortable="situacion" filter="{'_situacionAlumno':'select'}" filter-data="situacionesFilter">{{item._situacionAlumno.nombre}}</td>
+            <td class="text-left" data-title="'Condición'" sortable="condicion" filter="{'_tipoCondicionAlumno':'select'}" filter-data="condicionesFilter">{{item._tipoCondicionAlumno.nombre}}</td>
+            <td class="text-left" data-title="'Modalidad Ingreso'" sortable="modalidad" filter="{'_modalidadIngreso':'select'}" filter-data="modalidadesFilter">{{item._modalidadIngreso.nombre}}</td>
           </tr>
         </tbody>
       </table>

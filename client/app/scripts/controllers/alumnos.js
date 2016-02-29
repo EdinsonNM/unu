@@ -13,6 +13,11 @@
   angular.module('unuApp').controller('AlumnosCtrl', ['$q', 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD',
     function($q, MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD) {
       var List, service, service_usuario;
+
+      $scope.situacionesFilter = [];
+      $scope.condicionesFilter = [];
+      $scope.modalidadesFilter = [];
+      
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
@@ -79,22 +84,41 @@
         return defer;
       };
 
+
       var LoadSituacionAlumnos = function LoadSituacionAlumnos() {
         var serviceSituaciones = Restangular.all(LOCAL.route_situacionalumnos);
         serviceSituaciones.getList().then(function(data) {
           $scope.situaciones = data;
+          angular.forEach(data, function(item) {
+            $scope.situacionesFilter.push({
+              'id': item._id,
+              'title': item.nombre
+            });
+          });
         });
       };
       var LoadTipoCondicionAlumnos = function LoadTipoCondicionAlumnos() {
         var serviceCondiciones = Restangular.all(LOCAL.route_tipocondicionalumnos);
         serviceCondiciones.getList().then(function(data) {
           $scope.condiciones = data;
+          angular.forEach(data, function(item) {
+            $scope.condicionesFilter.push({
+              'id': item._id,
+              'title': item.nombre
+            });
+          });
         });
       };
       var LoadModalidadIngresos = function LoadModalidadIngresos() {
         var serviceModalidades = Restangular.all(LOCAL.route_modalidadingresos);
         serviceModalidades.getList().then(function(data) {
           $scope.modalidades = data;
+          angular.forEach(data, function(item) {
+            $scope.modalidadesFilter.push({
+              'id': item._id,
+              'title': item.nombre
+            });
+          });
         });
       };
 
