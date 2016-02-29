@@ -56,7 +56,6 @@ module.exports = function() {
                   {email: request.body.email},
                   function(err, persona){
                       if(err) return response.status(500).send({message:err});
-                      console.log(persona);
                       //response.status(200).send(persona);
                       model.findOne(
                           {_persona: persona._id},

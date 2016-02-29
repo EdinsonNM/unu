@@ -140,8 +140,8 @@
              serviceGrupoCurso.customGET('methods/paginate', query).then(function(result) {
                $timeout(function() {
                  angular.forEach(result.data, function(item){
-                   angular.forEach($scope.groups_selected, function(curso){
-                     if(item._id === curso._id){
+                   angular.forEach(matricula._detalleMatricula, function(curso){
+                     if(item._id === curso._grupoCurso._id){
                        item.active = true;
                      }
                    });
@@ -176,7 +176,11 @@
         }else{
           var index = findIndex(item);
           $scope.groups_selected.splice(index, 1);
-          serviceDetalleMatricula.delete(params).then(function() {});
+          angular.forEach(matricula._detalleMatricula, function(curso){
+            if(item._id === curso._grupoCurso._id){
+              serviceDetalleMatricula.one(curso._id).remove();
+            }
+          });
         }
 
         if( $scope.groups_selected.length !== initial_count ){
