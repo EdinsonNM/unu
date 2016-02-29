@@ -91,7 +91,6 @@
                   </td>
                 </tr>
               </tbody>
-              <tbody>
             </table>
           </div>
 <!-- >>>>>>> 6465471a73e81055ffef03945617b0fd57994ab1 -->
@@ -99,5 +98,7 @@
         </md-content>
       </div>
     </md-dialog-content>
+    <button ng-if="addMode" class="btn btn-success btn-block btn-inscription" ng-click="addCursos()">Agregar Cursos</button>
+    <button ng-if="updateMode" class="btn btn-success btn-block col-md-3 btn-inscription" ng-click="addCursos()">Actualizar Curso</button>
   </form>
 </md-dialog>

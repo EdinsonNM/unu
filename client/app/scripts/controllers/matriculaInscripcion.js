@@ -57,12 +57,17 @@
            templateUrl: LOCAL.form,
            locals:{
              name_form: LOCAL.name_form,
-             alumno: $scope.ALUMNO
+             alumno: $scope.ALUMNO,
+             cursos_selected: $scope.cursos_selected
            },
            controller: 'InscripcionNewCtrl',
            fullscreen: useFullscreen
          });
        };
+
+       $rootScope.$on('user:inscripcioncurso', function($event, data){
+         $scope.cursos_selected = data.cursos;
+       });
 
     })
 
@@ -75,7 +80,11 @@
       MessageFactory,
       alumno,
       NgTableParams,
-      $timeout
+      $timeout,
+      cursos_selected,
+      $mdDialog,
+      ToastMD,
+      $rootScope
     ){
 
       /**
@@ -89,10 +98,16 @@
       $scope.message = MessageFactory.Form;
       $scope.model = {};
       $scope.ALUMNO = alumno;
-      console.log(alumno);
+      $scope.addMode = false;
+      $scope.updateMode = false;
+      $scope.cursos_selected = cursos_selected;
+      var initial_count = cursos_selected.length;
 
       serviceCursos = Restangular.all('planestudiodetalles');
 
+      /**
+       * initialize
+       */
       var ListDetallePlanEstudios = function(id_periodo, id_planestudio) {
         if(id_planestudio === 0 || id_periodo === 0){
           return;
@@ -100,6 +115,7 @@
         $scope.tableParams = new NgTableParams({
           page: 1,
           count: 1000,
+          alumno: $scope.ALUMNO._id,
           filter: {
               _planestudio: id_planestudio
           }
@@ -111,8 +127,15 @@
             var query;
             query = params.url();
 
-            serviceCursos.customGET('methods/aprobacion/' + id_periodo, query).then(function(result) {
+            serviceCursos.customGET('methods/permitidos/' + id_periodo, query).then(function(result) {
               $timeout(function() {
+                angular.forEach(result.data, function(item){
+                  angular.forEach(cursos_selected, function(curso){
+                    if(item._id === curso._id){
+                      item.active = true;
+                    }
+                  });
+                });
                 params.total(result.total);
                 $defer.resolve(result.data);
               }, 500);
@@ -121,6 +144,50 @@
         });
       };
       ListDetallePlanEstudios('56c2ce19f484a8c740091645', '56c2ce1af484a8c740091700');
+
+      var findIndex = function(item){
+        var index;
+        angular.forEach($scope.cursos_selected, function(curso, k){
+          if(item._id === curso._id){
+            index= k;
+          }
+        });
+        return index;
+      };
+
+      $scope.EnabledEdit = function (item){
+        if(item.active){
+          $scope.cursos_selected.push(item);
+        }else{
+          var index = findIndex(item);
+          $scope.cursos_selected.splice(index, 1);
+        }
+
+        if( $scope.cursos_selected.length !== initial_count ){
+          if(initial_count === 0){
+            $scope.addMode = true;
+            $scope.updateMode = false;
+          }else{
+            $scope.addMode = false;
+            $scope.updateMode = true;
+          }
+        }else{
+          if(initial_count !== 0){
+            $scope.addMode = false;
+            $scope.updateMode = true;
+          }
+        }
+      };
+
+      $scope.addCursos = function(){
+        ToastMD.success("Su matrícula fue actualizada");
+        $rootScope.$broadcast('user:inscripcioncurso', {cursos: $scope.cursos_selected});
+        $mdDialog.hide();
+      };
+
+      $scope.Cancel = function(){
+        $mdDialog.hide();
+      };
 
     });
 

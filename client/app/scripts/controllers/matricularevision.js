@@ -13,7 +13,7 @@
   angular.module('unuApp').controller('MatriculaRevisionCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var List, service;
+    var servicePendientes, serviceDeudas;
 
     $timeout(function(){
      $scope.ALUMNO = $rootScope.ALUMNO;
@@ -23,29 +23,37 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Matrícula 2016 - I ',
+      title: 'Matrícula 2016 - I',
       editMode: false,
-      selected:null
+      selected:null,
+      messagePendiente: 'No se encontro ningun pendiente',
+      messageDeudas: 'No se encontro ninguna deuda pendiente',
+      messageAction: 'Iniciar el proceso de matricula',
+      deudasValue: false,
+      pendientesValue: false,
+      nextStage1: false,
+      nextStage2: false
     };
 
-    var LOCAL ={
-      name: 'Matrícula',
-      // form:'views/facultades/form.html',
-      // route:'facultades'
-    };
+   //  var LOCAL ={
+   //    name: 'Matrícula'
+   //    // form:'views/facultades/form.html',
+   //    // route:'facultades'
+   //  };
 
-    servicePendientes = Restangular.all('conflictosalumnos');
-    serviceDeudas = Restangular.all('compromisopago');
-
-    var ListPendientesAlumno = function(id_alumno) {
-     if(id_alumno === 0){
-        return;
-     }
+     servicePendientes = Restangular.all('conflictosalumnos');
+     serviceDeudas = Restangular.all('compromisopagos');
+    //
+    var ListPendientesAlumno = function() {
+   //   if(id_alumno === 0){
+   //      return;
+   //   }
      $scope.tableParamsPendientes = new NgTableParams({
         page: 1,
         count: 1000,
         filter: {
-            _id: id_alumno
+            _id: $scope.ALUMNO._id,
+            estado: 'Pendiente'
         }
      }, {
         total: 0,
@@ -54,25 +62,36 @@
           var query;
           query = params.url();
 
-          servicePendientes.customGET('methods/revision/' + id_alumno, query).then(function(result) {
+          servicePendientes.customGET('methods/conflicto', query).then(function(result) {
             $timeout(function() {
              params.total(result.total);
              $defer.resolve(result.data);
+             if(result.data.length !== 0){
+               $scope.UI.pendientesValue = true;
+               $scope.UI.nextStage1=false;
+             }else{
+                $scope.UI.nextStage1=true;
+                $scope.UI.messagePendiente = 'No se encontro ningun pendiente';
+             }
             }, 500);
           });
         }
      });
     };
 
-    var ListDeudasAlumno = function(id_alumno) {
-     if(id_alumno === 0){
-        return;
-     }
+    var ListDeudasAlumno = function() {
+   //   if(id_alumno === 0){
+   //      return;
+   //   }
+      var idalumno = '56c2ce24f484a8c740092c94';
      $scope.tableParamsDeudas = new NgTableParams({
         page: 1,
         count: 1000,
         filter: {
-            _id: id_alumno
+         //  _id: $scope.ALUMNO._id
+          _id: idalumno,
+          pagado: false
+
         }
      }, {
         total: 0,
@@ -81,18 +100,27 @@
           var query;
           query = params.url();
 
-          serviceDeudas.customGET('methods/revision/' + id_alumno, query).then(function(result) {
+          serviceDeudas.customGET('methods/deudas', query).then(function(result) {
             $timeout(function() {
              params.total(result.total);
              $defer.resolve(result.data);
+             if(result.data.length !== 0){
+                $scope.UI.deudasValue = true;
+                $scope.UI.nextStage2=false;
+             }else {
+                $scope.UI.nextStage2=true;
+                $scope.UI.deudasValue = false;
+                $scope.UI.messageDeudas='No se encontro ninguna deuda pendiente';
+             }
             }, 500);
           });
         }
      });
+
     };
 
-    ListPendientesAlumno('1234');
-    ListDeudasAlumno('1234');
+new  ListPendientesAlumno();
+new  ListDeudasAlumno();
 
   }]);
 }).call(this);

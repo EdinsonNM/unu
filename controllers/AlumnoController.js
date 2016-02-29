@@ -18,6 +18,9 @@ module.exports = function() {
           [{
             path: '_persona',
             model: 'Persona'
+          },{
+            path: '_avanceCurricular',
+            model: 'AvanceCurricular'
           }]
         );
         next();

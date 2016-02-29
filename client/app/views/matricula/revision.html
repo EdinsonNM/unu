@@ -25,29 +25,28 @@
         <p>Bienvenidos al proceso de matricula. Para iniciar el proceso es necesario que se asegure de levantar todas las observaciones y cancelar todas sus deudas pendientes con la universidad.</p>
       </div>
 
-
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+         <!-- Imagen del usuario -->
       <div flex layout="row" layout-fill>
         <strong>Pendientes del Alumno:</strong>
       </div>
-
       <div layout="row" layout-fill>
+
         <md-content flex class="md-padding page-content" style="max-width:600px;">
-          <!--tabla: contiene el listado de elementos-->
-          <!-- <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear> -->
+
           <table ng-table="tableParamsPendientes" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
             <tbody>
-              <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-              <tr>
-                <!-- <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}"> -->
-                <td class="text-left" data-title="'Código'">0001</td>
-                <td class="text-left" data-title="'Descripción'">Alumno debe libro</td>
-              </tr>
-              <tr>
-                <td class="text-left" data-title="'Código'">0002</td>
-                <td class="text-left" data-title="'Descripción'">Alumno debe enciclopedia</td>
-              </tr>
+            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.pendientesValue">
+                <td class="text-left" data-title="'Código'">{{item._conflicto.codigo}}</td>
+                <td class="text-left" data-title="'Descripción'">{{item._conflicto.nombre}}</td>
+            </tr>
+
+            <tr ng-if="!UI.pendientesValue">
+                <td class="text-center" colspan="3"> {{UI.messagePendiente}}</td>
+            </tr>
             </tbody>
           </table>
+          <!-- <div ng-if="!UI.pendientesValue">{{UI.messagePendiente}}</div> -->
         </md-content>
       </div>
 
@@ -57,34 +56,31 @@
 
       <div layout="row" layout-fill>
         <md-content flex class="md-padding page-content" style="max-width:600px;">
-          <!--tabla: contiene el listado de elementos-->
-          <!-- <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear> -->
-          <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+          <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
             <tbody>
-              <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-              <tr>
-                <!-- <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}"> -->
-                <td class="text-left" data-title="'Código'">0001</td>
-                <td class="text-left" data-title="'Descripción'">Alumno debe libro</td>
-              </tr>
-              <tr>
-                <td class="text-left" data-title="'Código'">0002</td>
-                <td class="text-left" data-title="'Descripción'">Alumno debe enciclopedia</td>
-              </tr>
+            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
+                <td class="text-left" data-title="'Código'">{{item.codigo}}</td>
+                <td class="text-left" data-title="'Descripción'">{{item.descripcion}}</td>
+                <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
+            </tr>
+
+            <tr ng-if="!UI.deudasValue">
+                <td class="text-center" colspan="3"> {{UI.messageDeudas}}</td>
+            </tr>
+
             </tbody>
           </table>
+          <!-- <div ng-if="!UI.deudasValue">{{UI.messageDeudas}}</div> -->
         </md-content>
-      </div>
+     </div>
 
+  <div flex layout="row" layout-fill ng-if="!UI.nextStage1||!UI.nextStage2">
+   <strong>No es posible iniciar el proceso de matricula</strong>
+ </div>
 
-      <div flex layout="row" layout-fill style="text-align:center;">
-        <strong>No es posible iniciar el proceso de matricula</strong>
-      </div>
-
-      <div flex layout="row" layout-fill style="text-align:center;">
-        <strong>Iniciar el proceso de matricula</strong>
-      </div>
-
-    </md-content>
-  </div>
+<div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2">
+   <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion">
+ <button class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Iniciar el proceso de matricula</button>
+ </a>
+ </div>
 </md-content>
