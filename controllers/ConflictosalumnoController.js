@@ -28,15 +28,15 @@ module.exports=function(){
       		filter,
       		{page: page, limit: limit},
       		function(err, results, pageCount, itemCount){
-            var obj = {
-              total: results.total,
-              perpage: limit*1,
-              current_page: page*1,
-              last_page: results.pages,
-              from: (page-1)*limit+1,
-              to: page*limit,
-              data: results.docs
-            };
+                var obj = {
+                  total: results.total,
+                  perpage: limit*1,
+                  current_page: page*1,
+                  last_page: results.pages,
+                  from: (page-1)*limit+1,
+                  to: page*limit,
+                  data: results.docs
+                };
       			res.send(obj);
       		}
       	);

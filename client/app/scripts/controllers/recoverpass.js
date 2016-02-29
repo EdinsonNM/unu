@@ -12,7 +12,7 @@
   angular.module('unuApp').controller('RecoverPassCtrl',[
     '$scope', 'Restangular', '$rootScope',
     function($scope, Restangular, $rootScope) {
-
+        $scope.model = {};
         var service = Restangular.all("alumnos");
         service.customPOST('recoverPass', {codigo: model.codigo}).then(function(result){
             console.log(result);

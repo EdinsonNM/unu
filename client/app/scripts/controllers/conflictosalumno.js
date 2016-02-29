@@ -24,10 +24,13 @@
       customActions:[]
     };
     var LOCAL ={
-      name: 'Conflictosalumno',
+      name: 'Conflictos de alumnos',
       form:'views/conflictosalumnos/form.html',
-      route:'conflictosalumnos'
-
+      route:'conflictosalumnos',
+      route_conflictos:'conflictos',
+      route_facultades: 'facultades',
+      route_periodos: 'periodos',
+      route_escuelas: 'escuelas'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
@@ -35,6 +38,25 @@
     service.customGET('model/estado', {}).then(function(result){
       $scope.estados = result;
     });
+
+    var LoadConflictos = function LoadConflictos() {
+      var serviceConflicto = Restangular.all(LOCAL.route_conflictos);
+      serviceConflicto.getList().then(function(data){
+        $scope.conclictos = data;
+      });
+    };
+    var LoadFacultades = function LoadFacultades() {
+      var serviceFacultad = Restangular.all(LOCAL.route_facultades);
+      serviceFacultad.getList().then(function(data){
+        $scope.facultades = data;
+      });
+    };
+    var LoadPeriodos = function LoadPeriodos() {
+      var servicePeriodo = Restangular.all(LOCAL.route_periodos);
+      servicePeriodo.getList().then(function(data){
+        $scope.periodos = data;
+      });
+    };
 
     List = function() {
       $scope.tableParams = new ngTableParams({
@@ -74,9 +96,12 @@
           service: service,
           name: LOCAL.name,
           table:$scope.tableParams,
-          estados: $scope.estados
+          estados: $scope.estados,
+          conflictos: $scope.conclictos,
+          facultades: $scope.facultades,
+          periodos: $scope.periodos
         },
-        controller: 'ConflictoNewCtrl'
+        controller: 'ConflictosalumnoNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -89,9 +114,12 @@
           name: LOCAL.name,
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected),
-          estados: $scope.estados
+          estados: $scope.estados,
+          conflictos: $scope.conclictos,
+          facultades: $scope.facultades,
+          periodos: $scope.periodos
         },
-        controller: 'ConflictoEditCtrl'
+        controller: 'ConflictosalumnoEditCtrl'
       });
     };
     $scope.Delete = function Delete($event){
@@ -130,15 +158,37 @@
     };
 
     new List();
+    new LoadConflictos();
+    new LoadFacultades();
+    new LoadPeriodos();
   }])
 
-  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, estados){
+  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados', 'conflictos', 'facultades', 'periodos',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, estados, conflictos, facultades, periodos){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
     $scope.estados = estados;
+    $scope.conflictos = conflictos;
+    $scope.facultades = facultades;
+    $scope.periodos = periodos;
+
+    $scope.ListAlumnos = function(){
+        var filter = {
+            _escuela: $scope.model._escuela._id,
+            _periodo: $scope.model._periodo._id
+        };
+        service.customGET('methods/paginate', {filter: filter}).then(function(result) {
+            $scope.alumnos = result.data;
+        });
+    };
+    $scope.LoadEcuelas = function LoadEcuelas(){
+      var serviceEscuela = Restangular.all('escuelas');
+      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id},populate:'_facultad'}).then(function(data){
+        $scope.escuelas = data;
+      });
+    };
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
@@ -154,13 +204,32 @@
     };
   }])
 
-  .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'estados',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados){
+  .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'estados', 'conflictos', 'facultades', 'periodos',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados, conflictos, facultades, periodos){
     $scope.submited = false;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.estados = estados;
+    $scope.conflictos = conflictos;
+    $scope.facultades = facultades;
+    $scope.periodos = periodos;
+
+    $scope.ListAlumnos = function(){
+        var filter = {
+            _escuela: $scope.model._escuela._id,
+            _periodo: $scope.model._periodo._id
+        };
+        service.customGET('methods/paginate', {filter: filter}).then(function(result) {
+            $scope.alumnos = result.data;
+        });
+    };
+    $scope.LoadEcuelas = function LoadEcuelas(){
+      var serviceEscuela = Restangular.all('escuelas');
+      serviceEscuela.getList({conditions:{_facultad:$scope.model._facultad._id},populate:'_facultad'}).then(function(data){
+        $scope.escuelas = data;
+      });
+    };
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
