@@ -41,12 +41,12 @@
                   <td><strong>Grupo</strong></td>
                 </tr>
                 <tr ng-repeat="item in cursos_selected" ng-click="item.active=!item.active;EnabledAdd(item)">
-                  <td>{{ item.codigo }}</td>
-                  <td class="text-left">{{ item._curso.nombre }}</td>
-                  <td class="text-left">{{ item.ciclo }}</td>
-                  <td class="text-left">{{ item.creditos }}</td>
-                  <td class="text-left">{{ item.tipo }}</td>
-                  <td class="text-left">{{ item.grupo }}</td>
+                  <td>{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
+                  <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
+                  <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo }}</td>
+                  <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos }}</td>
+                  <td class="text-left"></td>
+                  <td class="text-left">{{ item._grupoCurso._seccion.nombre }}</td>
                 </tr>
               </tbody>
               <tbody>
