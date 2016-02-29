@@ -4,7 +4,7 @@ module.exports=function(){
   return{
     setup:function(){
       var controller=baucis.rest('Conflicto');
-      controller.fragment('/conflicto');
+      controller.fragment('/conflictos');
       //custom methods
       controller.get('/methods/validate-unique', function(req, res){
         var obj={};

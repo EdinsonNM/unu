@@ -13,21 +13,140 @@
   angular.module('unuApp').controller('MatriculaRevisionCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-    var List, service;
+    var service, servicePendientes, serviceDeudas;
+
+    console.log('Mostrar'+$rootScope.ALUMNO.codigo);
+
+    $timeout(function(){
+      console.log('root'+$rootScope.ALUMNO.codigo);
+     $scope.ALUMNO = $rootScope.ALUMNO;
+     console.log('SCOPE'+$scope.ALUMNO);
+     $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+     ListPendientesAlumno();
+     ListDeudasAlumno();
+    }, 500);
 
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Matrícula 2016 - I ',
+      title: 'Matrícula 2016 - I',
       editMode: false,
-      selected:null
+      selected:null,
+      messagePendiente: 'No se encontro ningun pendiente',
+      messageDeudas: 'No se encontro ninguna deuda pendiente',
+      messageAction: 'Iniciar el proceso de matricula',
+      deudasValue: false,
+      pendientesValue: false,
+      nextStage1: false,
+      nextStage2: false
     };
 
-    var LOCAL ={
-      name: 'Facultad',
-      form:'views/facultades/form.html',
-      route:'facultades'
+    var LOCAL = {
+      name: 'Registrar Matricula',
+      //form: 'views/aprobacion/cursos/form-grupo.html',
+      route: 'planestudiodetalles',
+
     };
+
+    service = Restangular.all(LOCAL.route);
+     servicePendientes = Restangular.all('conflictosalumnos');
+     serviceDeudas = Restangular.all('compromisopagos');
+
+    var ListPendientesAlumno = function() {
+   //   if(id_alumno === 0){
+   //      return;
+   //   }
+   console.log('id'+$scope.ALUMNO._id);
+     $scope.tableParamsPendientes = new NgTableParams({
+        page: 1,
+        count: 1000,
+        filter: {
+            _id: $scope.ALUMNO._id,
+            estado: 'Pendiente'
+        }
+     }, {
+        total: 0,
+        counts: [],
+        getData: function($defer, params) {
+          var query;
+          query = params.url();
+
+          servicePendientes.customGET('methods/conflicto', query).then(function(result) {
+            $timeout(function() {
+             params.total(result.total);
+             $defer.resolve(result.data);
+             if(result.data.length !== 0){
+               $scope.UI.pendientesValue = true;
+               $scope.UI.nextStage1=false;
+             }else{
+                $scope.UI.nextStage1=true;
+                $scope.UI.messagePendiente = 'No se encontro ningun pendiente';
+             }
+            }, 500);
+          });
+        }
+     });
+    };
+
+    var ListDeudasAlumno = function() {
+      console.log('Codigo de alumno:'+$rootScope.ALUMNO.codigo);
+     $scope.tableParamsDeudas = new NgTableParams({
+        page: 1,
+        count: 1000,
+        filter: {
+          codigo: $scope.ALUMNO.codigo,
+          pagado: false
+
+        }
+     }, {
+        total: 0,
+        counts: [],
+        getData: function($defer, params) {
+          var query;
+          query = params.url();
+          serviceDeudas.customGET('methods/deudas', query).then(function(result) {
+            $timeout(function() {
+             params.total(result.total);
+             $defer.resolve(result.data);
+             console.log(result.data);
+             if(result.data.length !== 0){
+                $scope.UI.deudasValue = true;
+                $scope.UI.nextStage2=false;
+             }else {
+                $scope.UI.nextStage2=true;
+                $scope.UI.deudasValue = false;
+                $scope.UI.messageDeudas='No se encontro ninguna deuda pendiente';
+             }
+            }, 500);
+          });
+        }
+     });
+
+    };
+
+    $scope.New = function New($event){
+     var parentEl = angular.element(document.body);
+     $mdDialog.show({
+       parent: parentEl,
+       targetEvent: $event,
+       templateUrl :LOCAL.form,
+       locals:{
+         name: LOCAL.name,
+         table:$scope.tableParams,
+         tableGrupos: $scope.tableParamsGrupo,
+         service: service,
+         idFacultad: $scope.filter._facultad,
+         idEscuela: $scope.filter._escuela
+       },
+       controller: 'MatriculaNewCtrl'
+     });
+   };
+
+   $scope.RegisterMatricula = function (){
+
+   };
+
+
 
   }]);
 }).call(this);
