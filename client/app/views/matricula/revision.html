@@ -5,71 +5,86 @@
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
-      <div flex layout="row" layout-fill>
-         {{UI.title}}
+      <section>
+        <md-subheader >
+          <strong>{{ UI.title }}</strong>
+        </md-subheader>
+        <div class="md-primary md-12-line">
+          <md-list layout="column" layout-padding>
+            <md-list-item>
+              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <div class="md-list-item-text">
+                <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
+                <p>{{ ALUMNO.codigo }}</p>
+              </div>
+            </md-list-item>
+          </md-list>
+        </div>
+      </section>
+      <div flex layout="row" layout-fill style="padding-bottom:10px;">
+        <p>Bienvenidos al proceso de matricula. Para iniciar el proceso es necesario que se asegure de levantar todas las observaciones y cancelar todas sus deudas pendientes con la universidad.</p>
       </div>
 
 
-         <!-- Imagen del usuario -->
-         <div flex layout="row" layout-fill>
-             <div flex-gt-sm="10" flex="10">
-                <div flex layout="column">
-                   <div flex>
-                      <img class=" img-circle profile-photo" src="images/user0.jpg"/>
-                   </div>
-                </div>
-             </div>
-            <div flex-gt-sm="33" flex="33">
-               <div flex layout="column">
-                  <div flex>
-                     <div class="mt+ mr+">
-                         <strong>Henry Carreño Palacios</strong>
-                         <br/>
-                         <small>0512001123</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
+      <div flex layout="row" layout-fill>
+        <strong>Pendientes del Alumno:</strong>
+      </div>
 
-         </div>
-
-         <p>Bienvenidos al proceso de matricula. Para iniciar el proceso es necesario que se asegure de levantar todas las observaciones y cancelar todas sus deudas pendientes con la universidad.</p>
-
-
-         <div flex layout="row" layout-fill>
-            <strong>Pendientes del Alumno:</strong>
-         </div>
-
-      <!-- Agregar las pestañas -->
-        <md-content class="md-padding">
-
-        <div class="table-responsive">
-          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
-            <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+      <div layout="row" layout-fill>
+        <md-content flex class="md-padding page-content" style="max-width:600px;">
+          <!--tabla: contiene el listado de elementos-->
+          <!-- <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear> -->
+          <table ng-table="tableParamsPendientes" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
             <tbody>
+              <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
               <tr>
-                <td style="width:30px;">
-                  <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
-                </td>
-
-                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{ }}</td>
-                <td data-title="'Descripción'">{{item._planestudiodetalle.creditos}}</td>
-                <td data-title="'Estado'">
-                  <strong>
-                      <a href  title="{{item.aprobacioncursosperiodo}}" >
-                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
-                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
-                      </a>
-                    </strong>
-                </td>
+                <!-- <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}"> -->
+                <td class="text-left" data-title="'Código'">0001</td>
+                <td class="text-left" data-title="'Descripción'">Alumno debe libro</td>
+              </tr>
+              <tr>
+                <td class="text-left" data-title="'Código'">0002</td>
+                <td class="text-left" data-title="'Descripción'">Alumno debe enciclopedia</td>
               </tr>
             </tbody>
           </table>
-        </div>
+        </md-content>
+      </div>
 
-       </md-content>
+      <div flex layout="row" layout-fill>
+        <strong>Deudas del Alumno:</strong>
+      </div>
 
-      <!-- fin de pestañas -->
+      <div layout="row" layout-fill>
+        <md-content flex class="md-padding page-content" style="max-width:600px;">
+          <!--tabla: contiene el listado de elementos-->
+          <!-- <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh"></md-progress-linear> -->
+          <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+            <tbody>
+              <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+              <tr>
+                <!-- <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}"> -->
+                <td class="text-left" data-title="'Código'">0001</td>
+                <td class="text-left" data-title="'Descripción'">Alumno debe libro</td>
+              </tr>
+              <tr>
+                <td class="text-left" data-title="'Código'">0002</td>
+                <td class="text-left" data-title="'Descripción'">Alumno debe enciclopedia</td>
+              </tr>
+            </tbody>
+          </table>
+        </md-content>
+      </div>
+
+
+      <div flex layout="row" layout-fill style="text-align:center;">
+        <strong>No es posible iniciar el proceso de matricula</strong>
+      </div>
+
+      <div flex layout="row" layout-fill style="text-align:center;">
+        <strong>Iniciar el proceso de matricula</strong>
+      </div>
+
     </md-content>
   </div>
 </md-content>

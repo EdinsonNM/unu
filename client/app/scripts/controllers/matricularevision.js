@@ -15,6 +15,11 @@
   function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
+    $timeout(function(){
+     $scope.ALUMNO = $rootScope.ALUMNO;
+     $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+    }, 500);
+
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
@@ -24,10 +29,70 @@
     };
 
     var LOCAL ={
-      name: 'Facultad',
-      form:'views/facultades/form.html',
-      route:'facultades'
+      name: 'Matrícula',
+      // form:'views/facultades/form.html',
+      // route:'facultades'
     };
+
+    servicePendientes = Restangular.all('conflictosalumnos');
+    serviceDeudas = Restangular.all('compromisopago');
+
+    var ListPendientesAlumno = function(id_alumno) {
+     if(id_alumno === 0){
+        return;
+     }
+     $scope.tableParamsPendientes = new NgTableParams({
+        page: 1,
+        count: 1000,
+        filter: {
+            _id: id_alumno
+        }
+     }, {
+        total: 0,
+        counts: [],
+        getData: function($defer, params) {
+          var query;
+          query = params.url();
+
+          servicePendientes.customGET('methods/revision/' + id_alumno, query).then(function(result) {
+            $timeout(function() {
+             params.total(result.total);
+             $defer.resolve(result.data);
+            }, 500);
+          });
+        }
+     });
+    };
+
+    var ListDeudasAlumno = function(id_alumno) {
+     if(id_alumno === 0){
+        return;
+     }
+     $scope.tableParamsDeudas = new NgTableParams({
+        page: 1,
+        count: 1000,
+        filter: {
+            _id: id_alumno
+        }
+     }, {
+        total: 0,
+        counts: [],
+        getData: function($defer, params) {
+          var query;
+          query = params.url();
+
+          serviceDeudas.customGET('methods/revision/' + id_alumno, query).then(function(result) {
+            $timeout(function() {
+             params.total(result.total);
+             $defer.resolve(result.data);
+            }, 500);
+          });
+        }
+     });
+    };
+
+    ListPendientesAlumno('1234');
+    ListDeudasAlumno('1234');
 
   }]);
 }).call(this);
