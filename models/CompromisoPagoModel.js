@@ -3,7 +3,7 @@ var Schema   = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 
-var CompromisopagoSchema = new Schema({
+var CompromisoPagoSchema = new Schema({
     _periodo:{
       type:Schema.Types.ObjectId,
       ref:'Periodo',
@@ -59,7 +59,7 @@ var CompromisopagoSchema = new Schema({
   	updatedAt:Date
 });
 
-CompromisopagoSchema.pre('save',function(next){
+CompromisoPagoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
 	if (!this.createdAt){
@@ -67,6 +67,6 @@ CompromisopagoSchema.pre('save',function(next){
 	}
 	next();
 });
-CompromisopagoSchema.plugin(mongoosePaginate);
-CompromisopagoSchema.plugin(uniqueValidator);
-module.exports = mongoose.model('Compromisopago', CompromisopagoSchema).plural('compromisopago');
+CompromisoPagoSchema.plugin(mongoosePaginate);
+CompromisoPagoSchema.plugin(uniqueValidator);
+module.exports = mongoose.model('CompromisoPago',CompromisoPagoSchema).plural('compromisopago');
