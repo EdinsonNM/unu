@@ -53,7 +53,7 @@
           page: 1,
           count: 1000,
           filter: {
-            _id: $scope.ALUMNO._id,
+            _alumno: $scope.ALUMNO._id,
             estado: 'Pendiente'
           }
         }, {

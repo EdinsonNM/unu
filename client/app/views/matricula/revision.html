@@ -79,8 +79,11 @@
  </div>
 
 <div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2" ng-click="Save()" >
-   <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion">
- <button class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Iniciar el proceso de matricula</button>
- </a>
+  <div class="text-center" flex>
+    <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion">
+  <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Iniciar el proceso de matricula</button>
+  </a>
+  </div>
+
  </div>
 </md-content>
