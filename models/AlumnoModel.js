@@ -7,6 +7,10 @@ var AlumnoSchema = new Schema({
         type: String,
         required: true
     },
+    codigoAntiguo: {
+        type: String,
+        required: true
+    },
     estadoCivil: {
         type: String,
         enum: ['Soltero(a)', 'Casado(a)', 'Viudo(a)', 'Divorciado(a)', 'Conviviente', 'Separado(a)']

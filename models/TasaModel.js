@@ -8,13 +8,14 @@ var TasaSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:'Tipotasa'
   },
-  _historial:[
+  codigo:String,
+  historial:[
     {
-      desde:{
+      createdAt:{
         type:Date,
     		required:true
       },
-      hasta:{
+      updateAt:{
         type:Date,
     		required:true
       },
@@ -29,6 +30,9 @@ var TasaSchema = new Schema({
 	nombre : {
 		type:String,
 		required:true
+	},
+  abreviatura:{
+		type:String
 	},
   activo:{
     type:Boolean,
@@ -49,4 +53,4 @@ TasaSchema.pre('save',function(next){
 });
 TasaSchema.plugin(mongoosePaginate);
 TasaSchema.plugin(uniqueValidator);
-module.exports = mongoose.model('Tasa', TasaSchema).plural('tasa');
+module.exports = mongoose.model('Tasa', TasaSchema).plural('tasas');
