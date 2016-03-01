@@ -73,7 +73,7 @@ module.exports = function() {
       });
 
       controller.request('post', function (request, response, next) {
-          
+
         Q.fcall(function(){
           var defer = Q.defer();
           Grupo.findOne({codigo:'ALUMNO'}).exec(function(err,data){

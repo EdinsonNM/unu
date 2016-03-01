@@ -46,8 +46,7 @@ var AlumnoSchema = new Schema({
     },
     _avanceCurricular: [{
         type: Schema.Types.ObjectId,
-        ref: 'AvanceCurricular',
-        required: true
+        ref: 'AvanceCurricular'
     }],
     createdAt: Date,
     updatedAt: Date

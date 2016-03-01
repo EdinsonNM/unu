@@ -18,7 +18,9 @@ module.exports=function(){
               flex:'67',
               children:[
                 {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
-                {title:'Alumnos',icon:'',url:'app.alumnos',order:2}
+                {title:'Alumnos',icon:'',url:'app.alumnos',order:2},
+                {title:'Conflictos',icon:'',url:'app.conflicto',order:3},
+                {title:'Conflictos Alumnos',icon:'',url:'app.conflictosalumno',order:4}
               ],
               style:{
                 color: 'white',

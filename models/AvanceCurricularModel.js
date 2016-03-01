@@ -60,4 +60,4 @@ AvanceCurricularSchema.pre('save', function(next) {
   }
   next();
 });
-module.exports = mongoose.model('AvanceCurricular', AvanceCurricularSchema).plural('avancecurricular');
+module.exports = mongoose.model('AvanceCurricular', AvanceCurricularSchema).plural('avancecurriculars');
