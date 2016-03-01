@@ -1,4 +1,6 @@
 var model = require('../models/IngresanteModel.js');
+var Persona = require('../models/PersonaModel.js');
+var Q = require('q');
 var Validator = require('jsonschema').Validator;
 var schemaPago  = require('../schemas/ingresante-pagos');
 module.exports = function() {
