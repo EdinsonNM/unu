@@ -12,6 +12,36 @@
     <md-dialog-content class="window-modal-content-sm">
       <div flex layout="row" layout-sm="row">
         <div flex>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filtro._facultad" name="facultad" ng-change="LoadEcuelas()" required>
+              <md-option ng-repeat="facultad in facultades" ng-value="facultad">
+                {{ facultad.nombre }}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="myForm._conflicto.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filtro._escuela" name="escuela" ng-change="allowSelection()" required>
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{ escuela.nombre }}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="row" ng-if="allowUserSelection">
+        <div flex>
             <md-autocomplete flex
               md-input-name="alumno"
               md-input-minlength="2"

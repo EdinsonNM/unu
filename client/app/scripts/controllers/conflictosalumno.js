@@ -82,6 +82,14 @@
       $scope.tableParams.reload();
     };
 
+    var LoadFacultades = function LoadFacultades() {
+      var serviceFacultad = Restangular.all('facultades');
+      serviceFacultad.getList().then(function(data) {
+        $scope.facultades = data;
+      });
+    };
+    LoadFacultades();
+
     $scope.New = function New($event){
       var parentEl = angular.element(document.body);
       $mdDialog.show({
@@ -93,7 +101,8 @@
           name: LOCAL.name,
           table:$scope.tableParams,
           estados: $scope.estados,
-          conflictos: $scope.conclictos
+          conflictos: $scope.conclictos,
+          facultades: $scope.facultades
         },
         controller: 'ConflictosalumnoNewCtrl'
       });
@@ -101,7 +110,6 @@
     $scope.Edit = function Edit($event){
       var parentEl = angular.element(document.body);
       var model = Restangular.copy($scope.UI.selected);
-      console.log(model);
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
@@ -155,8 +163,21 @@
     new LoadConflictos();
   }])
 
-  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados', 'conflictos',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular, estados, conflictos){
+  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados', 'conflictos', 'facultades',
+  function(
+    $scope,
+    table,
+    name,
+    MessageFactory,
+    $mdDialog,
+    service,
+    ToastMD,
+    Restangular,
+    estados,
+    conflictos,
+    facultades
+  ){
+
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
@@ -164,10 +185,15 @@
     $scope.estados = estados;
     $scope.conflictos = conflictos;
     $scope.model = {};
+    $scope.facultades = facultades;
+    $scope.escuelas = [];
+    $scope.filtro = {};
+    $scope.allowUserSelection = false;
 
-    //var serviceAlumnos = 
+    //var serviceAlumnos =
 
     $scope.FilterAlumnos = function(text){
+      $scope.allowUserSelection = false;
       var data = [];
       angular.forEach($scope.alumnos, function(item){
         var index = item._persona.nombreCompleto.search(new RegExp(text,'i'));
@@ -178,6 +204,25 @@
       return data;
     };
 
+    $scope.LoadEcuelas = function LoadEcuelas() {
+      $scope.escuelas = [];
+      $scope.allowUserSelection = false;
+      var serviceEscuela = Restangular.all('escuelas');
+      serviceEscuela.getList({
+        conditions: {
+          _facultad: $scope.filtro._facultad._id
+        }
+      }).then(function(data) {
+        $scope.escuelas = data;
+      });
+    };
+
+    $scope.allowSelection = function(){
+      if($scope.escuelas.length>0){
+        console.log("hola");
+        $scope.allowUserSelection = true;
+      }
+    };
 
     $scope.Save = function(form) {
       $scope.submited = true;
