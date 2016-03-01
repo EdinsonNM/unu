@@ -8,7 +8,8 @@ module.exports.RemplazaCaracteres= function RemplazaCaracteres(cadtemp){
   var N=['±','Ñ','ñ'];
   var Y=['ÿ','ý','Ý'];
   var D=['Ð.'];
-  var Espacio=['"',';',',','+','!','#','$','%','/','(','\\','¡','¿','´','~','[','}',']','`','<','>','_',')','^',':','|','°','¬','=','?','º'];
+  var Espacio=['"',';',',','+','!','#','$','%','/','(','\\','¡','¿','´','~','[','}',']','`','<','>','_',')','{','^',':','|','°','¬','=','?','º'];
+
   var j=0;
   for (j=0; j<A.length; j++) { cadena=cadena.replace(new RegExp(A[j],'g'), "A"); }
   for (j=0; j<E.length; j++) { cadena=cadena.replace(new RegExp(E[j],'g'), "E"); }
@@ -18,7 +19,7 @@ module.exports.RemplazaCaracteres= function RemplazaCaracteres(cadtemp){
   for (j=0; j<N.length; j++) { cadena=cadena.replace(new RegExp(N[j],'g'), "N"); }
   for (j=0; j<Y.length; j++) { cadena=cadena.replace(new RegExp(Y[j],'g'), "Y"); }
   cadena=cadena.replace(new RegExp(D[0],'g'), "D");
-  for (j=0; j<Espacio.length; j++) { cadena=cadena.replace(new RegExp(Espacio[j],'g'), " "); }
+  for (j=0; j<Espacio.length; j++) { cadena=cadena.replace(new RegExp('\\' + Espacio[j],'g'), " "); }
   return cadena.toUpperCase();
 
 };

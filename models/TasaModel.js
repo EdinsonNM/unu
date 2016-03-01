@@ -31,6 +31,9 @@ var TasaSchema = new Schema({
 		type:String,
 		required:true
 	},
+  abreviatura:{
+		type:String
+	},
   activo:{
     type:Boolean,
 		required:true,
