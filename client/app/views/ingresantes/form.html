@@ -114,7 +114,7 @@
             <div flex-item>
               <md-input-container class="md-block">
                 <label>Escuela</label>
-                <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
+                <md-select ng-model="model.escuela_select" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
                   <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
                     {{escuela.nombre}}
                   </md-option>

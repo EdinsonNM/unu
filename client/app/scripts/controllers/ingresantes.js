@@ -12,7 +12,7 @@
 
   angular.module('unuApp').controller('IngresantesCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state, $mdMedia) {
     var List, service;
 
     $scope.UI = {
@@ -113,6 +113,7 @@
       });
     };
     $scope.Edit = function Edit($event){
+      var useFullscreen = ($mdMedia('sm') || $mdMedia('xs')) && $mdMedia('xs') || $mdMedia('sm');
       var parentEl = angular.element(document.body);
       //console.log($scope.periodos);
       $mdDialog.show({
@@ -130,7 +131,8 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: 'IngresanteEditCtrl'
+        controller: 'IngresanteEditCtrl',
+        fullscreen: useFullscreen
       });
     };
 
@@ -200,7 +202,7 @@
     };
     $scope.Save = function(form) {
       $scope.submited = true;
-      $scope.model._escuela = $scope.model._escuela._id;
+      $scope.model._escuela = $scope.model.escuela_select._id;
 
       if (form.$valid) {
         service.post($scope.model).then(function() {
