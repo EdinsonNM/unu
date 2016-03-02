@@ -130,21 +130,22 @@ var procesarPago = function procesarPago(item,index){
   var defer = Q.defer();
   //NOTE si el pago pertenece a un ingresante entonces retorna ingresante defe.resolve(ingresante) si no defer.resolve(null)
   //NOTE si el proceso falla defer.reject(error);
-  var NombreCliente = item.substring(2,30);
-  var Referencias = item.substring(32,48);//SE ASUMIRÁ QUE DE LOS 48 CARACTERES DE LA REFERENCIA: IDENTIFICADOR DEL PAGO [10], DNI PAGADOR [10], ALGUN DATO ADICIONAL [28]
-    var documentoPagador = Referencias.substring(0,8);
-    var codigoPago = Referencias.substring(8,10);
-    var adicionalPago = Referencias.substring(18,28);
-  var ImporteOrigen = parseFloat(item.substring(80,13))/100;
-  var ImporteDepositado = parseFloat(item.substring(95,15))/100;
-  var ImporteMora = parseFloat(item.substring(110,15))/100;
-  var Oficina = item.substring(125,4);
-  var NroMovimiento = item.substring(129,6);
-  var FechaPago = new Date(item.substring(135,8));
-  var TipoValor = item.substring(143,2);
-  var CanalEntrada = item.substring(145,2);
+  var NombreCliente = item.substr(2,30);
+  var Referencias = item.substr(32,48);//SE ASUMIRÁ QUE DE LOS 48 CARACTERES DE LA REFERENCIA: IDENTIFICADOR DEL PAGO [10], DNI PAGADOR [10], ALGUN DATO ADICIONAL [28]
+    var codigo = Referencias.substr(0,10);
+    var descripcionTasa = Referencias.substr(10,14);
+    var compromisoId = Referencias.substr(24,24);
+  var ImporteOrigen = parseFloat(item.substr(80,15))/100;
+  var ImporteDepositado = parseFloat(item.substr(95,15))/100;
+  var ImporteMora = parseFloat(item.substr(110,15))/100;
+  var Oficina = item.substr(125,4);
+  var NroMovimiento = item.substr(129,6);
+  var FechaPago = new Date(item.substr(135,4)+'-'+item.substr(139,2)+'-'+item.substr(141,2));
+  var TipoValor = item.substr(143,2);
+  var CanalEntrada = item.substr(145,2);
 
-  CompromisoPago.findOne({codigo:codigoPago},function(err, compromisopago){
+  CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
+    if(err) return defer.reject(err);
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
@@ -163,7 +164,7 @@ var procesarPago = function procesarPago(item,index){
         defer.reject(err);
       }else{
         //SE DETERMINA SI EL COMPROMISO DE PAGO PERTENECE A UN INGRESANTE
-        ingresantes.findOne({_persona:compromisopago._persona, estado:'Registrado'}, function(err,ingresante){
+        ingresantes.findOne({_persona:compromisopago._persona, estado:'Aprobado'}, function(err,ingresante){
           if(err){
             defer.reject(err);
           }else{
@@ -176,32 +177,7 @@ var procesarPago = function procesarPago(item,index){
         });
       }
     });
-    /*
-    compromisopago.update({_id:compromisopago._id},
-                          {$set:{
-                              pagado: pagado + ImporteDepositado - ImporteMora,
-                              saldo: saldo - (ImporteDepositado - ImporteMora),
-                              moratotal: moratotal + ImporteMora,
-                              detallePago: detallesPago
-                            }
-                          },
-                          function(err, cp){
-                            if(err){
-                              console.log(err);
-                            }else{
-                              //SE DETERMINA SI EL COMPROMISO DE PAGO PERTENECE A UN INGRESANTE
-                              ingresantes.findOne({_persona:compromisopago._persona, estado:'Registrado'}, function(err,ingresante){
-                                if(err){
-                                  defer.reject(error);
-                                }else{
-                                  if(ingresante === undefined) defe.resolve(null);
-                                  else defe.resolve(ingresante);
-                                }
-                              });
-                            }
-                          }
-    );
-    */
+
   });
   //defer.resolve(true);
   //proceso de actualización de pagos
@@ -218,22 +194,24 @@ module.exports  = function(filename,next){
       fs.readFile( pathFile, 'utf8', function ( error , data ) {
         if(error) return next(error);
         var dataArchivo = data.split("\n");
-        nrolineas = dataArchivo.length;
+
         var cabecera = dataArchivo.shift();
         var totales = dataArchivo.pop();
+        nrolineas = dataArchivo.length;
         var promises = [];
 
         NroCuenta = cabecera.substring(27,18);
         //SE REGISTRA LOS DATOS DEL ARCHIVO CARGADO
-        ArchivoBanco.nombre = filename;
-        ArchivoBanco.registros = dataArchivo.length;
-        ArchivoBanco.importeTotal = parseFloat(totales.substring(11,15))/100;//SE ASUME QUE LOS 2 ULTIMOS DÍGITOS SON LOS DECIMALES
-        ArchivoBanco.tipo = 'E';
-        ArchivoBanco.fechabanco = new Date(cabecera.substring(19,8));
-        ArchivoBanco.version = 1;
-        ArchivoBanco.createdAt = new Date();
-        ArchivoBanco.updatedAt = new Date();
-        ArchivoBanco.save(function(err){
+        var archivoBanco = new ArchivoBanco();
+        archivoBanco.nombre = filename;
+        archivoBanco.registros = dataArchivo.length;
+        archivoBanco.importeTotal = parseFloat(totales.substr(11,15))/100;//SE ASUME QUE LOS 2 ULTIMOS DÍGITOS SON LOS DECIMALES
+        archivoBanco.tipo = 'E';
+        archivoBanco.fechabanco = new Date(cabecera.substr(19,4)+'-'+cabecera.substr(23,2)+'-'+cabecera.substr(25,2));
+        archivoBanco.version = 1;
+        archivoBanco.createdAt = new Date();
+        archivoBanco.updatedAt = new Date();
+        archivoBanco.save(function(err){
           if(err){ console.log(err); return null; }
           else{
             //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
@@ -262,3 +240,4 @@ module.exports  = function(filename,next){
     }
   });
 };
+
