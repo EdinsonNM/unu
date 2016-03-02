@@ -3,7 +3,8 @@
   angular.module('unuApp')
   .controller('AlumnoMisDatosCtrl', ['$scope', 'Restangular', '$rootScope', function($scope, Restangular, $rootScope){
     var LOCAL = {
-        route:'alumnos'
+        route:'alumnos',
+        route1:'personas'
     };
     $scope.editable = false;
     $scope.UI = {
@@ -18,7 +19,7 @@
     },true);
 
 
-    var service = Restangular.all(LOCAL.route);
+    var service = Restangular.all(LOCAL.route1);
 
     service.customGET('model/sexo', {}).then(function(result){
       $scope.sexo = result; //sexo = result;

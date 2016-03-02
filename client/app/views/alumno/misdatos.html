@@ -56,7 +56,7 @@
                       <md-input-container class="md-block">
                         <label>Sexo</label>
                         <!--md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon-->
-                        <md-select ng-model="model.sexo" name="sexo" required ng-disabled="!editable">
+                        <md-select ng-model="model.sexo" name="sexo" required ng-disabled="editable">
                           <md-option ng-repeat="sex in sexo" ng-value="sex">
                             {{sex}}
                           </md-option>

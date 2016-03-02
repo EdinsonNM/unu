@@ -22,7 +22,7 @@
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
-        title: 'Matrícula 2016 - I',
+        //title: 'Matrícula 2016 - I',
         editMode: false,
         selected: null,
         messagePendiente: 'No se encontro ningun pendiente',
@@ -127,7 +127,6 @@
          }).then(function(data){
             $scope.matricula = data;
             if($scope.matricula.length !== 0){
-               console.log('INgresa a matricula length');
                $state.go('app.matriculainscripcion');
             }
          });
@@ -149,14 +148,16 @@
 
 
       var datosAlumno = function() {
-        var Service = Restangular.all('avancecurricular');
+         //$scope.idplanestudio= 'null';
+        var Service = Restangular.all('avancecurriculars');
+      //  console.log('alumno_id datosalummno'+$scope.ALUMNO._id);
         Service.getList({
           conditions: {
             _alumno: $scope.ALUMNO._id
           }
         }).then(function(data) {
           $scope.planestudio = data;
-          $scope.idplanestudio = data[0]._planEstudios;
+           $scope.idplanestudio = data[0]._planEstudios;
         });
       };
 
@@ -181,7 +182,7 @@
         servicePeriodo.getList().then(function(data) {
           $scope.periodo = data;
           $scope.idLast = data[0]._id;
-          console.log('id' + data[0]._id);
+          $scope.periodoNombre = data[0].nombre;
         });
       };
 
