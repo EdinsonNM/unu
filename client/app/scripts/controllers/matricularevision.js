@@ -150,6 +150,7 @@
 
       var datosAlumno = function() {
         var Service = Restangular.all('avancecurricular');
+        console.log('alumno_id datosalummno'+$scope.ALUMNO._id);
         Service.getList({
           conditions: {
             _alumno: $scope.ALUMNO._id
