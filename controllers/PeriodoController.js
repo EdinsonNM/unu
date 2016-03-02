@@ -99,7 +99,7 @@ module.exports=function(){
        * devuelve el último periodo registradoº
        */
        controller.get('/lastPeriodo', function(req, res){
-       	var filter;
+       	var filter = {activo: true};
        	model.paginate(
        		filter,
        		{
