@@ -17,10 +17,20 @@ module.exports = function() {
         req.baucis.query.populate(
           [{
             path: '_persona',
-            model: 'Persona'
+            model: 'Persona',
+            populate: [{
+              path: '_alumno',
+              model: 'Alumno'
+            }]
           },{
             path: '_avanceCurricular',
             model: 'AvanceCurricular'
+          },{
+            path: '_facultad',
+            model: 'Facultad'
+          },{
+            path: '_escuela',
+            model: 'Escuela'
           }]
         );
         next();

@@ -48,24 +48,24 @@
               md-input-maxlength="50"
               md-selected-item="_alumno"
               md-search-text="ctrl.searchText"
-              md-items="alumn in FilterAlumnos(ctrl.searchText)"
+              md-items="alumno in FilterAlumnos(ctrl.searchText)"
               md-item-text="alumno._persona.nombreCompleto"
               md-floating-label="Alumno"
               md-menu-class="autocomplete-custom-template">
                 <md-item-template>
                     <span class="item-title">
                         <md-icon md-font-icon="fa fa-book"></md-icon>
-                        <span> {{alumno._persona.nombre}} </span>
+                        <span> {{ alumno._persona.nombres }} </span>
                     </span>
                     <span class="item-metadata">
                         <span class="item-metastat">
-                            <strong>Código</strong> {{alumno.codigo}};
+                            <strong>Código</strong> {{ alumno._alumno.codigoUniversitario }};
                         </span>
                         <span class="item-metastat">
-                            <strong>Facultad</strong> {{alumno._facultad}};
+                            <strong>Facultad</strong> {{ alumno._facultad.nombre }};
                         </span>
                         <span class="item-metastat">
-                            <strong>Escuea</strong> {{alumno._escuela}}
+                            <strong>Escuela</strong> {{ alumno._escuela.nombre }}
                         </span>
                     </span>
                 </md-item-template>
@@ -77,7 +77,7 @@
             </md-autocomplete>
         </div>
       </div>
-      <div flex layout="row" layout-sm="row">
+      <div flex layout="row" layout-sm="row" ng-if="allowUserSelection">
         <div flex>
           <md-input-container class="md-block">
             <label>Conflicto</label>
@@ -108,7 +108,7 @@
         </div>
       </div>
 
-      <div flex layout="row" layout-sm="column">
+      <div flex layout="row" layout-sm="column" ng-if="allowUserSelection">
         <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
           <!--md-checkbox ng-model="model.activo">
             Activo

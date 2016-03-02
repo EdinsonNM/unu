@@ -190,10 +190,9 @@
     $scope.filtro = {};
     $scope.allowUserSelection = false;
 
-    //var serviceAlumnos =
+    var serviceAlumno = Restangular.all('alumnos');
 
     $scope.FilterAlumnos = function(text){
-      $scope.allowUserSelection = false;
       var data = [];
       angular.forEach($scope.alumnos, function(item){
         var index = item._persona.nombreCompleto.search(new RegExp(text,'i'));
@@ -218,10 +217,17 @@
     };
 
     $scope.allowSelection = function(){
-      if($scope.escuelas.length>0){
-        console.log("hola");
-        $scope.allowUserSelection = true;
-      }
+      serviceAlumno.getList({
+        conditions:{
+          _facultad : $scope.filtro._facultad._id,
+          _escuela : $scope.filtro._escuela._id
+        }
+      }).then(function(alumnos){
+        if($scope.escuelas.length>0){
+          $scope.allowUserSelection = true;
+        }
+        $scope.alumnos = alumnos;
+      });
     };
 
     $scope.Save = function(form) {
