@@ -13,6 +13,22 @@
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
+            <label>Periodo</label>
+            <md-select ng-model="filtro._periodo" name="periodo" ng-change="allowSelection()" required>
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                {{ periodo.nombre }}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="myForm._conflicto.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
             <label>Facultad</label>
             <md-select ng-model="filtro._facultad" name="facultad" ng-change="LoadEcuelas()" required>
               <md-option ng-repeat="facultad in facultades" ng-value="facultad">

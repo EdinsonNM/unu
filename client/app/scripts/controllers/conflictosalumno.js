@@ -82,13 +82,21 @@
       $scope.tableParams.reload();
     };
 
-    var LoadFacultades = function LoadFacultades() {
+    var LoadFacultades = function() {
       var serviceFacultad = Restangular.all('facultades');
       serviceFacultad.getList().then(function(data) {
         $scope.facultades = data;
       });
     };
     LoadFacultades();
+
+    var LoadPeriodos = function() {
+      var servicePeriodos = Restangular.all('periodos');
+      servicePeriodos.getList().then(function(data) {
+        $scope.periodos = data;
+      });
+    };
+    LoadPeriodos();
 
     $scope.New = function New($event){
       var parentEl = angular.element(document.body);
@@ -102,7 +110,8 @@
           table:$scope.tableParams,
           estados: $scope.estados,
           conflictos: $scope.conclictos,
-          facultades: $scope.facultades
+          facultades: $scope.facultades,
+          periodos: $scope.periodos
         },
         controller: 'ConflictosalumnoNewCtrl'
       });
@@ -163,7 +172,7 @@
     new LoadConflictos();
   }])
 
-  .controller('ConflictosalumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular', 'estados', 'conflictos', 'facultades',
+  .controller('ConflictosalumnoNewCtrl',
   function(
     $scope,
     table,
@@ -175,7 +184,8 @@
     Restangular,
     estados,
     conflictos,
-    facultades
+    facultades,
+    periodos
   ){
 
     $scope.submited = false;
@@ -189,6 +199,7 @@
     $scope.escuelas = [];
     $scope.filtro = {};
     $scope.allowUserSelection = false;
+    $scope.periodos = periodos;
 
     var serviceAlumno = Restangular.all('alumnos');
 
@@ -200,7 +211,11 @@
           data.push(item);
         }
       });
-      return data;
+      if(data.length>0){
+        return data;
+      }else {
+        return false;
+      }
     };
 
     $scope.LoadEcuelas = function LoadEcuelas() {
@@ -217,17 +232,22 @@
     };
 
     $scope.allowSelection = function(){
-      serviceAlumno.getList({
-        conditions:{
-          _facultad : $scope.filtro._facultad._id,
-          _escuela : $scope.filtro._escuela._id
-        }
-      }).then(function(alumnos){
-        if($scope.escuelas.length>0){
-          $scope.allowUserSelection = true;
-        }
-        $scope.alumnos = alumnos;
-      });
+      if(typeof $scope.filtro._facultad !== 'undefined' && typeof $scope.filtro._escuela !== 'undefined' && typeof $scope.filtro._periodo !== 'undefined'){
+        serviceAlumno.getList({
+          conditions:{
+            _facultad : $scope.filtro._facultad._id,
+            _escuela : $scope.filtro._escuela._id,
+            _periodoInicio : $scope.filtro._periodo._id
+          }
+        }).then(function(alumnos){
+          if($scope.escuelas.length>0){
+            $scope.allowUserSelection = true;
+          }
+          $scope.alumnos = alumnos;
+        });
+      }else{
+        $scope.allowUserSelection = false;
+      }
     };
 
     $scope.Save = function(form) {
@@ -243,7 +263,7 @@
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
-  }])
+  })
 
   .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'estados', 'conflictos',
   function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados, conflictos){
