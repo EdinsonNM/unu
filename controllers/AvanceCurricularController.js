@@ -6,7 +6,7 @@ module.exports = function() {
       var controller = baucis.rest('AvanceCurricular');
       controller.relations(true);
       controller.hints(true);
-      controller.fragment('/avancecurricular');
+      controller.fragment('/avancecurriculars');
 
     }
   };
