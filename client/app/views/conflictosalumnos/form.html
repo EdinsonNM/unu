@@ -10,7 +10,7 @@
       </div>
     </md-toolbar>
     <md-dialog-content class="window-modal-content-sm">
-      <div flex layout="row" layout-sm="row">
+      <div flex layout="row" layout-sm="row" ng-hide="allowEditSelection">
         <div flex>
           <md-input-container class="md-block">
             <label>Periodo</label>
@@ -26,7 +26,7 @@
           </md-input-container>
         </div>
       </div>
-      <div flex layout="row" layout-sm="row">
+      <div flex layout="row" layout-sm="row" ng-hide="allowEditSelection">
         <div flex>
           <md-input-container class="md-block">
             <label>Facultad</label>
@@ -56,15 +56,12 @@
           </md-input-container>
         </div>
       </div>
-      <div flex layout="row" layout-sm="row" ng-if="allowUserSelection">
+      <div flex layout="row" layout-sm="row" ng-show="allowUserSelection">
         <div flex>
             <md-autocomplete flex
-              md-input-name="alumno"
-              md-input-minlength="2"
-              md-input-maxlength="50"
-              md-selected-item="_alumno"
-              md-search-text="ctrl.searchText"
-              md-items="alumno in FilterAlumnos(ctrl.searchText)"
+              md-selected-item="selected_alumno"
+              md-search-text="searchText"
+              md-items="alumno in FilterAlumnos(searchText)"
               md-item-text="alumno._persona.nombreCompleto"
               md-floating-label="Alumno"
               md-menu-class="autocomplete-custom-template">
@@ -93,13 +90,13 @@
             </md-autocomplete>
         </div>
       </div>
-      <div flex layout="row" layout-sm="row" ng-if="allowUserSelection">
+      <div flex layout="row" layout-sm="row" ng-show="allowUserSelection">
         <div flex>
           <md-input-container class="md-block">
             <label>Conflicto</label>
             <md-select ng-model="model._conflicto" name="conflicto" required>
-              <md-option ng-repeat="conf in conflictos" ng-value="conf">
-                {{conf.nombre}}
+              <md-option ng-repeat="conflicto in conflictos" ng-value="conflicto">
+                {{ conflicto.nombre }}
               </md-option>
             </md-select>
 
@@ -124,7 +121,7 @@
         </div>
       </div>
 
-      <div flex layout="row" layout-sm="column" ng-if="allowUserSelection">
+      <div flex layout="row" layout-sm="column" ng-show="allowUserSelection">
         <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
           <!--md-checkbox ng-model="model.activo">
             Activo

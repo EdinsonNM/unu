@@ -49,7 +49,7 @@
     var LoadConflictos = function LoadConflictos() {
       var serviceConflicto = Restangular.all(LOCAL.route_conflictos);
       serviceConflicto.getList().then(function(data){
-        $scope.conclictos = data;
+        $scope._conflicto = data;
       });
     };
 
@@ -109,7 +109,7 @@
           name: LOCAL.name,
           table:$scope.tableParams,
           estados: $scope.estados,
-          conflictos: $scope.conclictos,
+          conflictos: $scope._conflicto,
           facultades: $scope.facultades,
           periodos: $scope.periodos
         },
@@ -128,7 +128,7 @@
           table:$scope.tableParams,
           model: model,
           estados: $scope.estados,
-          conflictos: $scope.conclictos
+          conflictos: $scope._conflicto
         },
         controller: 'ConflictosalumnoEditCtrl'
       });
@@ -200,6 +200,8 @@
     $scope.filtro = {};
     $scope.allowUserSelection = false;
     $scope.periodos = periodos;
+    $scope.selected_alumno = null;
+    $scope.searchText = null;
 
     var serviceAlumno = Restangular.all('alumnos');
 
@@ -251,6 +253,7 @@
     };
 
     $scope.Save = function(form) {
+      $scope.model._alumno = $scope.selected_alumno;
       $scope.submited = true;
       if (form.$valid) {
         service.post($scope.model).then(function() {
@@ -265,17 +268,19 @@
     };
   })
 
-  .controller('ConflictosalumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular', 'estados', 'conflictos',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados, conflictos){
-    $scope.submited = false;
+  .controller('ConflictosalumnoEditCtrl',
+  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular, estados, conflictos, $timeout){
 
+    $scope.submited = false;
+    $scope.allowUserSelection = true;
+    $scope.allowEditSelection = true;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.estados = estados;
     $scope.conflictos = conflictos;
+    $scope.selected_alumno = model._alumno;
+
     $scope.model = model;
-
-
 
     $scope.FilterAlumnos = function(text){
       var data = [];
@@ -289,6 +294,7 @@
     };
 
     $scope.Save = function(form) {
+      $scope.model._alumno = $scope.selected_alumno;
       $scope.submited = true;
       if (form.$valid) {
         $scope.model.put().then(function() {
@@ -301,5 +307,6 @@
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
-  }]);
+  });
+
 }).call(this);
