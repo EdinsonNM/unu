@@ -27,5 +27,5 @@ module.exports.RemplazaCaracteres= function RemplazaCaracteres(cadtemp){
 module.exports.pad = function pad(n, width, z) {
   z = z || '0';
   n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  return n.length >= width ? n.substr(0,width) : new Array(width - n.length + 1).join(z) + n;
 };
