@@ -1,5 +1,6 @@
 var model = require('../models/GrupoCursoModel.js');
-var Parent=require('../models/CursoAperturadoPeriodoModel.js');
+var Parent = require('../models/CursoAperturadoPeriodoModel.js');
+var AvanceCurricular = require('../models/AvanceCurricularModel.js');
 var message = require('../commons/messages');
 var _ = require('underscore');
 module.exports=function(){
@@ -48,6 +49,10 @@ module.exports=function(){
 
       });
 
+      /**
+       * lista los grupo cursos agrupados por nombre_curso, codigo_curso, idPeriodo y idPlanestudio
+       * Este endpoint es usado en horarios
+       */
       controller.get('/methods/paginate', function(req, res) {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
@@ -98,6 +103,74 @@ module.exports=function(){
           }
         );
       });
+
+      /**
+       * lista los grupo cursos agrupados por nombre_curso, codigo_curso, idPeriodo y idPlanestudio
+       * Este endpoint es usado en matrícula
+       */
+      controller.get('/methods/matricula', function(req, res) {
+        var limit = parseInt(req.query.count);
+        var page = parseInt(req.query.page) || 1;
+        var filter = req.query.filter;
+        var conditions = req.query.conditions;
+        model.paginate(
+          filter, {
+            page: page,
+            limit: limit,
+            populate: [{
+              path:'_programaciones'
+            },{
+              path:'_cursoAperturadoPeriodo',
+              populate:[{
+                path:'_planestudiodetalle',
+                model:"Planestudiodetalle",
+                populate:{
+                   path:'_curso',
+                   model:"Curso"
+                }
+              }]
+            },
+            {path:'_seccion'}]
+          },
+          function(err, results, pageCount, itemCount) {
+
+            var objAlumno;
+            objAlumno = AvanceCurricular.findOne({'_alumno' : conditions._alumno}, function(err, alumno){
+              var detalleAvance = alumno.detalleAvance;
+              var datos = [];
+              var planesEstudiosID = [];
+              results.docs.forEach(function(item){
+                if(item._cursoAperturadoPeriodo._planestudiodetalle && item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == conditions._planestudio){
+                  detalleAvance.forEach(function(detalle){
+                    if(detalle._planEstudiosDetalle !== item._cursoAperturadoPeriodo._planestudiodetalle._id){
+                      if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
+                        planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
+                        item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+                        item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+                        item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
+                        item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
+                        datos.push(item);
+                      }
+                    }
+                  });
+                }
+              });
+
+              var obj = {
+                total: results.total,
+                perpage: limit*1,
+                current_page: page*1,
+                last_page: results.pages,
+                from: (page-1)*limit+1,
+                to: page*limit,
+                data: datos
+              };
+              res.send(obj);
+            });
+          }
+        );
+      });
+
     }
   };
 };

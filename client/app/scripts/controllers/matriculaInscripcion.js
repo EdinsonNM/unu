@@ -139,7 +139,8 @@
            page: 1,
            count: 1000,
            conditions : {
-             _planestudio : matricula._planEstudio
+             _planestudio : matricula._planEstudio,
+             _alumno : $scope.ALUMNO._id
            },
            filter: {
              abierto: true
@@ -153,7 +154,7 @@
            getData: function($defer, params) {
              var query;
              query = params.url();
-             serviceGrupoCurso.customGET('methods/paginate', query).then(function(result) {
+             serviceGrupoCurso.customGET('methods/matricula', query).then(function(result) {
                $timeout(function() {
                  angular.forEach(result.data, function(item){
                    angular.forEach(matricula._detalleMatricula, function(curso){
