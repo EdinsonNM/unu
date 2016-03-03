@@ -8,7 +8,7 @@ var UsuarioSchema = new Schema({
   password:{type:String, required:true},
   firstname:String,
   lastname:String,
-  email:{type:String, required:true},
+  email:{type:String},
   _grupo:{
     type:Schema.Types.ObjectId,
     ref:'Grupo',
