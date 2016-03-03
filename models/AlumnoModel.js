@@ -98,3 +98,7 @@ AlumnoSchema.pre('save', function(next) {
     next();
 });
 module.exports = mongoose.model('Alumno', AlumnoSchema).plural('alumnos');
+<<<<<<< 7eed1b2773f10b3708cbf4a173c603a0503ec249
+=======
+
+>>>>>>> Fix importacion de importacion de archivo de entrada del banco

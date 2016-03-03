@@ -19,6 +19,7 @@ var Q = require('q');
 var _ = require('underscore');
 var NroCuenta = "";
 var tipoCondicion,situacion,grupoAlumno;
+
 var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
   var codigo="";
   var correlativo = 0;
@@ -35,6 +36,7 @@ var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
     correlativo+=1;
     codigo = utils.pad(escuela.codigo,3,'0') + utils.pad(anioPeriodo.toString(),4,'0') + utils.pad(correlativo.toString(),3,'0');
     return next(null,codigo);
+
   });
 
 };
@@ -80,6 +82,7 @@ var crearAlumno = function crearAlumno(ingresante,next){
     });
   });
 };
+
 
 var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
     planestudiodetalle.find({_planestudio:dataAlumno.planestudio._id},function(err,listaDetallesPlan){
@@ -150,6 +153,7 @@ var procesarPago = function procesarPago(item,index){
     FechaPago = new Date(item.substr(135,4)+'-'+item.substr(139,2)+'-'+item.substr(141,2));
     TipoValor = item.substr(143,2);
     CanalEntrada = item.substr(145,2);
+
   } catch (e) {
     return defer.reject(e);
   }
@@ -195,6 +199,7 @@ var procesarPago = function procesarPago(item,index){
 
 
     });
+
 
   });
   //defer.resolve(true);
@@ -253,7 +258,6 @@ module.exports  = function(filename,next){
 
                 });
                 //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
-
 
               });
             });
