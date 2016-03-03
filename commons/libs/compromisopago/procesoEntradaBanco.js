@@ -13,6 +13,7 @@ var situacionalumno = require('../../../models/SituacionAlumnoModel.js'); //mode
 var escuelas = require('../../../models/EscuelaModel.js'); //model de Escuela
 var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
 
+
 var fs = require('fs'); //permite escribir y leer en disco
 var lockFile = require('lockfile');
 var Q = require('q');
@@ -188,7 +189,6 @@ var procesarPago = function procesarPago(item,index){
 
     });
 
-
   });
   //defer.resolve(true);
   //proceso de actualización de pagos
@@ -212,6 +212,7 @@ module.exports  = function(filename,next){
         var promises = [];
 
         NroCuenta = cabecera.substr(27,18);
+
         //SE REGISTRA LOS DATOS DEL ARCHIVO CARGADO
         var archivoBanco = new ArchivoBanco();
         archivoBanco.nombre = filename;
@@ -249,7 +250,6 @@ module.exports  = function(filename,next){
                   });
               });
             });
-
           }
         });
       });
