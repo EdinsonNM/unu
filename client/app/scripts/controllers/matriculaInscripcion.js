@@ -28,11 +28,12 @@
       $timeout(function(){
         $scope.ALUMNO = $rootScope.ALUMNO;
         $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+        getMatricula();
       }, 500);
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
-        title: 'Matrícula 2016-I',
+        title: '',
         editMode: false,
         selected:null,
         customActions:[]
@@ -46,15 +47,27 @@
       var serviceMatricula, matricula;
       $scope.cursos_selected = [];
 
+      var servicePeriodos = Restangular.all('periodos');
+      servicePeriodos.customGET('lastPeriodo').then(function(response){
+        $scope.UI.title = response[0].nombre;
+      });
+
       serviceMatricula = Restangular.all('matriculas');
       var getMatricula = function(){
-        serviceMatricula.customGET('lastMatricula').then(function(response){
-          matricula = response[0];
-          $scope.cursos_selected = matricula._detalleMatricula;
-          console.log($scope.cursos_selected);
+        var filter = {
+          _alumnos : $scope.ALUMNO._id
+        };
+        serviceMatricula.customGET('lastMatricula', filter).then(function(response){
+          if(response[0]){
+            matricula = response[0];
+            $scope.cursos_selected = matricula._detalleMatricula;
+          }else{
+            matricula = {}
+            matricula._detalleMatricula = [];
+            $scope.cursos_selected = [];
+          }
         });
       }
-      getMatricula();
 
       /**
        * Abre modal para agregar cursos
@@ -125,8 +138,11 @@
          $scope.tableParams = new NgTableParams({
            page: 1,
            count: 1000,
-           filter : {
+           conditions : {
              _planestudio : matricula._planEstudio
+           },
+           filter: {
+             abierto: true
            }
          }, {
            total: 0,

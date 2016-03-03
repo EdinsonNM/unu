@@ -21,7 +21,7 @@ var GrupoCursoSchema = new Schema({
     nivel:Number,//Definir Variable
     abierto: {
         type: Boolean,
-      default: true
+        default: true
     },
     createdAt: Date,
     updatedAt: Date,

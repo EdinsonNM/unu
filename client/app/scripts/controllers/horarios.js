@@ -327,8 +327,11 @@
         $scope.tableParams = new NgTableParams({
           page: 1,
           count: 1000,
-          filter : {
+          conditions : {
             _planestudio : $scope.filter._planestudios._id
+          },
+          filter: {
+            abierto: true
           }
         }, {
           total: 0,

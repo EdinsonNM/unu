@@ -41,7 +41,7 @@ module.exports = function() {
        * devuelve el último periodo registradoº
        */
        controller.get('/lastMatricula', function(req, res){
-       	var filter;
+       	var filter = req.query.filter;
        	model.paginate(
        		filter,
        		{

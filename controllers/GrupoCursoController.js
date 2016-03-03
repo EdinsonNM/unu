@@ -54,31 +54,35 @@ module.exports=function(){
         var filter = req.query.filter;
         var conditions = req.query.conditions;
         model.paginate(
-          {}, {
+          filter, {
             page: page,
             limit: limit,
-            populate: [
-            {path:'_programaciones'},
-            {path:'_cursoAperturadoPeriodo',
-               populate:{
-                  path:'_planestudiodetalle',
-                  model:"Planestudiodetalle",
-                  populate:{
-                     path:'_curso',
-                     model:"Curso"
-                  }
-               }
+            populate: [{
+              path:'_programaciones'
+            },{
+              path:'_cursoAperturadoPeriodo',
+              populate:[{
+                path:'_planestudiodetalle',
+                model:"Planestudiodetalle",
+                populate:{
+                   path:'_curso',
+                   model:"Curso"
+                }
+              }]
             },
             {path:'_seccion'}]
           },
           function(err, results, pageCount, itemCount) {
 
-             var datos = results.docs.map(function(item){
-              item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-              item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-              item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
-              item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
-              return item;
+            var datos = [];
+            results.docs.forEach(function(item){
+              if(item._cursoAperturadoPeriodo._planestudiodetalle && item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == conditions._planestudio){
+                item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+                item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+                item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
+                item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
+                datos.push(item);
+              }
             });
 
             var obj = {

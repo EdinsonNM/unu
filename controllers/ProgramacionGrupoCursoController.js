@@ -122,7 +122,7 @@ module.exports=function(){
         var filter = req.query.filter;
         var conditions = req.query.conditions;
         model.paginate(
-          conditions, {
+          {}, {
             page: page,
             limit: limit,
             populate: [{
@@ -160,7 +160,7 @@ module.exports=function(){
           function(err, results, pageCount, itemCount) {
             var datos = [];
             results.docs.forEach(function(item){
-              if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
+              if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle && item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._planestudio == filter._planestudio){
                 item._doc._nombre_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
                 item._doc._codigo_curso = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
                 item._doc._grupo_curso = item._grupoCurso._seccion.nombre;
