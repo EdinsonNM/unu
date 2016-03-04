@@ -29,14 +29,14 @@ var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
     correlativo = escuela._correlativosAnio[indexCorrelativo].correlativo;
     escuela._correlativosAnio[indexCorrelativo].correlativo = correlativo + 1;
   }else{
-    escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:1})
+    escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:1});
   }
   escuela.save(function(err,data){
     if(err) return next(err);
     correlativo+=1;
     codigo = utils.pad(escuela.codigo,3,'0') + utils.pad(anioPeriodo.toString(),4,'0') + utils.pad(correlativo.toString(),3,'0');
     return next(null,codigo);
-  })
+  });
 
 };
 
@@ -56,7 +56,7 @@ var crearAlumno = function crearAlumno(ingresante,next){
           estadoCivil : 'Soltero(a)',
           _persona : objIngresante._persona,
           _ingresante : objIngresante._id,
-          _periodoInicio : objPlanEstudioVigente._periodo,
+          _periodoInicio : objPlanEstudioVigente._periodo._id,
           _facultad : objIngresante._facultad,
           _escuela : objIngresante._escuela,
           _tipoCondicionAlumno : tipocondicion._id,
@@ -73,55 +73,53 @@ var crearAlumno = function crearAlumno(ingresante,next){
           alumno._usuario = objUsuario._id;
           alumno.save(function(err,objAlumno){
             if(err) return next(err);
-            return next(null,objAlumno);
+            return next(null,{alumno:objAlumno,planestudio:objPlanEstudioVigente});
           });
         });
 
       });
     });
   });
-}
+};
 
-var crearAvanceCurricular = function crearAvanceCurricular(alumno){
-  planestudio.findOne({_periodo:alumno._periodoInicio, _escuela:alumno._escuela}, function(err,objPlanEstudio){
-    planestudiodetalle.find({_planestudio:objPlanEstudio._id},function(err,listaDetallesPlan){
+var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
+    planestudiodetalle.find({_planestudio:dataAlumno.planestudio._id},function(err,listaDetallesPlan){
+      if(err) return next(err);
       var itemDetalle = {};
       var listaDetalles = [];
       var avancecurricular = new AvanceCurricularModel();
       avancecurricular.secuencia = 1;
-      avancecurricular._alumno = alumno._id;
-      avancecurricular._planEstudios = objPlanEstudio._id;
+      avancecurricular._alumno = dataAlumno.alumno._id;
+      avancecurricular._planEstudios = dataAlumno.planestudio._id;
       avancecurricular.activo = true;
       avancecurricular.createdAt = new Date();
 
       for (var i = 0; i < listaDetallesPlan.length; i++) {
         itemDetalle = {};
         itemDetalle._planEstudiosDetalle = listaDetallesPlan[i]._id;
-        itemDetalle.numeroVeces = 1;
+        itemDetalle.numeroVeces = 0;
         itemDetalle.record = [];
         listaDetalles.push(itemDetalle);
       }
       avancecurricular.detalleAvance = listaDetalles;
       avancecurricular.save(function(err,avance){
-        if(err){
-          console.log(err);
-          return null;
-        }
-        else{
-          return true;
-        }
+        if(err) return next(err);
+        dataAlumno.alumno._avanceCurricular.push(avance._id);
+        dataAlumno.alumno.save(function(err,alumno){
+          if(err) return next(err);
+          return next(null,alumno);
+        });
       });
     });
-  });
 };
 
 var procesarIngresante = function(ingresante){
   var defer = Q.defer();
-  crearAlumno(ingresante,function(err,alumno){
+  crearAlumno(ingresante,function(err,dataAlumno){
     if(err) return defer.reject(err);
-    crearAvanceCurricular(alumno,function(err,alumno){
+    crearAvanceCurricular(dataAlumno,function(err,avance){
       if(err) return defer.reject(err);
-      return defer.resolve(alumno);
+      return defer.resolve(avance);
     });
   });
   return defer.promise;
@@ -129,28 +127,36 @@ var procesarIngresante = function(ingresante){
 
 var procesarPago = function procesarPago(item,index){
   var defer = Q.defer();
+  var NombreCliente = item.substr(2,30);
+  // INFO referencias = codigo+descripcionTasa+compromisoId
+  var Referencias,codigo,
+  descripcionTasa,compromisoId,
+  ImporteOrigen,ImporteDepositado,
+  ImporteMora,Oficina,NroMovimiento,FechaPago,
+  TipoValor,CanalEntrada;
 
   try {
-    var NombreCliente = item.substr(2,30);
+    NombreCliente = item.substr(2,30);
     // INFO referencias = codigo+descripcionTasa+compromisoId
-    var Referencias = item.substr(32,48);
-    var codigo = Referencias.substr(0,10);
-    var descripcionTasa = Referencias.substr(10,14);
-    var compromisoId = Referencias.substr(24,24);
-    var ImporteOrigen = parseFloat(item.substr(80,15))/100;
-    var ImporteDepositado = parseFloat(item.substr(95,15))/100;
-    var ImporteMora = parseFloat(item.substr(110,15))/100;
-    var Oficina = item.substr(125,4);
-    var NroMovimiento = item.substr(129,6);
-    var FechaPago = new Date(item.substr(135,4)+'-'+item.substr(139,2)+'-'+item.substr(141,2));
-    var TipoValor = item.substr(143,2);
-    var CanalEntrada = item.substr(145,2);
+    Referencias = item.substr(32,48);
+    codigo = Referencias.substr(0,10);
+    descripcionTasa = Referencias.substr(10,14);
+    compromisoId = Referencias.substr(24,24);
+    ImporteOrigen = parseFloat(item.substr(80,15))/100;
+    ImporteDepositado = parseFloat(item.substr(95,15))/100;
+    ImporteMora = parseFloat(item.substr(110,15))/100;
+    Oficina = item.substr(125,4);
+    NroMovimiento = item.substr(129,6);
+    FechaPago = new Date(item.substr(135,4)+'-'+item.substr(139,2)+'-'+item.substr(141,2));
+    TipoValor = item.substr(143,2);
+    CanalEntrada = item.substr(145,2);
   } catch (e) {
     return defer.reject(e);
   }
 
   CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
     if(err) return defer.reject(err);
+    if(!compromisopago) return defer.resolve({message:'No se encontro el compromiso'});
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
@@ -224,7 +230,7 @@ module.exports  = function(filename,next){
         archivoBanco.createdAt = new Date();
         archivoBanco.updatedAt = new Date();
         archivoBanco.save(function(err){
-          if(err){ console.log(err); return null; }
+          if(err){ console.log(err); return next(err); }
           else{
             tipocondicionalumno.findOne({codigo:'01'},function(err,tc){
               if(err) return next(err);
@@ -238,16 +244,16 @@ module.exports  = function(filename,next){
                     promises.push(procesarPago(item,index));
                   });
 
+                  Q.all(promises).then(
+                    function(result){
+                      console.log('result',result);//[ingresante,null,null,ingresante];
+                      return next(null,result);
+                    });
+
                 });
                 //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
 
-                Q.all(promises).then(
-                  function(result){
-                    console.log(result);//[ingresante,null,null,ingresante];
-                  },
-                  function(result){
-                    console.log(result);
-                  });
+
               });
             });
           }
