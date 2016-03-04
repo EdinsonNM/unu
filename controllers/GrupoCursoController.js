@@ -108,6 +108,22 @@ module.exports=function(){
        * lista los grupo cursos agrupados por nombre_curso, codigo_curso, idPeriodo y idPlanestudio
        * Este endpoint es usado en matrícula
        */
+       var auxMatricula = function(item){
+         item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
+         item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
+         item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
+         item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
+         return item;
+       };
+       var auxSort = function(a, b){
+         if(a.secuencia < b.secuencia){
+           return 1;
+         }else if(a.secuencia > b.secuencia){
+           return -1;
+         }else{
+           return 0;
+         }
+       };
       controller.get('/methods/matricula', function(req, res) {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
@@ -135,24 +151,39 @@ module.exports=function(){
           function(err, results, pageCount, itemCount) {
 
             var objAlumno;
+            var record;
+            var auxItem;
+            var situaciones_aceptadas = ['Retirado', 'Desaprobado'];
             objAlumno = AvanceCurricular.findOne({'_alumno' : conditions._alumno}, function(err, alumno){
               var detalleAvance = alumno.detalleAvance;
               var datos = [];
               var planesEstudiosID = [];
               results.docs.forEach(function(item){
                 if(item._cursoAperturadoPeriodo._planestudiodetalle && item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == conditions._planestudio){
-                  detalleAvance.forEach(function(detalle){
-                    if(detalle._planEstudiosDetalle !== item._cursoAperturadoPeriodo._planestudiodetalle._id){
-                      if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
-                        planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
-                        item._doc._nombre_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre;
-                        item._doc._codigo_curso = item._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo;
-                        item._doc._idPeriodo = item._cursoAperturadoPeriodo._periodo;
-                        item._doc._idPlanestudio = item._cursoAperturadoPeriodo._planestudiodetalle._planestudio;
-                        datos.push(item);
+                  if(detalleAvance.length > 0){
+                    detalleAvance.forEach(function(detalle){
+                      if(detalle.record.length > 0){
+                        record = detalle.record.sort(auxSort)[0];
+                      }else{
+                        record = null;
                       }
-                    }
-                  });
+                      if(detalle._planEstudiosDetalle !== item._cursoAperturadoPeriodo._planestudiodetalle._id){
+                        if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
+                          planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
+                          auxItem = auxMatricula(item);
+                          datos.push(auxItem);
+                        }
+                      }else{
+                        if(!record || situaciones_aceptadas.indexOf(record.situacion) >= 0){
+                          auxItem = auxMatricula(item);
+                          datos.push(auxItem);
+                        }
+                      }
+                    });
+                  }else{
+                    var auxItem = auxMatricula(item);
+                    datos.push(auxItem);
+                  }
                 }
               });
 
