@@ -81,8 +81,8 @@ var crearAlumno = function crearAlumno(ingresante,next){
       });
     });
   });
-};
 
+};
 
 var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
     planestudiodetalle.find({_planestudio:dataAlumno.planestudio._id},function(err,listaDetallesPlan){
@@ -161,7 +161,6 @@ var procesarPago = function procesarPago(item,index){
   CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
     if(err) return defer.reject(err);
     if(!compromisopago) return defer.resolve({message:'No se encontro el compromiso'});
-
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
