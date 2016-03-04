@@ -72,9 +72,7 @@ class CompromisoPagoAlumno{
   ObtenerDeudaPerdidaGratuidad(){
     //TODO implementar proceso de verificacion y agregar deuda si corresponde
   }
-  ObtenerDeudaPerdidaGratuidad(){
-    //TODO implementar proceso de verificacion y agregar deuda si corresponde
-  }
+
   ObtenerDeudaPerdidaGratuidad(){
     //TODO implementar proceso de verificacion y agregar deuda si corresponde
   }
