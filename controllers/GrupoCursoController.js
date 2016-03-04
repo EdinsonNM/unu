@@ -134,19 +134,17 @@ module.exports=function(){
             page: page,
             limit: limit,
             populate: [{
-              path:'_programaciones'
-            },{
               path:'_cursoAperturadoPeriodo',
+              model: 'CursoAperturadoPeriodo',
               populate:[{
-                path:'_planestudiodetalle',
-                model:"Planestudiodetalle",
+                path: '_planestudiodetalle',
+                model: 'Planestudiodetalle',
                 populate:{
                    path:'_curso',
-                   model:"Curso"
+                   model: 'Curso'
                 }
               }]
-            },
-            {path:'_seccion'}]
+            }]
           },
           function(err, results, pageCount, itemCount) {
 
@@ -159,6 +157,7 @@ module.exports=function(){
               var datos = [];
               var planesEstudiosID = [];
               results.docs.forEach(function(item){
+                console.log(item);
                 if(item._cursoAperturadoPeriodo._planestudiodetalle && item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == conditions._planestudio){
                   if(detalleAvance.length > 0){
                     detalleAvance.forEach(function(detalle){
@@ -175,8 +174,11 @@ module.exports=function(){
                         }
                       }else{
                         if(!record || situaciones_aceptadas.indexOf(record.situacion) >= 0){
-                          auxItem = auxMatricula(item);
-                          datos.push(auxItem);
+                          if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
+                            planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
+                            auxItem = auxMatricula(item);
+                            datos.push(auxItem);
+                          }
                         }
                       }
                     });
