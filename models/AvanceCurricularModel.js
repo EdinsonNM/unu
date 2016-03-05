@@ -14,6 +14,28 @@ var AvanceCurricularSchema = new Schema({
     ref:'Planestudio',
     required:true
   },
+  recordTotalSemestral:[{
+    _matricula:{
+      type:Schema.Types.ObjectId,
+      ref:'Matricula'
+    },
+    _periodo:{
+      type:Schema.Types.ObjectId,
+      ref:'Periodo'
+    },
+    pps:Number,
+    merito:Number,
+    creditosAprobados:Number,
+    creditosDesaprobados:Number,
+    creditosElectivosAprobados:Number
+  }],
+  totales:{
+    merito:Number,
+    promedioTotal:Number,
+    creditosAprobados:Number,
+    creditosDesaprobados:Number,
+    creditosElectivosAprobados:Number
+  },
   detalleAvance:[{
     _planEstudiosDetalle:{
       type:Schema.Types.ObjectId,
