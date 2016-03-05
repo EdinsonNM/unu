@@ -85,6 +85,7 @@ var crearAlumno = function crearAlumno(ingresante,next){
 var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
     planestudiodetalle.find({_planestudio:dataAlumno.planestudio._id},function(err,listaDetallesPlan){
       if(err) return next(err);
+
       var itemDetalle = {};
       var listaDetalles = [];
       var avancecurricular = new AvanceCurricularModel();
@@ -219,7 +220,6 @@ module.exports  = function(filename,next){
         var promises = [];
 
         NroCuenta = cabecera.substr(27,18);
-
         //SE REGISTRA LOS DATOS DEL ARCHIVO CARGADO
         var archivoBanco = new ArchivoBanco();
         archivoBanco.nombre = filename;
@@ -257,7 +257,6 @@ module.exports  = function(filename,next){
 
               });
             });
-
           }
         });
       });
