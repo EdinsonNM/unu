@@ -92,7 +92,6 @@ class CompromisoPagoAlumno{
     .then(ObtenerDeudaMatriculaOrdinaria)
     .then(ObtenerDeudaPensionEnzenianza)
     .then(ObtenerDeudaPerdidaGratuidad)
-    .then(ObtenerDeudaCarnetUniversitario)
     .then(ObtenerDeudaReactualizacionMatricula)
     .then(ObtenerDeudaCursosRepetidos)
     .then(ObtenerRecargoExtemporanea)
