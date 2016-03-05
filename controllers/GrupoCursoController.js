@@ -151,7 +151,7 @@ module.exports=function(){
             var objAlumno;
             var record;
             var auxItem;
-            var situaciones_aceptadas = ['Retirado', 'Desaprobado'];
+            var situaciones_aceptadas = ['Aprobado', 'Convalidado', 'Matriculado'];
             objAlumno = AvanceCurricular.findOne({'_alumno' : conditions._alumno}, function(err, alumno){
               var detalleAvance = alumno.detalleAvance;
               var datos = [];
@@ -166,14 +166,20 @@ module.exports=function(){
                       }else{
                         record = null;
                       }
-                      if(detalle._planEstudiosDetalle !== item._cursoAperturadoPeriodo._planestudiodetalle._id){
+                      if(detalle._planEstudiosDetalle != item._cursoAperturadoPeriodo._planestudiodetalle._id){
                         if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
                           planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
                           auxItem = auxMatricula(item);
                           datos.push(auxItem);
                         }
                       }else{
-                        if(!record || situaciones_aceptadas.indexOf(record.situacion) >= 0){
+                        if(!record){
+                          if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
+                            planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
+                            auxItem = auxMatricula(item);
+                            datos.push(auxItem);
+                          }
+                        }else if(situaciones_aceptadas.indexOf(record.situacion) < 0){
                           if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
                             planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
                             auxItem = auxMatricula(item);
