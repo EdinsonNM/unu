@@ -32,6 +32,7 @@ var FichaMatriculaSchema = new Schema({
     default:false
   },
   promedioPonderadoPeriodoAnterior:Number,
+  numeroCursosRepetidos:Number,
   creditos:{
     maximoampliacion:Number,
     totalampliados:Number,
