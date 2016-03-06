@@ -151,13 +151,14 @@ module.exports=function(){
             var objAlumno;
             var record;
             var auxItem;
-            var situaciones_aceptadas = ['Retirado', 'Desaprobado'];
+            var situaciones_aceptadas = ['Aprobado', 'Convalidado', 'Matriculado'];
             objAlumno = AvanceCurricular.findOne({'_alumno' : conditions._alumno}, function(err, alumno){
               var detalleAvance = alumno.detalleAvance;
               var datos = [];
               var planesEstudiosID = [];
+              var is_allowed;
               results.docs.forEach(function(item){
-                console.log(item);
+                is_allowed = 0;
                 if(item._cursoAperturadoPeriodo._planestudiodetalle && item._cursoAperturadoPeriodo._planestudiodetalle._planestudio == conditions._planestudio){
                   if(detalleAvance.length > 0){
                     detalleAvance.forEach(function(detalle){
@@ -166,24 +167,24 @@ module.exports=function(){
                       }else{
                         record = null;
                       }
-                      if(detalle._planEstudiosDetalle !== item._cursoAperturadoPeriodo._planestudiodetalle._id){
+                      if(detalle._planEstudiosDetalle.toString() != item._cursoAperturadoPeriodo._planestudiodetalle._id.toString()){
                         if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
-                          planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
-                          auxItem = auxMatricula(item);
-                          datos.push(auxItem);
+                          is_allowed++;
                         }
                       }else{
-                        if(!record || situaciones_aceptadas.indexOf(record.situacion) >= 0){
+                        if(!record || situaciones_aceptadas.indexOf(record.situacion) > 0){
                           if(planesEstudiosID.indexOf(item._cursoAperturadoPeriodo._planestudiodetalle._id) < 0){
-                            planesEstudiosID.push(item._cursoAperturadoPeriodo._planestudiodetalle._id);
-                            auxItem = auxMatricula(item);
-                            datos.push(auxItem);
+                            is_allowed++;
                           }
                         }
                       }
                     });
+                    if(is_allowed === 0){
+                      auxItem = auxMatricula(item);
+                      datos.push(auxItem);
+                    }
                   }else{
-                    var auxItem = auxMatricula(item);
+                    auxItem = auxMatricula(item);
                     datos.push(auxItem);
                   }
                 }
