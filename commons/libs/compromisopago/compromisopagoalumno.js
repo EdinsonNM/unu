@@ -6,6 +6,7 @@ var Tasa = require('../../../models/TasaModel.js');
 var Matricula = require('../../../models/MatriculaModel.js');
 var Periodo = require('../../../models/PeriodoModel.js');
 var util = require('./compromisopago.utils');
+var FichaMatricula = require('../../../models/FichaMatriculaModel.js');
 var Q = require('q');
 var _ = require('underscore');
 
@@ -38,7 +39,8 @@ const SITUACION={
   DEPORTISTA_INACTIVO:'12'
 };
 const PARAMETROS={
-  CREDITOS_MENOR_PERMITIDO:12
+  CREDITOS_MENOR_PERMITIDO:12,
+  MINIMO_PPS_APROBATORIO:10.5
 };
 class CompromisoPagoAlumno{
   constructor(matriculaId){
@@ -46,6 +48,7 @@ class CompromisoPagoAlumno{
     this.deudas=[];
     this.tasas=[];
     this.matricula = {};
+    this.fichamatricula = {};
   }
 
   ObenerPagoReactualizacionMatricula(alumno){
@@ -71,8 +74,14 @@ class CompromisoPagoAlumno{
       if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
       if(!matricula) return defer.reject({message:'Matricula no encontrada',detail:err,status:404});
       self.matricula = matricula;
+      //SE SACA LA FICHA DE MATRICULA DEL ALUMNO
+      FichaMatricula.findOne({_alumno:matricula._id},function(err,objFichaMatricula){
+        self.fichamatricula = objFichaMatricula;
+      });
+
       return defer.resolve(null,matricula);
     });
+
     return defer.promise;
 
   }
@@ -100,9 +109,9 @@ class CompromisoPagoAlumno{
       self.deudas.push(tasa);
     }else if(self.matricula.totalCreditos < PARAMETROS.CREDITOS_MENOR_PERMITIDO){
       self.deudas.push(tasa);
-    }else if (1){  //NOTE DeudaCursosRepetidos preguntar si tiene cursos repetidos.
+    }else if (self.fichamatricula.numeroCursosRepetidos > 0){  //NOTE DeudaCursosRepetidos preguntar si tiene cursos repetidos. -> SE SACARA DE LA FICHA DE MATRICULA
       self.deudas.push(tasa);
-    }else if (1){  //NOTE ponderado semestral menor a 10.5
+    }else if (self.fichamatricula.promedioPonderadoPeriodoAnterior > PARAMETROS.MINIMO_PPS_APROBATORIO){  //NOTE ponderado semestral menor a 10.5
       self.deudas.push(tasa);
     }else{
       //TODO Consultar si las tasas son diferentes por observado, rezagado, y los demas estados....
@@ -122,8 +131,9 @@ class CompromisoPagoAlumno{
     return tasa;
   }
   ObtenerDeudaCarnetUniversitario(){
-    let tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_CARNET_UNIVERSITARIO});
-    this.deudas.push(tasa);
+    var self = this;
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_CARNET_UNIVERSITARIO});
+    self.deudas.push(tasa);
     return tasa;
     //TODO DETERMINAR EN EL MODELO COMO SE CONTROL PARA EL COBRO DE CARNET DADO QUE ES ANUAL y APLICAR EL FILTRO.
   }
@@ -132,6 +142,15 @@ class CompromisoPagoAlumno{
   }
   ObtenerRecargoExtemporanea(){
     //TODO implementar proceso de verificacion y agregar deuda si corresponde
+    var self = this;
+    let fechaHoy = new Date();
+    let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
+    let fechaDesde = procesoMatricula.createdAt;
+    let fechaHasta = procesoMatricula.updatedAt;
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_RECARGO_EXTEMPORANEO});
+    if(fechaHoy > fechaHasta){
+      self.deudas.push(tasa);
+    }
   }
   generar(next){
     var self = this;
