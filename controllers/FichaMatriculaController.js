@@ -19,7 +19,6 @@ module.exports=function(){
         var alumno = req.query._alumno;
         console.log(periodo, alumno);
         Alumno.findOne({_id:alumno},function(err,alumno){
-          console.log(alumno);
           model.findOne({_periodo:periodo,_alumno:alumno})
           .populate([{path:'_detalles'}])
           .exec(function(err,matricula){
