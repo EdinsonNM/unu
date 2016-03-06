@@ -113,11 +113,15 @@
       };
 
       var LastPeriodo = function() {
-        var idMatriculaProceso = '56d533febc3056d0ae51276b';
+      //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
+        var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
         var f = new Date();
         var servicePeriodo = Restangular.all('periodos/lastPeriodo');
         servicePeriodo.getList().then(function(result) {
           $scope.periodoActual = result[0]._id;
+         // $scope.nombreperiodo = result[0].nombre;
+          console.log(result);
+          console.log($scope.nombreperiodo);
           angular.forEach(result[0].procesos, function(item) {
             if (item._proceso === idMatriculaProceso) {
               $scope.process = true;
@@ -138,7 +142,13 @@
                    $scope.aproved = false;
                 }
               }
+           }else {
+             if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+                 $scope.aproved = true;
+            }else{
+                 $scope.aproved = false;
             }
+          }
           });
         });
       };
