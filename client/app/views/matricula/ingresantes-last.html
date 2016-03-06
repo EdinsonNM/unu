@@ -1,0 +1,38 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>Matrícula {{periodoNombre }}</h3>
+  </md-subheader>
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <section>
+        <md-subheader>
+          <strong>Matrícula {{periodoNombre }}</strong>
+        </md-subheader>
+        <div class="md-primary md-12-line">
+          <md-list layout="column" layout-padding>
+            <md-list-item>
+              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <div class="md-list-item-text">
+                <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
+                <p>{{ ALUMNO.codigo }}</p>
+              </div>
+            </md-list-item>
+          </md-list>
+        </div>
+      </section>
+
+      <div layout="row" layout-fill>
+        <p>
+          El proceso de matricula ha finalizado satisfactoriamente.
+        </p>
+      </div>
+      <div layout="row" layout-fill>
+        <div class="text-center" flex>
+          <a>
+            <button ui-sref="app" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Volver</button>
+          </a>
+        </div>
+      </div>
+
+    </md-content>

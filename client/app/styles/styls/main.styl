@@ -281,3 +281,47 @@ md-icon.s32 span
 	right: 10px;
 	bottom: 10px;
 	width: 200px
+
+.msg-advice
+	margin auto
+	padding 5px
+	background-color rgb(255,152,0)
+
+.msg-title
+	font-weight 500
+	font-size 14px
+	color white
+	margin 6px 8px
+	line-height 36px
+	cursor pointer
+	text-transform inherit
+	letter-spacing inherit
+
+@media screen
+	#printSec
+		display none
+
+@media print
+	body *
+		visibility hidden
+
+	#printSec
+		visibility visible
+		text-align center
+		padding 5px 0 10px
+		min-height 50px
+
+	#tablePrint
+		border 1px solid black !important
+
+	#printSection
+		visibility visible
+		position absolute
+		left 0
+		top 0
+
+		md-content #tablePrint
+			border 1px solid black !important
+
+		*
+			visibility visible

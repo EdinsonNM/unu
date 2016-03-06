@@ -3,82 +3,153 @@
   'use strict';
 
   /**
-    * @ngdoc function
-    * @name unuApp.controller:AppCtrl
-    * @description
-    * # AppCtrl
-    * Controller of the unuApp
+   * @ngdoc function
+   * @name unuApp.controller:AppCtrl
+   * @description
+   * # AppCtrl
+   * Controller of the unuApp
    */
   angular.module('unuApp')
-  .controller('AppCtrl', ['DataResolve','$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state','Restangular','TYPE_GROUP',function(DataResolve,$scope, UserFactory, $rootScope, $mdSidenav, $log, $state,Restangular,TYPE_GROUP) {
-    if(!DataResolve){
-      $state.go('login');
-      return;
-    }
-    $rootScope.app.module ='';
-    $rootScope.menu = UserFactory.getAccess();
-    var LoadCards = function LoadCards(){
-      $scope.rowsCards = [];
-      var row = [];
-      var rowFlex = 0;
-      angular.forEach($rootScope.menu,function(item,index){
-        rowFlex += parseInt(item.flex);
-        row.push(item);
-        if(rowFlex===100||index===$rootScope.menu.length-1){
-          $scope.rowsCards.push(angular.copy(row));
-          row = [];
-          rowFlex = 0;
-        }
-      });
-      console.log($scope.rowsCards);
-    };
-    $scope.GoTo = function(item) {
-      $rootScope.app.module = ' > ' + item.title;
-      $state.go(item.url);
-      return console.log(item.url);
-    };
-    $scope.SidenavToggle = function() {
-      return $mdSidenav('left').toggle().then(function() {
-        $log.debug('close sidenav');
-      });
-    };
-    $scope.Logout = function() {
-      UserFactory.logout();
-    };
-    $rootScope.ALUMNO ={};
-    var LaodAlumno = function LaodAlumno(){
-      var service  = Restangular.all('alumnos');
-      service.getList({conditions:{_usuario:$rootScope.USER._id}}).then(function(result){
-        if(result.length>0){
-          $rootScope.ShowAlert = false;
-          $rootScope.ALUMNO = result[0];
-          /*var validation = Validator.validate($rootScope.ALUMNO,schemaAlumno);
-          if(validation.errors.length>0){
-            $rootScope.ShowAlert=true;
-            $rootScope.MessageAlert = "Datos incompletos";
+    .controller('AppCtrl', ['DataResolve', '$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state', 'Restangular', 'TYPE_GROUP', function(DataResolve, $scope, UserFactory, $rootScope, $mdSidenav, $log, $state, Restangular, TYPE_GROUP) {
+
+      $scope.UI = {
+        access: false,
+        refMatricula: '',
+        refPlanestudio: '',
+        hrefMatricula: '#/home',
+        hrefPlanestudio: '#/home',
+        messageDatos: '',
+        //  refMatricula: 'app.matricularevision',
+        //  hrefMatricula: '#/home/testing/matricula/revision',
+        //  refPlanestudio: 'app.pabellones',
+        //  hrefPlanestudio: '#/home/pabellones',
+      };
+
+      if (!DataResolve) {
+        $state.go('login');
+        return;
+      }
+      $rootScope.app.module = '';
+      $rootScope.menu = UserFactory.getAccess();
+      var LoadCards = function LoadCards() {
+        $scope.rowsCards = [];
+        var row = [];
+        var rowFlex = 0;
+        angular.forEach($rootScope.menu, function(item, index) {
+          rowFlex += parseInt(item.flex);
+          row.push(item);
+          if (rowFlex === 100 || index === $rootScope.menu.length - 1) {
+            $scope.rowsCards.push(angular.copy(row));
+            row = [];
+            rowFlex = 0;
           }
+        });
+        console.log($scope.rowsCards);
+      };
+      $scope.GoTo = function(item) {
+        $rootScope.app.module = ' > ' + item.title;
+        $state.go(item.url);
+        return console.log(item.url);
+      };
+      $scope.SidenavToggle = function() {
+        return $mdSidenav('left').toggle().then(function() {
+          $log.debug('close sidenav');
+        });
+      };
+      $scope.Logout = function() {
+        UserFactory.logout();
+      };
+      $rootScope.ALUMNO = {};
 
-          if(!$rootScope.ALUMNO.email) {
-            $rootScope.ShowAlert=true;
+      var LaodAlumno = function LaodAlumno() {
+        var service = Restangular.all('alumnos');
+        service.getList({
+          conditions: {
+            _usuario: $rootScope.USER._id
           }
-          if(!$rootScope.ALUMNO.telefono) {
-            $rootScope.ShowAlert=true;
-          }*/
+        }).then(function(result) {
+          if (result.length > 0) {
+            $rootScope.ShowAlert = false;
+            $rootScope.ALUMNO = result[0];
+            $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
+            /*var validation = Validator.validate($rootScope.ALUMNO,schemaAlumno);
+            if(validation.errors.length>0){
+              $rootScope.ShowAlert=true;
+              $rootScope.MessageAlert = "Datos incompletos";
+            }
 
+            if(!$rootScope.ALUMNO.email) {
+              $rootScope.ShowAlert=true;
+            }
+            if(!$rootScope.ALUMNO.telefono) {
+              $rootScope.ShowAlert=true;
+            }*/
+
+          }
+           new LastPeriodo();
+        });
+      };
+
+      /**Llamar al ultimo periodo****/
+      $scope.LoadPage = function() {
+         if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+            if ($scope.periodoIngresante === $scope.periodoActual) {
+              $state.go('app.matriculainscripcion');
+              console.log('son iguales');
+            } else {
+              $state.go('app.matricularevision');
+              console.log('son diferentes');
+            }
+        }else{
+           $state.go('app');
         }
-      });
-    };
-    switch ($rootScope.USER._grupo.codigo) {
-      case TYPE_GROUP.ALUMNO:
-        new LaodAlumno();
-        break;
-      default:
-        console.log('grupo no identificado');
+      };
 
-    }
+      var LastPeriodo = function() {
+        var idMatriculaProceso = '56d533febc3056d0ae51276b';
+        var f = new Date();
+        var servicePeriodo = Restangular.all('periodos/lastPeriodo');
+        servicePeriodo.getList().then(function(result) {
+          $scope.periodoActual = result[0]._id;
+          angular.forEach(result[0].procesos, function(item) {
+            if (item._proceso === idMatriculaProceso) {
+              $scope.process = true;
+              var fechaInicio = new Date(item.fechaInicio);
+              var fechaFin = new Date(item.fechaFin);
+              if (fechaInicio <= f && f <= fechaFin) {
+                $scope.showmenu = true;
+                if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+                   $scope.aproved = true;
+                }else{
+                   $scope.aproved = false;
+                }
+              } else {
+                $scope.showmenu = false;
+                if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+                   $scope.aproved = true;
+                }else{
+                   $scope.aproved = false;
+                }
+              }
+            }
+          });
+        });
+      };
 
-    new LoadCards();
+      switch ($rootScope.USER._grupo.codigo) {
+        case TYPE_GROUP.ALUMNO:
+          console.log('Ingresa Alumno');
+          new LaodAlumno();
+          //new LastPeriodo();
 
-  }]);
+          break;
+        default:
+          console.log('grupo no identificado');
+
+      }
+
+      new LoadCards();
+
+    }]);
 
 })();

@@ -1,0 +1,70 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>Matrícula {{periodoNombre }}</h3>
+  </md-subheader>
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <section>
+        <md-subheader>
+          <strong>Matrícula {{periodoNombre }}</strong>
+        </md-subheader>
+        <div class="md-primary md-12-line">
+          <md-list layout="column" layout-padding>
+            <md-list-item>
+              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <div class="md-list-item-text">
+                <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
+                <p>{{ ALUMNO.codigo }}</p>
+              </div>
+            </md-list-item>
+          </md-list>
+        </div>
+      </section>
+
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+      <!-- Imagen del usuario -->
+      <div flex layout="row" layout-fill>
+        <strong>Compromiso de pago</strong>
+        <md-button class="btn btn-primary" ng-print onclick="window.print()" style="top: 20px;right: 20px;bottom: auto;left: auto;
+    position: absolute;"><i class="fa fa-print"></i> Imprimir</md-button>
+      </div>
+
+      <div layout="row" layout-fill>
+        <p>
+          El proceso de prematricula ha finalizado satisfactoriamente.</br>
+          Para que su proceso de matricula se haga efectiva debe acercarse a abonar a las oficinas del banco Continental como se indica en la ficha de pago.
+        </p>
+      </div>
+      <!-- <div print-element-id="printSection" layout="row" layout-fill> -->
+      <div id="printSection" layout="row" layout-fill>
+
+        <md-content flex class="md-padding page-content" style="max-width:600px">
+         <div id="printSec">
+            <strong>Compromiso de Pago</strong>
+         </div>
+         <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+           <tbody>
+           <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
+               <td class="text-left" data-title="'Código'">{{}}</td>
+               <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
+               <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
+           </tr>
+
+           <tr ng-if="!UI.deudasValue">
+               <td class="text-center" colspan="3"> {{UI.messageDeudas}}</td>
+           </tr>
+
+           </tbody>
+         </table>
+        </md-content>
+      </div>
+
+      <div layout="row" layout-fill>
+        <div class="text-center" flex>
+          <a>
+            <button ui-sref="app" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Volver</button>
+          </a>
+        </div>
+      </div>
+    </md-content>

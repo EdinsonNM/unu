@@ -30,6 +30,10 @@ var MatriculaSchema = new Schema({
     }],
     totalCursos:Number,
     totalCreditos:Number,
+    estado: {
+        type: Boolean,
+      default: false
+    },
     createdAt: Date,
     updatedAt: Date
 });
