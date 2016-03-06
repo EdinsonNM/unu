@@ -131,8 +131,9 @@ class CompromisoPagoAlumno{
     return tasa;
   }
   ObtenerDeudaCarnetUniversitario(){
-    let tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_CARNET_UNIVERSITARIO});
-    this.deudas.push(tasa);
+    var self = this;
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_CARNET_UNIVERSITARIO});
+    self.deudas.push(tasa);
     return tasa;
     //TODO DETERMINAR EN EL MODELO COMO SE CONTROL PARA EL COBRO DE CARNET DADO QUE ES ANUAL y APLICAR EL FILTRO.
   }
@@ -141,6 +142,15 @@ class CompromisoPagoAlumno{
   }
   ObtenerRecargoExtemporanea(){
     //TODO implementar proceso de verificacion y agregar deuda si corresponde
+    var self = this;
+    let fechaHoy = new Date();
+    let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
+    let fechaDesde = procesoMatricula.createdAt;
+    let fechaHasta = procesoMatricula.updatedAt;
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_RECARGO_EXTEMPORANEO});
+    if(fechaHoy > fechaHasta){
+      self.deudas.push(tasa);
+    }
   }
   generar(next){
     var self = this;
