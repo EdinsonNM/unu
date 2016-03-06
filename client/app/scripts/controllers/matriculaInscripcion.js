@@ -54,6 +54,7 @@
         $scope.UI.title = response[0].nombre;
         $scope.periodo = response[0];
         $scope.periodoActual = response[0]._id;
+        console.log($scope.periodo);
 
       });
       serviceMatricula = Restangular.all('fichamatriculas');

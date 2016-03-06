@@ -25,7 +25,7 @@ var FichaMatriculaSchema = new Schema({
   },
   estadoFichaMatricula:{
     type:'String',
-    enum:['GENERADA','MATRICULADO','RETIRO TOTAL']
+    enum:['GENERADA','MATRICULADA','RETIRO TOTAL','RECTIFICACION','RETIRO PARCIAL','MATRICULADA(ing)','MATRICULADA(ext)']
   },
   ampliacion:{
     type:Boolean,

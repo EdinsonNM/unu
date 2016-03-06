@@ -13,16 +13,18 @@ module.exports=function(){
 
       //custom methods
 
-      controller.get('/methods/fichamatricula', function(req, res, next){
+      controller.get('/methods/fichamatricula', function(req, res){
         var cursosDisponibles = [];
-        var periodo = req.query._periodo;
-        var alumno = req.query._alumno;
-        console.log(periodo, alumno);
-        Alumno.findOne({_id:alumno},function(err,alumno){
-          model.findOne({_periodo:periodo,_alumno:alumno})
+        var _periodo = req.query._periodo;
+        var _alumno = req.query._alumno;
+        Alumno.findOne({_id:_alumno},function(err,alumno){
+          console.log(_periodo);
+          console.log(_alumno);
+          model.findOne({_periodo:_periodo,_alumno:_alumno})
           .populate([{path:'_detalles'}])
           .exec(function(err,matricula){
-            CursoAperturado.find({_periodo:periodo,_escuela:alumno._escuela._id})
+            console.log(matricula);
+            CursoAperturado.find({_periodo:_periodo,_escuela:alumno._escuela})
             .populate('_grupos')
             .then(function(err,aperturados){
               matricula._detalles.forEach(function(detalle,index){
@@ -30,8 +32,7 @@ module.exports=function(){
                   cursosDisponibles.push(cursoAperturado);
                 }
               });
-              if(cursosDisponibles) return res.status(200).send(cursosDisponibles);
-              next();
+              return res.status(200).send(cursosDisponibles);
             });
           });
         });

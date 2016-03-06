@@ -92,7 +92,14 @@
 
       /**Llamar al ultimo periodo****/
       $scope.LoadPage = function() {
-         if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+        if ($scope.periodoIngresante === $scope.periodoActual) {
+          $state.go('app.matriculainscripcion');
+          console.log('son iguales');
+        } else {
+          $state.go('app.matricularevision');
+          console.log('son diferentes');
+        }
+        /*if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
             if ($scope.periodoIngresante === $scope.periodoActual) {
               $state.go('app.matriculainscripcion');
               console.log('son iguales');
@@ -102,7 +109,7 @@
             }
         }else{
            $state.go('app');
-        }
+        }*/
       };
 
       var LastPeriodo = function() {
