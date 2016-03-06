@@ -50,14 +50,17 @@
       var servicePeriodos = Restangular.all('periodos');
       servicePeriodos.customGET('lastPeriodo').then(function(response){
         $scope.UI.title = response[0].nombre;
+        $scope.periodo = response[0];
       });
-
-      serviceMatricula = Restangular.all('matriculas');
+      serviceMatricula = Restangular.all('fichamatriculas');
       var getMatricula = function(){
+        console.log($scope.ALUMNO);
         var filter = {
-          _alumnos : $scope.ALUMNO._id
+          _alumno : $scope.ALUMNO._id,
+          _periodo : $scope.periodo._id
         };
-        serviceMatricula.customGET('lastMatricula', filter).then(function(response){
+        serviceMatricula.customGET('methods/fichamatricula', filter).then(function(response){
+          console.log(response);
           if(response[0]){
             matricula = response[0];
             $scope.cursos_selected = matricula._detalleMatricula;
