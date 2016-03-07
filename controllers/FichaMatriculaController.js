@@ -35,7 +35,11 @@ module.exports=function(){
         var _periodo = req.query._periodo;
         var _alumno = req.query._alumno;
         model.findOne({_periodo:_periodo,_alumno:_alumno})
-        .populate([{path:'_detalles'}])
+        .populate(
+          [{
+            path:'_detalles'
+          }]
+        )
         .exec(function(err,matricula){
           if(err || !matricula) return res.status(500).send('No se encontró la matrícula');
           CursoAperturado.find({_periodo:_periodo})
