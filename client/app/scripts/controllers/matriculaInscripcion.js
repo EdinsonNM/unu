@@ -26,12 +26,14 @@
       /**
        * initial Params
        */
+      var getFichaMatricula, getMatricula;
       $timeout(function() {
         $scope.ALUMNO = $rootScope.ALUMNO;
         $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
         $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
+        getFichaMatricula();
         getMatricula();
-      }, 500);
+      }, 800);
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
@@ -42,40 +44,44 @@
       };
       var LOCAL = {
         name: 'Matrícula',
-        name_form: 'Seleccion un curso para ser agregado a su matrícula',
+        nameform: 'Seleccion un curso para ser agregado a su matrícula',
         form: 'views/matricula/inscripcion-form.html',
         route: 'facultades'
       };
-      var serviceMatricula, matricula;
-      $scope.cursos_selected = [];
+      var serviceFichaMatricula, serviceMatricula, fichamatricula, matricula;
 
       var servicePeriodos = Restangular.all('periodos');
       servicePeriodos.customGET('lastPeriodo').then(function(response) {
         $scope.UI.title = response[0].nombre;
         $scope.periodo = response[0];
         $scope.periodoActual = response[0]._id;
-        console.log($scope.periodo);
-
       });
-      serviceMatricula = Restangular.all('fichamatriculas');
-      var getMatricula = function() {
-        console.log($scope.ALUMNO);
+      getFichaMatricula = function() {
+        serviceFichaMatricula = Restangular.all('fichamatriculas');
         var filter = {
           _alumno: $scope.ALUMNO._id,
           _periodo: $scope.periodo._id
         };
-        serviceMatricula.customGET('methods/fichamatricula', filter).then(function(response) {
-          console.log(response);
-          if (response[0]) {
-            matricula = response[0];
-            $scope.cursos_selected = matricula._detalleMatricula;
-          } else {
-            matricula = {}
-            matricula._detalleMatricula = [];
-            $scope.cursos_selected = [];
+        serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
+          fichamatricula = response;
+        });
+      };
+      getMatricula = function(){
+        serviceMatricula = Restangular.all('matriculas');
+        var filter = {
+          _alumno: $scope.ALUMNO._id,
+          _periodo: $scope.periodo._id
+        };
+        serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
+          if(!response){
+            matricula = {};
+            $scope.cursosselected = [];
+          }else{
+            matricula = response;
+            $scope.cursosselected = response._detalleMatricula;
           }
         });
-      }
+      };
 
       /**
        * Abre modal para agregar cursos
@@ -88,9 +94,8 @@
           targetEvent: $event,
           templateUrl: LOCAL.form,
           locals: {
-            name_form: LOCAL.name_form,
-            alumno: $scope.ALUMNO,
-            cursos_selected: $scope.cursos_selected,
+            nameform: LOCAL.nameform,
+            fichamatricula: fichamatricula,
             matricula: matricula
           },
           controller: 'InscripcionNewCtrl',
@@ -106,7 +111,8 @@
         }
       };
 
-      $rootScope.$on('user:inscripcioncurso', function($event, data) {
+      $rootScope.$on('user:inscripcioncurso', function() {
+        getFichaMatricula();
         getMatricula();
       });
 
@@ -119,70 +125,53 @@
     $scope,
     Restangular,
     MessageFactory,
-    alumno,
     NgTableParams,
     $timeout,
     $mdDialog,
     ToastMD,
     $rootScope,
+    fichamatricula,
     matricula
   ) {
 
     /**
      * initial params
      */
-    var serviceGrupoCurso, serviceDetalleMatricula;
+    var serviceFichaMatricula, serviceDetalleMatricula;
     $scope.includeActive = false;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}', name);
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
     $scope.model = {};
-    $scope.ALUMNO = alumno;
     $scope.addMode = false;
     $scope.updateMode = false;
-    $scope.groups_selected = [];
-    var initial_count = matricula._detalleMatricula.length;
+    $scope.groupsselected = [];
+    var initialcount = matricula._detalleMatricula.length;
 
     serviceDetalleMatricula = Restangular.all('detallematriculas');
+    serviceFichaMatricula = Restangular.all('fichamatriculas');
 
     /**
      * initialize
      */
-    var ListaCursosGrupos = function() {
-      serviceGrupoCurso = Restangular.all('grupocursos');
-      $scope.tableParams = new NgTableParams({
-        page: 1,
-        count: 1000,
-        conditions: {
-          _planestudio: matricula._planEstudio,
-          _alumno: $scope.ALUMNO._id
-        },
-        filter: {
-          abierto: true
-        }
-      }, {
-        total: 0,
-        groupBy: function(dato) {
-          return dato._nombre_curso + '-' + dato._codigo_curso;
-        },
-        counts: [],
-        getData: function($defer, params) {
-          var query;
-          query = params.url();
-          serviceGrupoCurso.customGET('methods/matricula', query).then(function(result) {
-            $timeout(function() {
-              angular.forEach(result.data, function(item) {
-                angular.forEach(matricula._detalleMatricula, function(curso) {
-                  if (item._id === curso._grupoCurso._id) {
-                    item.active = true;
-                  }
-                });
-              });
-              $defer.resolve(result.data);
-            }, 500);
+    var ListaCursosGrupos = function(){
+      serviceFichaMatricula = Restangular.all('fichamatriculas');
+      var filter = {
+        _periodo: fichamatricula._periodo,
+        _alumno: fichamatricula._alumno
+      };
+      serviceFichaMatricula.customGET('methods/fichamatricula', filter).then(function(response) {
+        angular.forEach(response, function(item) {
+          angular.forEach(item._grupos, function(grupo){
+            angular.forEach(matricula._detalleMatricula, function(curso) {
+              if (grupo._id === curso._grupoCurso._id) {
+                grupo.active = true;
+              }
+            });
           });
-        }
+        });
+        $scope.cursoshabilitados = response;
       });
     };
     ListaCursosGrupos();
@@ -197,7 +186,7 @@
       return index;
     };
 
-    $scope.EnabledEdit = function(item) {
+    $scope.EnabledEdit = function(item, cursohabilitado) {
       var params = {
         _matricula: matricula._id,
         _grupoCurso: item._id,
@@ -206,14 +195,14 @@
       var test;
       if (item.active) {
         angular.forEach(matricula._detalleMatricula, function(curso) {
-          if (item._codigo_curso === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo) {
+          if (cursohabilitado._id === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo) {
             item.active = !item.active;
-            ToastMD.warning("Solo puede matricularse en un grupo por curso");
+            ToastMD.warning('Solo puede matricularse en un grupo por curso');
             test = true;
           }
         });
         if (!test) {
-          $scope.groups_selected.push(item);
+          $scope.groupsselected.push(item);
           serviceDetalleMatricula.post(params).then(function() {});
         }
       } else {
@@ -226,8 +215,8 @@
         matricula._detalleMatricula.splice(index, 1);
       }
 
-      if ($scope.groups_selected.length !== initial_count) {
-        if (initial_count === 0) {
+      if ($scope.groupsselected.length !== initialcount) {
+        if (initialcount === 0) {
           $scope.addMode = true;
           $scope.updateMode = false;
         } else {
@@ -235,7 +224,7 @@
           $scope.updateMode = true;
         }
       } else {
-        if (initial_count !== 0) {
+        if (initialcount !== 0) {
           $scope.addMode = false;
           $scope.updateMode = true;
         }
@@ -243,7 +232,7 @@
     };
 
     $scope.addCursos = function() {
-      ToastMD.success("Su matrícula fue actualizada");
+      ToastMD.success('Su matrícula fue actualizada');
       $rootScope.$broadcast('user:inscripcioncurso', {});
       $mdDialog.hide();
     };

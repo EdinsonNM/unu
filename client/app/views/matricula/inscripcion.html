@@ -28,7 +28,7 @@
       <div ng-cloak>
         <md-content class="col-md-10 col-md-offset-1 cursos-inscritos">
           <p class="cursos-inscritos-p">Seleccione uno o más cursos a los cuales desea matricularse</p>
-          <div class="table-responsive" ng-if="cursos_selected.length>0">
+          <div class="table-responsive" ng-if="cursosselected.length>0">
             <table show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
               <tbody>
@@ -40,7 +40,7 @@
                   <td><strong>Tipo</strong></td>
                   <td><strong>Grupo</strong></td>
                 </tr>
-                <tr ng-repeat="item in cursos_selected" ng-click="item.active=!item.active;EnabledAdd(item)">
+                <tr ng-repeat="item in cursosselected" ng-click="item.active=!item.active;EnabledAdd(item)">
                   <td>{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
                   <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
                   <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo }}</td>
