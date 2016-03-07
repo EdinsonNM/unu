@@ -7,13 +7,13 @@ var AlumnoSchema = new Schema({
         type: String,
         required: true
     },
-    codigoAntiguo: {
-        type: String,
-        required: true
-    },
     estadoCivil: {
         type: String,
         enum: ['Soltero(a)', 'Casado(a)', 'Viudo(a)', 'Divorciado(a)', 'Conviviente', 'Separado(a)']
+    },
+    educacionGratuita:{
+      type:Boolean,
+      default:true
     },
     _persona: {
         type: Schema.Types.ObjectId,
@@ -35,23 +35,58 @@ var AlumnoSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Escuela'
     },
-    _tipoCondicionAlumno: {
-        type: Schema.Types.ObjectId,
-        ref: 'TipoCondicionAlumno'
-    },
-    _situacionAlumno: {
-        type: Schema.Types.ObjectId,
-        ref: 'SituacionAlumno'
-    },
     _usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
         required: true
     },
-    _avanceCurricular: [{
+    // [NORMAL, [cualquier otro estado que indique que el alumno esta fuera de la universidad]]
+    _tipoCondicionAlumno: {
+        type: Schema.Types.ObjectId,
+        ref: 'TipoCondicionAlumno'
+    },
+    //NOTE [INGRESANTE,REGULAR,DESAPROBADO,SIN RETIRO,CREDITOS MENOR PERMITIDO,AMONESTADO,RESAGADO,CON SUSPENSION,OBSERVADO,PRIMER PUESTO]
+    _situacionAlumno: {
+        type: Schema.Types.ObjectId,
+        ref: 'SituacionAlumno'
+    },
+    _avanceCurricular: {
         type: Schema.Types.ObjectId,
         ref: 'AvanceCurricular'
-    }],
+    },
+    //NOTE es la modalidad de ingreso a la universidad
+    _modalidadIngreso: {
+        type: Schema.Types.ObjectId,
+        ref: 'Periodo'
+    },
+    historial:{
+      condicionesAlumno:[{
+        createdAt:Date,
+        _periodo:{
+          type: Schema.Types.ObjectId,
+          ref: 'Periodo'
+        },
+        _condicion:{
+            type: Schema.Types.ObjectId,
+            ref: 'TipoCondicionAlumno'
+        }
+      }],
+      situacionesAlumno:[{
+        createdAt:Date,
+        _periodo:{
+          type: Schema.Types.ObjectId,
+          ref: 'Periodo'
+        },
+        _condicion:{
+            type: Schema.Types.ObjectId,
+            ref: 'SituacionAlumno'
+        }
+      }],
+      avanceCurricular: [{
+          type: Schema.Types.ObjectId,
+          ref: 'AvanceCurricular'
+      }]
+    },
     createdAt: Date,
     updatedAt: Date
 

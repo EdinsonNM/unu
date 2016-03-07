@@ -67,6 +67,11 @@ module.exports=function(){
         );
       });
 
+      controller.post('/methods/generar/matricula/:id',function(req,res){
+        var matriculaId = req.params.id;
+        var compromiso = new CompromisoPagoAlumno(matriculaId);
+
+      });
     }
   };
 };
