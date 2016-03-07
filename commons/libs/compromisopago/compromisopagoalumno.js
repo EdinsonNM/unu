@@ -12,27 +12,27 @@ var _ = require('underscore');
 
 const TASA={
   PAGO_ORDINARIO:'01',
-  PAGO_RECARGO_EXTEMPORANEO:'02',
-  PAGO_REPETICION_CURSO:'03',
-  PERDIDA_GRATUIDAD:'04', //TODO se esta asumiendo que existe una tasa para este pago, agregarlo a la BD y actualizar el codigo
-  PAGO_CARNET_UNIVERSITARIO:'05',//TODO se esta asumiendo que existe una tasa para este pago, agregarlo a la BD y actualizar el codigo
-  SEGUNDA_CARRERA:'06', //TODO se esta asumiendo que existe una tasa para este pago, agregarlo a la BD y actualizar el codigo
-  PENSION_SEMESTRE:'07',
-  CREDITOS_MENOR_PERMITIDO:'08',
-  OBSERVADO:'09',
-  REZAGADO:'10',
-  SIN_RETIRO:'11',
-  AMONESTADO:'12',
-  CON_SUSPENSION:'13',
-  REACTUALIZACION_MATRICULA:'14',
-  EXONERACION_MATRICULA:'15'
+  SEGUNDA_CARRERA:'04',
+  PENSION_SEMESTRE_SEGUNDA_CARRERA:'05',
+  EXONERACION_MATRICULA:'06',
+  OBSERVADO:'08',
+  REZAGADO:'09',
+  REINGRESANTE:'10',
+  PAGO_RECARGO_EXTEMPORANEO:'12',
+  PAGO_REPETICION_CURSO:'13',
+  PAGO_CARNET_UNIVERSITARIO:'14'
 };
 const PROCESO={
   ORDINARIO:'09',
   EXTRAORDINARIO:''
 };
 const MODALIDAD_INGRESO={
-  SEGUNDA_CARRERA:'01' //TODO Actualizar este codigo de acuerdo a la base de datos.
+  SEGUNDA_CARRERA:'01', //TODO Actualizar este codigo de acuerdo a la base de datos.
+  VIOLENCIA_POLITICA: '02',
+  COMUNIDAD_NATIVA:'03',
+  MINEDU:'04',
+  DISCAPACITADO:'05',
+  DEPORTISTA:'06'
 };
 const SITUACION={
   INGRESANTE: '01',
@@ -41,11 +41,11 @@ const SITUACION={
   SIN_RETIRO: '04',
   CREDITOS_MENOR_PERMITIDO:'05',
   AMONESTADO:'06',
-  REZAGADO:'07',
   CON_SUSPENSION:'08',
-  OBSERVADO:'09',
+  OBSERVADO:'08',
+  REZAGADO:'09',
+  REINGRESANTE:'10',
   PRIMEROS_PUESTOS:'10',
-  REACTUALIZACION_MATRICULA:'11',
   DEPORTISTA_INACTIVO:'12'
 };
 const PARAMETROS={
@@ -72,32 +72,62 @@ class CompromisoPagoAlumno{
     var defer = Q.defer();
     Matricula.finOne({_id:self.matriculaId})
     .populate([
-      {path:'_alumno',
+      {
+        path:'_alumno',
         populate:[
                 {path:'_tipoCondicionAlumno',model:'TipoCondicionAlumno'},
-                {path:'_ingresante',model:'Ingresante',
-                  populate:{path:'_modalidad',model: 'ModalidadIngreso'}
-                }
+                {path:'_modalidadIngreso',model: 'ModalidadIngreso'}
       ]},
-      {path:'_detalleMatricula'},
+      {
+        path:'_detalleMatricula',
+        populate:[
+          {
+            path:'_grupoCurso',
+            model:'GrupoCurso',
+            populate:[
+              {
+                path:'_cursoAperturadoPeriodo',
+                model:'CursoAperturadoPeriodo',
+                populate:{
+                  path:'_planestudiodetalle',
+                  model:'Planestudiodetalle'
+                }
+              }
+            ]
+          }
+        ]
+      },
       {path:'_periodo',populate:{path:'procesos._proceso',model:'Proceso'}}
     ])
     .exec(function(err,matricula){
       if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
       if(!matricula) return defer.reject({message:'Matricula no encontrada',detail:err,status:404});
       self.matricula = matricula;
-      //SE SACA LA FICHA DE MATRICULA DEL ALUMNO
-      FichaMatricula.findOne({_alumno:matricula._id})
-      .populate([{path:'_detalles',model:'FichaMatriculaDetalle'}])
-      .exec(function(err,objFichaMatricula){
-        self.fichamatricula = objFichaMatricula;
-        let listaCursosRepetidos = _.filter(self.fichamatricula._detalles,function(elemento){ return elemento.numeroVeces > 0;});
-        self.numeroCursosRepetidos = listaCursosRepetidos.length;
-      });
-
       return defer.resolve(null,matricula);
     });
     return defer.promise;
+  }
+  ObtenerNumeroCursosRepetidos(matricula){
+    var defer = Q.defer();
+    var self = this;
+    FichaMatricula.findOne({_alumno:matricula._alumno,_periodo:matricula._periodo})
+    .populate([{path:'_detalles',model:'FichaMatriculaDetalle',populate:{path:'_planEstudiosDetalle',model:'Planestudiodetalle'}}])
+    .exec(function(err,fichaMatricula){
+      if(err) return defer.reject(err);
+      self.fichamatricula = fichaMatricula;
+      let listaCursosRepetidos = _.filter(self.fichamatricula._detalles,function(elemento){ return elemento.numeroVeces > 0;});
+      matricula._detalleMatricula.forEach(function(item){
+        let iddetalle = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._id;
+        let repetido = _.find(listaCursosRepetidos,function(cursoRepetido){
+          return cursoRepetido._planEstudiosDetalle._id === iddetalle;
+        });
+        if(repetido){
+          self.numeroCursosRepetidos +=1;
+        }
+      });
+      defer.resolve(self.numeroCursosRepetidos);
+
+    });
   }
   ObtenerTasas(){
     var self = this;
@@ -109,42 +139,59 @@ class CompromisoPagoAlumno{
     });
     return defer.promise;
   }
+  ObetenerDeudaSegundaCarrera(){
+    var tasa,self=this;
+    tasa = _.findWhere(self.tasas,{codigo:TASA.SEGUNDA_CARRERA});
+    let valorTasa = _.findWhere(tasa.historial,{activo:true});
+    self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
+    self.deudaTotal=self.deudaTotal + valorTasa.importe;
+    tasa = _.findWhere(self.tasas,{codigo:TASA.PENSION_SEMESTRE_SEGUNDA_CARRERA});
+    valorTasa = _.findWhere(tasa.historial,{activo:true});
+    self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
+    self.deudaTotal=self.deudaTotal + valorTasa.importe;
+  }
+  ObtenerDeudaExoneracion(){
+    var tasa,self=this;
+    if(self.matricula._alumno.educacionGratuita){
+      tasa = _.findWhere(this.tasas,{codigo:TASA.EXONERACION_MATRICULA});
+    }
+    else{
+      tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    }
+    let valorTasa = _.findWhere(tasa.historial,{activo:true});
+    self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
+    self.deudaTotal=self.deudaTotal + valorTasa.importe;
+  }
+  ObtenerDeudaOrdinaria(){
+    var tasa,self=this;
+    tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    let valorTasa = _.findWhere(tasa.historial,{activo:true});
+    self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
+    self.deudaTotal=self.deudaTotal + valorTasa.importe;
+  }
   ObtenerDeudaMatriculaOrdinaria(){
     var self = this;
     let tasa={};
-    let modalidad = self.matricula._alumno._ingresante_modalidad.codigo;
-    if(modalidad == MODALIDAD_INGRESO.SEGUNDA_CARRERA){
-      tasa = _.findWhere(self.tasas,{codigo:TASA.SEGUNDA_CARRERA});
-      let valorTasa = _.findWhere(tasa.historial,{activo:true});
-      self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
-      self.deudaTotal=self.deudaTotal + valorTasa.importe;
-      tasa = _.findWhere(self.tasas,{codigo:TASA.PENSION_SEMESTRE});
-      valorTasa = _.findWhere(tasa.historial,{activo:true});
-      self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
-      self.deudaTotal=self.deudaTotal + valorTasa.importe;
-    }else{
-      switch (modalidad) {
-        case MODALIDAD_INGRESO.VIOLENCIA_POLITICA:
-        case MODALIDAD_INGRESO.COMUNIDAD_NATIVA:
-        case MODALIDAD_INGRESO.MINEDU:
-        case MODALIDAD_INGRESO.DISCAPACITADO:
-        case MODALIDAD_INGRESO.DEPORTISTA:
-          if(self.matricula._alumno.educacionGratuita){tasa = _.findWhere(this.tasas,{codigo:TASA.EXONERACION_MATRICULA});}
-          else{tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});} break;
-        //TODO VERIFICAR SI EXISTEN MAS MODALIDADES QUE SE EXONEREN DE MATRICULA
-        default:
-          let condicion = self.matricula._alumno._tipoCondicionAlumno.codigo;
-          if(condicion ==SITUACION.PRIMEROS_PUESTOS && self.matricula._alumno.educacionGratuita){
-            tasa = _.findWhere(this.tasas,{codigo:TASA.EXONERACION_MATRICULA});
-          }else{
-            tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
-          }
-      }
-      let valorTasa = _.findWhere(tasa.historial,{activo:true});
-      self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
-      self.deudaTotal=self.deudaTotal + valorTasa.importe;
+    let modalidad = self.matricula._alumno._modalidadIngreso.codigo;
+    switch (modalidad) {
+      case MODALIDAD_INGRESO.VIOLENCIA_POLITICA:
+      case MODALIDAD_INGRESO.COMUNIDAD_NATIVA:
+      case MODALIDAD_INGRESO.MINEDU:
+      case MODALIDAD_INGRESO.DISCAPACITADO:
+      case MODALIDAD_INGRESO.DEPORTISTA:
+          self.ObtenerDeudaExoneracion();
+        break;
+      case MODALIDAD_INGRESO.SEGUNDA_CARRERA:
+        self.ObetenerDeudaSegundaCarrera();
+        break;
+      default:
+        let condicion = self.matricula._alumno._tipoCondicionAlumno.codigo;
+        if(condicion === SITUACION.PRIMEROS_PUESTOS){
+          self.ObtenerDeudaExoneracion();
+        }else{
+          self.ObtenerDeudaOrdinaria();
+        }
     }
-    //return tasa;
   }
   ObtenerDeudaCursosRepetidos(){
     var self = this;
@@ -157,14 +204,14 @@ class CompromisoPagoAlumno{
     return tasa;
   }
   ObtenerDeudaCreditosMenorPermitido(){
-    var self = this;
+    /*var self = this;
     let condicion = self.matricula._alumno._tipoCondicionAlumno.codigo;
     if(self.matricula.totalCreditos < PARAMETROS.CREDITOS_MENOR_PERMITIDO){
       let tasa = _.findWhere(self.tasas,{codigo:TASA.CREDITOS_MENOR_PERMITIDO});
       let valorTasa = _.findWhere(tasa.historial,{activo:true});
       self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
       self.deudaTotal=self.deudaTotal + valorTasa.importe;
-    }
+    }*/
   }
   ObtenerDeudaPerdidaGratuidad(){
     var self = this;
@@ -178,13 +225,12 @@ class CompromisoPagoAlumno{
       case SITUACION.SIN_RETIRO:tasa = _.findWhere(self.tasas,{codigo:TASA.SIN_RETIRO}); break; //->9: ALUMNO CON PPS>10.5/CON CURSO DESAPROBADO O CON CURSO EN NSP (NO SE PRESENTO, SIN RETIRO)
       case SITUACION.AMONESTADO: tasa = _.findWhere(self.tasas,{codigo:TASA.AMONESTADO}); break;
       case SITUACION.CON_SUSPENSION: tasa = _.findWhere(self.tasas,{codigo:TASA.CON_SUSPENSION}); break;
-      case SITUACION.REACTUALIZACION_MATRICULA: tasa = _.findWhere(self.tasas,{codigo:TASA.REACTUALIZACION_MATRICULA}); break;  //TODO CONSULTAR LA LOGICA DE NEGOCIO Y COMPLETAR LA FUNCION DE SER NECESARIO.
+    case SITUACION.REINGRESANTE: tasa = _.findWhere(self.tasas,{codigo:TASA.REINGRESANTE}); break;  //TODO CONSULTAR LA LOGICA DE NEGOCIO Y COMPLETAR LA FUNCION DE SER NECESARIO.
     }
     valorTasa = _.findWhere(tasa.historial,{activo:true});
     self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
     self.deudaTotal=self.deudaTotal + valorTasa.importe;
 
-    return tasa;
   }
   ObtenerDeudaCarnetUniversitario(){
     var self = this;
@@ -200,8 +246,8 @@ class CompromisoPagoAlumno{
     var self = this;
     let fechaHoy = new Date();
     let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
-    let fechaDesde = procesoMatricula.createdAt;
-    let fechaHasta = procesoMatricula.updatedAt;
+    let fechaDesde = procesoMatricula.fechaInicio;
+    let fechaHasta = procesoMatricula.fechaFin;
     let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_RECARGO_EXTEMPORANEO});
     if(fechaHoy > fechaHasta){
       let valorTasa = _.findWhere(tasa.historial,{activo:true});
@@ -209,11 +255,13 @@ class CompromisoPagoAlumno{
       self.deudaTotal=self.deudaTotal + valorTasa.importe;
     }
   }
+
   generar(next){
     var self = this;
     Q
-    .fcall(self.ObtenerMatricula())
-    .then(self.ObtenerTasas())
+    .fcall(self.ObtenerTasas())
+    .then(self.ObtenerMatricula())
+    .then(self.ObtenerNumeroCursosRepetidos())
     .then(self.ObtenerDeudaMatriculaOrdinaria())
     .then(self.ObtenerDeudaCursosRepetidos())
     .then(self.ObtenerDeudaCreditosMenorPermitido())
@@ -226,7 +274,7 @@ class CompromisoPagoAlumno{
       var self = this;
       var tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
       let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
-      let fechaVencimiento = procesoMatricula.updatedAt;
+      let fechaVencimiento = procesoMatricula.fechaFin;
       var compromisopago = new CompromisoPago({
         codigo:util.pad(self.matricula._alumno.codigo,10,'0'),
         pagado:false,
