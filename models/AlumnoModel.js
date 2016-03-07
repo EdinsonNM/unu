@@ -11,6 +11,10 @@ var AlumnoSchema = new Schema({
         type: String,
         enum: ['Soltero(a)', 'Casado(a)', 'Viudo(a)', 'Divorciado(a)', 'Conviviente', 'Separado(a)']
     },
+    educacionGratuita:{
+      type:Boolean,
+      default:true
+    },
     _persona: {
         type: Schema.Types.ObjectId,
         ref: 'Persona'
