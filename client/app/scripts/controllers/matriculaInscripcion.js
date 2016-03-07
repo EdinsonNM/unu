@@ -134,6 +134,12 @@
     matricula
   ) {
 
+    var creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
+    var creditosactuales = 0;
+    angular.forEach(matricula._detalleMatricula, function(detalle){
+      creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
+    });
+
     /**
      * initial params
      */
@@ -202,8 +208,13 @@
           }
         });
         if (!test) {
-          $scope.groupsselected.push(item);
-          serviceDetalleMatricula.post(params).then(function() {});
+          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > creditosaceptados){
+            ToastMD.warning('No puedes superar tu límite de créditos');
+          }else{
+            creditosactuales += cursohabilitado._planestudiodetalle.creditos;
+            $scope.groupsselected.push(item);
+            serviceDetalleMatricula.post(params).then(function() {});
+          }
         }
       } else {
         var index = findIndex(item);
