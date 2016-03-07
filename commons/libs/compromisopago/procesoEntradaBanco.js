@@ -2,149 +2,165 @@ var utils = require('./compromisopago.utils');
 var ArchivoBanco = require('../../../models/ArchivoBancoModel.js'); //model de archivo
 var CompromisoPago = require('../../../models/CompromisoPagoModel.js'); //model de compromisopago
 var ingresantes = require('../../../models/IngresanteModel.js'); //model de Ingresante
-var alumno = require('../../../models/AlumnoModel.js'); //model de Alumno
+var AlumnoModel = require('../../../models/AlumnoModel.js'); //model de Alumno
+var UsuarioModel = require('../../../models/UsuarioModel.js'); //model de Alumno
+var GrupoModel = require('../../../models/GrupoModel.js'); //model de Alumno
+
 var planestudio = require('../../../models/PlanestudioModel.js'); //model de Planestudio
 var planestudiodetalle = require('../../../models/PlanestudiodetalleModel.js'); //model de Planestudiodetalle
 var tipocondicionalumno = require('../../../models/TipoCondicionAlumnoModel.js'); //model de TipoCondicionAlumno
 var situacionalumno = require('../../../models/SituacionAlumnoModel.js'); //model de SituacionAlumno
 var escuelas = require('../../../models/EscuelaModel.js'); //model de Escuela
-var avancecurricular = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
+var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
 
 var fs = require('fs'); //permite escribir y leer en disco
 var lockFile = require('lockfile');
 var Q = require('q');
 var _ = require('underscore');
 var NroCuenta = "";
+var tipoCondicion,situacion,grupoAlumno;
 
-var crearCodigoAlumno = function crearAlumno(escuelaID, anioPeriodo){
-  //return '000' + periodo.substr(0,1) + periodo.substr(2,2) + LPAD(TO_CHAR(PCONTADOR),4,'0');
+var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
   var codigo="";
-  escuelas.findOne({_id:escuelaID},function(err,escuela){
-    var correlativo = 0;//parseInt(_.find(escuela._correlativosAnio, function(data){ return data.anio == anioPeriodo; })) + 1;
-    if(escuela._correlativosAnio.length === 0 || escuela._correlativoAnio === null){
-      for (var i = 0; i < escuela._correlativosAnio.length; i++) {
-        if(escuela._correlativosAnio[i].anio == anioPeriodo){
-          correlativo = escuela._correlativosAnio[i].correlativo + 1;
-          codigo = escuela.codigo + anioPeriodo.toString() + utils.pad(correlativo.toString(),3,'0');
-          escuela._correlativosAnio[i].correlativo = correlativo;
-          break;
-        }
-      }
-    }
-    else {
-      correlativo = correlativo + 1;
-      codigo = escuela.codigo + anioPeriodo.toString() + utils.pad(correlativo.toString(),3,'0');
-      escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:correlativo});
-    }
-    escuela.save(function(err,objEscuela){
-      if(err){ console.log(err); return null; }
-    });
-    return codigo;
+  var correlativo = 0;
+  var indexCorrelativo = -1;
+  indexCorrelativo =  _.findIndex(escuela._correlativosAnio, {anio:anioPeriodo});
+  if(indexCorrelativo!=-1){
+    correlativo = escuela._correlativosAnio[indexCorrelativo].correlativo;
+    escuela._correlativosAnio[indexCorrelativo].correlativo = correlativo + 1;
+  }else{
+    escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:1});
+  }
+  escuela.save(function(err,data){
+    if(err) return next(err);
+    correlativo+=1;
+    codigo = utils.pad(escuela.codigo,3,'0') + utils.pad(anioPeriodo.toString(),4,'0') + utils.pad(correlativo.toString(),3,'0');
+    return next(null,codigo);
+
   });
+
 };
 
-var crearAlumno = function crearAlumno(ingresante){
-  planestudio.find({estado:'Aprobado'}).populate({path: '_periodo', options: { sort: [['anio', 'desc']] }}).exec(function(err,planesdeestudio){
-    var objPlanEstudioVigente = planesdeestudio[0];
-    var codigoAlumno = crearCodigoAlumno(ingresante._escuela, objPlanEstudioVigente._periodo.anio);
-    tipocondicionalumno.findOne({codigo:'I'},function(err,tipocondicion){
-      situacionalumno.findOne({codigo:'01'},function(err,situacion){
-        //SE MARCA AL INGRESANTE COMO MATRICULADO
-        ingresante.estado = 'Matriculado';
-        ingresante.save(function(err, objIngresante){
-          //SE INGRESA LA DATA DEL ALUMNO
-          alumno.codigo = codigoAlumno;
-          alumno.estadoCivil = 'Soltero(a)';
-          alumno._persona = objIngresante._persona;
-          alumno._ingresante = objIngresante._id;
-          alumno._periodoInicio = objPlanEstudioVigente._periodo;
-          alumno._facultad = objIngresante._facultad;
-          alumno._escuela = objIngresante._escuela;
-          alumno._tipoCondicionAlumno = tipocondicion._id;
-          alumno._situacionAlumno = situacion._id;
-          alumno._usuario = codigoAlumno;
+var crearAlumno = function crearAlumno(ingresante,next){
+
+  planestudio.find({estado:'Aprobado',_escuela:ingresante._escuela}).populate('_periodo _escuela').exec(function(err,planesdeestudio){
+    if(err) return next(err);
+
+    var objPlanEstudioVigente = _.sortBy(planesdeestudio, function(item){ return -item._periodo.anio; })[0];
+    crearCodigoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio,function(err,codigo){
+      if(err) return next(err);
+      ingresante.estado = 'Matriculado';
+      ingresante.save(function(err, objIngresante){
+        if(err) return next(err);
+        var alumno = new AlumnoModel({
+          codigo : codigo,
+          estadoCivil : 'Soltero(a)',
+          _persona : objIngresante._persona,
+          _ingresante : objIngresante._id,
+          _periodoInicio : objPlanEstudioVigente._periodo._id,
+          _facultad : objIngresante._facultad,
+          _escuela : objIngresante._escuela,
+          _tipoCondicionAlumno : tipocondicion._id,
+          _situacionAlumno : situacion._id
+        });
+
+        var usuario = new UsuarioModel({
+          username:codigo,
+          password:codigo,
+          _grupo:grupoAlumno._id
+        });
+        usuario.save(function(err,objUsuario){
+          if(err) return next(err);
+          alumno._usuario = objUsuario._id;
           alumno.save(function(err,objAlumno){
-            if(err) return null;
+            if(err) return next(err);
+            return next(null,{alumno:objAlumno,planestudio:objPlanEstudioVigente});
           });
         });
+
       });
     });
   });
-  return alumno;
+
 };
 
-var crearAvanceCurricular = function crearAvanceCurricular(alumno){
-  planestudio.findOne({_periodo:alumno._periodoInicio, _escuela:alumno._escuela}, function(err,objPlanEstudio){
-    planestudiodetalle.find({_planestudio:objPlanEstudio._id},function(err,listaDetallesPlan){
+var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
+    planestudiodetalle.find({_planestudio:dataAlumno.planestudio._id},function(err,listaDetallesPlan){
+      if(err) return next(err);
       var itemDetalle = {};
       var listaDetalles = [];
+      var avancecurricular = new AvanceCurricularModel();
       avancecurricular.secuencia = 1;
-      avancecurricular._alumno = alumno._id;
-      avancecurricular._planEstudios = objPlanEstudio._id;
+      avancecurricular._alumno = dataAlumno.alumno._id;
+      avancecurricular._planEstudios = dataAlumno.planestudio._id;
       avancecurricular.activo = true;
       avancecurricular.createdAt = new Date();
 
       for (var i = 0; i < listaDetallesPlan.length; i++) {
         itemDetalle = {};
         itemDetalle._planEstudiosDetalle = listaDetallesPlan[i]._id;
-        itemDetalle.numeroVeces = 1;
+        itemDetalle.numeroVeces = 0;
         itemDetalle.record = [];
         listaDetalles.push(itemDetalle);
       }
       avancecurricular.detalleAvance = listaDetalles;
       avancecurricular.save(function(err,avance){
-        if(err){
-          console.log(err);
-          return null;
-        }
-        else{
-          return true;
-        }
+        if(err) return next(err);
+        dataAlumno.alumno._avanceCurricular.push(avance._id);
+        dataAlumno.alumno.save(function(err,alumno){
+          if(err) return next(err);
+          return next(null,alumno);
+        });
       });
     });
-  });
+
 };
 
 var procesarIngresante = function(ingresante){
   var defer = Q.defer();
-  crearAlumno(ingresante,function(err,alumno){
-    if(err) defer.reject(err);
-    crearAvanceCurricular(alumno,function(err,alumno){
-      if(err) defer.reject(err);
-      return defer.resolve(true);
+  crearAlumno(ingresante,function(err,dataAlumno){
+    if(err) return defer.reject(err);
+    crearAvanceCurricular(dataAlumno,function(err,avance){
+      if(err) return defer.reject(err);
+      return defer.resolve(avance);
     });
   });
   return defer.promise;
 };
-var procesarIngresantes = function(ingresantes,next){
-  var promises=[];
-  ingresantes.forEach(function(ingresante){
-    promises.push(procesarIngresante(ingresante));
-  });
-  Q.all(promises).then(function(result){
-    next(null,result);
-  });
-};
 
 var procesarPago = function procesarPago(item,index){
   var defer = Q.defer();
-  //NOTE si el pago pertenece a un ingresante entonces retorna ingresante defe.resolve(ingresante) si no defer.resolve(null)
-  //NOTE si el proceso falla defer.reject(error);
-  var NombreCliente = item.substring(2,30);
-  var Referencias = item.substring(32,48);//SE ASUMIRÁ QUE DE LOS 48 CARACTERES DE LA REFERENCIA: IDENTIFICADOR DEL PAGO [10], DNI PAGADOR [10], ALGUN DATO ADICIONAL [28]
-    var documentoPagador = Referencias.substring(0,8);
-    var codigoPago = Referencias.substring(8,10);
-    var adicionalPago = Referencias.substring(18,28);
-  var ImporteOrigen = parseFloat(item.substring(80,13))/100;
-  var ImporteDepositado = parseFloat(item.substring(95,15))/100;
-  var ImporteMora = parseFloat(item.substring(110,15))/100;
-  var Oficina = item.substring(125,4);
-  var NroMovimiento = item.substring(129,6);
-  var FechaPago = new Date(item.substring(135,8));
-  var TipoValor = item.substring(143,2);
-  var CanalEntrada = item.substring(145,2);
+  var NombreCliente = item.substr(2,30);
+  // INFO referencias = codigo+descripcionTasa+compromisoId
+  var Referencias,codigo,
+  descripcionTasa,compromisoId,
+  ImporteOrigen,ImporteDepositado,
+  ImporteMora,Oficina,NroMovimiento,FechaPago,
+  TipoValor,CanalEntrada;
 
-  CompromisoPago.findOne({codigo:codigoPago},function(err, compromisopago){
+  try {
+    NombreCliente = item.substr(2,30);
+    // INFO referencias = codigo+descripcionTasa+compromisoId
+    Referencias = item.substr(32,48);
+    codigo = Referencias.substr(0,10);
+    descripcionTasa = Referencias.substr(10,14);
+    compromisoId = Referencias.substr(24,24);
+    ImporteOrigen = parseFloat(item.substr(80,15))/100;
+    ImporteDepositado = parseFloat(item.substr(95,15))/100;
+    ImporteMora = parseFloat(item.substr(110,15))/100;
+    Oficina = item.substr(125,4);
+    NroMovimiento = item.substr(129,6);
+    FechaPago = new Date(item.substr(135,4)+'-'+item.substr(139,2)+'-'+item.substr(141,2));
+    TipoValor = item.substr(143,2);
+    CanalEntrada = item.substr(145,2);
+
+  } catch (e) {
+    return defer.reject(e);
+  }
+
+  CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
+    if(err) return defer.reject(err);
+    if(!compromisopago) return defer.resolve({message:'No se encontro el compromiso'});
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
@@ -157,51 +173,33 @@ var procesarPago = function procesarPago(item,index){
       fechaImportacion: new Date(),
       _archivobanco: ArchivoBanco._id
     });
-    compromisopago.save(function(err,objCompromisoPago){
-      if(err){
-        console.log(err);
-        defer.reject(err);
-      }else{
-        //SE DETERMINA SI EL COMPROMISO DE PAGO PERTENECE A UN INGRESANTE
-        ingresantes.findOne({_persona:compromisopago._persona, estado:'Registrado'}, function(err,ingresante){
-          if(err){
-            defer.reject(err);
-          }else{
-            if(!ingresante) defe.resolve(null);
-            else{
-              if(objCompromisoPago.pagado) defe.resolve(ingresante);
-              else defe.resolve(null);
-            }
-          }
+    ingresantes.findOne({
+      _persona:compromisopago._persona,
+      estado:'Aprobado'
+    }).populate('_periodo').exec(function(err,ingresante){
+      if(err) return defer.reject(err);
+      if(!ingresante){
+        compromisopago.save(function(err,objCompromisoPago){
+          if(err) return defer.reject(err);
+          return defer.resolve(objCompromisoPago);
         });
+      }else{
+        procesarIngresante(ingresante).then(
+          function(alumno){
+            compromisopago.referenciAlumno = alumno.codigo;
+            compromisopago.save(function(err,objCompromisoPago){
+              if(err) return defer.reject(err);
+              return defer.resolve(objCompromisoPago);
+            });
+          },function(result){
+            return defer.reject(result);
+          });
       }
+
+
     });
-    /*
-    compromisopago.update({_id:compromisopago._id},
-                          {$set:{
-                              pagado: pagado + ImporteDepositado - ImporteMora,
-                              saldo: saldo - (ImporteDepositado - ImporteMora),
-                              moratotal: moratotal + ImporteMora,
-                              detallePago: detallesPago
-                            }
-                          },
-                          function(err, cp){
-                            if(err){
-                              console.log(err);
-                            }else{
-                              //SE DETERMINA SI EL COMPROMISO DE PAGO PERTENECE A UN INGRESANTE
-                              ingresantes.findOne({_persona:compromisopago._persona, estado:'Registrado'}, function(err,ingresante){
-                                if(err){
-                                  defer.reject(error);
-                                }else{
-                                  if(ingresante === undefined) defe.resolve(null);
-                                  else defe.resolve(ingresante);
-                                }
-                              });
-                            }
-                          }
-    );
-    */
+
+
   });
   //defer.resolve(true);
   //proceso de actualización de pagos
@@ -218,44 +216,51 @@ module.exports  = function(filename,next){
       fs.readFile( pathFile, 'utf8', function ( error , data ) {
         if(error) return next(error);
         var dataArchivo = data.split("\n");
-        nrolineas = dataArchivo.length;
+
         var cabecera = dataArchivo.shift();
         var totales = dataArchivo.pop();
+        nrolineas = dataArchivo.length;
         var promises = [];
 
-        NroCuenta = cabecera.substring(27,18);
+        NroCuenta = cabecera.substr(27,18);
+
         //SE REGISTRA LOS DATOS DEL ARCHIVO CARGADO
-        ArchivoBanco.nombre = filename;
-        ArchivoBanco.registros = dataArchivo.length;
-        ArchivoBanco.importeTotal = parseFloat(totales.substring(11,15))/100;//SE ASUME QUE LOS 2 ULTIMOS DÍGITOS SON LOS DECIMALES
-        ArchivoBanco.tipo = 'E';
-        ArchivoBanco.fechabanco = new Date(cabecera.substring(19,8));
-        ArchivoBanco.version = 1;
-        ArchivoBanco.createdAt = new Date();
-        ArchivoBanco.updatedAt = new Date();
-        ArchivoBanco.save(function(err){
-          if(err){ console.log(err); return null; }
+        var archivoBanco = new ArchivoBanco();
+        archivoBanco.nombre = filename;
+        archivoBanco.registros = dataArchivo.length;
+        archivoBanco.importeTotal = parseFloat(totales.substr(11,15))/100;//SE ASUME QUE LOS 2 ULTIMOS DÍGITOS SON LOS DECIMALES
+        archivoBanco.tipo = 'E';
+        archivoBanco.fechabanco = new Date(cabecera.substr(19,4)+'-'+cabecera.substr(23,2)+'-'+cabecera.substr(25,2));
+        archivoBanco.version = 1;
+        archivoBanco.createdAt = new Date();
+        archivoBanco.updatedAt = new Date();
+        archivoBanco.save(function(err){
+          if(err){ console.log(err); return next(err); }
           else{
-            //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
-            dataArchivo.forEach(function(item,index){
-              promises.push(procesarPago(item,index));
-            });
-            Q.all(promises).then(
-              function(result){
-                console.log(result);//[ingresante,null,null,ingresante];
-                var ingresantes =  _.reject(result, function(item){ return item === null; });
-                procesarIngresantes(ingresantes,function(err,data){
-                  if(err){
-                    console.log(err);
-                  }else{
-                    console.log('importación es OK');
-                  }
+            tipocondicionalumno.findOne({codigo:'01'},function(err,tc){
+              if(err) return next(err);
+              tipocondicion = tc;
+              situacionalumno.findOne({codigo:'01'},function(err,st){
+                situacion =st;
+                GrupoModel.findOne({codigo:'ALUMNO'}).exec(function(err,gr){
+                  if(err) return next(err);
+                  grupoAlumno = gr;
+                  dataArchivo.forEach(function(item,index){
+                    promises.push(procesarPago(item,index));
+                  });
+
+                  Q.all(promises).then(
+                    function(result){
+                      console.log('result',result);//[ingresante,null,null,ingresante];
+                      return next(null,result);
+                    });
+
                 });
-              },
-              function(result){
-                //si falla el proceso de un pago
-                console.log(result);
+                //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
+
               });
+            });
+
           }
         });
       });

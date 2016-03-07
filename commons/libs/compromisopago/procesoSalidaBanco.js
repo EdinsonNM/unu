@@ -10,7 +10,7 @@ var generarCabecera  = function GenerarCabacera(numVersion,fecha){
   var version = utils.pad(numVersion.toString(),3,'0');
   var linea = '';
   linea = '01'; //Indicador de cabecera 01 (*)
-  linea = linea + '20154598244'; //RUC DE LA UNIVERSIDAD
+  linea = linea + '10428535982'; //RUC DE LA UNIVERSIDAD
   linea = linea + '556'; //Número proporcionado por el banco
   linea = linea + 'PEN'; //Moneda
   linea = linea + fecha; //Fecha de Facturación
@@ -42,7 +42,7 @@ module.exports = function GenerarArchivoSalida(next) {
       return next(err);
     }
     linea = generarCabecera(num,fecha);
-    dataArchivo = linea + '\n';
+    dataArchivo = linea + '\r\n';
     //Detalle
     CompromisoPago.find({
       pagado: false
@@ -62,7 +62,7 @@ module.exports = function GenerarArchivoSalida(next) {
           linea = linea + cadtemp.replace(/-/g, ' ').substr(0, 30); //Nombre del Cliente
           cadtemp = itemtabla.codigo + utils.pad(utils.RemplazaCaracteres(itemtabla._tasa.abreviatura),14,' ')  + itemtabla._id.toString();
           linea = linea + cadtemp; //Campo de Identificación del Pago
-          linea = linea + (itemtabla.fechavenc.getFullYear() * 10000 + itemtabla.fechavenc.getMonth() * 100 + itemtabla.fechavenc.getDate()); // Fecha de Vencimiento
+          linea = linea + (itemtabla.fechavenc.getFullYear() * 10000 + (itemtabla.fechavenc.getMonth() + 1) * 100 + itemtabla.fechavenc.getDate()); // Fecha de Vencimiento
           linea = linea + "20301231"; // Fecha de Bloqueo sugerido por el banco.
           linea = linea + '00'; //  Período del pago Facturado
           numtemp = itemtabla.saldo * 100 + 1000000000000000;
@@ -88,7 +88,7 @@ module.exports = function GenerarArchivoSalida(next) {
           linea = linea + utils.pad('',14,'0'); // Valor de Sub Concepto 08
           linea = linea + utils.pad('',72,' '); // Vacio  - Rellenar de Blancos
 
-          dataArchivo = dataArchivo + linea + '\n';
+          dataArchivo = dataArchivo + linea + '\r\n';
           TotalRegistros = TotalRegistros + 1;
           TotalMaximo = TotalMaximo + (itemtabla.saldo);
 
