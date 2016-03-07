@@ -140,6 +140,7 @@
                    $scope.aproved = true;
                 }else{
                    $scope.aproved = false;
+                   $state.go('app.alumnomisdatos');
                 }
               }
            }else {
@@ -147,6 +148,7 @@
                  $scope.aproved = true;
             }else{
                  $scope.aproved = false;
+                  $state.go('app.alumnomisdatos');
             }
           }
           });
