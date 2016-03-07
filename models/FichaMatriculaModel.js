@@ -10,17 +10,17 @@ var FichaMatriculaSchema = new Schema({
   },
   _periodo:{
     type:Schema.Types.ObjectId,
-    ref:'Planestudio',
+    ref:'Periodo',
     required:true
   },
   _escuela:{
     type:Schema.Types.ObjectId,
-    ref:'Planestudio',
+    ref:'Escuela',
     required:true
   },
   _condicionAlumno:{
     type:Schema.Types.ObjectId,
-    ref:'Planestudio',
+    ref:'TipoCondicionAlumno',
     required:true
   },
   estadoFichaMatricula:{
@@ -32,7 +32,6 @@ var FichaMatriculaSchema = new Schema({
     default:false
   },
   promedioPonderadoPeriodoAnterior:Number,
-  numeroCursosRepetidos:Number,
   creditos:{
     maximoampliacion:Number,
     totalampliados:Number,

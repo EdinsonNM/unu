@@ -34,6 +34,16 @@ var CompromisopagoSchema = new Schema({
     fechavenc:Date,
     createdAt:Date,
     updatedAt:Date,
+    detalleDeuda:[{
+      tasa:{
+        type:Schema.Types.ObjectId,
+        ref:'Tasa',
+        required:false
+      },
+      monto:Number,
+      activo:Boolean
+    }
+    ],
     detallePago:[
       {
         nroMovimiento:Number,
