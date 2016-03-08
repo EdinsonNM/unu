@@ -28,7 +28,6 @@
        */
       var getFichaMatricula, getMatricula;
       $timeout(function() {
-        console.log('Alumno', $rootScope.ALUMNO);
         $scope.ALUMNO = $rootScope.ALUMNO;
         $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
         $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
@@ -202,7 +201,7 @@
       var test;
       if (item.active) {
         angular.forEach(matricula._detalleMatricula, function(curso) {
-          if (cursohabilitado._id === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo) {
+          if (cursohabilitado._planestudiodetalle._curso._id === curso._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso._id) {
             item.active = !item.active;
             ToastMD.warning('Solo puede matricularse en un grupo por curso');
             test = true;
@@ -214,7 +213,9 @@
           }else{
             creditosactuales += cursohabilitado._planestudiodetalle.creditos;
             $scope.groupsselected.push(item);
-            serviceDetalleMatricula.post(params).then(function() {});
+            serviceDetalleMatricula.post(params).then(function(response) {
+              matricula._detalleMatricula.push(response);
+            });
           }
         }
       } else {

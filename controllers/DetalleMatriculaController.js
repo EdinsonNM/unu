@@ -10,6 +10,31 @@ module.exports = function() {
       controller.hints(true);
       controller.fragment('/detallematriculas');
 
+      controller.query('post', function(req, res, next){
+        req.baucis.query.populate(
+          [{
+            path: '_grupoCurso',
+            model: 'GrupoCurso',
+            populate: [{
+              path: '_seccion',
+              model: 'Seccion'
+            },{
+              path: '_cursoAperturadoPeriodo',
+              model: 'CursoAperturadoPeriodo',
+              populate: [{
+                path: '_planestudiodetalle',
+                model: 'Planestudiodetalle',
+                populate: [{
+                  path: '_curso',
+                  model: 'Curso'
+                }]
+              }]
+            }]
+          }]
+        );
+        next();
+      });
+
       /**
        * actualiza el _detalleMatricula en MatriculaModel despues de crear el detalle matricula
        */
