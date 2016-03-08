@@ -1,6 +1,7 @@
 var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
+var path = require('path');
 //var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
 module.exports=function(){
   var baucis=require('baucis');
@@ -15,7 +16,9 @@ module.exports=function(){
         var type = req.params.type;
         procExport(function(err,result){
           if(err){ return res.status(500).send(err);}
-          res.status(200).send(result);
+          var nomArchivo = result.nombre;
+          pathFile = path.join(__dirname, '../', 'commons/data/exports', nomArchivo);
+          res.download(pathFile);
         });
       });
 

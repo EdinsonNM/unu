@@ -110,7 +110,7 @@ module.exports = function GenerarArchivoSalida(next) {
         fecha = new Date().toISOString().replace('T', ' ').substr(0, 19);
         fecha = fecha.replace(/-/g, '').replace(/:/g, '').replace(/ /g, '');
         nomArchivo = 'unuRecaudo' + fecha + '.txt';
-        pathFile = path.join(__dirname, '../../', 'data', nomArchivo);
+        pathFile = path.join(__dirname, '../../', 'data/exports', nomArchivo);
         fs.writeFile(pathFile, dataArchivo, 'utf8', function(err) {
           if (err) {
             return next(err);
@@ -120,7 +120,7 @@ module.exports = function GenerarArchivoSalida(next) {
             registros: TotalRegistros,
             importeTotal: TotalMaximo,
             tipo: 'S',
-            version: version
+            version: utils.pad(num.toString(),3,'0')
           });
           archivo.save(function(err, dato) {
             if (err) {

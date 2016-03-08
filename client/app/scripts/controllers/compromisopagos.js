@@ -118,17 +118,14 @@
     $scope.Generar = function Generar($event){
       var confirm = $mdDialog.confirm()
           .title(LOCAL.name)
-          .content('Desea generar los compromisos de pago?')
+          .content('Desea generar el archivo con los compromisos de pago?')
           .ariaLabel(LOCAL.name)
           .targetEvent($event)
           .ok(MessageFactory.Buttons.Yes)
           .cancel(MessageFactory.Buttons.No);
 
       $mdDialog.show(confirm).then(function() {
-        var service = Restangular.all('compromisopagos');
-        service.customPOST({},'/methods/process').then(function() {
-          ToastMD.success('Archivo Generado satisfactoriamente');
-        });
+        $('#btnDownloadRecaudo').click();
       }, function() {
 
       });
