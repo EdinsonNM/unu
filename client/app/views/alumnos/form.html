@@ -9,13 +9,13 @@
         </md-button>
       </div>
     </md-toolbar>
-
+    <md-dialog-content style="max-width:800px;max-height:810px; ">
     <md-tabs md-selected="0" md-dynamic-height md-border-bottom>
 
       <md-tab label="Datos Personales">
         <md-content class="md-padding window-modal-content-sm">
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Nombres</label>
                 <input required name="nombres" ng-model="model._persona.nombres">
@@ -25,7 +25,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Ap. Paterno</label>
                 <input required name="apellidoPaterno" ng-model="model._persona.apellidoPaterno">
@@ -35,7 +35,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Ap. Materno</label>
                 <input required name="apellidoMaterno" ng-model="model._persona.apellidoMaterno">
@@ -47,8 +47,8 @@
             </div>
           </div>
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Tipo de Documento</label>
                 <md-select ng-model="model._persona.tipoDocumento" name="tipo" required>
@@ -61,16 +61,16 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
-                <label>Documento Identidad</label>
+                <label>Doc. Identidad</label>
                 <input required name="documento" ng-model="model._persona.documento">
                 <div ng-messages="myForm._persona.documento.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Sexo</label>
                 <md-select ng-model="model._persona.sexo" name="sexo" required>
@@ -83,17 +83,12 @@
 
           </div>
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
-              <md-input-container class="md-block">
-                <md-datepicker required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" md-placeholder="Fecha Nacimiento"></md-datepicker>
-                <div ng-messages="myForm._persona.fechaNacimiento.$error" ng-if="submited">
-                  <div ng-message="required">{{message.Required}}</div>
-                </div>
-              </md-input-container>
+          <div layout="row">
+            <div flex>
+              <md-datepicker ng-model="model._persona.fechaNacimiento" md-placeholder="Fec. Nacimiento" style="padding-top:10px;"></md-datepicker>
             </div>
 
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Lugar Nac.</label>
                 <input required name="lugarNacimiento" ng-model="model._persona.lugarNacimiento">
@@ -103,7 +98,7 @@
               </md-input-container>
             </div>
 
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Estado Civil</label>
                 <md-select ng-model="model.estadoCivil" name="estadoCivil" required>
@@ -121,8 +116,8 @@
 
       <md-tab label="Datos de Contacto">
         <md-content class="md-padding window-modal-content-sm">
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Dirección</label>
                 <input required name="direccion" ng-model="model._persona.direccion" ng-readonly="nombreFound">
@@ -132,7 +127,7 @@
 
               </md-input-container>
             </diV>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Email</label>
                 <input required name="email" ng-model="model._usuario.email">
@@ -142,7 +137,7 @@
               </md-input-container>
             </div>
 
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Telefono</label>
                 <input required name="telefono" ng-model="model._persona.telefono">
@@ -159,8 +154,8 @@
       <md-tab label="Datos Académicos">
         <md-content class="md-padding window-modal-content-sm">
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Periodo Ingreso</label>
                 <md-select ng-model="model._periodoIngreso" ng-model-options="{trackBy: '$value._id'}">
@@ -173,7 +168,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Facultad</label>
                 <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEscuelas()">
@@ -183,7 +178,7 @@
                 </md-select>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Escuela</label>
                 <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}">
@@ -199,8 +194,8 @@
 
           </div>
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Modalidad</label>
                 <md-select ng-model="model._modalidadIngreso" ng-model-options="{trackBy: '$value._id'}">
@@ -213,7 +208,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Tipo Condición</label>
                 <md-select ng-model="model._tipoCondicionAlumno" ng-model-options="{trackBy: '$value._id'}">
@@ -226,7 +221,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item>
+            <div flex>
               <md-input-container class="md-block">
                 <label>Situación</label>
                 <md-select ng-model="model._situacionAlumno" ng-model-options="{trackBy: '$value._id'}">
@@ -241,8 +236,8 @@
             </div>
           </div>
 
-          <div flex-container="row" flex-gutter="24">
-            <div flex-item>
+          <div layout="row">
+            <div flex>
               <md-input-container class="md-block">
                 <label>Código</label>
                 <input required name="codigo" ng-model="model.codigo">
@@ -251,7 +246,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item ng-if="includeUserData">
+            <div flex ng-if="includeUserData">
               <md-input-container class="md-block">
                 <label>Usuario</label>
                 <input required ng-model="model._usuario.username">
@@ -260,7 +255,7 @@
                 </div>
               </md-input-container>
             </div>
-            <div flex-item ng-if="includeUserData">
+            <div flex ng-if="includeUserData">
               <md-input-container class="md-block">
                 <label>Contraseña</label>
                 <input required type="password" ng-model="model._usuario.password">
@@ -275,18 +270,15 @@
       </md-tab>
 
     </md-tabs>
-
-    <div class="dialog__actions">
-      <div class="pull-left">
-        <md-checkbox ng-model="model.activo">
-          Activo
-        </md-checkbox>
-      </div>
-      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-    </div>
+    </md-dialog-content>
 
     <md-dialog-actions layout="row">
+      <md-checkbox ng-model="model.activo">
+        Activo
+      </md-checkbox>
+      <span flex></span>
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </md-dialog-actions>
   </form>
 </md-dialog>

@@ -20,7 +20,7 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>DNI:</label>
                         <md-icon md-font-icon="fa-credit-card" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="documento" ng-model="model.documento" ng-readonly="!editable">
+                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable">
                         <div ng-messages="myForm.documento.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
@@ -32,7 +32,7 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>Nombres</label>
                         <md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="nombres" ng-model="model.nombres" ng-readonly="!editable">
+                        <input required name="nombres" ng-model="model._persona.nombres" ng-readonly="!editable">
                         <div ng-messages="myForm.nombres.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                       </md-input-container>
@@ -53,10 +53,11 @@
               </div>
               <div flex layout="row">
                   <div flex>
-                      <md-input-container class="md-block">
+                      <md-input-container class="md-icon-float md-block">
                         <label>Sexo</label>
+                        <md-icon md-font-icon="fa fa-venus-mars" class="fa s24 md-primary md-hue-1" > </md-icon>
                         <!--md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon-->
-                        <md-select ng-model="model.sexo" name="sexo" required ng-disabled="!editable">
+                        <md-select class="md-icon-float " ng-model="model._persona.sexo" name="sexo" required ng-disabled="!editable">
                           <md-option ng-repeat="sex in sexo" ng-value="sex">
                             {{sex}}
                           </md-option>
@@ -69,14 +70,11 @@
               </div>
               <div flex layout="row">
                   <div flex>
-                      <md-input-container class="md-block">
-                        <!--input required name="fechaNacimiento" ng-model="model.fechaNacimiento"-->
-                        <!--md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon-->
-                        <md-datepicker required name="fechaNacimiento" ng-model="model.fechaNacimiento" md-placeholder="Fecha de Nacimiento" ng-disabled="!editable"></md-datepicker>
-                        <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
-                          <div ng-message="required">{{message.Required}}</div>
-                        </div>
-                      </md-input-container>
+                      <md-input-container class="md-icon-float md-block">
+                      <label>Fec. Nacimiento</label>
+                      <md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon>
+                      <input type="date" required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" ng-readonly="!editable">
+                    </md-input-container>
                   </div>
               </div>
               <div flex layout="row">
@@ -84,8 +82,26 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>Lugar de Nacimiento</label>
                         <md-icon md-font-icon="fa-map-marker" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="lugarNacimiento" ng-model="model.lugarNacimiento" ng-readonly="!editable">
+                        <input required name="lugarNacimiento" ng-model="model._persona.lugarNacimiento" ng-readonly="!editable">
                         <div ng-messages="myForm.lugarNacimiento.$error" ng-if="submited">
+                          <div ng-message="required">{{message.Required}}</div>
+                        </div>
+                      </md-input-container>
+                  </div>
+              </div>
+
+
+              <div flex layout="row">
+                  <div flex>
+                      <md-input-container class="md-block">
+                        <label>Estado Civil</label>
+                        <md-icon md-font-icon="fa-heart" class="fa s24 md-primary md-hue-1"></md-icon>
+                        <md-select ng-model="model.estadoCivil" name="estadoCivil" required ng-disabled="!editable">
+                          <md-option ng-repeat="estado in estadoscivil" ng-value="estado">
+                            {{estado}}
+                          </md-option>
+                        </md-select>
+                        <div ng-messages="myForm.estadoCivil.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
                       </md-input-container>

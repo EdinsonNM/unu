@@ -37,18 +37,7 @@ var PersonaSchema = new Schema({
     //nacionalidad:String,
     //ubigeo:String,
   },
-  telefono: {
-    type: String
-    //,required: true
-  },
-  direccion: {
-    type: String
-    //,required: true
-  },
-  email: {
-    type: String
-    //,required: true
-  },
+
   _alumno:[{
       type:Schema.Types.ObjectId,
       ref:'Alumno',
@@ -65,6 +54,7 @@ var PersonaSchema = new Schema({
 PersonaSchema.plugin(mongoosePaginate);
 PersonaSchema.plugin(uniqueValidator);
 PersonaSchema.pre('save', function(next) {
+  console.log('update persona..');
   var now = new Date();
   this.updatedAt = now;
   if (!this.createdAt) {

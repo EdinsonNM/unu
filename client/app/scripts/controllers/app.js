@@ -61,29 +61,35 @@
       };
       $rootScope.ALUMNO = {};
 
-      var LaodAlumno = function LaodAlumno() {
+      var LoadAlumno = function LaodAlumno() {
+        console.log('load alumno..');
         var service = Restangular.all('alumnos');
         service.getList({
           conditions: {
             _usuario: $rootScope.USER._id
-          }
+          },
+          populate:'_persona'
         }).then(function(result) {
+          console.log('load alumno..',result[0]);
           if (result.length > 0) {
             $rootScope.ShowAlert = false;
             $rootScope.ALUMNO = result[0];
             $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
-            /*var validation = Validator.validate($rootScope.ALUMNO,schemaAlumno);
-            if(validation.errors.length>0){
-              $rootScope.ShowAlert=true;
-              $rootScope.MessageAlert = "Datos incompletos";
+
+            switch (true) {
+            case $rootScope.ALUMNO.email.toString()==='':
+            case $rootScope.ALUMNO._persona.documento.toString()==='':
+            case $rootScope.ALUMNO.telefono.toString()==='':
+            case $rootScope.ALUMNO.direccion.toString()==='':
+                $scope.aproved = false;
+                $scope.showmenu = false;
+                break;
+              default:
+                $scope.aproved = true;
+                $scope.showmenu = true;
+
             }
 
-            if(!$rootScope.ALUMNO.email) {
-              $rootScope.ShowAlert=true;
-            }
-            if(!$rootScope.ALUMNO.telefono) {
-              $rootScope.ShowAlert=true;
-            }*/
 
           }
            new LastPeriodo();
@@ -129,14 +135,14 @@
               var fechaFin = new Date(item.fechaFin);
               if (fechaInicio <= f && f <= fechaFin) {
                 $scope.showmenu = true;
-                if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
                    $scope.aproved = true;
                 }else{
                    $scope.aproved = false;
                 }
               } else {
                 $scope.showmenu = false;
-                if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
                    $scope.aproved = true;
                 }else{
                    $scope.aproved = false;
@@ -144,7 +150,7 @@
                 }
               }
            }else {
-             if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+             if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
                  $scope.aproved = true;
             }else{
                  $scope.aproved = false;
@@ -158,7 +164,7 @@
       switch ($rootScope.USER._grupo.codigo) {
         case TYPE_GROUP.ALUMNO:
           console.log('Ingresa Alumno');
-          new LaodAlumno();
+          new LoadAlumno();
           //new LastPeriodo();
 
           break;

@@ -32,12 +32,12 @@
       </div>
       <div layout="row" layout-fill>
 
-        <md-content flex class="md-padding page-content" style="max-width:600px;">
+        <md-content flex class="md-padding page-content">
 
           <table ng-table="tableParamsPendientes" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
             <tbody>
             <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.pendientesValue">
-                <td class="text-left" data-title="'Código'">{{item._conflicto.codigo}}</td>
+                <td class="text-left" data-title="'Código'" style="width:100px;">{{item._conflicto.codigo}}</td>
                 <td class="text-left" data-title="'Descripción'">{{item._conflicto.nombre}}</td>
             </tr>
 
@@ -55,7 +55,7 @@
       </div>
 
       <div layout="row" layout-fill>
-        <md-content flex class="md-padding page-content" style="max-width:600px;">
+        <md-content flex class="md-padding page-content" >
           <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
             <tbody>
             <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">

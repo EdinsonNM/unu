@@ -156,10 +156,6 @@ md-sidenav {
 }
 
 
-.side-menu menu-toggle span{
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
 
 .icon-white
 	color white
@@ -172,7 +168,7 @@ md-sidenav {
 	position fixed
 	right 40px
 	bottom 40px*/
-
+/*
 md-datepicker-button
 	display none
 
@@ -183,7 +179,7 @@ md-datepicker
 		.md-datepicker-input
 			&.md-input
 				color black !important
-
+*/
 .gridOptions
 	md-grid-list
 		margin: 8px
@@ -213,13 +209,6 @@ md-tab-item
 .md-toast.success
 	background-color green
 
-md-datepicker
-	padding-top 19px
-	.md-datepicker-button
-		display none
-	.md-datepicker-input-container
-		width 100%
-		margin-left 0
 
 a.groupTitle
 	text-decoration none
@@ -325,3 +314,22 @@ md-icon.s32 span
 
 		*
 			visibility visible
+
+
+
+.side-menu
+	menu-toggle
+		span
+			padding-top: 0
+			padding-bottom: 0
+
+label
+	width 100%
+
+md-datepicker
+	display: flex;
+	.md-datepicker-button
+		flex: 0 0 auto;
+	.md-datepicker-input-container
+		flex: 0.9 0 8em;
+		padding-top 10px
