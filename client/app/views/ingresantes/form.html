@@ -155,17 +155,14 @@
       </md-tab>
     </md-tabs>
 
-    <div class="dialog__actions">
-      <div class="pull-left">
-        <md-checkbox ng-model="model.activo">
-          Activo
-        </md-checkbox>
-      </div>
-      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-    </div>
 
     <md-dialog-actions layout="row">
+      <md-checkbox ng-model="model.activo">
+        Activo
+      </md-checkbox>
+      <span flex></span>
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button type="submit" class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </md-dialog-actions>
 
   </form>

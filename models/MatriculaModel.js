@@ -35,6 +35,10 @@ var MatriculaSchema = new Schema({
       enum: ['Proceso', 'Prematricula', 'Matriculado'],
       default: 'Proceso'
    },
+   /*estado:{
+     type:Boolean,
+     default:false
+  },*/
    createdAt: Date,
    updatedAt: Date
 });

@@ -18,7 +18,7 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Ingresantes Registrados',
+      title: 'Listado de Ingresantes Registrados para aprobación',
       editMode: false,
       selected: null,
       customActions:[]

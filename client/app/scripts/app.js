@@ -375,6 +375,11 @@
           url: '/mic/sesionaprendizaje/:id',
           templateUrl: 'views/mic/sesionaprendizaje/form.html',
           controller: 'MICSesionaprendizajeDetalleCtrl'
+        })
+        .state('app.compromisopagos', {
+          url: '/compromisopagos',
+          templateUrl: 'views/compromisopagos/list.html',
+          controller: 'CompromisoPagoCtrl'
         });
     }]).constant('TYPE_ALUMNO', {
       INGRESANTE: 'ING'

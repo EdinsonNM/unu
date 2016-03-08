@@ -1,7 +1,7 @@
 var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
-var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
+//var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -19,7 +19,7 @@ module.exports=function(){
         });
       });
 
-      controller.post('/methods/generar/:tipo',function(req,res){
+      /*controller.post('/methods/generar/:tipo',function(req,res){
         var periodo = req.body._periodo;
         var tipo = req.params.tipo;
         var compromiso = new CompromisoPago(periodo,tipo);
@@ -28,7 +28,7 @@ module.exports=function(){
           return res.status(201).send(data);
         });
 
-      });
+      });*/
 
       controller.get('/methods/deudas', function(req, res) {
         var limit = parseInt(req.query.count);
@@ -71,6 +71,37 @@ module.exports=function(){
         var matriculaId = req.params.id;
         var compromiso = new CompromisoPagoAlumno(matriculaId);
 
+      });
+
+      controller.get('/methods/paginate', function(req, res){
+      	var limit = parseInt(req.query.count);
+      	var page = parseInt(req.query.page) || 1;
+      	var filter = req.query.filter;
+        for (var key in filter) {
+          switch (key) {
+            case 'codigo':
+            case 'nombre':
+              filter[key] = new RegExp(filter[key],'i');
+              break;
+          }
+        }
+      	model.paginate(
+      		filter,
+      		{page: page, limit: limit,populate:'_persona'},
+      		function(err, results, pageCount, itemCount){
+
+            var obj = {
+              total: results.total,
+              perpage: limit*1,
+              current_page: page*1,
+              last_page: results.pages,
+              from: (page-1)*limit+1,
+              to: page*limit,
+              data: results.docs
+            };
+      			res.send(obj);
+      		}
+      	);
       });
     }
   };

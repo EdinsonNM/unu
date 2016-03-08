@@ -172,7 +172,8 @@ module.exports = function() {
                 '_escuela',
                 '_modalidadIngreso',
                 '_tipoCondicionAlumno',
-                '_situacionAlumno'
+                '_situacionAlumno',
+                '_periodoInicio'
             ] //Aqui corregir
           },
           function(err, results) {
@@ -202,6 +203,16 @@ module.exports = function() {
             }
         );
 
+      });
+
+      controller.query('put', function(req, res, next){
+        req.baucis.query.populate(
+          [{
+            path: '_persona',
+            model: 'Persona'
+          }]
+        );
+        next();
       });
 
     }

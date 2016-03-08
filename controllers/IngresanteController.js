@@ -10,6 +10,7 @@ var modelSituacionAlumno = require('../models/SituacionAlumnoModel.js');
 var modelAlumno = require('../models/AlumnoModel.js');
 var modelPlanEstudioDetalle = require('../models/PlanestudiodetalleModel.js');
 var modelAvanceCurricular = require('../models/AvanceCurricularModel.js');
+var CompromisoPagoIngresante = require('../commons/libs/compromisopago/compromisopagoingresante');
 
 var Validator = require('jsonschema').Validator;
 var schemaPago  = require('../schemas/ingresante-pagos');
@@ -60,28 +61,55 @@ module.exports = function() {
         });
       });
 
-      controller.post('/updateEstadoAprIngresante', function(request, response, next){
+      controller.request('put', function (request, response, next) {
+        Persona.findOneAndUpdate(
+            { "_id": request.body._persona._id},
+            {
+                "$set": request.body._persona
+            },
+            function(err,doc) {
+              if(err) return response.status(500).send(err);
+              next();
+            }
+        );
+
+      });
+
+
+      controller.post('/updateEstadoAprIngresante', function(request, response){
+          var compromiso = new CompromisoPagoIngresante();
           if(request.body._id){
-            model.findByIdAndUpdate(
-              request.body._id,
-              { estado: 'Aprobado' },
-              { safe: true },
-              function(err, data){
+            model.findOne({_id:request.body._id}).populate('_persona').exec(function(err,data){
+              if(err) return response.status(500).send({message:err});
+              if(!data) return response.status(404).send({message:"No se encontro el ingresante",detail:err});
+              data.estado="Aprobado";
+              data.save(function(err,data){
                 if(err) return response.status(500).send({message:err});
-                response.status(200).send(data);
-              }
-            );
+                compromiso.generarCompromisoIngresante(data,function(err,data){
+                  if(err) return response.status(err.status).send(err);
+                  return response.status(201).send(data);
+                });
+              });
+            });
+
           }else{
             var query = {
               _periodo: request.body._periodo,
               _escuela: request.body._escuela,
               estado: 'Registrado'
             };
-            model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
-              // numAffected is the number of updated documents
-              if(err) return response.status(500).send({message:err});
-              response.status(200).send('Hola');
+            model.find(query).populate('_persona').exec(function(err,ingresantes){
+                if(err) return response.status(500).send({message:'Error intenro del servidor',detail:err});
+                model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
+                  if(err) return response.status(500).send({message:'Error intenro del servidor',detail:err});
+                  compromiso.generarCompromisoIngresantes(query._periodo,ingresantes,function(err,data){
+                    if(err) return response.status(err.status).send(err);
+                    return response.status(201).send(data);
+                  });
+                });
+
             });
+
           }
         });
 

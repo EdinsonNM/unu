@@ -9,7 +9,7 @@
       </md-button>
     </div>
   </md-toolbar>
-    <md-dialog-content class="window-modal-content-sm">
+    <md-dialog-content class="window-modal-content-sm md-padding">
       <form name="myForm">
         <div flex  layout="row" layout-sm="column">
           <div flex>
@@ -52,33 +52,36 @@
           </div>
           <div flex>
             <md-input-container class="md-block">
-              <!--label>Fecha Resolución</label-->
-              <md-datepicker required name="fechaResolucion" ng-model="model.fechaResolucion" md-placeholder="Fecha Resolución"></md-datepicker>
-              <!--input required name="fecharesolucion" ng-model="model.fecharesolucion"-->
+              <label>Resolución</label>
+              <input type="date" required name="fechaResolucion" ng-model="model.fechaResolucion">
               <div ng-messages="myForm.fechaResolucion.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
             </md-input-container>
+
           </div>
         </div>
         <div flex  layout="row" layout-sm="row">
           <div flex>
             <md-input-container class="md-block">
-            <md-datepicker required name="inicio" ng-model="model.inicio" md-placeholder="Fecha Inicio"></md-datepicker>
-            <div ng-messages="myForm.inicio.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
+              <label>Inicio</label>
+              <input type="date" required name="inicio" ng-model="model.inicio">
+              <div ng-messages="myForm.inicio.$error" ng-if="submited">
+                <div ng-message="required">{{message.Required}}</div>
+              </div>
             </md-input-container>
+
           </div>
 
           <div flex>
             <md-input-container class="md-block">
-              <md-datepicker required name="fin" ng-model="model.fin" md-placeholder="Fecha Fin"></md-datepicker>
-              <!--input required name="fin" ng-model="model.fin"-->
+              <label>Fecha Fin</label>
+              <input type="date" required name="fin" ng-model="model.fin">
               <div ng-messages="myForm.fin.$error" ng-if="submited">
                 <div ng-message="required">{{message.Required}}</div>
               </div>
             </md-input-container>
+
           </div>
         </div>
       </form>

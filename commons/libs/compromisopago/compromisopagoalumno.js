@@ -256,18 +256,19 @@ class CompromisoPagoAlumno{
     }
   }
 
+
   generar(next){
     var self = this;
     Q
-    .fcall(self.ObtenerTasas())
-    .then(self.ObtenerMatricula())
-    .then(self.ObtenerNumeroCursosRepetidos())
-    .then(self.ObtenerDeudaMatriculaOrdinaria())
-    .then(self.ObtenerDeudaCursosRepetidos())
-    .then(self.ObtenerDeudaCreditosMenorPermitido())
-    .then(self.ObtenerDeudaPerdidaGratuidad())
-    .then(self.ObtenerDeudaCarnetUniversitario())
-    .then(self.ObtenerRecargoExtemporanea())
+    .fcall(self.ObtenerTasas.bind(this))
+    .then(self.ObtenerMatricula.bind(this))
+    .then(self.ObtenerNumeroCursosRepetidos.bind(this))
+    .then(self.ObtenerDeudaMatriculaOrdinaria.bind(this))
+    .then(self.ObtenerDeudaCursosRepetidos.bind(this))
+    .then(self.ObtenerDeudaCreditosMenorPermitido.bind(this))
+    .then(self.ObtenerDeudaPerdidaGratuidad.bind(this))
+    .then(self.ObtenerDeudaCarnetUniversitario.bind(this))
+    .then(self.ObtenerRecargoExtemporanea.bind(this))
     .then(function(){
       //TODO this.deudas contiene todos los montos que se han añadido para la cobranza de la matricula
       //TODO se debe generar el compromiso de pago
@@ -288,9 +289,14 @@ class CompromisoPagoAlumno{
         _persona:self.matricula._alumno._persona,
         _tasa:tasa._id
       });
-      compromisopago.save(function(err,compromiso){
-        return next(null,compromiso);
+      self.matricula.estado="Prematriculado";
+      self.matricula.save(function(err,data){
+        if(err) return next(err);
+        compromisopago.save(function(err,compromiso){
+          return next(null,compromiso);
+        });
       });
+
     });
   }
 }
