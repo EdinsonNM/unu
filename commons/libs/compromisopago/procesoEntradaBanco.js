@@ -20,7 +20,8 @@ var _ = require('underscore');
 var NroCuenta = "";
 var tipoCondicion,situacion,grupoAlumno;
 
-var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
+var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo){
+  var defer = Q.defer();
   var codigo="";
   var correlativo = 0;
   var indexCorrelativo = -1;
@@ -32,12 +33,13 @@ var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo,next){
     escuela._correlativosAnio.push({anio:anioPeriodo,correlativo:1});
   }
   escuela.save(function(err,data){
-    if(err) return next(err);
+    if(err) return defer.reject(err);
     correlativo+=1;
     codigo = utils.pad(escuela.codigo,3,'0') + utils.pad(anioPeriodo.toString(),4,'0') + utils.pad(correlativo.toString(),3,'0');
-    return next(null,codigo);
+    return defer.resolve(codigo);
 
   });
+  return defer.promise;
 
 };
 
@@ -47,8 +49,8 @@ var crearAlumno = function crearAlumno(ingresante,next){
     if(err) return next(err);
 
     var objPlanEstudioVigente = _.sortBy(planesdeestudio, function(item){ return -item._periodo.anio; })[0];
-    crearCodigoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio,function(err,codigo){
-      if(err) return next(err);
+    crearCodigoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio).then(function(codigo){
+      //if(err) return next(err);
       ingresante.estado = 'Matriculado';
       ingresante.save(function(err, objIngresante){
         if(err) return next(err);
@@ -129,6 +131,7 @@ var procesarIngresante = function(ingresante){
 };
 
 var procesarPago = function procesarPago(item,index){
+  console.log("item:",item);
   var defer = Q.defer();
   var NombreCliente = item.substr(2,30);
   // INFO referencias = codigo+descripcionTasa+compromisoId
@@ -234,35 +237,55 @@ module.exports  = function(filename,next){
         archivoBanco.version = 1;
         archivoBanco.createdAt = new Date();
         archivoBanco.updatedAt = new Date();
-        archivoBanco.save(function(err){
-          if(err){ console.log(err); return next(err); }
-          else{
-            tipocondicionalumno.findOne({codigo:'01'},function(err,tc){
-              if(err) return next(err);
-              tipocondicion = tc;
-              situacionalumno.findOne({codigo:'01'},function(err,st){
-                situacion =st;
-                GrupoModel.findOne({codigo:'ALUMNO'}).exec(function(err,gr){
-                  if(err) return next(err);
-                  grupoAlumno = gr;
-                  dataArchivo.forEach(function(item,index){
-                    promises.push(procesarPago(item,index));
-                  });
+        Q.fcall(function(){
+          var defer = Q.defer();
+          archivoBanco.save(function(err,archivo){
+            if(err){ console.log(err); return defer.reject(err); }
+            return defer.resolve(archivo);
+          });
+          return defer.promise;
+        })
+        .then(function(archivo){
+          var defer = Q.defer();
+          tipocondicionalumno.findOne({codigo:'01'},function(err,tc){
+            if(err) return defer.reject(err);
+            return defer.resolve({archivo:archivo,tipocondicion:tc});
+          });
+          return defer.promise;
+        })
+        .then(function(result){
+          var defer = Q.defer();
+          situacionalumno.findOne({codigo:'01'},function(err,st){
+            if(err) return defer.reject(err);
+            result.situacion = st;
+            return defer.resolve(result);
+          });
+          return defer.promise;
+        })
+        .then(function(result){
+          var defer = Q.defer();
+          GrupoModel.findOne({codigo:'ALUMNO'}).exec(function(err,gr){
+            if(err) return next(err);
+            result.grupoAlumno = gr;
+            return defer.resolve(result);
+          });
+          return defer.promise;
+        })
+        .then(function(result){
+          grupoAlumno = result.grupoAlumno;
+          situacion = result.situacion;
+          tipocondicion = result.tipocondicion;
+          var x = Q.fcall(function(){});
+          dataArchivo.forEach(function(item,index){
+            x=x.then(procesarPago.bind(this,item));
+          });
+          x.then(function(){
+            console.log('finalizo..');
+          }).done();
 
-                  Q.all(promises).then(
-                    function(result){
-                      console.log('result',result);//[ingresante,null,null,ingresante];
-                      return next(null,result);
-                    });
+        })
+        .done();
 
-                });
-                //EJECUCIÓN DE CADA LINEA DEL ARCHIVO
-
-              });
-            });
-
-          }
-        });
       });
     }
   });
