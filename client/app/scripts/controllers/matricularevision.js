@@ -125,27 +125,21 @@
                _alumno: $scope.ALUMNO._id
             }
          }).then(function(data){
-            $scope.matricula = data;
-            if($scope.matricula.length !== 0){
-               $state.go('app.matriculainscripcion');
+            $scope.matricula = data[0];
+            console.log('matricula scope');
+            console.log($scope.matricula);
+            // if($scope.matricula.length !== 0){}
+            if($scope.matricula){
+               if($scope.matricula.estado === 'Proceso'){
+                  $state.go('app.matriculainscripcion');
+               }else {
+                  if($scope.matricula.estado === 'Prematricula'){
+                     $state.go('app.matricularevisionlast');
+                  }
+               }
             }
          });
       };
-
-
-
-      // var periodoxplanestudio = function() {
-      //   var Service = Restangular.all('planestudios');
-      //   Service.getList({
-      //     conditions: {
-      //       _periodo: $scope.idLast
-      //     }
-      //   }).then(function(data) {
-      //     $scope.planestudio = data;
-      //     console.log(data);
-      //   });
-      // };
-
 
       var datosAlumno = function() {
          //$scope.idplanestudio= 'null';
@@ -161,8 +155,6 @@
         });
       };
 
-
-
       $timeout(function() {
         console.log('root' + $rootScope.ALUMNO.codigo);
         $scope.ALUMNO = $rootScope.ALUMNO;
@@ -173,8 +165,6 @@
         ListDeudasAlumno();
         datosAlumno();
         verificaMatricula();
-      //   periodoxplanestudio();
-        console.log('idlastnew' + $scope.idLast);
       }, 500);
 
       var ultimoPeriodo = function ultimoPeriodo() {

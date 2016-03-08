@@ -58,6 +58,64 @@
       $scope.Logout = function() {
         UserFactory.logout();
       };
+
+      var DatosAlumno = function() {
+        var Service = Restangular.all('avancecurriculars');
+        Service.getList({
+          conditions: {
+            _alumno: $rootScope.ALUMNO._id
+          }
+        }).then(function(data) {
+          $scope.planestudio = data;
+          $scope.idplanestudio = data[0]._planEstudios;
+        });
+      };
+
+
+      var LastPeriodo = function() {
+        //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
+        var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
+        var f = new Date();
+        var servicePeriodo = Restangular.all('periodos/lastPeriodo');
+        servicePeriodo.getList().then(function(result) {
+          $scope.periodoActual = result[0]._id;
+          console.log('periodo actual', $scope.periodoActual);
+          // $scope.nombreperiodo = result[0].nombre;
+          console.log(result);
+          console.log($scope.nombreperiodo);
+          angular.forEach(result[0].procesos, function(item) {
+            if (item._proceso === idMatriculaProceso) {
+              $scope.process = true;
+              var fechaInicio = new Date(item.fechaInicio);
+              var fechaFin = new Date(item.fechaFin);
+              if (fechaInicio <= f && f <= fechaFin) {
+                $scope.showmenu = true;
+                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                  $scope.aproved = true;
+                } else {
+                  $scope.aproved = false;
+                }
+              } else {
+                $scope.showmenu = false;
+                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                  $scope.aproved = true;
+                } else {
+                  $scope.aproved = false;
+                  $state.go('app.alumnomisdatos');
+                }
+              }
+            } else {
+              if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                $scope.aproved = true;
+              } else {
+                $scope.aproved = false;
+                $state.go('app.alumnomisdatos');
+              }
+            }
+          });
+        });
+      };
+
       $rootScope.ALUMNO = {};
 
       var LoadAlumno = function LaodAlumno() {
@@ -67,19 +125,19 @@
           conditions: {
             _usuario: $rootScope.USER._id
           },
-          populate:'_persona'
+          populate: '_persona'
         }).then(function(result) {
-          console.log('load alumno..',result[0]);
+          console.log('load alumno..', result[0]);
           if (result.length > 0) {
             $rootScope.ShowAlert = false;
             $rootScope.ALUMNO = result[0];
             $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
 
             switch (true) {
-            case $rootScope.ALUMNO.email.toString()==='':
-            case $rootScope.ALUMNO._persona.documento.toString()==='':
-            case $rootScope.ALUMNO.telefono.toString()==='':
-            case $rootScope.ALUMNO.direccion.toString()==='':
+              case $rootScope.ALUMNO.email.toString() === '':
+              case $rootScope.ALUMNO._persona.documento.toString() === '':
+              case $rootScope.ALUMNO.telefono.toString() === '':
+              case $rootScope.ALUMNO.direccion.toString() === '':
                 $scope.aproved = false;
                 $scope.showmenu = false;
                 break;
@@ -91,72 +149,67 @@
 
 
           }
-           new LastPeriodo();
+          new LastPeriodo();
+          new DatosAlumno();
         });
+      };
+
+      var Save = function() {
+        //$scope.submited = true;
+        //declaro el servicio con la ruta correcta del endpoint.
+        $scope.model = {};
+        $scope.model._periodo = $scope.periodoActual;
+        $scope.model._alumno = $rootScope.ALUMNO._id;
+        $scope.model._planEstudio = $scope.idplanestudio;
+        $scope.model._escuela = $rootScope.ALUMNO._escuela;
+
+        var service = Restangular.all('matriculas');
+        service.post($scope.model).then(function() {
+          $state.go('app.matriculainscripcion');
+        });
+
       };
 
       /**Llamar al ultimo periodo****/
       $scope.LoadPage = function() {
-        if ($scope.periodoIngresante === $scope.periodoActual) {
-          $state.go('app.matriculainscripcion');
-          console.log('son iguales');
-        } else {
-          $state.go('app.matricularevision');
-          console.log('son diferentes');
-        }
-        /*if ($rootScope.ALUMNO._persona.email && $rootScope.ALUMNO._persona.documento){
+
+        console.log($scope.periodoActual);
+        var serviceMatricula = Restangular.all('matriculas');
+        serviceMatricula.getList({
+          conditions: {
+            _periodo: $scope.periodoActual,
+            _alumno: $rootScope.ALUMNO._id
+          }
+        }).then(function(data) {
+          $scope.matricula = data[0];
+          console.log('matricula scope');
+          console.log($scope.matricula);
+
+          if ($scope.matricula) {
+
+            switch ($scope.matricula.estado) {
+              case 'Proceso':
+                console.log('Matricula en proceso');
+                $state.go('app.matriculainscripcion');
+                break;
+              case 'Prematricula':
+                console.log('Matricula en prematricula');
+                $state.go('app.matricularevisionlast');
+                break;
+              case 'Matriculado':
+                console.log('Con matricula matriculada');
+                $state.go('app.matriculaingresantelast');
+                break;
+            }
+          } else {
             if ($scope.periodoIngresante === $scope.periodoActual) {
-              $state.go('app.matriculainscripcion');
+              //Es ingresante y no hay matrocula, grabar matricula
+              new Save();
               console.log('son iguales');
             } else {
               $state.go('app.matricularevision');
-              console.log('son diferentes');
-            }
-        }else{
-           $state.go('app');
-        }*/
-      };
-
-      var LastPeriodo = function() {
-      //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
-        var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
-        var f = new Date();
-        var servicePeriodo = Restangular.all('periodos/lastPeriodo');
-        servicePeriodo.getList().then(function(result) {
-          $scope.periodoActual = result[0]._id;
-         // $scope.nombreperiodo = result[0].nombre;
-          console.log(result);
-          console.log($scope.nombreperiodo);
-          angular.forEach(result[0].procesos, function(item) {
-            if (item._proceso === idMatriculaProceso) {
-              $scope.process = true;
-              var fechaInicio = new Date(item.fechaInicio);
-              var fechaFin = new Date(item.fechaFin);
-              if (fechaInicio <= f && f <= fechaFin) {
-                $scope.showmenu = true;
-                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
-                   $scope.aproved = true;
-                }else{
-                   $scope.aproved = false;
-                }
-              } else {
-                $scope.showmenu = false;
-                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
-                   $scope.aproved = true;
-                }else{
-                   $scope.aproved = false;
-                   $state.go('app.alumnomisdatos');
-                }
-              }
-           }else {
-             if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento){
-                 $scope.aproved = true;
-            }else{
-                 $scope.aproved = false;
-                  $state.go('app.alumnomisdatos');
             }
           }
-          });
         });
       };
 
