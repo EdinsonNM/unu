@@ -53,25 +53,17 @@ class CompromisoPagoIngresante{
     });
     return defer.promise;
   }
-  generarIngresantes(next){
+  generarIngresantes(ingresantes,next){
+    var defer = Q.defer();
     var self = this;
-    Ingresante.find({
-      estado:'Aprobado',
-      _periodo:this.periodo
-    })
-    .populate('modalidad')
-    .populate('_persona')
-    .exec(function(err,ingresantes){
-      if(err) return next(err);
-      var promises = [];
-      ingresantes.forEach(function(ingresante,index){
-        promises.push(self.generarIngresante(ingresante));
-      });
-      Q.all(promises).then(function(result){
-        next(null,result);
-      });
-
+    var promises=[];
+    ingresantes.forEach(function(ingresante,index){
+      promises.push(self.generarIngresante(ingresante));
     });
+    Q.all(promises).then(function(result){
+      defer.resolve(result);
+    });
+    return defer.promise;
   }
 
   ObtenerTasas(){
@@ -100,19 +92,18 @@ class CompromisoPagoIngresante{
     });
     return defer.promise;
   }
-  generarCompromisoTodos(periodo,escuela,next){
+  generarCompromisoIngresantes(periodo,ingresantes,next){
     var self = this;
-    this.escuela = escuela;
     this.periodo = periodo;
 
     Q
-    .fcall(self.ObtenerTasas)
-    .then(self.ObtenerProcesoPeriodo)
+    .fcall(self.ObtenerTasas.bind(this))
+    .then(self.ObtenerProcesoPeriodo.bind(this))
+    .then(self.generarIngresantes.bind(this,ingresantes))
     .then(function(result){
-      self.tasas = result.tasas;
-      self.proceso = result.proceso;
-      self.generarIngresantes(next);
-    });
+      return next(null,result);
+    })
+    .done();
   }
   generarCompromisoIngresante(ingresante,next){
     let self = this;

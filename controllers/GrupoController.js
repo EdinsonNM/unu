@@ -37,8 +37,7 @@ module.exports=function(){
               flex:'33',
               children:[
                 {title:'Ingresantes',icon:'',url:'app.ingresantes',order:1},
-                {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:2},
-                {title:'Pagos Ingresantes',icon:'',url:'app.pagosingresantes',order:3}
+                {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:2}
               ],
               style:{
                 color: 'white',
@@ -102,7 +101,8 @@ module.exports=function(){
                 {title:'Parametros y Procesos por Periodo',icon:'',url:'app.paramprocesosperiodo',order:4},
                 {title:'Parametros y Procesos por Escuela',icon:'',url:'app.paramprocesosescuela',order:5},
                 {title:'Generación de ficha de matrícula',icon:'',url:'app.',order:6},
-                {title:'Ficha de matrícula individual',icon:'',url:'app.',order:7}
+                {title:'Ficha de matrícula individual',icon:'',url:'app.s',order:7},
+                {title:'Compromiso de Pagos',icon:'',url:'app.compromisopagos',order:7}
               ],
               style:{
                 color: 'white',
@@ -110,36 +110,6 @@ module.exports=function(){
                 bgColorHead:'bgc-teal-500',
                 image:'bghome-2.jpg'
               }
-            },
-            {
-              order:5,
-              title: 'Matrícula Test',
-              description:'Inicia el proceso de matrícula de cada alumno',
-              url:'',
-              flex:33,
-              children:[{
-                title:'Matricula',
-                icon:'',
-                url:'app.matricula',
-                order:1
-              },{
-                title:'Matrícula Revisión',
-                icon:'',
-                url:'app.matricularevision',
-                order:2
-              },{
-                title:'Matrícula Cursos',
-                icon:'',
-                url:'app.matriculacursos',
-                order:3
-              }],
-              style:{
-                color: 'white',
-                bgColor:'bgc-white',
-                bgColorHead:'bgc-teal-500',
-                image:'bghome-2.jpg'
-              }
-
             }
 
           ];

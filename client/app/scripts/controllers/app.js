@@ -11,7 +11,6 @@
    */
   angular.module('unuApp')
     .controller('AppCtrl', ['DataResolve', '$scope', 'UserFactory', '$rootScope', '$mdSidenav', '$log', '$state', 'Restangular', 'TYPE_GROUP', function(DataResolve, $scope, UserFactory, $rootScope, $mdSidenav, $log, $state, Restangular, TYPE_GROUP) {
-
       $scope.UI = {
         access: false,
         refMatricula: '',

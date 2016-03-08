@@ -98,11 +98,18 @@ module.exports = function() {
               _escuela: request.body._escuela,
               estado: 'Registrado'
             };
-            model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
-              // numAffected is the number of updated documents
-              if(err) return response.status(500).send({message:err});
-              response.status(200).send('Hola');
+            model.find(query).populate('_persona').exec(function(err,ingresantes){
+                if(err) return response.status(500).send({message:'Error intenro del servidor',detail:err});
+                model.update(query, { $set: { estado: 'Aprobado' }}, {multi: true}, function (err, numAffected) {
+                  if(err) return response.status(500).send({message:'Error intenro del servidor',detail:err});
+                  compromiso.generarCompromisoIngresantes(query._periodo,ingresantes,function(err,data){
+                    if(err) return response.status(err.status).send(err);
+                    return response.status(201).send(data);
+                  });
+                });
+
             });
+
           }
         });
 
