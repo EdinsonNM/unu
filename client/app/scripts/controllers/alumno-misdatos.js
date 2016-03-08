@@ -12,8 +12,8 @@
       function($scope, Restangular, $rootScope, $timeout, ToastMD, MessageFactory, $mdBottomSheet, $state) {
 
         var LOCAL = {
-          route: 'alumnos',
-          route1: 'personas'
+          routeAlumno: 'alumnos',
+          routePersona: 'personas'
         };
         $scope.editable = false;
         $scope.Buttons = MessageFactory.Buttons;
@@ -25,18 +25,23 @@
 
         $scope.model = {};
 
-        $rootScope.$watch('ALUMNO._persona', function(newValue, oldValue) {
+        $rootScope.$watch('ALUMNO', function(newValue, oldValue) {
           $scope.model = Restangular.copy(newValue);
-          $scope.model.apellidos = $scope.model.apellidoPaterno + ' ' + $scope.model.apellidoMaterno;
-          $scope.model.fechaNacimiento = new Date($scope.model.fechaNacimiento);
+          $scope.model.apellidos = $scope.model._persona.apellidoPaterno + ' ' + $scope.model._persona.apellidoMaterno;
+          if($scope.model._persona.fechaNacimiento ){
+            $scope.model._persona.fechaNacimiento = new Date($scope.model._persona.fechaNacimiento);
+          }
         }, true);
 
-        var service = Restangular.all(LOCAL.route1);
+        var serviceAlumno = Restangular.all(LOCAL.routeAlumno);
+        var servicePersona = Restangular.all(LOCAL.routePersona);
 
-        service.customGET('model/sexo', {}).then(function(result) {
+        servicePersona.customGET('model/sexo', {}).then(function(result) {
           $scope.sexo = result; //sexo = result;
         });
-
+        serviceAlumno.customGET('model/estadoCivil', {}).then(function(result) {
+          $scope.estadoscivil = result; //sexo = result;
+        });
         $scope.Edit = function Edit($event) {
           $scope.UI.editMode = true;
           $scope.editable = true;
@@ -45,8 +50,12 @@
         };
 
         $scope.Save = function Save($event) {
-           $scope.model.route = 'personas';
+          $scope.model.route = 'alumnos';
           $scope.UI.editMode = false;
+          $scope.model.email = $scope.model.email||'';
+          $scope.model._persona.documento = $scope.model._persona.documento||'';
+          $scope.model.telefono = $scope.model.telefono||'';
+          $scope.model.direccion = $scope.model.direccion||'';
           $scope.model.put().then(function(result) {
             $scope.editable = false;
             ToastMD.success(MessageFactory.Form.Updated);

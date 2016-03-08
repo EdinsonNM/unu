@@ -11,6 +11,18 @@ var AlumnoSchema = new Schema({
         type: String,
         enum: ['Soltero(a)', 'Casado(a)', 'Viudo(a)', 'Divorciado(a)', 'Conviviente', 'Separado(a)']
     },
+    telefono: {
+      type: String
+      //,required: true
+    },
+    direccion: {
+      type: String
+      //,required: true
+    },
+    email: {
+      type: String
+      //,required: true
+    },
     educacionGratuita:{
       type:Boolean,
       default:true
@@ -50,10 +62,6 @@ var AlumnoSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'SituacionAlumno'
     },
-    _avanceCurricular: {
-        type: Schema.Types.ObjectId,
-        ref: 'AvanceCurricular'
-    },
     //NOTE es la modalidad de ingreso a la universidad
     _modalidadIngreso: {
         type: Schema.Types.ObjectId,
@@ -81,12 +89,13 @@ var AlumnoSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'SituacionAlumno'
         }
-      }],
-      avanceCurricular: [{
-          type: Schema.Types.ObjectId,
-          ref: 'AvanceCurricular'
       }]
     },
+    _avanceCurricular: [{
+        type: Schema.Types.ObjectId,
+        ref: 'AvanceCurricular',
+        default:null
+    }],
     createdAt: Date,
     updatedAt: Date
 

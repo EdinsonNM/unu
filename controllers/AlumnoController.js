@@ -190,6 +190,20 @@ module.exports = function() {
         );
       });
 
+      controller.request('put', function (request, response, next) {
+        Persona.findOneAndUpdate(
+            { "_id": request.body._persona._id},
+            {
+                "$set": request.body._persona
+            },
+            function(err,doc) {
+              if(err) return response.status(500).send(err);
+              next();
+            }
+        );
+
+      });
+
     }
   };
 };
