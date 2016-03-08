@@ -116,6 +116,15 @@
         getMatricula();
       });
 
+      $scope.FinalizarMatricula = function(){
+        var serviceCompromisoPago = Restangular.all('compromisopagos');
+        if(matricula && matricula._id){
+          serviceCompromisoPago.customPOST({}, 'methods/generar/matricula/' + matricula._id).then(function(){
+            ToastMD.success('Se finalizó su proceso de matrícula');
+          });
+        }
+      };
+
     })
 
   /**
