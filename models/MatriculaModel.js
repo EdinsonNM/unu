@@ -25,8 +25,7 @@ var MatriculaSchema = new Schema({
    },
    _detalleMatricula: [{
       type: Schema.Types.ObjectId,
-      ref: 'DetalleMatricula',
-      required: true
+      ref: 'DetalleMatricula'
    }],
    totalCursos: Number,
    totalCreditos: Number,

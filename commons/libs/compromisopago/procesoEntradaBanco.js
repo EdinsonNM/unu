@@ -13,6 +13,10 @@ var situacionalumno = require('../../../models/SituacionAlumnoModel.js'); //mode
 var escuelas = require('../../../models/EscuelaModel.js'); //model de Escuela
 var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
 
+var Matricula = require('../../../models/MatriculaModel.js'); //model de Alumno
+var FichaMatricula = require('../../../models/FichaMatriculaModel.js'); //model de Alumno
+
+
 var fs = require('fs'); //permite escribir y leer en disco
 var lockFile = require('lockfile');
 var Q = require('q');
@@ -59,7 +63,7 @@ var crearAlumno = function crearAlumno(ingresante,next){
           estadoCivil : 'Soltero(a)',
           _persona : objIngresante._persona,
           _ingresante : objIngresante._id,
-          _periodoInicio : objPlanEstudioVigente._periodo._id,
+          _periodoInicio : objIngresante._periodo._id,
           _facultad : objIngresante._facultad,
           _escuela : objIngresante._escuela,
           _tipoCondicionAlumno : tipocondicion._id,
@@ -98,6 +102,7 @@ var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
       avancecurricular.activo = true;
       avancecurricular.createdAt = new Date();
 
+
       for (var i = 0; i < listaDetallesPlan.length; i++) {
         itemDetalle = {};
         itemDetalle._planEstudiosDetalle = listaDetallesPlan[i]._id;
@@ -108,23 +113,64 @@ var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
       avancecurricular.detalleAvance = listaDetalles;
       avancecurricular.save(function(err,avance){
         if(err) return next(err);
+        dataAlumno.avance = avance;
+        dataAlumno.detalleAvance = listaDetalles;
         dataAlumno.alumno._avanceCurricular.push(avance._id);
         dataAlumno.alumno.save(function(err,alumno){
           if(err) return next(err);
-          return next(null,alumno);
+          return next(null,dataAlumno);
         });
       });
     });
 
 };
+var crearMatricula = function(dataAlumno,next){
+  var itemDetalle = {};
+  var matricula = new Matricula();
+  matricula._alumno = dataAlumno.alumno._id;
+  matricula._planEstudio = dataAlumno.planestudio._id;
+  matricula._periodo = dataAlumno.alumno._periodoInicio;
+  matricula._escuela = dataAlumno.alumno._escuela;
+  matricula.save(function(err,data){
+    if(err) return next(err);
+    return next(null,dataAlumno);
+  });
 
+};
+var crearFichaMatricula = function(dataAlumno,next){
+  var itemDetalle = {};
+  var fichaMatricula = new FichaMatricula();
+  fichaMatricula._alumno = dataAlumno.alumno._id;
+  fichaMatricula._periodo = dataAlumno.alumno._periodoInicio;
+  fichaMatricula._escuela = dataAlumno.alumno._escuela;
+  fichaMatricula._condicionAlumno = dataAlumno.alumno._tipoCondicionAlumno;
+  fichaMatricula.save(function(err,ficha){
+    if(err) return next(err);
+    for (var i = 0; i < dataAlumno.detalleAvance.length; i++) {
+      if(dataAlumno.detalleAvance[i].ciclo===1){
+        data._detalles.push({_fichaMatricula:data._id,_planEstudiosDetalle:dataAlumno.detalleAvance[i]._id,numeroVeces:0});
+      }
+    }
+    ficha.save(function(err,data){
+      if(err) return next(err);
+      return next(null,dataAlumno);
+    });
+  });
+
+};
 var procesarIngresante = function(ingresante){
   var defer = Q.defer();
   crearAlumno(ingresante,function(err,dataAlumno){
     if(err) return defer.reject(err);
-    crearAvanceCurricular(dataAlumno,function(err,avance){
+    crearAvanceCurricular(dataAlumno,function(err,result){
       if(err) return defer.reject(err);
-      return defer.resolve(avance);
+      crearMatricula(dataAlumno,function(err,result){
+        if(err) return defer.reject(err);
+        crearFichaMatricula(dataAlumno,function(err,result){
+          if(err) return defer.reject(err);
+          return defer.resolve(result.alumno);
+        });
+      });
     });
   });
   return defer.promise;
