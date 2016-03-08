@@ -256,6 +256,7 @@ class CompromisoPagoAlumno{
     }
   }
 
+
   generar(next){
     var self = this;
     Q
@@ -288,9 +289,14 @@ class CompromisoPagoAlumno{
         _persona:self.matricula._alumno._persona,
         _tasa:tasa._id
       });
-      compromisopago.save(function(err,compromiso){
-        return next(null,compromiso);
+      self.matricula.estado="Prematriculado";
+      self.matricula.save(function(err,data){
+        if(err) return next(err);
+        compromisopago.save(function(err,compromiso){
+          return next(null,compromiso);
+        });
       });
+
     });
   }
 }

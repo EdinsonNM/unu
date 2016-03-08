@@ -9,7 +9,7 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content class="window-modal-content-sm">
+    <md-dialog-content class="window-modal-content-sm  md-padding">
       <div flex layout="row" layout-sm="row" ng-hide="allowEditSelection">
         <div flex>
           <md-input-container class="md-block">
@@ -121,17 +121,12 @@
         </div>
       </div>
 
-      <div flex layout="row" layout-sm="column" ng-show="allowUserSelection">
-        <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-          <!--md-checkbox ng-model="model.activo">
-            Activo
-        </md-checkbox-->
-        </div>
-        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
-          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-        </div>
-      </div>
+
     </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </md-dialog-actions>
   </form>
 </md-dialog>

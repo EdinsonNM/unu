@@ -1,7 +1,7 @@
 var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
-var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
+//var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -19,7 +19,7 @@ module.exports=function(){
         });
       });
 
-      controller.post('/methods/generar/:tipo',function(req,res){
+      /*controller.post('/methods/generar/:tipo',function(req,res){
         var periodo = req.body._periodo;
         var tipo = req.params.tipo;
         var compromiso = new CompromisoPago(periodo,tipo);
@@ -28,7 +28,7 @@ module.exports=function(){
           return res.status(201).send(data);
         });
 
-      });
+      });*/
 
       controller.get('/methods/deudas', function(req, res) {
         var limit = parseInt(req.query.count);

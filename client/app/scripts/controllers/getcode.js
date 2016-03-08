@@ -14,7 +14,7 @@
     function($scope, Restangular, $rootScope) {
         $scope.model = {};
         var service = Restangular.all("alumnos");
-        service.customPOST('getCode', {email: model.email}).then(function(result) {
+        service.customPOST('getCode', {email: $scope.model.email}).then(function(result) {
             console.log(result);
         });
     }

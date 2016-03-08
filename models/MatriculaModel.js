@@ -31,8 +31,9 @@ var MatriculaSchema = new Schema({
     totalCursos:Number,
     totalCreditos:Number,
     estado: {
-        type: Boolean,
-      default: false
+      type: String,
+      enum:["Proceso",'Prematriculado','Matriculado'],
+      default: "Proceso"
     },
     createdAt: Date,
     updatedAt: Date
