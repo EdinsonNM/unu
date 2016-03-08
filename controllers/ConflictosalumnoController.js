@@ -1,4 +1,4 @@
-var model = require('../models/ConflictosalumnoModel.js');
+var model = require('../models/ConflictosAlumnoModel.js');
 module.exports=function(){
   var baucis=require('baucis');
   return{

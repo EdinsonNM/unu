@@ -2,6 +2,7 @@ var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
 var path = require('path');
+var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno');
 //var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
 module.exports=function(){
   var baucis=require('baucis');
@@ -73,6 +74,10 @@ module.exports=function(){
       controller.post('/methods/generar/matricula/:id',function(req,res){
         var matriculaId = req.params.id;
         var compromiso = new CompromisoPagoAlumno(matriculaId);
+        compromiso.generar(matriculaId,function(err,data){
+            if(err) return res.status(500).send({message:'Ocurrion un error interno del servidor',detail:err});
+            return res.status(201).send(data);
+        });
 
       });
 
