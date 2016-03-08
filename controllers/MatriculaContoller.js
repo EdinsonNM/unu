@@ -46,9 +46,6 @@ module.exports = function() {
        		filter,
        		{
             limit: 1,
-            sort:{
-              $natural: -1
-            },
             populate: [{
               path: '_detalleMatricula',
               model: 'DetalleMatricula',
