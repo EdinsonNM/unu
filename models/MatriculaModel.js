@@ -31,7 +31,7 @@ var MatriculaSchema = new Schema({
    totalCreditos: Number,
    estado: {
       type: String,
-      enum: ['Proceso', 'Prematricula', 'Matriculado'],
+      enum: ['Proceso', 'Prematricula','Inactivo','Matriculado','Liberado'],
       default: 'Proceso'
    },
    /*estado:{

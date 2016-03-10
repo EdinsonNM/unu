@@ -76,6 +76,10 @@ var CompromisopagoSchema = new Schema({
       type:Schema.Types.ObjectId,
       ref:'Tasa',
       required:true
+    },
+    esActivo:{
+      type:Boolean,
+      default:true
     }
 });
 

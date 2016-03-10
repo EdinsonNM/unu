@@ -15,7 +15,19 @@ var DetalleMatriculaSchema = new Schema({
     },
     orden:Number,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    /*
+    *Proceso: Se agrego el detalle en el sistema pero aun no se ha generado la pre-matricula
+    *Separado: Se registro la prematricula y el compromiso de pago aun se encuentra vigente
+    *Registrado: Se ha confirmado la matricula cuando se realizo el pago del compromiso del pago
+    *Liberado: no se realizo el pago de la prematricula y vencio la fecha del compromiso de pago
+    *SinCupo: En proceso pero sin cupo disponible
+    */
+    estado:{
+      type:'String',
+      enum:['Proceso','Separado','Registrado','Liberado','SinCupo'],
+      default:'Proceso'
+    }
 });
 DetalleMatriculaSchema.plugin(mongoosePaginate);
 DetalleMatriculaSchema.plugin(uniqueValidator);

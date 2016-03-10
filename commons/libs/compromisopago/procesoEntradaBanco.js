@@ -125,6 +125,7 @@ var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
     });
 
 };
+
 var crearMatricula = function(dataAlumno,next){
   var itemDetalle = {};
   var matricula = new Matricula();
@@ -138,6 +139,7 @@ var crearMatricula = function(dataAlumno,next){
   });
 
 };
+
 var crearFichaMatricula = function(dataAlumno,next){
   var itemDetalle = {};
   var fichaMatricula = new FichaMatricula();
@@ -145,14 +147,20 @@ var crearFichaMatricula = function(dataAlumno,next){
   fichaMatricula._periodo = dataAlumno.alumno._periodoInicio;
   fichaMatricula._escuela = dataAlumno.alumno._escuela;
   fichaMatricula._condicionAlumno = dataAlumno.alumno._tipoCondicionAlumno;
+  fichaMatricula.creditos.maximo.creditosmatricula = 0;
+  fichaMatricula.creditos.maximo.cursosmatricula = 0;
   fichaMatricula.save(function(err,ficha){
     if(err) return next(err);
     var detalles = [];
     for (var i = 0; i < dataAlumno.detalleAvance.length; i++) {
       if(dataAlumno.detalleAvance[i].ciclo===1){
+        console.log(dataAlumno.detalleAvance[i].ciclo);
         var detalle = new FichaMatriculaDetalle({_fichaMatricula:ficha._id,_planEstudiosDetalle:dataAlumno.detalleAvance[i]._id,numeroVeces:0});
         detalles.push(detalle);
         ficha._detalles.push(detalle);
+        ficha.creditos.maximo.creditosmatricula += dataAlumno.detalleAvance[i].creditos;
+        ficha.creditos.maximo.cursosmatricula += 1;
+
       }
     }
     FichaMatriculaDetalle.create(detalles,function(err,data){
@@ -167,6 +175,7 @@ var crearFichaMatricula = function(dataAlumno,next){
   });
 
 };
+
 var procesarIngresante = function(ingresante){
   var defer = Q.defer();
   crearAlumno(ingresante,function(err,dataAlumno){
@@ -263,6 +272,7 @@ var procesarPago = function procesarPago(item,index){
   //proceso de actualización de pagos
   return defer.promise;
 };
+
 module.exports  = function(filename,next){
   if ( !filename || typeof filename != 'string' ) next("filename (string) is required.");
   var pathFile = filename;
@@ -335,6 +345,7 @@ module.exports  = function(filename,next){
             x=x.then(procesarPago.bind(this,item));
           });
           x.then(function(){
+            lockFile.unlockSync(pathLockFile);
             console.log('finalizo..');
           }).done();
 

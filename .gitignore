@@ -3,3 +3,4 @@
 /client/npm-debug.log
 npm-debug.log
 /commons/data/*
+/jobs/node_modules
