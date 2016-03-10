@@ -57,7 +57,7 @@
         $scope.periodoActual = response[0]._id;
       });
       getFichaMatricula = function() {
-        if($scope.ALUMNO._periodoInicio === $scope.periodoActual){
+        /*if($scope.ALUMNO._periodoInicio === $scope.periodoActual){
           serviceCursoAperturadoPeriodo = Restangular.all('cursoaperturadoperiodos');
           filter = {
             _alumno: $scope.ALUMNO._id,
@@ -76,7 +76,16 @@
           serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
             fichamatricula = response;
           });
-        }
+        }*/
+
+        serviceFichaMatricula = Restangular.all('fichamatriculas');
+        filter = {
+          _alumno: $scope.ALUMNO._id,
+          _periodo: $scope.periodo._id
+        };
+        serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
+          fichamatricula = response;
+        });
       };
       getMatricula = function(){
         serviceMatricula = Restangular.all('matriculas');
@@ -159,7 +168,11 @@
 
     var creditosaceptados;
     if(fichamatricula){
-      creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
+      if(!fichamatricula.creditos){
+        creditosaceptados = 100;
+      }else{
+        creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
+      }
     }else if(fichamatriculaIngresante){
       creditosaceptados = fichamatriculaIngresante.creditos.maximo.creditosmatricula;
     }
