@@ -59,7 +59,7 @@ module.exports=function(){
               }
             }])
           .exec(function(err,aperturados){
-            if(err || !aperturados) return res.status(500).send('No se encontraron Cursos Aperturados');
+            if(err || !aperturados.length) return res.status(500).send('No se encontraron Cursos Aperturados');
             var count;
             aperturados.forEach(function(aperturado){
               if(aperturado._planestudiodetalle){

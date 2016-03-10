@@ -130,6 +130,52 @@ module.exports=function(){
         );
       });
 
+      controller.get('/methods/listacursosingresante', function(req, res) {
+        var _alumno = req.query._alumno;
+        var _periodo = req.query._periodo;
+        var _escuela = req.query._escuela;
+        model.find({_periodo : _periodo})
+        .populate(
+          [{
+            path:'_grupos',
+            populate: {
+              path: '_seccion',
+              model: 'Seccion'
+            }
+          },{
+            path: '_planestudiodetalle',
+            populate: [{
+              path: '_curso',
+              model: 'Curso'
+            },{
+              path: '_planestudio',
+              model: 'Planestudio'
+            }]
+          }]
+        )
+        .exec(function(err, aperturados){
+          if(err || !aperturados.length) return res.status(500).send('No se encontraron Cursos Aperturados');
+          var fichaMatricula = {
+            creditos: {
+              maximo : {
+                creditosmatricula: 0
+              }
+            },
+            _periodo: _periodo,
+            _alumno: _alumno,
+            _escuela: _escuela,
+            cursos: []
+          };
+          aperturados.forEach(function(aperturado){
+            if((aperturado._planestudiodetalle.ciclo == '01' || aperturado._planestudiodetalle.ciclo == '1') && aperturado._grupos.length>0 && aperturado._planestudiodetalle._planestudio._escuela == _escuela){
+              fichaMatricula.creditos.maximo.creditosmatricula+= aperturado._planestudiodetalle.creditos;
+              fichaMatricula.cursos.push(aperturado);
+            }
+          });
+          return res.status(200).send(fichaMatricula);
+        });
+      });
+
     }
   };
 };

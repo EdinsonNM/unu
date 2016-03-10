@@ -206,6 +206,10 @@
               //Es ingresante y no hay matrocula, grabar matricula
               new Save();
               console.log('son iguales');
+              /**
+               * quitar comentario para testear ingresante
+               */
+              //$state.go('app.matricularevision');
             } else {
               $state.go('app.matricularevision');
             }

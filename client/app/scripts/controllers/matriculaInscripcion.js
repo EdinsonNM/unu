@@ -48,7 +48,7 @@
         form: 'views/matricula/inscripcion-form.html',
         route: 'facultades'
       };
-      var serviceFichaMatricula, serviceMatricula, fichamatricula, matricula;
+      var serviceFichaMatricula, serviceCursoAperturadoPeriodo, fichamatricula, filter, fichamatriculaIngresante, serviceMatricula, matricula;
 
       var servicePeriodos = Restangular.all('periodos');
       servicePeriodos.customGET('lastPeriodo').then(function(response) {
@@ -57,14 +57,26 @@
         $scope.periodoActual = response[0]._id;
       });
       getFichaMatricula = function() {
-        serviceFichaMatricula = Restangular.all('fichamatriculas');
-        var filter = {
-          _alumno: $scope.ALUMNO._id,
-          _periodo: $scope.periodo._id
-        };
-        serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
-          fichamatricula = response;
-        });
+        if($scope.ALUMNO._periodoInicio === $scope.periodoActual){
+          serviceCursoAperturadoPeriodo = Restangular.all('cursoaperturadoperiodos');
+          filter = {
+            _alumno: $scope.ALUMNO._id,
+            _periodo: $scope.periodo._id,
+            _escuela: $scope.ALUMNO._escuela._id
+          };
+          serviceCursoAperturadoPeriodo.customGET('methods/listacursosingresante', filter).then(function(response) {
+            fichamatriculaIngresante = response;
+          });
+        }else{
+          serviceFichaMatricula = Restangular.all('fichamatriculas');
+          filter = {
+            _alumno: $scope.ALUMNO._id,
+            _periodo: $scope.periodo._id
+          };
+          serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
+            fichamatricula = response;
+          });
+        }
       };
       getMatricula = function(){
         serviceMatricula = Restangular.all('matriculas');
@@ -96,6 +108,7 @@
           locals: {
             nameform: LOCAL.nameform,
             fichamatricula: fichamatricula,
+            fichamatriculaIngresante: fichamatriculaIngresante,
             matricula: matricula
           },
           controller: 'InscripcionNewCtrl',
@@ -140,10 +153,16 @@
     ToastMD,
     $rootScope,
     fichamatricula,
+    fichamatriculaIngresante,
     matricula
   ) {
 
-    var creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
+    var creditosaceptados;
+    if(fichamatricula){
+      creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
+    }else if(fichamatriculaIngresante){
+      creditosaceptados = fichamatriculaIngresante.creditos.maximo.creditosmatricula;
+    }
     var creditosactuales = 0;
     angular.forEach(matricula._detalleMatricula, function(detalle){
       creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
@@ -152,7 +171,7 @@
     /**
      * initial params
      */
-    var serviceFichaMatricula, serviceDetalleMatricula;
+    var serviceFichaMatricula, serviceDetalleMatricula, serviceCursoAperturadoPeriodo;
     $scope.includeActive = false;
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}', name);
@@ -166,28 +185,50 @@
 
     serviceDetalleMatricula = Restangular.all('detallematriculas');
     serviceFichaMatricula = Restangular.all('fichamatriculas');
+    serviceCursoAperturadoPeriodo = Restangular.all('cursoaperturadoperiodos');
 
     /**
      * initialize
      */
     var ListaCursosGrupos = function(){
       serviceFichaMatricula = Restangular.all('fichamatriculas');
-      var filter = {
-        _periodo: fichamatricula._periodo,
-        _alumno: fichamatricula._alumno
-      };
-      serviceFichaMatricula.customGET('methods/fichamatricula', filter).then(function(response) {
-        angular.forEach(response, function(item) {
-          angular.forEach(item._grupos, function(grupo){
-            angular.forEach(matricula._detalleMatricula, function(curso) {
-              if (grupo._id === curso._grupoCurso._id) {
-                grupo.active = true;
-              }
+      var filter = {};
+      if(fichamatricula){
+        filter = {
+          _periodo: fichamatricula._periodo,
+          _alumno: fichamatricula._alumno,
+        };
+        serviceFichaMatricula.customGET('methods/fichamatricula', filter).then(function(response) {
+          angular.forEach(response, function(item) {
+            angular.forEach(item._grupos, function(grupo){
+              angular.forEach(matricula._detalleMatricula, function(curso) {
+                if (grupo._id === curso._grupoCurso._id) {
+                  grupo.active = true;
+                }
+              });
             });
           });
+          $scope.cursoshabilitados = response;
         });
-        $scope.cursoshabilitados = response;
-      });
+      }else if(fichamatriculaIngresante){
+        filter = {
+          _periodo: fichamatriculaIngresante._periodo,
+          _alumno: fichamatriculaIngresante._alumno,
+          _escuela: fichamatriculaIngresante._escuela
+        };
+        serviceCursoAperturadoPeriodo.customGET('methods/listacursosingresante', filter).then(function(response) {
+          angular.forEach(response.cursos, function(item) {
+            angular.forEach(item._grupos, function(grupo){
+              angular.forEach(matricula._detalleMatricula, function(curso) {
+                if (grupo._id === curso._grupoCurso._id) {
+                  grupo.active = true;
+                }
+              });
+            });
+          });
+          $scope.cursoshabilitados = response.cursos;
+        });
+      }
     };
     ListaCursosGrupos();
 
