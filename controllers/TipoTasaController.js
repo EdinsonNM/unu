@@ -1,4 +1,4 @@
-var model = require('../models/TipotasaModel.js');
+var model = require('../models/TipoTasaModel.js');
 module.exports=function(){
   var baucis=require('baucis');
   return{

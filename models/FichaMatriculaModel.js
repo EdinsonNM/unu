@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
+var FichaMatriculaDetalle = require('./FichaMatriculaModel');
 var FichaMatriculaSchema = new Schema({
   _alumno:{
     type:Schema.Types.ObjectId,

@@ -15,6 +15,7 @@ var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js');
 
 var Matricula = require('../../../models/MatriculaModel.js'); //model de Alumno
 var FichaMatricula = require('../../../models/FichaMatriculaModel.js'); //model de Alumno
+var FichaMatriculaDetalle = require('../../../models/FichaMatriculaDetalleModel.js'); //model de Alumno
 
 
 var fs = require('fs'); //permite escribir y leer en disco
@@ -114,7 +115,7 @@ var crearAvanceCurricular = function crearAvanceCurricular(dataAlumno,next){
       avancecurricular.save(function(err,avance){
         if(err) return next(err);
         dataAlumno.avance = avance;
-        dataAlumno.detalleAvance = listaDetalles;
+        dataAlumno.detalleAvance = listaDetallesPlan;
         dataAlumno.alumno._avanceCurricular.push(avance._id);
         dataAlumno.alumno.save(function(err,alumno){
           if(err) return next(err);
@@ -146,15 +147,23 @@ var crearFichaMatricula = function(dataAlumno,next){
   fichaMatricula._condicionAlumno = dataAlumno.alumno._tipoCondicionAlumno;
   fichaMatricula.save(function(err,ficha){
     if(err) return next(err);
+    var detalles = [];
     for (var i = 0; i < dataAlumno.detalleAvance.length; i++) {
       if(dataAlumno.detalleAvance[i].ciclo===1){
-        data._detalles.push({_fichaMatricula:data._id,_planEstudiosDetalle:dataAlumno.detalleAvance[i]._id,numeroVeces:0});
+        var detalle = new FichaMatriculaDetalle({_fichaMatricula:ficha._id,_planEstudiosDetalle:dataAlumno.detalleAvance[i]._id,numeroVeces:0});
+        detalles.push(detalle);
+        ficha._detalles.push(detalle);
       }
     }
-    ficha.save(function(err,data){
+    FichaMatriculaDetalle.create(detalles,function(err,data){
+      console.log(err);
       if(err) return next(err);
-      return next(null,dataAlumno);
+      ficha.save(function(err,data){
+        if(err) return next(err);
+        return next(null,dataAlumno);
+      });
     });
+
   });
 
 };
