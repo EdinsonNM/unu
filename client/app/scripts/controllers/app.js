@@ -209,7 +209,7 @@
               /**
                * quitar comentario para testear ingresante
                */
-              //$state.go('app.matricularevision');
+              $state.go('app.matricularevision');
             } else {
               $state.go('app.matricularevision');
             }
