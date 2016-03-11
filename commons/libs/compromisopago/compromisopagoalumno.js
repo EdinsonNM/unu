@@ -9,22 +9,24 @@ var util = require('./compromisopago.utils');
 var FichaMatricula = require('../../../models/FichaMatriculaModel.js');
 var Q = require('q');
 var _ = require('underscore');
-
+var moment = require('moment');
 const TASA={
   PAGO_ORDINARIO:'01',
   SEGUNDA_CARRERA:'04',
   PENSION_SEMESTRE_SEGUNDA_CARRERA:'05',
   EXONERACION_MATRICULA:'06',
+  AVANCE_CURRICULAR:'07',
   OBSERVADO:'08',
   REZAGADO:'09',
   REINGRESANTE:'10',
+  DESAPROBADO_PROMEDIO_APROBADO:'11',
   PAGO_RECARGO_EXTEMPORANEO:'12',
   PAGO_REPETICION_CURSO:'13',
   PAGO_CARNET_UNIVERSITARIO:'14'
 };
 const PROCESO={
-  ORDINARIO:'09',
-  EXTRAORDINARIO:''
+  REGULAR:'09',
+  EXTEMPORANEO:'24'
 };
 const MODALIDAD_INGRESO={
   SEGUNDA_CARRERA:'01', //TODO Actualizar este codigo de acuerdo a la base de datos.
@@ -70,7 +72,7 @@ class CompromisoPagoAlumno{
   ObtenerMatricula(){
     var self = this;
     var defer = Q.defer();
-    Matricula.finOne({_id:self.matriculaId})
+    Matricula.findOne({_id:self.matriculaId})
     .populate([
       {
         path:'_alumno',
@@ -103,15 +105,15 @@ class CompromisoPagoAlumno{
       if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
       if(!matricula) return defer.reject({message:'Matricula no encontrada',detail:err,status:404});
       self.matricula = matricula;
-      return defer.resolve(null,matricula);
+      return defer.resolve(matricula);
     });
     return defer.promise;
   }
   ObtenerNumeroCursosRepetidos(matricula){
     var defer = Q.defer();
     var self = this;
-    FichaMatricula.findOne({_alumno:matricula._alumno,_periodo:matricula._periodo})
-    .populate([{path:'_detalles',model:'FichaMatriculaDetalle',populate:{path:'_planEstudiosDetalle',model:'Planestudiodetalle'}}])
+    FichaMatricula.findOne({_alumno:matricula._alumno._id,_periodo:matricula._periodo._id})
+    .populate([{path:'_detalles',populate:{path:'_planEstudiosDetalle',model:'Planestudiodetalle'}}])
     .exec(function(err,fichaMatricula){
       if(err) return defer.reject(err);
       self.fichamatricula = fichaMatricula;
@@ -128,6 +130,7 @@ class CompromisoPagoAlumno{
       defer.resolve(self.numeroCursosRepetidos);
 
     });
+    return defer.promise;
   }
   ObtenerTasas(){
     var self = this;
@@ -172,7 +175,7 @@ class CompromisoPagoAlumno{
   ObtenerDeudaMatriculaOrdinaria(){
     var self = this;
     let tasa={};
-    let modalidad = self.matricula._alumno._modalidadIngreso.codigo;
+    let modalidad = '99';//self.matricula._alumno._modalidadIngreso.codigo;
     switch (modalidad) {
       case MODALIDAD_INGRESO.VIOLENCIA_POLITICA:
       case MODALIDAD_INGRESO.COMUNIDAD_NATIVA:
@@ -226,6 +229,7 @@ class CompromisoPagoAlumno{
       case SITUACION.AMONESTADO: tasa = _.findWhere(self.tasas,{codigo:TASA.AMONESTADO}); break;
       case SITUACION.CON_SUSPENSION: tasa = _.findWhere(self.tasas,{codigo:TASA.CON_SUSPENSION}); break;
     case SITUACION.REINGRESANTE: tasa = _.findWhere(self.tasas,{codigo:TASA.REINGRESANTE}); break;  //TODO CONSULTAR LA LOGICA DE NEGOCIO Y COMPLETAR LA FUNCION DE SER NECESARIO.
+    default: return;
     }
     valorTasa = _.findWhere(tasa.historial,{activo:true});
     self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
@@ -245,7 +249,8 @@ class CompromisoPagoAlumno{
     //TODO implementar proceso de verificacion y agregar deuda si corresponde
     var self = this;
     let fechaHoy = new Date();
-    let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
+    let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.REGULAR});
+    return;
     let fechaDesde = procesoMatricula.fechaInicio;
     let fechaHasta = procesoMatricula.fechaFin;
     let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_RECARGO_EXTEMPORANEO});
@@ -256,25 +261,32 @@ class CompromisoPagoAlumno{
     }
   }
 
+
   generar(next){
     var self = this;
+    self.next = next;
     Q
-    .fcall(self.ObtenerTasas())
-    .then(self.ObtenerMatricula())
-    .then(self.ObtenerNumeroCursosRepetidos())
-    .then(self.ObtenerDeudaMatriculaOrdinaria())
-    .then(self.ObtenerDeudaCursosRepetidos())
-    .then(self.ObtenerDeudaCreditosMenorPermitido())
-    .then(self.ObtenerDeudaPerdidaGratuidad())
-    .then(self.ObtenerDeudaCarnetUniversitario())
-    .then(self.ObtenerRecargoExtemporanea())
+    .fcall(self.ObtenerTasas.bind(this))
+    .then(self.ObtenerMatricula.bind(this))
+    .then(self.ObtenerNumeroCursosRepetidos.bind(this))
+    .then(self.ObtenerDeudaMatriculaOrdinaria.bind(this))
+    .then(self.ObtenerDeudaCursosRepetidos.bind(this))
+    .then(self.ObtenerDeudaCreditosMenorPermitido.bind(this))
+    .then(self.ObtenerDeudaPerdidaGratuidad.bind(this))
+    .then(self.ObtenerDeudaCarnetUniversitario.bind(this))
+    //.then(self.ObtenerRecargoExtemporanea.bind(this))
     .then(function(){
+      console.log("Se agregaron todas las deudas...");
       //TODO this.deudas contiene todos los montos que se han añadido para la cobranza de la matricula
       //TODO se debe generar el compromiso de pago
-      var self = this;
-      var tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
-      let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:"09"});
-      let fechaVencimiento = procesoMatricula.fechaFin;
+
+      var tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
+
+      let procesoMatricula = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.REGULAR});
+      console.log('procesoMatricula');
+      let fechaVencimiento = moment().add(2, 'days');
+      console.log('fechaVencimiento',fechaVencimiento);
+      console.log('new compromiso',self.matricula);
       var compromisopago = new CompromisoPago({
         codigo:util.pad(self.matricula._alumno.codigo,10,'0'),
         pagado:false,
@@ -286,12 +298,21 @@ class CompromisoPagoAlumno{
         detallePago:[],
         _periodo: self.matricula._periodo._id,
         _persona:self.matricula._alumno._persona,
-        _tasa:tasa._id,
-        estado:'Activo',
+        _tasa:tasa._id
       });
-      compromisopago.save(function(err,compromiso){
-        return next(null,compromiso);
-      });
+      console.log('end compromiso');
+      console.log(compromisopago);
+      self.matricula.estado="Prematriculado";
+      self.matricula.save(function(err,data){
+        console.log(err);
+        if(err) return self.next(err);
+        compromisopago.save(function(err,compromiso){
+          if(err) return self.next(err);
+          console.log('se genero el compromiso');
+          return self.next(null,compromiso);
+        });
+      }).done();
+
     });
   }
 }
