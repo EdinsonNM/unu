@@ -198,22 +198,18 @@ var procesarIngresante = function(ingresante){
 
 var ProcesarAlumno = function(objCompromisoPago,next){
   try{
-    objCompromisoPago.estado = 'Activo';
-    objCompromisoPago.save(function(err,dataCompromisoPago){
+    AlumnoModel.findOne({codigo:objCompromisoPago.codigo},function(err,dataAlumno){
       if(err) return next(err);
-      AlumnoModel.findOne({codigo:dataCompromisoPago.codigo},function(err,dataAlumno){
+      if(!dataAlumno) return next({mesage:'No se encontró al Alumno de Código Universitario ' + dataCompromisoPago.codigo});
+      Matricula.findOne({_alumno:dataAlumno._id},function(err,dataMatricula){
         if(err) return next(err);
-        if(!dataAlumno) return next({mesage:'No se encontró al Alumno de Código Universitario ' + dataCompromisoPago.codigo});
-        Matricula.findOne({_alumno:dataAlumno._id},function(err,dataMatricula){
-          if(err) return next(err);
-          if(!dataMatricula) return next({message:'No se encontró Matrícula asociada al Alumno ' + dataCompromisoPago.codigo});
-          dataMatricula.estado = 'Matriculado';
-          dataMatricula.save(function(err,objMatricula){
+        if(!dataMatricula) return next({message:'No se encontró Matrícula asociada al Alumno ' + dataCompromisoPago.codigo});
+        dataMatricula.estado = 'Matriculado';
+        dataMatricula.save(function(err,objMatricula){
+        if(err) return next(err);
+          DetalleMatricula.update({_matricula:objMatricula._id},{$set:{estado:'Registrado'}},{multi: true},function(err,dataDetalle){
             if(err) return next(err);
-            DetalleMatricula.update({_matricula:objMatricula._id},{$set:{estado:'Registrado'}},{multi: true},function(err,dataDetalle){
-              if(err) return next(err);
-              return next(null, dataMatricula);
-            });
+            return next(null, dataMatricula);
           });
         });
       });
@@ -258,6 +254,7 @@ var procesarPago = function procesarPago(item,index){
   CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
     if(err) return defer.reject(err);
     if(!compromisopago) return defer.resolve({message:'No se encontro el compromiso'});
+    compromisopago.estado = 'Activo';
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
@@ -296,11 +293,7 @@ var procesarPago = function procesarPago(item,index){
             return defer.reject(result);
           });
       }
-
-
     });
-
-
   });
   //defer.resolve(true);
   //proceso de actualización de pagos
@@ -348,7 +341,7 @@ var LiberarMatriculaIndividual = function(codigoAlumno,next){
 var LiberarMatriculas = function(next){
   //COMPROMISOS DE PAGO NO CANCELADOS => SERAN PASADOS A ESTADO Anulado
   try{
-    CompromisoPago.update({pagado:false,fechavenc:{$lte:new Date()}},{$set:{estado:'Anulado'}},{multi:true},function(err, listaCompromisos){
+    CompromisoPago.update({pagado:false,estado:'Inactivo'},{$set:{estado:'Desestimado'}},{multi:true},function(err, listaCompromisos){
       if(err) return next(err);
       for (var i = 0; i < listaCompromisos.length; i++) {
         LiberarMatriculaIndividual(listaCompromisos[i].codigo, next);

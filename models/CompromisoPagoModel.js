@@ -77,9 +77,10 @@ var CompromisopagoSchema = new Schema({
       ref:'Tasa',
       required:true
     },
+    /*NOTE: El estado Desetimado signfica que al final del proceso de matricula será eliminado dado que fue un comprobante temporal*/
     estado:{
       type:String,
-      enum:['Activo','Inactivo','Anulado'],
+      enum:['Activo','Inactivo','Desestimado','Anulado'],
       default:'Activo'
     }
 });
@@ -94,8 +95,8 @@ CompromisopagoSchema.pre('save',function(next){
   var montoTotalPagado = 0, montoTotalMora = 0, totalDeuda = 0;
   totalDeuda = this.importe;
   for (var i = 0; i < this.detallePago.length; i++) {
-    montoTotalPagado = this.detallePago[i].montoPago;
-    montoTotalMora = this.detallePago[i].montoMora;
+    montoTotalPagado += this.detallePago[i].montoPago;
+    montoTotalMora += this.detallePago[i].montoMora;
   }
   this.moratotal = montoTotalMora;
   this.saldo = (totalDeuda - montoTotalPagado <= 0)?0:totalDeuda - montoTotalPagado;

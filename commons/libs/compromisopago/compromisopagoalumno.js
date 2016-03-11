@@ -286,7 +286,8 @@ class CompromisoPagoAlumno{
         detallePago:[],
         _periodo: self.matricula._periodo._id,
         _persona:self.matricula._alumno._persona,
-        _tasa:tasa._id
+        _tasa:tasa._id,
+        estado:'Activo',
       });
       compromisopago.save(function(err,compromiso){
         return next(null,compromiso);
