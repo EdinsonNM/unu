@@ -65,7 +65,7 @@ var AlumnoSchema = new Schema({
     //NOTE es la modalidad de ingreso a la universidad
     _modalidadIngreso: {
         type: Schema.Types.ObjectId,
-        ref: 'Periodo'
+        ref: 'ModalidadIngreso'
     },
     historial:{
       condicionesAlumno:[{

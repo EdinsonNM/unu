@@ -147,6 +147,10 @@
         }
       };
 
+      // $scope.FinalizarMatricula = function(){
+      //    $state.go('app.matricularevisionlast');
+      // };
+
     })
 
   /**

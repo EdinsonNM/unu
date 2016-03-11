@@ -74,11 +74,12 @@
         </md-content>
      </div>
 
-  <div flex layout="row" layout-fill ng-if="!UI.nextStage1||!UI.nextStage2">
-   <strong>No es posible iniciar el proceso de matricula</strong>
+  <div flex layout="row" layout-fill ng-if="!UI.nextStage1||!UI.nextStage2 || !modeIngreso" class="tc-{{$root.color.accent}}-500">
+     <span class="fa fa-exclamation-circle"></span>
+   <strong>No es posible iniciar el proceso de matricula  {{messageModalidad}}</strong>
  </div>
 
-<div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2" ng-click="Save()" >
+<div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2&&modeIngreso" ng-click="Save()" >
   <div class="text-center" flex>
      <!-- <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion"> -->
     <a>

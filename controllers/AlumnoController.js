@@ -31,7 +31,10 @@ module.exports = function() {
           },{
             path: '_escuela',
             model: 'Escuela'
-          }]
+         },{
+            path: '_modalidadIngreso',
+            model: 'ModalidadIngreso'
+         }]
         );
         next();
       });
