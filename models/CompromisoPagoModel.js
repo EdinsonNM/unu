@@ -5,11 +5,11 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 var CompromisopagoSchema = new Schema({
 
-    codigo:{//un simple correlativo como identificador del compromiso
+    codigo:{//00+DNI => Para INGRESANTES | CODIGOUNIVERSITARIO => ALUMNOS
       type:String,
       required:true
     },
-    referenciAlumno:{//un simple correlativo como identificador del compromiso
+    referenciAlumno:{//SE ACTUALIZA CUANDO EL INGRESANTE SE CONVIERTE EN ALUMNO, ES EL CODIGOUNIVERSITARIO
       type:String
     },
     pagado:{
@@ -77,9 +77,10 @@ var CompromisopagoSchema = new Schema({
       ref:'Tasa',
       required:true
     },
-    esActivo:{
-      type:Boolean,
-      default:true
+    estado:{
+      type:String,
+      enum:['Activo','Inactivo','Anulado'],
+      default:'Activo'
     }
 });
 
