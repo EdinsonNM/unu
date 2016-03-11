@@ -3,52 +3,55 @@
   'use strict';
 
   /**
-    * @ngdoc service
-    * @name unuApp.UserFactory
-    * @description
-    * # UserFactory
-    * Service in the unuApp.
+   * @ngdoc service
+   * @name unuApp.UserFactory
+   * @description
+   * # UserFactory
+   * Service in the unuApp.
    */
-  angular.module('unuApp').factory('UserFactory', ['Restangular', '$log', '$state', '$rootScope', 'AuthTokenFactory', 'ToastMD', '$timeout', 'TYPE_GROUP',function(Restangular, $log, $state, $rootScope, AuthTokenFactory, ToastMD, $timeout, TYPE_GROUP) {
-    var service;
-    service = Restangular.all('usuarios');
-    return {
-      login: function(user) {
-        service.customPOST(user, 'auth/login').then(function(result) {
-          var cservice;
-          AuthTokenFactory.setToken(result.token);
-          console.log(result);
-          cservice = Restangular.all('usuarios');
-          cservice.customGET('auth/me', {}).then(function(result) {
-            var group;
-            console.log(result.user);
-            $rootScope.USER = result.user;
-            group = $rootScope.USER._grupo.codigo;
-            switch (group) {
-              case TYPE_GROUP.ADMIN:
-                $rootScope.app.name = 'Sistema de Matrícula';
-                break;
-              case TYPE_GROUP.MIC:
-                $rootScope.app.name = 'M. Investigación Científica';
-                break;
-            }
-            $state.go('app');
+  angular.module('unuApp').factory('UserFactory', ['Restangular',
+    '$log', '$state', '$rootScope', 'AuthTokenFactory', 'ToastMD', '$timeout', 'TYPE_GROUP',
+    function(Restangular, $log, $state, $rootScope, AuthTokenFactory, ToastMD, $timeout, TYPE_GROUP) {
+      var service;
+      service = Restangular.all('usuarios');
+      return {
+        login: function(user) {
+          service.customPOST(user, 'auth/login').then(function(result) {
+            var cservice;
+            AuthTokenFactory.setToken(result.token);
+            console.log(result);
+            cservice = Restangular.all('usuarios');
+            cservice.customGET('auth/me', {}).then(function(result) {
+              var group;
+              console.log(result.user);
+              $rootScope.USER = result.user;
+              group = $rootScope.USER._grupo.codigo;
+              switch (group) {
+                case TYPE_GROUP.ADMIN:
+                  $rootScope.app.name = 'Sistema de Matrícula';
+                  break;
+                case TYPE_GROUP.MIC:
+                  $rootScope.app.name = 'M. Investigación Científica';
+                  break;
+              }
+              $state.go('app');
+            });
+          }, function(result) {
+            ToastMD.warning(result.data.message);
           });
-        }, function(result) {
-          ToastMD.warning(result.data.message);
-        });
-      },
-      logout: function() {
-        AuthTokenFactory.setToken();
-        $state.go('login');
-      },
-      getUser: function() {
+        },
+        logout: function() {
+          AuthTokenFactory.setToken();
+          $state.go('login');
+        },
+        getUser: function() {
           return service.customGET('auth/me', {});
-      },
-      getAccess: function() {
-        return $rootScope.USER._grupo.menu;
-      }
-    };
-  }]);
+        },
+        getAccess: function() {
+          return $rootScope.USER._grupo.menu;
+        }
+      };
+    }
+  ]);
 
 }).call(this);

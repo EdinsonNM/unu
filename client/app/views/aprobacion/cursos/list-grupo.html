@@ -1,0 +1,182 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <div flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodo</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo" >
+                {{periodo.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()" >
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Plan Estudios</label>
+            <md-select ng-model="filter._planestudios" ng-model-options="{trackBy: '$value._id'}" ng-change="ListGruposAprobados();ListAllGruposCursos()" >
+              <md-option ng-repeat="plan in planestudios" ng-value="plan">
+                {{plan.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+
+      <!-- Agregar las pestañas -->
+      <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="CURSOS APERTURADOS">
+        <md-content class="md-padding">
+
+        <div class="table-responsive">
+          <table ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+            <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+            <tbody ng-repeat="group in $groups">
+              <tr class="ng-table-group">
+                <td colspan="2">
+                  <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                    <strong>Ciclo: {{group.value}} </strong>
+                  </a>
+                </td>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>{{getCreditosCiclo(group.data)}}</strong></td>
+                <td><strong>{{getHorasCiclo(group.data)}}</strong></td>
+                <td colspan="{{$columns.length-5}}"></td>
+              </tr>
+              <tr ng-hide="group.$hideRows" ng-repeat="item in group.data" ng-click="item.active=!item.active;EnabledEdit(item,$groups)" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
+
+
+
+                <td style="width:30px;">
+                  <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                </td>
+
+                <td class="text-left" data-title="'Curso'" sortable="curso">{{item._planestudiodetalle._curso.nombre}}</td>
+                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._planestudiodetalle._curso.codigo}}</td>
+                <td data-title="'N° Creditos'">{{item._planestudiodetalle.creditos}}</td>
+                <td data-title="'N° Horas'">{{item._planestudiodetalle.horas_total}}</td>
+                <td data-title="'N° Horas Teoria'">{{item._planestudiodetalle.horas_teoria}}</td>
+                <td data-title="'N° Horas Práctica'">{{item._planestudiodetalle.horas_practica}}</td>
+                <td data-title="'N° Horas Laboratorio'">{{item._planestudiodetalle.horas_laboratorio}}</td>
+                <td data-title="'Estado'">
+                  <strong>
+                      <a href  title="{{item.aprobacioncursosperiodo}}" >
+                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length==0" class="fa fa-times tc-blue-grey-500" title="No Dictado"></span>
+                        <span ng-if="item._planestudiodetalle._aprobacionesPeriodo.length>0" class="fa fa-check-circle tc-green-500" title="Dictado"></span>
+                      </a>
+                    </strong>
+                </td>
+              </tr>
+
+            </tbody>
+            <tbody>
+          </table>
+        </div>
+
+       </md-content>
+
+    </md-tab>
+    <!-- segunda pestaña-->
+    <md-tab label="GRUPOS APERTURADOS">
+        <md-content class="md-padding">
+        <!-- CONTENIDO -->
+        <div class="table-responsive">
+          <table ng-table="tableParamsGrupo" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+
+           <tbody ng-repeat="group in $groups" ng-if="group.data[0]._grupos.length != '0' && group.data[0]._planestudiodetalle._planestudio == filter._planestudios._id" >
+             <tr class="ng-table-group" >
+                <td colspan="2">
+                  <a href class="groupTitle" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="fa" ng-class="{ 'fa-chevron-right': group.$hideRows, 'fa-chevron-down': !group.$hideRows }"></span>
+                    <strong>Curso: {{group.value}}</strong>
+                  </a>
+                </td>
+                <td><strong>{{group.data[0]._planestudiodetalle._curso.codigo}}</strong></td>
+                <td><strong>{{group.data[0]._planestudiodetalle.ciclo}}</strong></td>
+                <td colspan="{{$columns.length-4}}"></td>
+             </tr>
+
+             <tr ng-hide="group.$hideRows"  ng-repeat="item in group.data[0]._grupos" ng-click="item.active=!item.active;EnabledEditGrupo(item)">
+                <td style="width:30px;">
+                  <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                </td>
+
+                <td class="text-left" data-title="'Curso/Grupo'" sortable="curso">Grupo {{item._seccion.nombre}}</td>
+                <td data-title="'Código'" sortable="codigo"></td>
+                <td data-title="'Ciclo'"></td>
+                <td data-title="'N° Cupos'">{{item.totalCupos}}</td>
+                <td data-title="'N° Matriculados'">{{item.matriculados}}</td>
+                <td data-title="'Retiros Parciales'">{{item.retiroParcial}}</td>
+                <td data-title="'Retiros Totales'">{{item.retiroTotal}}</td>
+             </tr>
+
+           </tbody>
+           <tbody>
+          </table>
+        </div>
+        <!-- FIN DE CONTENIDO -->
+
+     </md-content>
+     </md-tab>
+     </md-tabs>
+      <!-- fin de pestañas -->
+    </md-content>
+  </div>
+</md-content>
+
+<md-button ng-if="UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
+</md-button>
+
+<!--acciones: se mostraran al seleccionar un elemento del listado-->
+<md-fab-speed-dial ng-if="UI.editModeGrupo" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab">
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+   <md-button aria-label="{{UI.message.Buttons.Edit}}" class="md-fab md-raised md-mini" ng-click="Edit($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
+     <md-icon class="md-accent" md-font-icon="fa fa-pencil fa-lg  tc-{{$root.color.accent}}-500 " aria-label="{{UI.message.Buttons.Edit}}"></md-icon>
+   </md-button>
+   <md-button aria-label="{{UI.message.Buttons.Delete}}" class="md-raised  md-fab md-mini" ng-click="Delete($event)">
+     <md-tooltip md-direction="left">{{UI.message.Buttons.Delete}}</md-tooltip>
+     <md-icon md-font-icon="fa fa-trash fa-lg md-accent  tc-{{$root.color.accent}}-500" aria-label="{{UI.message.Buttons.Delete}}"></md-icon>
+   </md-button>
+
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>

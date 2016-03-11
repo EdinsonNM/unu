@@ -156,10 +156,6 @@ md-sidenav {
 }
 
 
-.side-menu menu-toggle span{
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
 
 .icon-white
 	color white
@@ -172,7 +168,7 @@ md-sidenav {
 	position fixed
 	right 40px
 	bottom 40px*/
-
+/*
 md-datepicker-button
 	display none
 
@@ -183,7 +179,7 @@ md-datepicker
 		.md-datepicker-input
 			&.md-input
 				color black !important
-
+*/
 .gridOptions
 	md-grid-list
 		margin: 8px
@@ -213,13 +209,6 @@ md-tab-item
 .md-toast.success
 	background-color green
 
-md-datepicker
-	padding-top 19px
-	.md-datepicker-button
-		display none
-	.md-datepicker-input-container
-		width 100%
-		margin-left 0
 
 a.groupTitle
 	text-decoration none
@@ -228,6 +217,10 @@ a.groupTitle
 
 .window-modal-content-sm
 	min-width 700px
+	max-height 800px
+
+.window-modal-content-md
+	min-width 900px
 	max-height 800px
 
 .table
@@ -269,3 +262,78 @@ md-icon.fa
 
 md-icon.s32 span
 	padding-left 8px
+
+.cursos-inscritos
+	margin-top 20px
+
+.cursos-inscritos-p
+	margin 10px 0px
+
+.btn-inscription
+	position: absolute !important;
+	right: 10px;
+	bottom: 10px;
+	width: 200px
+
+.msg-advice
+	margin auto
+	padding 5px
+	background-color rgb(255,152,0)
+
+.msg-title
+	font-weight 500
+	font-size 14px
+	color white
+	margin 6px 8px
+	line-height 36px
+	cursor pointer
+	text-transform inherit
+	letter-spacing inherit
+
+@media screen
+	#printSec
+		display none
+
+@media print
+	body *
+		visibility hidden
+
+	#printSec
+		visibility visible
+		text-align center
+		padding 5px 0 10px
+		min-height 50px
+
+	#tablePrint
+		border 1px solid black !important
+
+	#printSection
+		visibility visible
+		position absolute
+		left 0
+		top 0
+
+		md-content #tablePrint
+			border 1px solid black !important
+
+		*
+			visibility visible
+
+
+
+.side-menu
+	menu-toggle
+		span
+			padding-top: 0
+			padding-bottom: 0
+
+label
+	width 100%
+
+md-datepicker
+	display: flex;
+	.md-datepicker-button
+		flex: 0 0 auto;
+	.md-datepicker-input-container
+		flex: 0.9 0 8em;
+		padding-top 10px

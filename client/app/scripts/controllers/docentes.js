@@ -10,8 +10,8 @@
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('DocentesCtrl', [
-    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+  function(MessageFactory, $rootScope,$scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
 
     $scope.UI = {
@@ -48,9 +48,11 @@
     service.customGET('model/grados', {}).then(function(result){
       $scope.UI.grados = result;
     });
-
+    service.customGET('model/categorias', {}).then(function(result){
+      $scope.UI.categorias = result;
+    });
     List = function() {
-      $scope.tableParams = new ngTableParams({
+      $scope.tableParams = new NgTableParams({
         page: 1,
         count: 10
       }, {
@@ -88,6 +90,7 @@
           facultades: $scope.UI.facultades,
           condiciones: $scope.UI.condiciones,
           tiposDedicacion: $scope.UI.tiposDedicacion,
+          categorias:$scope.UI.categorias,
           grados: $scope.UI.grados,
           service: service
         },
@@ -107,6 +110,7 @@
           facultades: $scope.UI.facultades,
           condiciones: $scope.UI.condiciones,
           tiposDedicacion: $scope.UI.tiposDedicacion,
+          categorias:$scope.UI.categorias,
           grados: $scope.UI.grados
         },
         controller: 'DocenteEditCtrl'
@@ -153,8 +157,8 @@
     new List();
   }])
 
-  .controller('DocenteNewCtrl',['$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, facultades, condiciones, tiposDedicacion, grados, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('DocenteNewCtrl',['$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'grados','categorias', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function($scope, table, name, facultades, condiciones, tiposDedicacion, grados, categorias, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
@@ -162,6 +166,7 @@
     $scope.facultades = facultades;
     $scope.condiciones= condiciones;
     $scope.tiposDedicacion= tiposDedicacion;
+    $scope.categorias = categorias;
     $scope.gradosdocente = grados;
 
     $scope.Save = function(form) {
@@ -195,13 +200,14 @@
   }])
 
   .controller('DocenteEditCtrl',[
-      '$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'grados', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
-      function($scope, table, name, facultades, condiciones, tiposDedicacion, grados, MessageFactory, model, ToastMD, $mdDialog){
+      '$scope', 'table', 'name', 'facultades', 'condiciones', 'tiposDedicacion', 'categorias','grados', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+      function($scope, table, name, facultades, condiciones, tiposDedicacion, categorias,grados, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.facultades = facultades;
     $scope.condiciones= condiciones;
     $scope.tiposDedicacion= tiposDedicacion;
     $scope.gradosdocente = grados;
+    $scope.categorias = categorias;
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;

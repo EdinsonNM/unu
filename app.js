@@ -4,7 +4,9 @@ var config = require('./config/config');
 var passport=require('./config/passport');
 var app = require('./expressjs')(config);
 //Error.stackTraceLimit = 0; // disables it
-
+var path = require('path');
+var watch = require('./watch');
+watch.watchBanco(path.join(__dirname,'/commons/data/imports'));
 
 
 // Connect to mongodb

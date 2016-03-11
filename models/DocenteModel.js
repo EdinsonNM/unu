@@ -27,6 +27,10 @@ var DocenteSchema = new Schema({
     type:String,
     enum:['Tiempo Completo','Dedicación Exclusiva','Tiempo Parcial']
   },
+  categoria:{
+    type:'String',
+    enum:['Principal','Asociado','Auxiliar','Jefe de Practica']
+  },
   _facultad:{
     type:Schema.Types.ObjectId,
     ref:'Facultad',
@@ -38,16 +42,16 @@ var DocenteSchema = new Schema({
     ref:'Usuario',
     required:true
   },
-  created_at: Date,
-  updated_at: Date
+  createdAt: Date,
+  updatedAt: Date
 });
 DocenteSchema.plugin(mongoosePaginate);
 DocenteSchema.plugin(uniqueValidator);
 DocenteSchema.pre('save', function(next) {
   var now = new Date();
-  this.updated_at = now;
-  if (!this.created_at) {
-    this.created_at = now;
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });

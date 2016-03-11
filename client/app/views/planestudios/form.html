@@ -9,7 +9,7 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content class="window-modal-content-sm">
+    <md-dialog-content class="window-modal-content-md md-padding">
         <div flex  layout="row" layout-sm="row">
             <div flex>
               <md-input-container class="md-block">
@@ -33,7 +33,6 @@
           </md-input-container>
           </diV>
         </div>
-
 
            <div flex  layout="row" layout-sm="row">
 
@@ -66,23 +65,21 @@
                </div>
                <div flex>
                  <md-input-container class="md-block">
-                   <md-datepicker class="md-block" required name="fecha_resolucion" ng-model="model.fecha_resolucion" md-placeholder="Fecha Resolución"></md-datepicker>
+
                    <div ng-messages="myForm.fecha_resolucion.$error"  ng-if="submited">
                      <div ng-message="required">{{message.Required}}</div>
                    </div>
                  </md-input-container>
                </div>
            </div>
-           <div  flex  layout="row" layout-sm="column">
-            <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-              <md-button class="md-warn">{{model.estado}}</md-button>
-            </div>
-            <div flex="70" layout="row"  layout-align="end center" flex-sm="100">
-              <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-              <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-            </div>
-          </div>
+
     </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button class="md-warn">{{model.estado}}</md-button>
+      <span flex></span>
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </md-dialog-actions>
 
   </form>
 </md-dialog>

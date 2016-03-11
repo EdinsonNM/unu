@@ -1,7 +1,7 @@
 <md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
     <h3>{{UI.title}}</h3>
-  </md-subheader> 
+  </md-subheader>
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
@@ -14,12 +14,9 @@
             <td style="width:30px;">
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
-            <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
-            <td class="text-left" data-title="'Nombre'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombre}}</td>
-            <td class="text-center" data-title="'Activo'">
-              <span href title="Activo" ng-if="item.activo" class="fa fa-lg fa-toggle-on tc-{{$root.color.primary}}-500"></span>
-              <span href title="Inactivo" ng-if="!item.activo" class="fa fa-lg fa-toggle-off tc-{{$root.color.primary}}-500"></span>
-            </td>
+            <td class="text-left" data-title="'Alumno'" sortable="_alumno" filter="{'_alumno':'text'}">{{item._alumno._persona.nombreCompleto}}</td>
+            <td class="text-left" data-title="'Conflicto'" sortable="_conflicto" filter="{'_conclicto':'text'}">{{item._conflicto.nombre}}</td>
+            <td class="text-left" data-title="'Estado'" sortable="estado" filter="{'estado':'select'}" filter-data="estadosFilter">{{item.estado}}</td>
           </tr>
         </tbody>
       </table>

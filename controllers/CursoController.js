@@ -47,6 +47,11 @@ module.exports=function(){
       	);
       });
 
+
+      var controller=baucis.rest('Conflictosalumno');
+      controller.relations(true);
+      controller.hints(true);
+
     }
   };
 };

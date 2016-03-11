@@ -4,13 +4,13 @@
 
   /**
     * @ngdoc function
-    * @name unuApp.controller:ConflictosAlumnosCtrl
+    * @name unuApp.controller:ConflictoCtrl
     * @description
-    * # ConflictosAlumnosCtrl
+    * # ConflictoCtrl
     * Controller of the unuApp
    */
 
-  angular.module('unuApp').controller('ConflictosAlumnosCtrl', [
+  angular.module('unuApp').controller('ConflictosCtrl', [
 'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
   function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
     var List, service;
@@ -18,21 +18,16 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Conflictos del Alumno',
+      title: 'Listado de Conflictos',
       editMode: false,
       selected: null,
       customActions:[]
     };
     var LOCAL ={
-      name: 'Conflictos del Alumno',
-      form:'views/conflictosalumnos/form.html',
-      route:'conflictosalumnos',
+      name: 'Conflictos',
+      form:'views/conflictos/form.html',
+      route:'conflictos'
 
-      route_periodos: 'periodos',
-      route_facultades: 'facultades',
-      route_periodos: 'periodos',
-      route_modalidades: 'modalidadingresos',
-      route_escuelas: 'escuelas'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
@@ -76,7 +71,7 @@
           name: LOCAL.name,
           table:$scope.tableParams
         },
-        controller: 'ConflictosAlumnoNewCtrl'
+        controller: 'ConflictoNewCtrl'
       });
     };
     $scope.Edit = function Edit($event){
@@ -90,7 +85,7 @@
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: 'ConflictosAlumnoEditCtrl'
+        controller: 'ConflictoEditCtrl'
       });
     };
     $scope.Delete = function Delete($event){
@@ -131,7 +126,7 @@
     new List();
   }])
 
-  .controller('ConflictosAlumnoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  .controller('ConflictoNewCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
   function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
@@ -152,7 +147,7 @@
     };
   }])
 
-  .controller('ConflictosAlumnoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular',
+  .controller('ConflictoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog', 'Restangular',
   function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog, Restangular){
     $scope.submited = false;
     $scope.model = model;

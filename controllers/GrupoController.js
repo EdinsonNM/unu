@@ -12,14 +12,15 @@ module.exports=function(){
           grupo.menu = [
             {
               order:0,
-              title:'Admisión',
+              title:'Mantenimiento',
               description:'Realiza el mantenimiento de las tablas generales del sistema',
               url:'',
-              flex:'33',
+              flex:'67',
               children:[
-                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:1},
-                {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
-                {title:'Pagos Ingresantes',icon:'',url:'app.pagosingresantes',order:1}
+                {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
+                {title:'Alumnos',icon:'',url:'app.alumnos',order:2},
+                {title:'Conflictos',icon:'',url:'app.conflicto',order:3},
+                {title:'Conflictos Alumnos',icon:'',url:'app.conflictosalumno',order:4}
               ],
               style:{
                 color: 'white',
@@ -30,20 +31,13 @@ module.exports=function(){
             },
             {
               order:1,
-              title:'Mantenimiento',
+              title:'Admisión',
               description:'Realiza el mantenimiento de las tablas generales del sistema',
               url:'',
-              flex:'67',
+              flex:'33',
               children:[
-                {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
-                {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:2},
-                {title:'Procesos',icon:'fa-cogs',url:'app.procesos',order:3},
-                {title:'Cursos',icon:'',url:'app.cursos',order:5},
-                {title:'Pabellones',icon:'',url:'app.pabellones',order:6},
-                {title:'Docentes',icon:'',url:'app.docentes',order:7},
-                {title:'Aulas',icon:'',url:'app.aulas',order:8},
-                {title:'Alumnos',icon:'',url:'app.alumnos',order:9},
-                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:10}
+                {title:'Ingresantes',icon:'',url:'app.ingresantes',order:1},
+                {title:'Aprobación Ingresantes',icon:'',url:'app.aprobacioningresantes',order:2}
               ],
               style:{
                 color: 'white',
@@ -54,26 +48,7 @@ module.exports=function(){
             },
             {
               order:2,
-              title: 'Apertura',
-              description:'Inicia el proceso de Apertura del Periodo Académico',
-              url:'',
-              flex:33,
-              children:[
-                {title:'Periodos',icon:'',url:'app.periodos',order:1},
-                {title:'Parametros y Procesos por Periodo',icon:'',url:'app.paramprocesosperiodo',order:2},
-                {title:'Parametros y Procesos por Escuela',icon:'',url:'app.paramprocesosescuela',order:2},
-
-              ],
-              style:{
-                color: 'white',
-                bgColor:'bgc-white',
-                bgColorHead:'bgc-teal-500',
-                image:'bghome-2.jpg'
-              }
-            },
-            {
-              order:3,
-              title: 'Plan de Estudios',
+              title: 'Planes de Estudio',
               description:'',
               url:'',
               flex:33,
@@ -83,8 +58,7 @@ module.exports=function(){
                 {title:'Equivalencias',icon:'',url:'app.planestudiosequivalencia',order:3},
                 {title:'Aprobación Plan de Estudios',icon:'',url:'app.aprobacionplanestudios',order:4},
                 {title:'Aprobación Cursos Periodo',icon:'',url:'app.aprobacioncursosperiodo',order:5},
-                {title:'Reportes',icon:'',url:'app.paramprocesosescuela',order:6},
-
+                {title:'Reportes',icon:'',url:'app.',order:6}
               ],
               style:{
                 color: 'white',
@@ -94,13 +68,18 @@ module.exports=function(){
               }
             },
             {
-              order:4,
-              title: 'Aprobación',
+              order:3,
+              title: 'Horario',
               url:'',
               flex:33,
               children:[
-                {title:'Alumnos Ingresantes',icon:'',url:'app.aprobacioningresantes',order:1},
-
+                {title:'Pabellones',icon:'',url:'app.pabellones',order:1},
+                {title:'Aulas',icon:'',url:'app.aulas',order:2},
+                {title:'Secciones',icon:'',url:'app.secciones',order:3},
+                {title:'Docentes',icon:'',url:'app.docentes',order:4},
+                {title:'Curso - Grupo',icon:'',url:'app.grupocursoperiodo',order:5},
+                {title:'Horario',icon:'',url:'app.horarios',order:6},
+                {title:'Reportes',icon:'',url:'app.',order:7}
               ],
               style:{
                 color: 'white',
@@ -110,18 +89,26 @@ module.exports=function(){
               }
             },
             {
-              order:5,
-              title: 'Programación Académica',
+              order:4,
+              title: 'Apertura',
+              description:'Inicia el proceso de Apertura del Periodo Académico',
               url:'',
-              flex:100,
+              flex:33,
               children:[
-                {title:'Asignar Aulas',icon:'',url:'app.asignaraulas',order:1},
+                {title:'Periodos',icon:'',url:'app.periodos',order:1},
+                {title:'Procesos',icon:'fa-cogs',url:'app.procesos',order:2},
+                {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:3},
+                {title:'Parametros y Procesos por Periodo',icon:'',url:'app.paramprocesosperiodo',order:4},
+                {title:'Parametros y Procesos por Escuela',icon:'',url:'app.paramprocesosescuela',order:5},
+                {title:'Generación de ficha de matrícula',icon:'',url:'app.',order:6},
+                {title:'Ficha de matrícula individual',icon:'',url:'app.s',order:7},
+                {title:'Compromiso de Pagos',icon:'',url:'app.compromisopagos',order:7}
               ],
               style:{
                 color: 'white',
                 bgColor:'bgc-white',
                 bgColorHead:'bgc-teal-500',
-                image:'bghome-3.jpg'
+                image:'bghome-2.jpg'
               }
             }
 
@@ -159,6 +146,45 @@ module.exports=function(){
             res.status(200).send(data);
           });
         });
+
+        /*model.findOne({codigo: 'ALUMNO'}, function(error, grupo){
+          grupo.menu = [
+            {
+              order:5,
+              title: 'Matrícula',
+              description:'Inicia el proceso de matrícula de cada alumno',
+              url:'',
+              flex:33,
+               children:[{
+                 title:'Matricula',
+                 icon:'',
+                 url:'app.matricula',
+                 order:1
+               },{
+                 title:'Matrícula Revisión',
+                 icon:'',
+                 url:'app.matricularevision',
+                 order:2
+               },{
+                 title:'Matrícula Incripción',
+                 icon:'',
+                 url:'app.matriculainscripcion',
+                 order:3
+               }],
+              style:{
+                color: 'white',
+                bgColor:'bgc-white',
+                bgColorHead:'bgc-teal-500',
+                image:'bghome-2.jpg'
+              }
+            }
+
+          ];
+          grupo.save(function(error, data){
+            //res.status(200).send(data);
+          });
+        });*/
+
       });
 
     }

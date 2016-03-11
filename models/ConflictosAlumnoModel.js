@@ -3,28 +3,30 @@ var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var ConflictosalumnoSchema = new Schema({
-  codigo: {
-    type: String,
-    required: true
+  _alumno:{
+    type:Schema.Types.ObjectId,
+    ref:'Alumno',
+    required:true
   },
-  nombre: {
-    type: String,
-    required: true
+  _conflicto:{
+    type:Schema.Types.ObjectId,
+    ref:'Conflicto',
+    required:true
   },
-  activo: {
-    type: Boolean,
-    default: true
+  estado: {
+    type:String,
+    enum:['Pendiente','Cancelado']
   },
-  created_at: Date,
-  updated_at: Date
+  createdAt: Date,
+  updatedAt: Date
 });
 ConflictosalumnoSchema.plugin(mongoosePaginate);
 ConflictosalumnoSchema.plugin(uniqueValidator);
 ConflictosalumnoSchema.pre('save', function(next) {
   var now = new Date();
-  this.updated_at = now;
-  if (!this.created_at) {
-    this.created_at = now;
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });

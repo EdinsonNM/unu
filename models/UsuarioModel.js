@@ -8,15 +8,15 @@ var UsuarioSchema = new Schema({
   password:{type:String, required:true},
   firstname:String,
   lastname:String,
-  email:{type:String, required:true},
+  email:{type:String},
   _grupo:{
     type:Schema.Types.ObjectId,
     ref:'Grupo',
     required:true
   },
   salt:String,
-	created_at:Date,
-	updated_at:Date
+	createdAt:Date,
+	updatedAt:Date
 });
 
 
@@ -24,9 +24,9 @@ var UsuarioSchema = new Schema({
 UsuarioSchema.pre('save', function(next) {
 	var user = this;
   var now = new Date();
-  user.updated_at = now;
-  if (!user.created_at){
-    user.created_at=now;
+  user.updatedAt = now;
+  if (!user.createdAt){
+    user.createdAt=now;
   }
 
 	if(!user.isModified('password')) return next();
@@ -36,6 +36,7 @@ UsuarioSchema.pre('save', function(next) {
 		bcrypt.hash(user.password, salt, function(err, hash) {
 			if(err) return next(err);
 			user.password = hash;
+      console.log('update password:'+user.username);
 			next();
 		});
 	});

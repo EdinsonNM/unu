@@ -122,14 +122,23 @@ module.exports=function(){
 
       });
 
-      controller.put('/auth/genratepasswords',auth.ensureAuthenticated,function(req,res,next){
+      var updatePassword = function(item){
+        var defer = Q.defer();
+        item.save(function(err,data){
+          if(err) return defer.reject(err);
+          defer.resolve(data);
+        });
+        return defer.promise;
+      };
+      controller.get('/auth/genratepasswords',function(req,res,next){
         var promises = [];
         model.find({},function(error,data){
+          if(error) return res.status(500).send(error);
           for(var i = 0;i<data.length;i++){
             var item = data[i];
             if(item.username!='admin'){
               item.password = item.username;
-              promises.push(item.save);
+              promises.push(updatePassword(item));
             }
           }
           Q.all(promises).then(function(results){

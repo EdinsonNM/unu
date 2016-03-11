@@ -10,159 +10,160 @@
       </div>
     </md-toolbar>
 
-    <md-dialog-content class="window-modal-content-sm">
-      <div flex layout="row" layout-sm="row">
+    <md-tabs md-selected="0" md-dynamic-height md-border-bottom>
 
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Nombres</label>
-            <input required name="nombres" ng-model="model.nombres" required>
-            <div ng-messages="myForm.nombres.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+      <md-tab label="Datos Personales">
+        <md-content class="md-padding window-modal-content-sm">
+          <div flex-container="row" flex-gutter="24">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Nombres</label>
+                <input required name="nombres" ng-model="model._persona.nombres" required>
+                <div ng-messages="myForm.nombres.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Apellido Paterno</label>
-            <input required name="apellidoPaterno" ng-model="model.apellidoPaterno" required>
-            <div ng-messages="myForm.apellidoPaterno.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Apellido Paterno</label>
+                <input required name="apellidoPaterno" ng-model="model._persona.apellidoPaterno" required>
+
+                <div ng-messages="myForm.apellidoPaterno.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
-        </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Apellido Materno</label>
+                <input required name="apellidoMaterno" ng-model="model._persona.apellidoMaterno" required>
 
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Apellido Materno</label>
-            <input required name="apellidoMaterno" ng-model="model.apellidoMaterno" required>
-            <div ng-messages="myForm.apellidoMaterno.$error" ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
+                <div ng-messages="myForm.apellidoMaterno.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
-          </md-input-container>
-        </div>
-      </div>
+          </div>
 
-      <div flex layout="row" layput-sm="column">
-          <div flex>
-            <md-input-container class="md-block">
-              <label>Código</label>
-              <input required name="codigoPostulante" ng-model="model.codigoPostulante" required>
-              <div ng-messages="myForm.codigoPostulante.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block" >
-              <label>Tipo de Documento</label>
-              <md-select ng-model="model.documentoIdentidad.tipo" name="tipo" required>
-                <md-option ng-repeat="td in tipodocumento" ng-value="td">
-                  {{td}}
-                </md-option>
-              </md-select>
-              <div ng-messages="myForm.tipodocumento.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block">
-              <label>Documento</label>
-              <input required name="numero" ng-model="model.documentoIdentidad.numero" required>
-              <div ng-messages="myForm.numero.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block" >
-              <label>Sexo</label>
-              <md-select ng-model="model.sexo" name="sexo" required>
-                <md-option ng-repeat="sex in sexo" ng-value="sex">
-                  {{sex}}
-                </md-option>
-              </md-select>
-              <div ng-messages="myForm.sexo.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-      </div>
-      <div flex layout="row" layput-sm="column">          
-          <div flex-item>
-            <md-input-container class="md-block">
-              <label>Facultad</label>
-              <md-select ng-model="model._facultad"  ng-model-options="{trackBy: '$value._id'}" name="facultad" ng-change="LoadEscuelas()">
-                <md-option ng-repeat="fac in facultades" ng-value="fac">
-                  {{fac.nombre}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block">
-              <label>Escuela</label>
-              <md-select ng-model="model._escuela" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
-                <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
-                  {{escuela.nombre}}
-                </md-option>
-              </md-select>
-              <div ng-messages="myForm._escuela.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-      </div>
-      <div flex layout="row" layput-sm="column">
-          <div flex-item>
-            <md-input-container class="md-block">
-              <label>Periodo</label>
-              <md-select ng-model="model._periodo"  ng-model-options="{trackBy: '$value._id'}" name="periodo">
-                <md-option ng-repeat="per in periodos" ng-value="per">
-                  {{per.nombre}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block" >
-              <label>Modalidad</label>
-              <md-select ng-model="model._modalidad" ng-model-options="{trackBy: '$value._id'}" name="modalidad" required>
-                <md-option ng-repeat="mod in modalidades" ng-value="mod">
-                  {{mod.nombre}}
-                </md-option>
-              </md-select>
-              <div ng-messages="myForm.sexo.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-          <div flex-item>
-            <md-input-container class="md-block">
-              <label>Voucher Pago</label>
-              <input required name="voucher" ng-model="model._pagoIngresante.voucher">
-              <div ng-messages="myForm.voucher.$error" ng-if="submited">
-                <div ng-message="required">{{message.Required}}</div>
-              </div>
-            </md-input-container>
-          </div>
-        </div>
+          <div flex layout="row" layput-sm="column">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Tipo de Documento</label>
+                <md-select ng-model="model._persona.tipoDocumento" name="tipo" required>
+                  <md-option ng-repeat="td in tipodocumento" ng-value="td">
+                    {{td}}
+                  </md-option>
+                </md-select>
+                <div ng-messages="myForm.tipodocumento.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Documento</label>
+                <input required name="numero" ng-model="model._persona.documento" required>
 
-      <div flex layout="row" layout-sm="column">
-        <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-          <md-checkbox ng-model="model.activo">
-            Activo
-          </md-checkbox>
-        </div>
-        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
-          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
-        </div>
-      </div>
-    </md-dialog-content>
+                <div ng-messages="myForm.documento.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Sexo</label>
+                <md-select ng-model="model._persona.sexo" name="sexo" required>
+                  <md-option ng-repeat="sex in sexo" ng-value="sex">
+                    {{sex}}
+                  </md-option>
+                </md-select>
+                <div ng-messages="myForm.sexo.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+          </div>
+        </md-content>
+      </md-tab>
+
+      <md-tab label="Datos Académicos">
+        <md-content class="md-padding window-modal-content-sm">
+
+          <div flex layout="row" layput-sm="column">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Periodo</label>
+                <md-select ng-model="model._periodo" ng-model-options="{trackBy: '$value._id'}" name="periodo">
+                  <md-option ng-repeat="per in periodos" ng-value="per">
+                    {{per.nombre}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Facultad</label>
+                <md-select ng-model="model._facultad" ng-model-options="{trackBy: '$value._id'}" name="facultad" ng-change="LoadEscuelas()">
+                  <md-option ng-repeat="fac in facultades" ng-value="fac">
+                    {{fac.nombre}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Escuela</label>
+                <md-select ng-model="model.escuela_select" ng-model-options="{trackBy: '$value._id'}" name="escuela" required>
+                  <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                    {{escuela.nombre}}
+                  </md-option>
+                </md-select>
+                <div ng-messages="myForm._escuela.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+          </div>
+
+          <div flex layout="row" layput-sm="column">
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Código</label>
+                <input required name="codigoPostulante" ng-model="model.codigoPostulante" required>
+                <div ng-messages="myForm.codigoPostulante.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+            <div flex-item>
+              <md-input-container class="md-block">
+                <label>Modalidad</label>
+                <md-select ng-model="model._modalidad" ng-model-options="{trackBy: '$value._id'}" name="modalidad" required>
+                  <md-option ng-repeat="mod in modalidades" ng-value="mod">
+                    {{mod.nombre}}
+                  </md-option>
+                </md-select>
+                <div ng-messages="myForm.sexo.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
+            </div>
+
+          </div>
+        </md-content>
+      </md-tab>
+    </md-tabs>
+
+
     <md-dialog-actions layout="row">
-
+      <md-checkbox ng-model="model.activo">
+        Activo
+      </md-checkbox>
+      <span flex></span>
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button type="submit" class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
     </md-dialog-actions>
+
   </form>
 </md-dialog>

@@ -11,8 +11,8 @@
    */
 
   angular.module('unuApp').controller('IngresantesCtrl', [
-'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state','$mdMedia',
+  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state, $mdMedia) {
     var List, service;
 
     $scope.UI = {
@@ -28,19 +28,20 @@
       name: 'Ingresante',
       form:'views/ingresantes/form.html',
       route:'ingresantes',
+      route_personas:'personas',
       route_periodos: 'periodos',
       route_facultades: 'facultades',
-      route_periodos: 'periodos',
       route_modalidades: 'modalidadingresos',
       route_escuelas: 'escuelas'
     };
     service = Restangular.all(LOCAL.route);
     $rootScope.app.module = ' > ' + LOCAL.name;
 
-    service.customGET('model/sexo', {}).then(function(result){
-      $scope.sexo = result; //sexo = result;
+    var servicePersona = Restangular.all(LOCAL.route_personas);
+    servicePersona.customGET('model/sexo', {}).then(function(result){
+      $scope.sexo = result;
     });
-    service.customGET('model/tipodocumento', {}).then(function(result){
+    servicePersona.customGET('model/tipodocumento', {}).then(function(result){
       $scope.tipodocumento = result;
     });
 
@@ -104,7 +105,6 @@
           tipodocumento: $scope.tipodocumento,
           periodos: $scope.periodos,
           facultades: $scope.facultades,
-          periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams
@@ -113,6 +113,7 @@
       });
     };
     $scope.Edit = function Edit($event){
+      var useFullscreen = ($mdMedia('sm') || $mdMedia('xs')) && $mdMedia('xs') || $mdMedia('sm');
       var parentEl = angular.element(document.body);
       //console.log($scope.periodos);
       $mdDialog.show({
@@ -125,13 +126,13 @@
           tipodocumento: $scope.tipodocumento,
           periodos: $scope.periodos,
           facultades: $scope.facultades,
-          periodos: $scope.periodos,
           modalidades: $scope.modalidades,
           route_escuelas: LOCAL.route_escuelas,
           table:$scope.tableParams,
           model: Restangular.copy($scope.UI.selected)
         },
-        controller: 'IngresanteEditCtrl'
+        controller: 'IngresanteEditCtrl',
+        fullscreen: useFullscreen
       });
     };
 
@@ -201,7 +202,7 @@
     };
     $scope.Save = function(form) {
       $scope.submited = true;
-      $scope.model._escuela = $scope.model._escuela._id;
+      $scope.model._escuela = $scope.model.escuela_select._id;
 
       if (form.$valid) {
         service.post($scope.model).then(function() {
@@ -235,7 +236,6 @@
     $scope.model = model;
     $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
-    $scope.periodos = periodos;
     $scope.facultades = facultades;
     $scope.periodos = periodos;
     $scope.modalidades = modalidades;

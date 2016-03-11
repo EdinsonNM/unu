@@ -1,0 +1,69 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{ title }}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="window-modal-content-lg">
+      <div layout="row" layout-align="center start" layout-margin layout-fill>
+        <md-content flex class="md-padding page-content" style="max-width:1020px;">
+          <div class="table-responsive">
+            <table class="table table-hover table-condensed table-striped table-bordered ">
+              <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+              <thead>
+                <tr>
+                  <th colspan="2">Curso/Grupo</th>
+                  <th>Código</th>
+                  <th>Ciclo</th>
+                  <th>N° Creditos</th>
+                  <th>N° Horas</th>
+                  <th>N° Horas Teoria</th>
+                  <th>N° Horas Práctica</th>
+                  <th>N° Horas Laboratorio</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="curso in cursoshabilitados">
+                <tr class="ng-table-group">
+                  <td colspan="2">
+                    <a href class="groupTitle" ng-click="curso.$hideRows = !curso.$hideRows">
+                      <span class="fa" ng-class="{ 'fa-chevron-right': curso.$hideRows, 'fa-chevron-down': !curso.$hideRows }"></span>
+                      <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
+                    </a>
+                  </td>
+                  <td><strong>{{ curso._planestudiodetalle._curso.codigo }}</strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.ciclo }} </strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.creditos }} </strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.horas_total }} </strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.horas_teoria }} </strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.horas_practica }} </strong></td>
+                  <td><strong>{{ curso._planestudiodetalle.horas_laboratorio }} </strong></td>
+                </tr>
+                <tr ng-hide="curso.$hideRows" ng-repeat="item in curso._grupos" ng-click="item.active=!item.active;EnabledEdit(item, curso)">
+                  <td style="width:30px;">
+                    <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                  </td>
+                  <td class="text-left" data-title="'Curso/Grupo'" sortable="curso">{{ item._seccion.nombre }}</td>
+                  <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{ item._seccion.codigo }}</td>
+                  <td data-title="'Ciclo'"></td>
+                  <td data-title="'N° Creditos'"></td>
+                  <td data-title="'N° Horas'"></td>
+                  <td data-title="'N° Horas Teoria'"></td>
+                  <td data-title="'N° Horas Práctica'"></td>
+                  <td data-title="'N° Horas Laboratorio'"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </md-content>
+      </div>
+    </md-dialog-content>
+    <button ng-if="addMode" class="btn btn-success btn-block btn-inscription" ng-click="addCursos()">Actualizar Matrícula</button>
+    <button ng-if="updateMode" class="btn btn-success btn-block col-md-3 btn-inscription" ng-click="addCursos()">Actualizar Matrícula</button>
+  </form>
+</md-dialog>

@@ -15,10 +15,11 @@
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
             <td class="text-left" data-title="'Código'" sortable="codigoPostulante" filter="{'codigoPostulante':'text'}">{{item.codigoPostulante}}</td>
-            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item.nombres}}</td>
-            <td class="text-left" data-title="'Apellido Paterno'" sortable="apellidoPaterno" filter="{'apellidoPaterno':'text'}">{{item.apellidoPaterno}}</td>
-            <td class="text-left" data-title="'Apellido Materno'" sortable="apellidoMaterno" filter="{'apellidoMaterno':'text'}">{{item.apellidoMaterno}}</td>
-            <td class="text-left" data-title="'Sexo'" sortable="sexo" filter="{'sexo':'text'}">{{item.sexo}}</td>
+            <td class="text-left" data-title="'Nombres'" sortable="nombres" filter="{'nombres':'text'}">{{item._persona.nombres}}</td>
+            <td class="text-left" data-title="'Apellido Paterno'" sortable="apellidoPaterno" filter="{'apellidoPaterno':'text'}">{{item._persona.apellidoPaterno}}</td>
+            <td class="text-left" data-title="'Apellido Materno'" sortable="apellidoMaterno" filter="{'apellidoMaterno':'text'}">{{item._persona.apellidoMaterno}}</td>
+            <td class="text-left" data-title="'Sexo'" sortable="sexo" filter="{'sexo':'text'}">{{item._persona.sexo}}</td>
+            <td class="text-left" data-title="'Documento'" sortable="documento" filter="{'_persona':'text'}">{{item._persona.documento}}</td>
           </tr>
         </tbody>
       </table>
@@ -29,13 +30,13 @@
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
 <md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.New}}</md-tooltip>
-  <md-icon md-font-icon="fa fa-plus fa-lg"></md-icon>
+  <md-icon md-font-icon="fa fa-plus fa-lg tc-white"></md-icon>
 </md-button>
 <!--acciones: se mostraran al seleccionar un elemento del listado-->
 <md-fab-speed-dial ng-if="UI.editMode" md-open="false" md-direction="up" class="md-fling md-fab-bottom-right">
  <md-fab-trigger>
    <md-button aria-label="menu" class="md-fab">
-     <md-icon md-font-icon="fa fa-bars fa-lg tc-{{$root.color.accent}}"></md-icon>
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
    </md-button>
  </md-fab-trigger>
  <md-fab-actions>

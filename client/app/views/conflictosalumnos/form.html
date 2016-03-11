@@ -9,38 +9,124 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content class="window-modal-content-sm">
-      <div flex layout="row" layout-sm="row">
+    <md-dialog-content class="window-modal-content-sm  md-padding">
+      <div flex layout="row" layout-sm="row" ng-hide="allowEditSelection">
         <div flex>
           <md-input-container class="md-block">
-            <label>Código</label>
-            <input required name="codigo" ng-model="model.codigo">
-            <div ng-messages="myForm.codigo.$error"  ng-if="submited">
-              <div ng-message="required">{{message.Required}}</div>
-            </div>
-          </md-input-container>
-        </div>
-        <div flex>
-          <md-input-container class="md-block">
-            <label>Nombre</label>
-            <input required name="nombre" ng-model="model.nombre">
-            <div ng-messages="myForm.nombre.$error"  ng-if="submited">
+            <label>Periodo</label>
+            <md-select ng-model="filtro._periodo" name="periodo" ng-change="allowSelection()" required>
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo">
+                {{ periodo.nombre }}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="myForm._conflicto.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
       </div>
-      <div flex layout="row" layout-sm="column">
-        <div flex="30" layout-align="start start" flex-sm="100" class="text-left">
-          <md-checkbox ng-model="model.activo">
-            Activo
-          </md-checkbox>
+      <div flex layout="row" layout-sm="row" ng-hide="allowEditSelection">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filtro._facultad" name="facultad" ng-change="LoadEcuelas()" required>
+              <md-option ng-repeat="facultad in facultades" ng-value="facultad">
+                {{ facultad.nombre }}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="myForm._conflicto.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
         </div>
-        <div flex="70" layout="row" layout-align="end center" flex-sm="100">
-          <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-          <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filtro._escuela" name="escuela" ng-change="allowSelection()" required>
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{ escuela.nombre }}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
         </div>
       </div>
+      <div flex layout="row" layout-sm="row" ng-show="allowUserSelection">
+        <div flex>
+            <md-autocomplete flex
+              md-selected-item="selected_alumno"
+              md-search-text="searchText"
+              md-items="alumno in FilterAlumnos(searchText)"
+              md-item-text="alumno._persona.nombreCompleto"
+              md-floating-label="Alumno"
+              md-menu-class="autocomplete-custom-template">
+                <md-item-template>
+                    <span class="item-title">
+                        <md-icon md-font-icon="fa fa-book"></md-icon>
+                        <span> {{ alumno._persona.nombreCompleto }} </span>
+                    </span>
+                    <span class="item-metadata">
+                        <span class="item-metastat">
+                            <strong>Código</strong> {{ alumno._alumno.codigoUniversitario }};
+                        </span>
+                        <span class="item-metastat">
+                            <strong>Facultad</strong> {{ alumno._facultad.nombre }};
+                        </span>
+                        <span class="item-metastat">
+                            <strong>Escuela</strong> {{ alumno._escuela.nombre }}
+                        </span>
+                    </span>
+                </md-item-template>
+                <div ng-messages="myForm.requisito.$error" ng-if="myForm.requisito.$touched">
+                    <div ng-message="required">{{message.Required}}</div>
+                    <div ng-message="minlength">Texto demasiado corto</div>
+                    <div ng-message="maxlength">Texto demasiado largo</div>
+                </div>
+            </md-autocomplete>
+        </div>
+      </div>
+      <div flex layout="row" layout-sm="row" ng-show="allowUserSelection">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Conflicto</label>
+            <md-select ng-model="model._conflicto" name="conflicto" required>
+              <md-option ng-repeat="conflicto in conflictos" ng-value="conflicto">
+                {{ conflicto.nombre }}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="myForm._conflicto.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Estado</label>
+            <md-select ng-model="model.estado" name="estado" required>
+              <md-option ng-repeat="est in estados" ng-value="est">
+                {{est}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+
+
     </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </md-dialog-actions>
   </form>
 </md-dialog>

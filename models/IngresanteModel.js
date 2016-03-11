@@ -6,16 +6,20 @@ var IngresanteSchema = new Schema({
         type: String,
         required: true
     },
-    nombres: {
+    promedio: Number,
+    estado:{
         type: String,
+        enum:['Registrado', 'Aprobado', 'Matriculado'],
+        default: 'Registrado'
+    },
+    _facultad: {
+        type: Schema.Types.ObjectId,
+        ref: 'Facultad',
         required: true
     },
-    apellidoPaterno: {
-        type: String,
-        required: true
-    },
-    apellidoMaterno: {
-        type: String,
+    _escuela: {
+        type: Schema.Types.ObjectId,
+        ref: 'Escuela',
         required: true
     },
     _modalidad: {
@@ -28,45 +32,25 @@ var IngresanteSchema = new Schema({
         ref: 'Periodo',
         required: true
     },
-    promedio: Number,
-    documentoIdentidad: {
-        tipo: {
-            type: String,
-            enum: ['DNI', 'CARNET EXTRANJERIA'],
-            default: 'DNI'
-        },
-        numero: String
+    _persona:{
+      type: Schema.Types.ObjectId,
+      ref: 'Persona',
+      required: true
     },
-    sexo: {
-        type: String,
-        enum: ['Masculino', 'Femenino']
+    tipoColegio:{
+      type:String,
+      enum:['Estatal','Particular'],
+      default:'Estatal'
     },
-    estado:{
-        type: String,
-        enum:['Registrado','Aprobado'],
-        default: 'Registrado'
-    },
-    _escuela: {
-        type: Schema.Types.ObjectId,
-        ref: 'Escuela',
-        required: true
-    },
-    _pagoIngresante: {
-        activo: {
-            type: Boolean,
-            default: false
-        },
-        voucher: String
-    },
-    created_at: Date,
-    updated_at: Date
+    createdAt: Date,
+    updatedAt: Date
 });
 IngresanteSchema.plugin(mongoosePaginate);
 IngresanteSchema.pre('save', function(next) {
     var now = new Date();
-    this.updated_at = now;
-    if (!this.created_at) {
-        this.created_at = now;
+    this.updatedAt = now;
+    if (!this.createdAt) {
+        this.createdAt = now;
     }
     next();
 });

@@ -94,6 +94,32 @@ module.exports=function(){
       		}
       	);
       });
+
+      /**
+       * devuelve el último periodo registradoº
+       */
+       controller.get('/lastPeriodo', function(req, res){
+       	var filter = {activo: true};
+       	model.paginate(
+       		filter,
+       		{
+            limit: 1,
+            sort:{
+              $natural: -1
+           },
+           populate: [{
+             path:'procesos',
+             populate:{
+                path:'_proceso'
+             }
+          }]
+          },
+       		function(err, results, pageCount, itemCount){
+       			res.send(results.docs);
+       		}
+       	);
+       });
+
     }
   };
 };
