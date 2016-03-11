@@ -243,7 +243,6 @@
             console.log('No puede usar el servicio por la modalidad de ingreso');
             $state.go('app.matricularevision');
         }
-
       };
 
       switch ($rootScope.USER._grupo.codigo) {

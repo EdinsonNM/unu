@@ -2,6 +2,8 @@ var model = require('../models/FichaMatriculaModel.js');
 var CursoAperturado = require('../models/CursoAperturadoPeriodoModel.js');
 var Alumno = require('../models/AlumnoModel.js');
 var Curso = require('../models/CursoModel.js');
+var Matricula = require('../models/MatriculaModel.js');
+var _ = require('underscore');
 
 var auth = require('../config/passport');
 
@@ -29,6 +31,16 @@ module.exports=function(){
       /**
        * retorna los cursos habilitados para la matrícula
        */
+      var findAperturadoEnMatricula = function(cursosMatriculados, aperturado){
+        var c= 0;
+        var res= [];
+        cursosMatriculados.forEach(function(item){
+          if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.toString() == aperturado._planestudiodetalle._id.toString()){
+            res.push(item._grupoCurso._id.toString());
+          }
+        });
+        return res;
+      };
       controller.get('/methods/fichamatricula', function(req, res){
         var cursosDisponibles = [];
         var planesRegistrados = [];
@@ -40,10 +52,9 @@ module.exports=function(){
             path:'_detalles'
           }]
         )
-        .exec(function(err,matricula){
-          if(err || !matricula) return res.status(500).send('No se encontró la matrícula');
+        .exec(function(err,fichamatricula){
+          if(err || !fichamatricula) return res.status(500).send('No se encontró la fichamatrícula');
           CursoAperturado.find({_periodo:_periodo})
-          .populate('_grupos')
           .populate(
             [{
               path:'_grupos',
@@ -60,22 +71,62 @@ module.exports=function(){
             }])
           .exec(function(err,aperturados){
             if(err || !aperturados.length) return res.status(500).send('No se encontraron Cursos Aperturados');
-            var count;
-            aperturados.forEach(function(aperturado){
-              if(aperturado._planestudiodetalle){
-                count = 0;
-                matricula._detalles.forEach(function(detalle){
-                  if(detalle._planEstudiosDetalle === aperturado._planestudiodetalle._id){
-                    count++;
+
+            Matricula.findOne({'_alumno':_alumno, '_periodo':_periodo})
+            .populate(
+              [{
+                path: '_detalleMatricula',
+                populate: {
+                  path: '_grupoCurso',
+                  model: 'GrupoCurso',
+                  populate: {
+                    path: '_cursoAperturadoPeriodo',
+                    model: 'CursoAperturadoPeriodo'
                   }
-                });
-                if(count === 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0 && aperturado._grupos.length>0){
-                  cursosDisponibles.push(aperturado);
-                  planesRegistrados.push(aperturado._planestudiodetalle._id);
                 }
-              }
+              }]
+            ).exec(function(err, matricula){
+              if(err || !matricula) return res.status(500).send('No se encontró la matrícula');
+
+              var count;
+              var cursosMatriculados = matricula._detalleMatricula;
+              var cursosFiltrados = [];
+              aperturados.forEach(function(aperturado){
+                cursosFiltrados = findAperturadoEnMatricula(cursosMatriculados, aperturado);
+                if(cursosFiltrados.length){
+                  aperturado._grupos.forEach(function(grupo, key){
+                    if(cursosFiltrados.indexOf(grupo._id.toString())<0 && grupo.inscritos >= grupo.totalCupos){
+                      aperturado._grupos.splice(key, 1);
+                    }
+                  });
+                  if(aperturado._grupos.length>0){
+                    cursosDisponibles.push(aperturado);
+                    planesRegistrados.push(aperturado._planestudiodetalle._id);
+                  }
+                }else{
+                  if(aperturado._planestudiodetalle){
+                    count = 0;
+                    fichamatricula._detalles.forEach(function(detalle){
+                      if(detalle._planEstudiosDetalle === aperturado._planestudiodetalle._id){
+                        count++;
+                      }
+                    });
+                    if(count === 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0){
+                      aperturado._grupos.forEach(function(grupo, key){
+                        if(grupo.inscritos >= grupo.totalCupos){
+                          aperturado._grupos.splice(key, 1);
+                        }
+                      });
+                      if(aperturado._grupos.length>0){
+                        cursosDisponibles.push(aperturado);
+                        planesRegistrados.push(aperturado._planestudiodetalle._id);
+                      }
+                    }
+                  }
+                }
+              });
+              return res.status(200).send(cursosDisponibles);
             });
-            return res.status(200).send(cursosDisponibles);
           });
         });
 
