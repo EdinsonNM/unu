@@ -3,6 +3,7 @@ var CursoAperturado = require('../models/CursoAperturadoPeriodoModel.js');
 var Alumno = require('../models/AlumnoModel.js');
 var Curso = require('../models/CursoModel.js');
 var Matricula = require('../models/MatriculaModel.js');
+var Programaciones = require('../models/ProgramacionGrupoCursoModel.js');
 var _ = require('underscore');
 
 var auth = require('../config/passport');
@@ -58,10 +59,13 @@ module.exports=function(){
           .populate(
             [{
               path:'_grupos',
-              populate: {
+              populate: [{
                 path: '_seccion',
                 model: 'Seccion'
-              }
+              },{
+                path: '_programaciones',
+                model: 'ProgramacionGrupoCurso'
+              }]
             },{
               path: '_planestudiodetalle',
               populate: {

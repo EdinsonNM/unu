@@ -5,11 +5,11 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 var CompromisopagoSchema = new Schema({
 
-    codigo:{//un simple correlativo como identificador del compromiso
+    codigo:{//00+DNI => Para INGRESANTES | CODIGOUNIVERSITARIO => ALUMNOS
       type:String,
       required:true
     },
-    referenciAlumno:{//un simple correlativo como identificador del compromiso
+    referenciAlumno:{//SE ACTUALIZA CUANDO EL INGRESANTE SE CONVIERTE EN ALUMNO, ES EL CODIGOUNIVERSITARIO
       type:String
     },
     pagado:{
@@ -77,9 +77,11 @@ var CompromisopagoSchema = new Schema({
       ref:'Tasa',
       required:true
     },
-    esActivo:{
-      type:Boolean,
-      default:true
+    /*NOTE: El estado Desetimado signfica que al final del proceso de matricula será eliminado dado que fue un comprobante temporal*/
+    estado:{
+      type:String,
+      enum:['Activo','Inactivo','Desestimado','Anulado'],
+      default:'Activo'
     }
 });
 
@@ -93,8 +95,8 @@ CompromisopagoSchema.pre('save',function(next){
   var montoTotalPagado = 0, montoTotalMora = 0, totalDeuda = 0;
   totalDeuda = this.importe;
   for (var i = 0; i < this.detallePago.length; i++) {
-    montoTotalPagado = this.detallePago[i].montoPago;
-    montoTotalMora = this.detallePago[i].montoMora;
+    montoTotalPagado += this.detallePago[i].montoPago;
+    montoTotalMora += this.detallePago[i].montoMora;
   }
   this.moratotal = montoTotalMora;
   this.saldo = (totalDeuda - montoTotalPagado <= 0)?0:totalDeuda - montoTotalPagado;

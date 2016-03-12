@@ -25,12 +25,16 @@ module.exports=function(){
 
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
-            _id: context.doc._grupoCugrso},
-            {$push: {_programaciones:context.doc}},
-            function(err){
-                if(err) return response.status(500).send({message:err});
-                callback(null, context);
-            });
+            _id: context.doc._grupoCurso
+          },{
+            $push: {
+              _programaciones:context.doc
+            }
+          },
+          function(err){
+              if(err) return response.status(500).send({message:err});
+              callback(null, context);
+          });
 
         });
 

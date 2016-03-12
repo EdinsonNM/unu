@@ -45,7 +45,8 @@ module.exports = function GenerarArchivoSalida(next) {
     dataArchivo = linea + '\r\n';
     //Detalle
     CompromisoPago.find({
-      pagado: false
+      pagado: false,
+      estado:'Activo'
     }).populate('_persona _tasa').exec(function(err, items) {
 
       if (err) {
