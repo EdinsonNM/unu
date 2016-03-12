@@ -77,7 +77,7 @@
       var LastPeriodo = function() {
         //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
         //   var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
-        var idMatriculaProceso = '56de3af7a785bf7f4d34551c';
+        //   var idMatriculaProceso = '56de3af7a785bf7f4d34551c';
         var f = new Date();
         var servicePeriodo = Restangular.all('periodos/lastPeriodo');
         servicePeriodo.getList().then(function(result) {
@@ -87,34 +87,45 @@
           console.log(result);
           console.log($scope.nombreperiodo);
           angular.forEach(result[0].procesos, function(item) {
-            if (item._proceso._id === idMatriculaProceso) {
-              $scope.process = true;
-              var fechaInicio = new Date(item.fechaInicio);
-              var fechaFin = new Date(item.fechaFin);
-              if (fechaInicio <= f && f <= fechaFin) {
-                $scope.showmenu = true;
-                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
-                  $scope.aproved = true;
+
+            console.log(item._proceso.codigo);
+            switch (item._proceso.codigo) {
+              case '09':
+              case '23':
+                $scope.process = true;
+                var fechaInicio = new Date(item.fechaInicio);
+                var fechaFin = new Date(item.fechaFin);
+                if (fechaInicio <= f && f <= fechaFin) {
+                  $scope.showmenu = true;
+                  if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                    $scope.aproved = true;
+                  } else {
+                    $scope.aproved = false;
+                  }
                 } else {
-                  $scope.aproved = false;
+                  $scope.showmenu = false;
+                  if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                    $scope.aproved = true;
+                  } else {
+                    $scope.aproved = false;
+                    $state.go('app.alumnomisdatos');
+                  }
                 }
-              } else {
-                $scope.showmenu = false;
+                break;
+              default:
                 if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
                   $scope.aproved = true;
                 } else {
                   $scope.aproved = false;
                   $state.go('app.alumnomisdatos');
                 }
-              }
-            } else {
-              if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
-                $scope.aproved = true;
-              } else {
-                $scope.aproved = false;
-                $state.go('app.alumnomisdatos');
-              }
             }
+            // if (item._proceso._id === idMatriculaProceso) {
+            //
+            // } else {
+            //
+            // }
+
           });
         });
       };
@@ -218,7 +229,9 @@
                     }
                   }
                 });
-                $state.go('app.matricularevision', {},{reload:true});
+                $state.go('app.matricularevision', {}, {
+                  reload: true
+                });
               } else {
                 if ($scope.periodoIngresante === $scope.periodoActual) {
                   //Es ingresante y no hay matrocula, grabar matricula
