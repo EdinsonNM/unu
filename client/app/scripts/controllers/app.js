@@ -18,10 +18,6 @@
         hrefMatricula: '#/home',
         hrefPlanestudio: '#/home',
         messageDatos: '',
-        //  refMatricula: 'app.matricularevision',
-        //  hrefMatricula: '#/home/testing/matricula/revision',
-        //  refPlanestudio: 'app.pabellones',
-        //  hrefPlanestudio: '#/home/pabellones',
       };
       $scope.modeIngreso = true;
       $rootScope.modeIngresoGlobal = true;
@@ -75,15 +71,11 @@
 
 
       var LastPeriodo = function() {
-        //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
-        //   var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
-        //   var idMatriculaProceso = '56de3af7a785bf7f4d34551c';
         var f = new Date();
         var servicePeriodo = Restangular.all('periodos/lastPeriodo');
         servicePeriodo.getList().then(function(result) {
           $scope.periodoActual = result[0]._id;
           console.log('periodo actual', $scope.periodoActual);
-          // $scope.nombreperiodo = result[0].nombre;
           console.log(result);
           console.log($scope.nombreperiodo);
           angular.forEach(result[0].procesos, function(item) {
@@ -120,12 +112,6 @@
                   $state.go('app.alumnomisdatos');
                 }
             }
-            // if (item._proceso._id === idMatriculaProceso) {
-            //
-            // } else {
-            //
-            // }
-
           });
         });
       };
@@ -169,8 +155,6 @@
       };
 
       var Save = function() {
-        //$scope.submited = true;
-        //declaro el servicio con la ruta correcta del endpoint.
         $scope.model = {};
         $scope.model._periodo = $scope.periodoActual;
         $scope.model._alumno = $rootScope.ALUMNO._id;
