@@ -179,19 +179,10 @@
         $scope.nombreIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
         $scope.modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
         switch ($scope.modalidadIngreso) {
-          case '04':
-          case '06':
-          case '07':
-          case '08':
-          case '09':
-          case '10':
-          case '11':
-          case '12':
-          case '13':
-          case '14':
-          case '15':
-          case '17':
-          case '18':
+          case '01':
+          case '02':
+          case '03':
+          case '16':
             $scope.modeIngreso = true;
             $rootScope.modeIngresoGlobal = true;
             console.log($scope.periodoActual);
@@ -202,26 +193,32 @@
                 _alumno: $rootScope.ALUMNO._id
               }
             }).then(function(data) {
-              $scope.matricula = data[0];
+              $scope.matricula = data;
+              //   $scope.matricula = data[0];
               console.log('matricula scope');
               console.log($scope.matricula);
 
               if ($scope.matricula) {
-
-                switch ($scope.matricula.estado) {
-                  case 'Proceso':
-                    console.log('Matricula en proceso');
-                    $state.go('app.matriculainscripcion');
-                    break;
-                  case 'Prematricula':
-                    console.log('Matricula en prematricula');
-                    $state.go('app.matricularevisionlast');
-                    break;
-                  case 'Matriculado':
-                    console.log('Con matricula matriculada');
-                    $state.go('app.matriculaingresantelast');
-                    break;
-                }
+                angular.forEach($scope.matricula, function(item) {
+                  console.log(item);
+                  if (item.estado !== 'Inactivo' && item.estado !== 'Liberado') {
+                    switch (item.estado) {
+                      case 'Proceso':
+                        console.log('Matricula en proceso');
+                        $state.go('app.matriculainscripcion');
+                        break;
+                      case 'Prematricula':
+                        console.log('Matricula en prematricula');
+                        $state.go('app.matricularevisionlast');
+                        break;
+                      case 'Matriculado':
+                        console.log('Con matricula matriculada');
+                        $state.go('app.matriculaingresantelast');
+                        break;
+                    }
+                  }
+                });
+                $state.go('app.matricularevision', {},{reload:true});
               } else {
                 if ($scope.periodoIngresante === $scope.periodoActual) {
                   //Es ingresante y no hay matrocula, grabar matricula
