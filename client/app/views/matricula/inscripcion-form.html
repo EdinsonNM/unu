@@ -13,65 +13,69 @@
       <div layout="row" layout-align="center start" layout-margin layout-fill>
         <md-content flex class="md-padding page-content" style="max-width:1020px;">
           <div class="table-responsive">
-            <table class="table table-hover table-condensed table-striped table-bordered ">
+            <table class="table table-condensed table-striped table-bordered ">
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
-              <thead>
-                <tr>
-                  <th colspan="2">Curso/Grupo</th>
-                  <th>Código</th>
-                  <th>Ciclo</th>
-                  <th>N° Cred</th>
-                  <th>N° Hrs</th>
-                  <th>N° Hrs Teoria</th>
-                  <th>N° Hrs Práctica</th>
-                  <th>N° Hrs Laboratorio</th>
-                  <th>Día</th>
-                  <th>Hr Inicio / Hr Fin</th>
-                </tr>
-              </thead>
-              <tbody ng-repeat="curso in cursoshabilitados">
+              <tbody ng-repeat="(ciclo, cursos) in cursoshabilitados">
                 <tr class="ng-table-group">
-                  <td colspan="2">
-                    <a href class="groupTitle" ng-click="curso.$hideRows = !curso.$hideRows">
-                      <span class="fa" ng-class="{ 'fa-chevron-right': curso.$hideRows, 'fa-chevron-down': !curso.$hideRows }"></span>
-                      <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
+                  <td>
+                    <a href class="groupTitle" ng-click="cursos.$hideRows = !cursos.$hideRows">
+                      <span class="fa" ng-class="{ 'fa-chevron-right': cursos.$hideRows, 'fa-chevron-down': !cursos.$hideRows }"></span>
+                      <strong>ciclo {{ ciclo }}</strong>
                     </a>
                   </td>
-                  <td><strong>{{ curso._planestudiodetalle._curso.codigo }}</strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.ciclo }} </strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.creditos }} </strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.horas_total }} </strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.horas_teoria }} </strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.horas_practica }} </strong></td>
-                  <td><strong>{{ curso._planestudiodetalle.horas_laboratorio }} </strong></td>
-                  <td></td>
-                  <td></td>
                 </tr>
-                <tr ng-hide="curso.$hideRows" ng-repeat="item in curso._grupos" ng-click="item.active=!item.active;EnabledEdit(item, curso)">
-                  <td style="width:30px;">
-                    <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
-                  </td>
-                  <td class="text-left" data-title="'Curso/Grupo'" sortable="curso">{{ item._seccion.nombre }}</td>
-                  <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{ item._seccion.codigo }}</td>
-                  <td data-title="'Ciclo'"></td>
-                  <td data-title="'N° Creditos'"></td>
-                  <td data-title="'N° Horas'"></td>
-                  <td data-title="'N° Horas Teoria'"></td>
-                  <td data-title="'N° Horas Práctica'"></td>
-                  <td data-title="'N° Horas Laboratorio'"></td>
-                  <td data-title="'Día'">
-                    <md-list>
-                      <md-list-item style="min-height: inherit!important" ng-repeat="horario in item._programaciones[0].horarios">
-                        <p> {{ horario.dia }} </p>
-                      </md-list-item>
-                    </md-list>
-                  </td>
-                  <td data-title="'Hora Inicio / Hora Fin'">
-                    <md-list>
-                      <md-list-item style="min-height: inherit!important" ng-repeat="horario in item._programaciones[0].horarios">
-                        <p> {{ horario.horaInicio | date : 'hh:mm' }} / {{ horario.horaFin | date : 'hh:mm' }} </p>
-                      </md-list-item>
-                    </md-list>
+                <tr ng-hide="cursos.$hideRows" ng-repeat="curso in cursos">
+                  <td ng-repeat="curso in cursos">
+                    <table style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>Curso</th>
+                          <th style="padding-right: 15px; padding-left:15px;">Grupo</th>
+                          <th style="padding-right: 15px; padding-left:15px;">Código</th>
+                          <th style="padding-right: 15px; padding-left:15px;">N° Cred</th>
+                          <th style="padding-right: 15px; padding-left:15px;">N° Hrs</th>
+                          <th style="padding-right: 15px; padding-left:15px;">Día</th>
+                          <th style="padding-right: 15px; padding-left:15px;">Hr Inicio / Hr Fin</th>
+                        </tr>
+                      </thead>
+                      <tr class="ng-table-group">
+                        <td>
+                          <a href class="groupTitle" ng-click="curso.$hideRows = !curso.$hideRows">
+                            <span class="fa" ng-class="{ 'fa-chevron-right': curso.$hideRows, 'fa-chevron-down': !curso.$hideRows }"></span>
+                            <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
+                          </a>
+                        </td>
+                        <td><strong></strong></td>
+                        <td><strong>{{ curso._planestudiodetalle._curso.codigo }}</strong></td>
+                        <td class="text-center"><strong>{{ curso._planestudiodetalle.creditos }} </strong></td>
+                        <td class="text-center"><strong>{{ curso._planestudiodetalle.horas_total }} </strong></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr ng-hide="curso.$hideRows" ng-repeat="item in curso._grupos" ng-click="item.active=!item.active;EnabledEdit(item, curso)">
+                        <td>
+                          <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+                        </td>
+                        <td class="text-center">{{ item._seccion.nombre }}</td>
+                        <td class="text-center">{{ item._seccion.codigo }}</td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <md-list>
+                            <md-list-item style="min-height: inherit!important" ng-repeat="horario in item._programaciones[0].horarios">
+                              <p> {{ horario.dia }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                        <td data-title="'Hora Inicio / Hora Fin'">
+                          <md-list>
+                            <md-list-item style="min-height: inherit!important" ng-repeat="horario in item._programaciones[0].horarios">
+                              <p> {{ horario.horaInicio | date : 'hh:mm' }} / {{ horario.horaFin | date : 'hh:mm' }} </p>
+                            </md-list-item>
+                          </md-list>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </tbody>

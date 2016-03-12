@@ -32,6 +32,17 @@ module.exports=function(){
       /**
        * retorna los cursos habilitados para la matrícula
        */
+      var groupByCiclo = function(cursosDisponibles){
+        var cursosCiclo = {};
+        cursosDisponibles.forEach(function(curso){
+          var ciclo = curso._planestudiodetalle.ciclo;
+          if(typeof cursosCiclo[ciclo] === 'undefined'){
+            cursosCiclo[ciclo] = [];
+          }
+          cursosCiclo[ciclo].push(curso);
+        });
+        return cursosCiclo;
+      };
       var findAperturadoEnMatricula = function(cursosMatriculados, aperturado){
         var c= 0;
         var res= [];
@@ -129,7 +140,9 @@ module.exports=function(){
                   }
                 }
               });
-              return res.status(200).send(cursosDisponibles);
+              var response = {};
+              response.ciclos = groupByCiclo(cursosDisponibles);
+              return res.status(200).send(response);
             });
           });
         });
