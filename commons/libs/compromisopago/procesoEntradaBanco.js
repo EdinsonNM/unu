@@ -13,7 +13,9 @@ var situacionalumno = require('../../../models/SituacionAlumnoModel.js'); //mode
 var escuelas = require('../../../models/EscuelaModel.js'); //model de Escuela
 var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
 
-var Matricula = require('../../../models/MatriculaModel.js'); //model de Alumno
+var Matricula = require('../../../models/MatriculaModel.js'); //model de Matricula
+var DetalleMatricula = require('../../../models/DetalleMatriculaModel.js'); //model de DetalleMatricula
+//var GrupoCurso = require('../../../models/grupoCursoModel.js'); //model de DetalleMatricula
 var FichaMatricula = require('../../../models/FichaMatriculaModel.js'); //model de Alumno
 var FichaMatriculaDetalle = require('../../../models/FichaMatriculaDetalleModel.js'); //model de Alumno
 
@@ -194,6 +196,30 @@ var procesarIngresante = function(ingresante){
   return defer.promise;
 };
 
+var ProcesarAlumno = function(objCompromisoPago,next){
+  try{
+    AlumnoModel.findOne({codigo:objCompromisoPago.codigo},function(err,dataAlumno){
+      if(err) return next(err);
+      if(!dataAlumno) return next({mesage:'No se encontró al Alumno de Código Universitario ' + dataCompromisoPago.codigo});
+      Matricula.findOne({_alumno:dataAlumno._id},function(err,dataMatricula){
+        if(err) return next(err);
+        if(!dataMatricula) return next({message:'No se encontró Matrícula asociada al Alumno ' + dataCompromisoPago.codigo});
+        dataMatricula.estado = 'Matriculado';
+        dataMatricula.save(function(err,objMatricula){
+        if(err) return next(err);
+          DetalleMatricula.update({_matricula:objMatricula._id},{$set:{estado:'Registrado'}},{multi: true},function(err,dataDetalle){
+            if(err) return next(err);
+            return next(null, dataMatricula);
+          });
+        });
+      });
+    });
+  }
+  catch(e){
+    return next(e);
+  }
+};
+
 var procesarPago = function procesarPago(item,index){
   console.log("item:",item);
   var defer = Q.defer();
@@ -228,6 +254,7 @@ var procesarPago = function procesarPago(item,index){
   CompromisoPago.findOne({_id:compromisoId},function(err, compromisopago){
     if(err) return defer.reject(err);
     if(!compromisopago) return defer.resolve({message:'No se encontro el compromiso'});
+    compromisopago.estado = 'Activo';
     compromisopago.detallePago.push({
       nroMovimiento: NroMovimiento,
       fechaPago: FechaPago,
@@ -248,7 +275,11 @@ var procesarPago = function procesarPago(item,index){
       if(!ingresante){
         compromisopago.save(function(err,objCompromisoPago){
           if(err) return defer.reject(err);
-          return defer.resolve(objCompromisoPago);
+          if(objCompromisoPago.pagado)
+            ProcesarAlumno(objCompromisoPago,function(err,data){
+              if(err) return defer.reject(err);
+              return defer.resolve(objCompromisoPago);
+            });
         });
       }else{
         procesarIngresante(ingresante).then(
@@ -262,15 +293,64 @@ var procesarPago = function procesarPago(item,index){
             return defer.reject(result);
           });
       }
-
-
     });
-
-
   });
   //defer.resolve(true);
   //proceso de actualización de pagos
   return defer.promise;
+};
+
+var RestableceCupo = function(detalleMatricula,next){
+  //SE AUMENTA EL CUPO DE LOS CURSOS SELECCIONADOS
+  try{
+    GrupoCurso.update({_id:detalleMatricula._grupoCurso},{$set:{cupos:cupos+1}},function(err,dataGrupoCurso){
+      if(err) return next(err);
+      return next(null, detalleMatricula);
+    });
+  }
+  catch(e){
+    return next(e);
+  }
+};
+
+var LiberarMatriculaIndividual = function(codigoAlumno,next){
+  //MATRICULA Y DETALLE DE MATRICULA SERAN PASADOS A ESTADO Liberado
+  try{
+    AlumnoModel.findOne({codigo:codigoAlumno},function(err,dataAlumno){
+      if(err) return next(err);
+      if(!dataAlumno) return next({mesage:'No se encontró al Alumno de Código Universitario ' + codigoAlumno});
+      Matricula.findOne({_alumno:dataAlumno._id},function(err,dataMatricula){
+        dataMatricula.estado = 'Liberado';
+        dataMatricula.save(function(err,objMatricula){
+          if(err) return next(err);
+          DetalleMatricula.update({_matricula:objMatricula._id},{$set:{estado:'Liberado'}},{multi: true},function(err,dataDetalles){
+            if(err) return next(err);
+            for (var i = 0; i < dataDetalles.length; i++) {
+              RestableceCupo(dataDetalles[i],next);
+            }
+          });
+        });
+      });
+    });
+  }
+  catch(e){
+    return next(e);
+  }
+};
+
+var LiberarMatriculas = function(next){
+  //COMPROMISOS DE PAGO NO CANCELADOS => SERAN PASADOS A ESTADO Anulado
+  try{
+    CompromisoPago.update({pagado:false,estado:'Inactivo'},{$set:{estado:'Desestimado'}},{multi:true},function(err, listaCompromisos){
+      if(err) return next(err);
+      for (var i = 0; i < listaCompromisos.length; i++) {
+        LiberarMatriculaIndividual(listaCompromisos[i].codigo, next);
+      }
+    });
+  }
+  catch(e){
+    return next(e);
+  }
 };
 
 module.exports  = function(filename,next){
@@ -346,6 +426,7 @@ module.exports  = function(filename,next){
           });
           x.then(function(){
             lockFile.unlockSync(pathLockFile);
+            LiberarMatriculas();
             console.log('finalizo..');
           }).done();
 

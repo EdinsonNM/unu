@@ -1,7 +1,42 @@
+<!-- <div id="printSection">
+  <div id="showprint" layout="row" layout-fill>
+    <div id="headerPre" class="md-layout-row layout-fill">
+      <div id="righthead" class="col-md-10">
+        <md-list class="md-layout-column layout-padding md-teal-theme" role="list">
+          <md-list-item role="listitem" class="md-no-proxy">
+            <img src="/images/logo.jpg" width="100" height="100" class="img-round user-logo-main">
+            <div class="md-list-item-text">
+              <h3 class="ng-binding">UNIVERSIDAD NACIONAL DE UCAYALI</h3>
+              <p class="ng-binding">OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
+              <h2> FICHA DE PRE-MATRICULA </br>SEMESTRE ACADEMICO 2016-0</h2>
+
+            </div>
+          </md-list-item>
+        </md-list>
+
+        <p>FACULTAD DE CIENCIAS FORESTALES</p>
+        <p>ESCUELA: INGENIERIA FORESTAL</p>
+        <div>
+          FICHA DE PRE-MATRICULA SEMESTRE ACADEMICO 2016-0
+        </div>
+
+
+        <div>
+          FACULTAD DE CIENCIAS FORESTALES ESCUELA: INGENIERIA FORESTAL
+        </div>
+      </div>
+      <div id="lefthead" class="col-md-2">
+        FOTO
+      </div>
+    </div>
+  </div>
+</div> -->
+
 <md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
     <h3>Matrícula {{periodoNombre }}</h3>
   </md-subheader>
+
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
@@ -37,28 +72,24 @@
         </p>
       </div>
       <!-- <div print-element-id="printSection" layout="row" layout-fill> -->
-      <div id="printSection" layout="row" layout-fill>
+      <md-content flex class="md-padding page-content" style="max-width:600px">
+        <!-- <div id="printSec"> -->
 
-        <md-content flex class="md-padding page-content" style="max-width:600px">
-         <div id="printSec">
-            <strong>Compromiso de Pago</strong>
-         </div>
-         <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
-           <tbody>
-           <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
-               <td class="text-left" data-title="'Código'">{{}}</td>
-               <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
-               <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
-           </tr>
+        <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+          <tbody>
+            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
+              <td class="text-left" data-title="'Código'">{{}}</td>
+              <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
+              <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
+            </tr>
 
-           <tr ng-if="!UI.deudasValue">
-               <td class="text-center" colspan="3"> {{UI.messageDeudas}}</td>
-           </tr>
+            <tr ng-if="!UI.deudasValue">
+              <td class="text-center" colspan="3"> {{UI.messageDeudas}}</td>
+            </tr>
 
-           </tbody>
-         </table>
-        </md-content>
-      </div>
+          </tbody>
+        </table>
+      </md-content>
 
       <div layout="row" layout-fill>
         <div class="text-center" flex>

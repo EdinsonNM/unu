@@ -34,6 +34,8 @@
         nextStage2: false
       };
 
+      $scope.modeIngreso = false;
+
       var LOCAL = {
         name: 'Registrar Matricula',
         //form: 'views/aprobacion/cursos/form-grupo.html',
@@ -71,8 +73,10 @@
                   $scope.UI.pendientesValue = true;
                   $scope.UI.nextStage1 = false;
                 } else {
+
                   $scope.UI.nextStage1 = true;
                   $scope.UI.messagePendiente = 'No se encontro ningun pendiente';
+
                 }
               }, 500);
             });
@@ -108,6 +112,7 @@
                   $scope.UI.nextStage2 = true;
                   $scope.UI.deudasValue = false;
                   $scope.UI.messageDeudas = 'No se encontro ninguna deuda pendiente';
+
                 }
               }, 500);
             });
@@ -116,42 +121,69 @@
 
       };
 
-      var verificaMatricula = function(){
-         console.log($scope.idLast);
-         var serviceMatricula = Restangular.all('matriculas');
-         serviceMatricula.getList({
-            conditions: {
-               _periodo: $scope.idLast,
-               _alumno: $scope.ALUMNO._id
-            }
-         }).then(function(data){
-            $scope.matricula = data[0];
-            console.log('matricula scope');
-            console.log($scope.matricula);
-            // if($scope.matricula.length !== 0){}
-            if($scope.matricula){
-               if($scope.matricula.estado === 'Proceso'){
+      var verificaMatricula = function() {
+        $scope.nombreIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
+        $scope.modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
+        console.log('modadlida', $scope.modalidadIngreso);
+        switch ($scope.modalidadIngreso) {
+          case '04':
+          case '06':
+          case '07':
+          case '08':
+          case '09':
+          case '10':
+          case '11':
+          case '12':
+          case '13':
+          case '14':
+          case '15':
+          case '17':
+          case '18':
+            $scope.modeIngreso = true;
+            var serviceMatricula = Restangular.all('matriculas');
+            serviceMatricula.getList({
+              conditions: {
+                _periodo: $scope.idLast,
+                _alumno: $scope.ALUMNO._id
+              }
+            }).then(function(data) {
+              $scope.matricula = data[0];
+              console.log('matricula scope');
+              console.log($scope.matricula);
+              // if($scope.matricula.length !== 0){}
+              if ($scope.matricula) {
+                if ($scope.matricula.estado === 'Proceso') {
                   $state.go('app.matriculainscripcion');
-               }else {
-                  if($scope.matricula.estado === 'Prematricula'){
-                     $state.go('app.matricularevisionlast');
+                } else {
+                  if ($scope.matricula.estado === 'Prematricula') {
+                    $state.go('app.matricularevisionlast');
                   }
-               }
-            }
-         });
+                }
+              }
+            });
+            break;
+          default:
+            $scope.modeIngreso = false;
+            $scope.UI.nextStage1 = false;
+            $scope.UI.nextStage2 = false;
+            $scope.modeIngresoGlobal = false;
+            $scope.messageModalidad = 'por su modalidad de ingreso: ' + $scope.nombreIngreso;
+        }
       };
 
+
+
       var datosAlumno = function() {
-         //$scope.idplanestudio= 'null';
+        //$scope.idplanestudio= 'null';
         var Service = Restangular.all('avancecurriculars');
-      //  console.log('alumno_id datosalummno'+$scope.ALUMNO._id);
+        //  console.log('alumno_id datosalummno'+$scope.ALUMNO._id);
         Service.getList({
           conditions: {
             _alumno: $scope.ALUMNO._id
           }
         }).then(function(data) {
           $scope.planestudio = data;
-           $scope.idplanestudio = data[0]._planEstudios;
+          $scope.idplanestudio = data[0]._planEstudios;
         });
       };
 
@@ -189,22 +221,22 @@
 
         console.log($scope.model);
         service = Restangular.all('matriculas');
-         service.post($scope.model).then(function() {
+        service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
-         // $mdDialog.hide();
-         }, function(error) {
+          // $mdDialog.hide();
+        }, function(error) {
           switch (error.status) {
             case 422:
-               $scope.ValidationError = error.data;
-               break;
+              $scope.ValidationError = error.data;
+              break;
             default:
           }
 
-         }, function(result) {
+        }, function(result) {
           ToastMD.error(result.data.message);
 
 
-         });
+        });
 
       };
 

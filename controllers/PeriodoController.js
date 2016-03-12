@@ -106,7 +106,13 @@ module.exports=function(){
             limit: 1,
             sort:{
               $natural: -1
-            }
+           },
+           populate: [{
+             path:'procesos',
+             populate:{
+                path:'_proceso'
+             }
+          }]
           },
        		function(err, results, pageCount, itemCount){
        			res.send(results.docs);
