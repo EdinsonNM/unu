@@ -34,6 +34,7 @@
         getFichaMatricula();
         getMatricula();
       }, 800);
+      $scope.creditosactuales = 0;
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
@@ -101,6 +102,9 @@
             matricula = response;
             $scope.cursosselected = response._detalleMatricula;
           }
+          angular.forEach(matricula._detalleMatricula, function(detalle){
+            $scope.creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
+          });
         });
       };
 

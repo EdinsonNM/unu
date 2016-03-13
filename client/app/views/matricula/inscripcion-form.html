@@ -26,14 +26,14 @@
                 </tr>
                 <tr ng-hide="cursos.$hideRows" ng-repeat="curso in cursos">
                   <td ng-repeat="curso in cursos">
-                    <table class="incripcion-horarios">
+                    <table class="inscripcion-horarios">
                       <thead>
                         <tr>
                           <th>Curso</th>
-                          <th style="padding-right: 15px; padding-left:15px;">Grupo</th>
                           <th style="padding-right: 15px; padding-left:15px;">Código</th>
                           <th style="padding-right: 15px; padding-left:15px;">N° Cred</th>
                           <th style="padding-right: 15px; padding-left:15px;">N° Hrs</th>
+                          <th style="padding-right: 15px; padding-left:15px;">Grupo</th>
                           <th style="padding-right: 15px; padding-left:15px;">Día</th>
                           <th style="padding-right: 15px; padding-left:15px;">Hr Inicio / Hr Fin</th>
                         </tr>
@@ -45,10 +45,10 @@
                             <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
                           </a>
                         </td>
-                        <td><strong></strong></td>
                         <td><strong>{{ curso._planestudiodetalle._curso.codigo }}</strong></td>
                         <td class="text-center"><strong>{{ curso._planestudiodetalle.creditos }} </strong></td>
                         <td class="text-center"><strong>{{ curso._planestudiodetalle.horas_total }} </strong></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                       </tr>
@@ -56,10 +56,10 @@
                         <td>
                           <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                         </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td class="text-center">{{ item._seccion.nombre }}</td>
-                        <td class="text-center">{{ item._seccion.codigo }}</td>
-                        <td></td>
-                        <td></td>
                         <td>
                           <md-list>
                             <md-list-item style="min-height: inherit!important" ng-repeat="horario in item._programaciones[0].horarios">
