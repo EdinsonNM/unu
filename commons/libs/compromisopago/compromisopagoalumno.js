@@ -233,7 +233,7 @@ class CompromisoPagoAlumno{
     let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
     CompromisoPago.findOne({
-      codigo:self.matricula._alumno.codigo,
+      //codigo:self.matricula._alumno.codigo,
       _periodo:self.matricula._periodo._id,
       _persona:self.matricula._alumno._persona,
       _tasa:tasa._id,
