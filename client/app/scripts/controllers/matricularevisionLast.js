@@ -13,7 +13,7 @@
   angular.module('unuApp').controller('MatriculaRevisionLastCtrl', [
     'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
     function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
-      var service, servicePendientes, serviceDeudas;
+      var service, servicePendientes, serviceDeudas, matricula,fichamatricula, creditosactuales = 0;
 
       console.log('Mostrar' + $rootScope.ALUMNO.codigo);
 
@@ -33,7 +33,7 @@
         nextStage1: false,
         nextStage2: false
       };
-
+      $scope.print = false;
       var LOCAL = {
         name: 'Registrar Matricula',
         //form: 'views/aprobacion/cursos/form-grupo.html',
@@ -116,36 +116,46 @@
 
       };
 
-      // var verificaMatricula = function(){
-      //    console.log($scope.idLast);
-      //    var serviceMatricula = Restangular.all('matriculas');
-      //    serviceMatricula.getList({
-      //       conditions: {
-      //          _periodo: $scope.idLast,
-      //          _alumno: $scope.ALUMNO._id
-      //       }
-      //    }).then(function(data){
-      //       $scope.matricula = data;
-      //       if($scope.matricula.length !== 0){
-      //          $state.go('app.matriculainscripcion');
-      //       }
-      //    });
-      // };
+      var getFichaMatricula = function() {
+        var serviceFichaMatricula = Restangular.all('fichamatriculas');
+        var filter = {
+          _alumno: $scope.ALUMNO._id,
+          _periodo: $scope.periodo._id
+        };
+        serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
+         $scope.fichamatricula = response;
+          console.log('ficha matricula detalle',$scope.fichamatricula);
+        });
+      };
 
+      var getMatricula = function(){
+        var serviceMatricula = Restangular.all('matriculas');
+        var filter = {
+          _alumno: $scope.ALUMNO._id,
+          _periodo: $scope.periodo._id
+        };
+        serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
+          if(!response){
+            matricula = {};
+            $scope.cursosselected = [];
+          }else{
+            matricula = response;
+            console.log('matricula', matricula);
+            if (matricula.estado === 'Matriculado'){
+               $scope.print = true;
+            }
+            $scope.planestudio = response._planEstudio.nombre;
+            $scope.cursosselected = response._detalleMatricula;
+            console.log('cursos seleccionados', $scope.cursosselected);
+            angular.forEach(matricula._detalleMatricula, function(detalle){
+             creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
+            });
+            $scope.creditosactuales = creditosactuales;
+            console.log('creditosactuales', creditosactuales);
+          }
 
-
-      // var periodoxplanestudio = function() {
-      //   var Service = Restangular.all('planestudios');
-      //   Service.getList({
-      //     conditions: {
-      //       _periodo: $scope.idLast
-      //     }
-      //   }).then(function(data) {
-      //     $scope.planestudio = data;
-      //     console.log(data);
-      //   });
-      // };
-
+        });
+      };
 
       var datosAlumno = function() {
          //$scope.idplanestudio= 'null';
@@ -172,7 +182,8 @@
         ListPendientesAlumno();
         ListDeudasAlumno();
         datosAlumno();
-        verificaMatricula();
+        getFichaMatricula();
+        getMatricula();
       //   periodoxplanestudio();
         console.log('idlastnew' + $scope.idLast);
       }, 500);
@@ -180,7 +191,7 @@
       var ultimoPeriodo = function ultimoPeriodo() {
         var servicePeriodo = Restangular.all('periodos/lastPeriodo');
         servicePeriodo.getList().then(function(data) {
-          $scope.periodo = data;
+          $scope.periodo = data[0];
           $scope.idLast = data[0]._id;
           $scope.periodoNombre = data[0].nombre;
         });

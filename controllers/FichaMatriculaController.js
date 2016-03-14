@@ -20,6 +20,7 @@ module.exports=function(){
       /**
        * retorna los detalles de la matrícula
        */
+      //
       controller.get('/methods/fichamatriculadetalle', function(req, res){
         var _periodo = req.query._periodo;
         var _alumno = req.query._alumno;
@@ -28,6 +29,21 @@ module.exports=function(){
           return res.status(200).send(matricula);
         });
       });
+
+      // controller.get('/methods/fichamatriculadetalle', function(req, res){
+      //   var _periodo = req.query._periodo;
+      //   var _alumno = req.query._alumno;
+      //   model.findOne({_periodo:_periodo,_alumno:_alumno}).populate([{
+      //      path: '_detalles', populate: [{
+      //        path: '_planEstudiosDetalle',
+      //        model: 'Planestudiodetalle',
+      //        populate: [{ path: '_curso', model: 'Curso'}]
+      //     }]
+      //   }]).exec(function(err,matricula){
+      //     if(err || !matricula) return res.status(500).send('No se encontró la matrícula');
+      //     return res.status(200).send(matricula);
+      //   });
+      // });
 
       /**
        * retorna los cursos habilitados para la matrícula

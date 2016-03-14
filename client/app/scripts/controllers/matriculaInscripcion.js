@@ -85,6 +85,7 @@
         };
         serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
           fichamatricula = response;
+          console.log('ficha matricula detalle', fichamatricula);
         });
       };
       getMatricula = function(){
@@ -100,6 +101,7 @@
           }else{
             matricula = response;
             $scope.cursosselected = response._detalleMatricula;
+            console.log('cursos seleccionados', $scope.cursosselected);
           }
         });
       };
@@ -184,7 +186,7 @@
     angular.forEach(matricula._detalleMatricula, function(detalle){
       creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
     });
-
+console.log('creditos actuales',creditosactuales);
     /**
      * initial params
      */
