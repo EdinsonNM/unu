@@ -233,6 +233,7 @@
             });
           });
           $scope.cursoshabilitados = response.ciclos;
+          console.log($scope.cursoshabilitados);
         });
       }else if(fichamatriculaIngresante){
         filter = {
