@@ -307,6 +307,20 @@
     function($scope, table, name, MessageFactory, model, sexo, tipodocumento, estadoCivil, periodos, facultades, situaciones, condiciones, modalidades, route_escuelas, ToastMD, $mdDialog, Restangular) {
       $scope.includeUserData = false;
       $scope.submited = false;
+
+      $scope.model = model;
+      $scope.title = MessageFactory.Form.Edit.replace('{element}', name);
+      $scope.Buttons = MessageFactory.Buttons;
+      $scope.sexo = sexo;
+      $scope.tipodocumento = tipodocumento;
+      $scope.estadoCivil = estadoCivil;
+      $scope.model._persona.fechaNacimiento = new Date($scope.model._persona.fechaNacimiento);
+      $scope.periodos = periodos;
+      $scope.facultades = facultades;
+      $scope.situaciones = situaciones;
+      $scope.condiciones = condiciones;
+      $scope.modalidades = modalidades;
+
       console.log("controlador vista alumno");
       $scope.LoadEscuelas = function LoadEscuelas() {
         var serviceEscuela = Restangular.all(route_escuelas);
@@ -329,19 +343,6 @@
         model._facultad = data[0];
         $scope.LoadEscuelas();
       });
-
-      $scope.model = model;
-      $scope.title = MessageFactory.Form.Edit.replace('{element}', name);
-      $scope.Buttons = MessageFactory.Buttons;
-      $scope.sexo = sexo;
-      $scope.tipodocumento = tipodocumento;
-      $scope.estadoCivil = estadoCivil;
-      $scope.model.fechaNacimiento = new Date($scope.model.fechaNacimiento);
-      $scope.periodos = periodos;
-      $scope.facultades = facultades;
-      $scope.situaciones = situaciones;
-      $scope.condiciones = condiciones;
-      $scope.modalidades = modalidades;
 
       $scope.Save = function(form) {
         $scope.submited = true;

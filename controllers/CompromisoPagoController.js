@@ -74,8 +74,8 @@ module.exports=function(){
       controller.post('/methods/generar/matricula/:id',function(req,res){
         var matriculaId = req.params.id;
         var compromiso = new CompromisoPagoAlumno(matriculaId);
-        compromiso.generar(matriculaId,function(err,data){
-            if(err) return res.status(500).send({message:'Ocurrion un error interno del servidor',detail:err});
+        compromiso.generar(function(err,data){
+            if(err) return res.status(err.status).send(err);
             return res.status(201).send(data);
         });
 
