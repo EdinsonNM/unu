@@ -13,7 +13,7 @@
       <div layout="row" layout-align="center start" layout-margin layout-fill>
         <md-content flex class="md-padding page-content" style="max-width:1020px;">
           <div class="table-responsive">
-            <table class="table table-condensed table-striped table-bordered ">
+            <table class="table table-condensed table-bordered table-matricula-inscripcion">
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
               <tbody ng-repeat="(ciclo, cursos) in cursoshabilitados">
                 <tr class="ng-table-group">
@@ -28,7 +28,7 @@
                   <td>
                     <table class="inscripcion-horarios">
                       <thead>
-                        <tr>
+                        <tr class="ng-table-group">
                           <th>Curso</th>
                           <th style="padding-right: 15px; padding-left:15px;">Código</th>
                           <th style="padding-right: 15px; padding-left:15px;">N° Cred</th>
@@ -38,8 +38,8 @@
                           <th style="padding-right: 15px; padding-left:15px;">Hr Inicio / Hr Fin</th>
                         </tr>
                       </thead>
-                      <tr class="ng-table-group">
-                        <td>
+                      <tr>
+                        <td width="30%">
                           <a href class="groupTitle" ng-click="curso.$hideRows = !curso.$hideRows">
                             <span class="fa" ng-class="{ 'fa-chevron-right': curso.$hideRows, 'fa-chevron-down': !curso.$hideRows }"></span>
                             <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
