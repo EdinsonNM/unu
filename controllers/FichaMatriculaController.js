@@ -3,6 +3,7 @@ var CursoAperturado = require('../models/CursoAperturadoPeriodoModel.js');
 var Alumno = require('../models/AlumnoModel.js');
 var Curso = require('../models/CursoModel.js');
 var Matricula = require('../models/MatriculaModel.js');
+var Programaciones = require('../models/ProgramacionGrupoCursoModel.js');
 var _ = require('underscore');
 
 var auth = require('../config/passport');
@@ -31,6 +32,17 @@ module.exports=function(){
       /**
        * retorna los cursos habilitados para la matrícula
        */
+      var groupByCiclo = function(cursosDisponibles){
+        var cursosCiclo = {};
+        cursosDisponibles.forEach(function(curso){
+          var ciclo = curso._planestudiodetalle.ciclo;
+          if(typeof cursosCiclo[ciclo] === 'undefined'){
+            cursosCiclo[ciclo] = [];
+          }
+          cursosCiclo[ciclo].push(curso);
+        });
+        return cursosCiclo;
+      };
       var findAperturadoEnMatricula = function(cursosMatriculados, aperturado){
         var c= 0;
         var res= [];
@@ -58,10 +70,13 @@ module.exports=function(){
           .populate(
             [{
               path:'_grupos',
-              populate: {
+              populate: [{
                 path: '_seccion',
                 model: 'Seccion'
-              }
+              },{
+                path: '_programaciones',
+                model: 'ProgramacionGrupoCurso'
+              }]
             },{
               path: '_planestudiodetalle',
               populate: {
@@ -125,7 +140,9 @@ module.exports=function(){
                   }
                 }
               });
-              return res.status(200).send(cursosDisponibles);
+              var response = {};
+              response.ciclos = groupByCiclo(cursosDisponibles);
+              return res.status(200).send(response);
             });
           });
         });

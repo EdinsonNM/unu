@@ -18,10 +18,6 @@
         hrefMatricula: '#/home',
         hrefPlanestudio: '#/home',
         messageDatos: '',
-        //  refMatricula: 'app.matricularevision',
-        //  hrefMatricula: '#/home/testing/matricula/revision',
-        //  refPlanestudio: 'app.pabellones',
-        //  hrefPlanestudio: '#/home/pabellones',
       };
       $scope.modeIngreso = true;
       $rootScope.modeIngresoGlobal = true;
@@ -75,45 +71,46 @@
 
 
       var LastPeriodo = function() {
-        //   var idMatriculaProceso = '56d533febc3056d0ae51276b';
-        //   var idMatriculaProceso = '56c2ce17f484a8c7400909fd';
-        var idMatriculaProceso = '56de3af7a785bf7f4d34551c';
         var f = new Date();
         var servicePeriodo = Restangular.all('periodos/lastPeriodo');
         servicePeriodo.getList().then(function(result) {
           $scope.periodoActual = result[0]._id;
           console.log('periodo actual', $scope.periodoActual);
-          // $scope.nombreperiodo = result[0].nombre;
           console.log(result);
           console.log($scope.nombreperiodo);
           angular.forEach(result[0].procesos, function(item) {
-            if (item._proceso._id === idMatriculaProceso) {
-              $scope.process = true;
-              var fechaInicio = new Date(item.fechaInicio);
-              var fechaFin = new Date(item.fechaFin);
-              if (fechaInicio <= f && f <= fechaFin) {
-                $scope.showmenu = true;
-                if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
-                  $scope.aproved = true;
+
+            console.log(item._proceso.codigo);
+            switch (item._proceso.codigo) {
+              case '09':
+              case '23':
+                $scope.process = true;
+                var fechaInicio = new Date(item.fechaInicio);
+                var fechaFin = new Date(item.fechaFin);
+                if (fechaInicio <= f && f <= fechaFin) {
+                  $scope.showmenu = true;
+                  if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                    $scope.aproved = true;
+                  } else {
+                    $scope.aproved = false;
+                  }
                 } else {
-                  $scope.aproved = false;
+                  $scope.showmenu = false;
+                  if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
+                    $scope.aproved = true;
+                  } else {
+                    $scope.aproved = false;
+                    $state.go('app.alumnomisdatos');
+                  }
                 }
-              } else {
-                $scope.showmenu = false;
+                break;
+              default:
                 if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
                   $scope.aproved = true;
                 } else {
                   $scope.aproved = false;
                   $state.go('app.alumnomisdatos');
                 }
-              }
-            } else {
-              if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
-                $scope.aproved = true;
-              } else {
-                $scope.aproved = false;
-                $state.go('app.alumnomisdatos');
-              }
             }
           });
         });
@@ -158,8 +155,6 @@
       };
 
       var Save = function() {
-        //$scope.submited = true;
-        //declaro el servicio con la ruta correcta del endpoint.
         $scope.model = {};
         $scope.model._periodo = $scope.periodoActual;
         $scope.model._alumno = $rootScope.ALUMNO._id;
@@ -179,19 +174,10 @@
         $scope.nombreIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
         $scope.modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
         switch ($scope.modalidadIngreso) {
-          case '04':
-          case '06':
-          case '07':
-          case '08':
-          case '09':
-          case '10':
-          case '11':
-          case '12':
-          case '13':
-          case '14':
-          case '15':
-          case '17':
-          case '18':
+          case '01':
+          case '02':
+          case '03':
+          case '16':
             $scope.modeIngreso = true;
             $rootScope.modeIngresoGlobal = true;
             console.log($scope.periodoActual);
@@ -202,26 +188,34 @@
                 _alumno: $rootScope.ALUMNO._id
               }
             }).then(function(data) {
-              $scope.matricula = data[0];
+              $scope.matricula = data;
+              //   $scope.matricula = data[0];
               console.log('matricula scope');
               console.log($scope.matricula);
 
               if ($scope.matricula) {
-
-                switch ($scope.matricula.estado) {
-                  case 'Proceso':
-                    console.log('Matricula en proceso');
-                    $state.go('app.matriculainscripcion');
-                    break;
-                  case 'Prematricula':
-                    console.log('Matricula en prematricula');
-                    $state.go('app.matricularevisionlast');
-                    break;
-                  case 'Matriculado':
-                    console.log('Con matricula matriculada');
-                    $state.go('app.matriculaingresantelast');
-                    break;
-                }
+                angular.forEach($scope.matricula, function(item) {
+                  console.log(item);
+                  if (item.estado !== 'Inactivo' && item.estado !== 'Liberado') {
+                    switch (item.estado) {
+                      case 'Proceso':
+                        console.log('Matricula en proceso');
+                        $state.go('app.matriculainscripcion');
+                        break;
+                      case 'Prematricula':
+                        console.log('Matricula en prematricula');
+                        $state.go('app.matricularevisionlast');
+                        break;
+                      case 'Matriculado':
+                        console.log('Con matricula matriculada');
+                        $state.go('app.matriculaingresantelast');
+                        break;
+                    }
+                  }
+                });
+                $state.go('app.matricularevision', {}, {
+                  reload: true
+                });
               } else {
                 if ($scope.periodoIngresante === $scope.periodoActual) {
                   //Es ingresante y no hay matrocula, grabar matricula

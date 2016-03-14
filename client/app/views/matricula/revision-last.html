@@ -1,36 +1,156 @@
-<!-- <div id="printSection">
-  <div id="showprint" layout="row" layout-fill>
-    <div id="headerPre" class="md-layout-row layout-fill">
-      <div id="righthead" class="col-md-10">
-        <md-list class="md-layout-column layout-padding md-teal-theme" role="list">
-          <md-list-item role="listitem" class="md-no-proxy">
+<div id="printSection" style="width:100%;">
+  <div id="showprint">
+    <div id="headerPre" layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding-bottom: 5px;">
+      <div id="righthead" style="width:85%;">
+        <md-list class="md-layout-column layout-padding md-teal-theme" role="list" style="padding-left:0px; font-size:10px;">
+          <md-list-item role="listitem" class="md-no-proxy" style="padding-left:0px;">
             <img src="/images/logo.jpg" width="100" height="100" class="img-round user-logo-main">
-            <div class="md-list-item-text">
+            <div class="md-list-item-text" style="width:100%;">
               <h3 class="ng-binding">UNIVERSIDAD NACIONAL DE UCAYALI</h3>
               <p class="ng-binding">OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
-              <h2> FICHA DE PRE-MATRICULA </br>SEMESTRE ACADEMICO 2016-0</h2>
-
+              <h2 style="text-align:center;"> FICHA DE MATRICULA </br>SEMESTRE ACADEMICO {{periodoNombre}}</h2>
             </div>
           </md-list-item>
         </md-list>
-
-        <p>FACULTAD DE CIENCIAS FORESTALES</p>
-        <p>ESCUELA: INGENIERIA FORESTAL</p>
-        <div>
-          FICHA DE PRE-MATRICULA SEMESTRE ACADEMICO 2016-0
-        </div>
-
-
-        <div>
-          FACULTAD DE CIENCIAS FORESTALES ESCUELA: INGENIERIA FORESTAL
-        </div>
+        <p><strong>FACULTAD DE {{ALUMNO._facultad.nombre}}</strong></p>
+        <p>ESCUELA: {{ALUMNO._escuela.nombre}}</p>
       </div>
-      <div id="lefthead" class="col-md-2">
-        FOTO
+      <div id="lefthead" style="width:15%;">
+        <fieldset style="height: 140px;width: 130px;">
+          <legend style="font-size: 14px;">Foto</legend>
+        </fieldset>
       </div>
     </div>
+
+    <div layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding: 5px 0 5px;">
+      <span>ALUMNO: {{ALUMNO.codigo}} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}, {{ ALUMNO._persona.nombres }}</span>
+      <div style="margin:auto; margin-right: 0px;">Plan Estudio: 2009-II</div>
+    </div>
+
+    <md-content flex class="md-padding page-content" style="border-bottom: 2px solid black;">
+      <!-- <div id="printSec"> -->
+
+      <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+        <tbody>
+          <tr ng-class="{'table-selected-row bgc-teal-50':item.active}">
+            <td class="text-left" data-title="''">1</td>
+            <td class="text-left" data-title="'CODIGO'">AFCB0007</td>
+            <td class="text-left" data-title="'NOMBRE CURSO'">MATEMATICA I</td>
+            <td class="text-left" data-title="'CICLO'">02</td>
+            <td class="text-left" data-title="'CR.'">4</td>
+            <td class="text-left" data-title="'TIPO CURSO'">OBLIGATORIO</td>
+            <td class="text-left" data-title="'N.V.'">0</td>
+            <td class="text-left" data-title="'ESTADO'">PENDIENTE</td>
+            <td class="text-left" data-title="'OP1'"></td>
+            <td data-title="'RP'" style="width:30px;">
+              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </md-content>
+    <div style="padding-top:5px;">
+      <h4 style="text-decoration: underline;">INFORMACION BASICA:</h4>
+      <div layout="row" layout-margin layout-fill style="padding-top:5px;">
+        <div class="infoFicha info">
+          <p><span>Orden de Matricula:</span> 0 </p>
+          <p><span>Máximo Credito Permitidos:</span> 26</p>
+          <p><span>Creditos Curriculares Aprobados:</span> 27</p>
+          <p><span>Ciclo Relativo: </span>2</p>
+          <p><span>Prom. Pond. Per. Ant: </span>12.17</p>
+        </div>
+        <div class="infoFicha info">
+          <p><span>Número de Créditos Matriculados:</span></p>
+          <p><span>Número de Cursos Matriculados:</span></p>
+          <p><span>Fecha:</span></p>
+          <p><span>Firma de Alumno:</span></p>
+          <p><span>Firma de Consejero:</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding-top: 5px;">
+      <h4 style="text-decoration: underline;">RECOMENDACIONES:</h4>
+      <div layout="row" layout-margin layout-fill style="padding-top:5px;">
+        <p>
+          1.- El CONSEJERO debe señalar los cursos en los que el Alumno puede Matricularse y anular los restantes
+        </p>
+      </div>
+      <div layout="row" layout-margin layout-fill>
+        <p>
+          2.- Si el ALUMNO no esta conforme con el presente documento, solicite su correción en la Oficina General de Coordinación y Servicios Académicos.
+        </p>
+      </div>
+    </div>
+
+    <div style="padding-top: 5px;">
+      <strong>Datos del estudiante</strong>
+      <div layout="row" layout-margin layout-fill>
+        <table class="data-alumno" style="width: 100%">
+          <tr>
+            <td class="td-alu">Fecha de Nacimiento:</td>
+            <td></td>
+            <td class="td-lit">Edad:</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="td-alu">Documento de Identidad:</td>
+            <td></td>
+            <td class="td-lit">Telefono:</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="td-alu">
+              Dirección:
+            </td>
+            <td colspan="3"></td>
+          </tr>
+          <tr>
+            <td class="td-alu">
+              Dirección Electronica:
+            </td>
+            <td colspan="3">
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div layout="row" layout-margin layout-fill>
+      <table class="data-alumno" style="width: 100%">
+        <tr>
+          <td class="td-alu">Año y semestre que inició Estudios</td>
+          <td></td>
+          <td class="td-lit">Ultimo Año y semestre Estudiado:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="td-alu" colspan="2">
+            Veces que solicitó Retiro Total y fue aceptado:
+          </td>
+          <td colspan="2"></td>
+        </tr>
+        <tr>
+          <td class="td-alu" colspan="2">
+            Indicar los Años y semestres en que solicitó Retiro Total:
+          </td>
+          <td colspan="2">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div layout="row" layout-margin layout-fill style="padding-top: 5px;">
+      <small>N.V.: número de veces</small>
+      <div style="margin:auto; margin-right: 0px;">
+        <strong style="display: inline-block;">USUARIO {{ALUMNO.codigo}} CLAVE {{ALUMNO.codigo}}</strong>
+      </div>
+
+    </div>
+
   </div>
-</div> -->
+</div>
 
 <md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
@@ -38,7 +158,7 @@
   </md-subheader>
 
 
-  <div layout="row" layout-align="center start" layout-margin layout-fill>
+  <div layout="row" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
       <section>
         <md-subheader>
