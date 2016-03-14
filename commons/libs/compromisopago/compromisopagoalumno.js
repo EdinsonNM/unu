@@ -237,11 +237,11 @@ class CompromisoPagoAlumno{
       _periodo:self.matricula._periodo._id,
       _persona:self.matricula._alumno._persona,
       _tasa:tasa._id,
-      estado:'Activo'
+      estado:{$in:['Activo','Inactivo']}
     },function(err,compromiso){
       if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
-      if(!compromiso) throw {message:'EL compromiso de pago no se ha generado porque ya tiene uno activo'};
-      return defer.resolve(compromiso);
+      if(compromiso) return defer.reject({message:'EL pago no se ha generado porque ya existe un compromiso registrado',status:412,detail:compromiso});
+      return defer.resolve(true);
     });
     return defer.promise;
   }
