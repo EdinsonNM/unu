@@ -85,7 +85,13 @@
 
           <div layout="row">
             <div flex>
-              <md-datepicker ng-model="model._persona.fechaNacimiento" md-placeholder="Fec. Nacimiento" style="padding-top:10px;"></md-datepicker>
+              <md-input-container class="md-block">
+                <label>Fecha Nac.</label>
+                <input type="date" required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento">
+                <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
+                  <div ng-message="required">{{message.Required}}</div>
+                </div>
+              </md-input-container>
             </div>
 
             <div flex>
@@ -120,7 +126,7 @@
             <div flex>
               <md-input-container class="md-block">
                 <label>Dirección</label>
-                <input required name="direccion" ng-model="model._persona.direccion" ng-readonly="nombreFound">
+                <input required name="direccion" ng-model="model.direccion" >
                 <div ng-messages="myForm._persona.direccion.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
@@ -130,8 +136,8 @@
             <div flex>
               <md-input-container class="md-block">
                 <label>Email</label>
-                <input required name="email" ng-model="model._usuario.email">
-                <div ng-messages="myForm._usuario.email.$error" ng-if="submited">
+                <input required name="email" ng-model="model.email">
+                <div ng-messages="myForm.email.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>
@@ -140,8 +146,8 @@
             <div flex>
               <md-input-container class="md-block">
                 <label>Telefono</label>
-                <input required name="telefono" ng-model="model._persona.telefono">
-                <div ng-messages="myForm._persona.telefono.$error" ng-if="submited">
+                <input required name="telefono" ng-model="model.telefono">
+                <div ng-messages="myForm.telefono.$error" ng-if="submited">
 
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
@@ -158,12 +164,12 @@
             <div flex>
               <md-input-container class="md-block">
                 <label>Periodo Ingreso</label>
-                <md-select ng-model="model._periodoIngreso" ng-model-options="{trackBy: '$value._id'}">
+                <md-select ng-model="model._periodoInicio" ng-model-options="{trackBy: '$value._id'}">
                   <md-option ng-repeat="periodo in periodos" ng-value="periodo">
                     {{periodo.nombre}}
                   </md-option>
                 </md-select>
-                <div ng-messages="myForm._periodoIngreso.$error" ng-if="submited">
+                <div ng-messages="myForm._periodoInicio.$error" ng-if="submited">
                   <div ng-message="required">{{message.Required}}</div>
                 </div>
               </md-input-container>

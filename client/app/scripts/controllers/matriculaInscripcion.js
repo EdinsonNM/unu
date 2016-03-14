@@ -34,6 +34,7 @@
         getFichaMatricula();
         getMatricula();
       }, 800);
+      $scope.creditosactuales = 0;
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
@@ -103,6 +104,9 @@
             $scope.cursosselected = response._detalleMatricula;
             console.log('cursos seleccionados', $scope.cursosselected);
           }
+          angular.forEach(matricula._detalleMatricula, function(detalle){
+            $scope.creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;
+          });
         });
       };
 
@@ -231,6 +235,7 @@ console.log('creditos actuales',creditosactuales);
             });
           });
           $scope.cursoshabilitados = response.ciclos;
+          console.log($scope.cursoshabilitados);
         });
       }else if(fichamatriculaIngresante){
         filter = {

@@ -63,7 +63,7 @@ module.exports=function(){
         var c= 0;
         var res= [];
         cursosMatriculados.forEach(function(item){
-          if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.toString() == aperturado._planestudiodetalle._id.toString()){
+          if(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.toString() == aperturado._planestudiodetalle._id.toString() && item._grupoCurso._programaciones.length > 0){
             res.push(item._grupoCurso._id.toString());
           }
         });
