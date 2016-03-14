@@ -269,18 +269,19 @@ class CompromisoPagoAlumno{
     let disponibilidad = true;
     let defer = Q.defer();
     if(self.matricula._detalleMatricula.length===0) return defer.reject({message:'Debe agregar uno o mas cursos a la matricula',status:400});
+    var SaveDetalle = function(item){
+      let deferItem = Q.defer();
+      item.save(function(err,data){
+        if(err) return deferItem.reject(err);
+        return deferItem.resolve(data);
+      });
+      return deferItem.promise;
+    };
     self.matricula._detalleMatricula.forEach(function(item,index){
       if(item._grupoCurso.totalCupos<=item._grupoCurso.matriculados){
         disponibilidad = false;
-        item._grupoCurso.estado = 'SinCupo';
-        promises.push(function(){
-          let deferItem = Q.defer();
-          item._grupoCurso.save(function(err,data){
-            if(err) return deferItem.reject(err);
-            return deferItem.resolve(data);
-          });
-          return deferItem.promise;
-        });
+        item.estado = 'SinCupo';
+        promises.push(SaveDetalle(item));
       }
     });
     if(!disponibilidad){
@@ -290,8 +291,24 @@ class CompromisoPagoAlumno{
         return defer.reject({message:'Uno o mas cursos no tienen disponibilidad',status:400});
       });
     }else{
-      console.log('todo ok');
-      return defer.resolve(true);
+      var promisesGrupos = [];
+      var SaveGrupo = function(item){
+        let deferItem = Q.defer();
+        item._grupoCurso.save(function(err,data){
+          if(err) return deferItem.reject(err);
+          return deferItem.resolve(data);
+        });
+        return deferItem.promise;
+      };
+      self.matricula._detalleMatricula.forEach(function(item,index){
+        item._grupoCurso.matriculados = item._grupoCurso.matriculados+1;
+        promisesGrupos.push(SaveGrupo(item));
+      });
+      Q.all(promisesGrupos).then(function(result){
+        console.log('update grupos..',result);
+        return defer.resolve(true);
+      });
+
     }
     return defer.promise;
   }

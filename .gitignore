@@ -4,4 +4,3 @@
 npm-debug.log
 /commons/data/*
 /jobs/node_modules
-.env
