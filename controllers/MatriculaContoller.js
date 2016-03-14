@@ -68,7 +68,9 @@ module.exports = function() {
                   }]
                 }]
               }]
-            }]
+           },{
+             path: '_planEstudio'
+          }]
           },
        		function(err, results, pageCount, itemCount){
        			res.send(results.docs[0]);

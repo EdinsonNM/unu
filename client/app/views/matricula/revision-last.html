@@ -24,24 +24,36 @@
 
     <div layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding: 5px 0 5px;">
       <span>ALUMNO: {{ALUMNO.codigo}} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}, {{ ALUMNO._persona.nombres }}</span>
-      <div style="margin:auto; margin-right: 0px;">Plan Estudio: 2009-II</div>
+      <div style="margin:auto; margin-right: 0px;">Plan Estudio: {{planestudio}}</div>
     </div>
 
     <md-content flex class="md-padding page-content" style="border-bottom: 2px solid black;">
       <!-- <div id="printSec"> -->
 
-      <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+      <table show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
         <tbody>
-          <tr ng-class="{'table-selected-row bgc-teal-50':item.active}">
-            <td class="text-left" data-title="''">1</td>
-            <td class="text-left" data-title="'CODIGO'">AFCB0007</td>
-            <td class="text-left" data-title="'NOMBRE CURSO'">MATEMATICA I</td>
-            <td class="text-left" data-title="'CICLO'">02</td>
-            <td class="text-left" data-title="'CR.'">4</td>
-            <td class="text-left" data-title="'TIPO CURSO'">OBLIGATORIO</td>
-            <td class="text-left" data-title="'N.V.'">0</td>
-            <td class="text-left" data-title="'ESTADO'">PENDIENTE</td>
-            <td class="text-left" data-title="'OP1'"></td>
+          <tr class="bg-table-group">
+            <td></td>
+            <td><strong>CÓDIGO</strong></td>
+            <td><strong>NOMBRE CURSO</strong></td>
+            <td><strong>CICLO</strong></td>
+            <td><strong>CR.</strong></td>
+            <td><strong>TIPO CURSO</strong></td>
+            <td><strong>N.V.</strong></td>
+            <td><strong>ESTADO</strong></td>
+            <td><strong>OP1</strong></td>
+            <td><strong>RP</strong></td>
+          </tr>
+          <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+            <td class="text-left" data-title="''">{{index}}</td>
+            <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
+            <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
+            <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
+            <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>
+            <td class="text-left" data-title="'TIPO CURSO'"></td>
+            <td class="text-left" data-title="'N.V.'"></td>
+            <td class="text-left" data-title="'ESTADO'">{{}}</td>
+            <td class="text-left" data-title="'OP1'">{{}}</td>
             <td data-title="'RP'" style="width:30px;">
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
@@ -55,15 +67,15 @@
       <div layout="row" layout-margin layout-fill style="padding-top:5px;">
         <div class="infoFicha info">
           <p><span>Orden de Matricula:</span> 0 </p>
-          <p><span>Máximo Credito Permitidos:</span> 26</p>
-          <p><span>Creditos Curriculares Aprobados:</span> 27</p>
-          <p><span>Ciclo Relativo: </span>2</p>
-          <p><span>Prom. Pond. Per. Ant: </span>12.17</p>
+          <p><span>Máximo Credito Permitidos:</span> {{fichamatricula.creditos.maximo.creditosmatricula}}</p>
+          <p><span>Creditos Curriculares Aprobados:</span> </p>
+          <p><span>Ciclo Relativo: </span></p>
+          <p><span>Prom. Pond. Per. Ant: </span>{{fichamatricula.promedioPonderadoPeriodoAnterior}}</p>
         </div>
         <div class="infoFicha info">
-          <p><span>Número de Créditos Matriculados:</span></p>
-          <p><span>Número de Cursos Matriculados:</span></p>
-          <p><span>Fecha:</span></p>
+          <p><span>Número de Créditos Matriculados:</span>{{creditosactuales}}</p>
+          <p><span>Número de Cursos Matriculados:</span>{{}}</p>
+          <p><span>Fecha:</span>{{}}</p>
           <p><span>Firma de Alumno:</span></p>
           <p><span>Firma de Consejero:</span></p>
         </div>
@@ -182,7 +194,7 @@
       <div flex layout="row" layout-fill>
         <strong>Compromiso de pago</strong>
         <md-button class="btn btn-primary" ng-print onclick="window.print()" style="top: 20px;right: 20px;bottom: auto;left: auto;
-    position: absolute;"><i class="fa fa-print"></i> Imprimir</md-button>
+    position: absolute;" ng-if="print"><i class="fa fa-print"></i> Imprimir</md-button>
       </div>
 
       <div layout="row" layout-fill>
