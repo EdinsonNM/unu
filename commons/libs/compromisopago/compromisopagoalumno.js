@@ -11,19 +11,9 @@ var Q = require('q');
 var _ = require('underscore');
 var moment = require('moment');
 const TASA={
-  PAGO_ORDINARIO:'01',
-  SEGUNDA_CARRERA:'04',
-  PENSION_SEMESTRE_SEGUNDA_CARRERA:'05',
-  EXONERACION_MATRICULA:'06',
-  AVANCE_CURRICULAR:'07',
-  OBSERVADO:'08',
-  REZAGADO:'09',
-  REINGRESANTE:'10',
-  DESAPROBADO_PROMEDIO_APROBADO:'11',
-  PAGO_RECARGO_EXTEMPORANEO:'12',
-  PAGO_REPETICION_CURSO:'13',
-  PAGO_CARNET_UNIVERSITARIO:'14',
-  PERDIDA_GRATUIDAD:'15'
+  MATRICULA_ORDINARIA:'01',
+  PERDIDA_GRATUIDAD:'04',
+  PAGO_REPETICION_CURSO:'05'
 };
 const PROCESO={
   REGULAR:'09',
@@ -146,7 +136,7 @@ class CompromisoPagoAlumno{
   ObtenerDeudaOrdinaria(){
     console.log('ObtenerDeudaOrdinaria');
     var tasa,self=this;
-    tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    tasa = _.findWhere(this.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
     let valorTasa = _.findWhere(tasa.historial,{activo:true});
     self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
@@ -227,7 +217,7 @@ class CompromisoPagoAlumno{
   ValidarExistenciaCompromiso(){
     var self = this;
     var defer = Q.defer();
-    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
     CompromisoPago.findOne({
       //codigo:self.matricula._alumno.codigo,
@@ -247,7 +237,7 @@ class CompromisoPagoAlumno{
     console.log('generarCompromiso');
     var defer = Q.defer();
     let self = this;
-    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
 
     let fechaVencimiento = moment().add(2, 'days');
