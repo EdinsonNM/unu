@@ -189,11 +189,11 @@
       }, 500);
 
       var ultimoPeriodo = function ultimoPeriodo() {
-        var servicePeriodo = Restangular.all('periodos/lastPeriodo');
-        servicePeriodo.getList().then(function(data) {
-          $scope.periodo = data[0];
-          $scope.idLast = data[0]._id;
-          $scope.periodoNombre = data[0].nombre;
+        var servicePeriodo = Restangular.all('periodos');
+        servicePeriodo.customGET('/lastPeriodo').then(function(data) {
+          $scope.periodo = data;
+          $scope.idLast = data._id;
+          $scope.periodoNombre = data.nombre;
         });
       };
 

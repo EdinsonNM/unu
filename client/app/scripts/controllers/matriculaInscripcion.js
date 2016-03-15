@@ -127,11 +127,13 @@
 
       $scope.FinalizarMatricula = function(){
         var serviceCompromisoPago = Restangular.all('compromisopagos');
-        if(matricula && matricula._id){
-          serviceCompromisoPago.customPOST({}, 'methods/generar/matricula/' + matricula._id).then(function(response){
+        if(matricula && matricula.hasOwnProperty('_id')){
+          serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
             console.log(response);
             ToastMD.success('Se finalizó su proceso de matrícula');
             $state.go('app.matricularevisionlast');
+          },function(result){
+            ToastMD.error(result.data.message);
           });
         }
       };

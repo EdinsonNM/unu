@@ -72,13 +72,13 @@
 
       var LastPeriodo = function() {
         var f = new Date();
-        var servicePeriodo = Restangular.all('periodos/lastPeriodo');
-        servicePeriodo.getList().then(function(result) {
-          $scope.periodoActual = result[0]._id;
+        var servicePeriodo = Restangular.all('periodos');
+        servicePeriodo.customGET('/lastPeriodo',{}).then(function(result) {
+          $scope.periodoActual = result._id;
           console.log('periodo actual', $scope.periodoActual);
           console.log(result);
           console.log($scope.nombreperiodo);
-          angular.forEach(result[0].procesos, function(item) {
+          angular.forEach(result.procesos, function(item) {
 
             console.log(item._proceso.codigo);
             switch (item._proceso.codigo) {
@@ -210,7 +210,7 @@
                           break;
                         case 'Matriculado':
                           console.log('Con matricula matriculada');
-                          $state.go('app.matriculaingresantelast');
+                          $state.go('app.matricularevisionlast');
                           break;
                       }
                     }
