@@ -64,10 +64,7 @@ class CompromisoPagoAlumno{
     this.deudaTotal=0;
   }
 
-  ObenerPagoReactualizacionMatricula(alumno){
-    var defer = Q.defer();
-    //if(alumno.condicion===)
-  }
+
   obtenerMatricula(){
     var self = this;
     var defer = Q.defer();
@@ -220,10 +217,10 @@ class CompromisoPagoAlumno{
 
   ValidarProcesos(){
     let self = this;
-    let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR});
+    let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR;});
     //let procesoOrdinario = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.EXTEMPORANEO});
     //console.log(self.matricula._periodo.procesos);
-    if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado'};
+    if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado',status:500};
     return true;
   }
 
