@@ -142,7 +142,7 @@ module.exports=function(){
                         count++;
                       }
                     });
-                    if(count === 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0){
+                    if(count > 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0){
                       aperturado._grupos.forEach(function(grupo, key){
                         if(grupo.inscritos >= grupo.totalCupos){
                           aperturado._grupos.splice(key, 1);

@@ -70,7 +70,6 @@ module.exports = function() {
            path: '_planEstudio'
         }])
         .exec(function(err, matricula){
-          console.log(matricula);
           if(err) return res.status(500).send('No se encontró la matrícula.');
           return res.status(200).send(matricula);
         });
