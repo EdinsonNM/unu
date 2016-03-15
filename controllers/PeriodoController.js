@@ -1,6 +1,8 @@
 var model = require('../models/PeriodoModel.js');
+var Parametros = require('../models/ParametroModel.js');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
+
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -115,7 +117,7 @@ module.exports=function(){
           }]
           },
        		function(err, results, pageCount, itemCount){
-       			res.send(results.docs);
+       			res.send(results.docs[0]);
        		}
        	);
        });
