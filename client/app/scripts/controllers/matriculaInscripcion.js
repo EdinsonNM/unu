@@ -26,7 +26,7 @@
       /**
        * initial Params
        */
-      var getFichaMatricula, getMatricula;
+      var getFichaMatricula, getMatricula, creditosaceptados;
       $timeout(function() {
         $scope.ALUMNO = $rootScope.ALUMNO;
         $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
@@ -49,36 +49,16 @@
         form: 'views/matricula/inscripcion-form.html',
         route: 'facultades'
       };
-      var serviceFichaMatricula, serviceCursoAperturadoPeriodo, fichamatricula, filter, fichamatriculaIngresante, serviceMatricula, matricula;
+      var serviceFichaMatricula, fichamatricula, filter, fichamatriculaIngresante, serviceMatricula, matricula;
 
       var servicePeriodos = Restangular.all('periodos');
       servicePeriodos.customGET('lastPeriodo').then(function(response) {
-        $scope.UI.title = response[0].nombre;
-        $scope.periodo = response[0];
-        $scope.periodoActual = response[0]._id;
+        $scope.UI.title = response.nombre;
+        $scope.periodo = response;
+        $scope.periodoActual = response._id;
+        creditosaceptados = response.parametros[0].valor;
       });
       getFichaMatricula = function() {
-        /*if($scope.ALUMNO._periodoInicio === $scope.periodoActual){
-          serviceCursoAperturadoPeriodo = Restangular.all('cursoaperturadoperiodos');
-          filter = {
-            _alumno: $scope.ALUMNO._id,
-            _periodo: $scope.periodo._id,
-            _escuela: $scope.ALUMNO._escuela._id
-          };
-          serviceCursoAperturadoPeriodo.customGET('methods/listacursosingresante', filter).then(function(response) {
-            fichamatriculaIngresante = response;
-          });
-        }else{
-          serviceFichaMatricula = Restangular.all('fichamatriculas');
-          filter = {
-            _alumno: $scope.ALUMNO._id,
-            _periodo: $scope.periodo._id
-          };
-          serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
-            fichamatricula = response;
-          });
-        }*/
-
         serviceFichaMatricula = Restangular.all('fichamatriculas');
         filter = {
           _alumno: $scope.ALUMNO._id,
@@ -124,7 +104,8 @@
             nameform: LOCAL.nameform,
             fichamatricula: fichamatricula,
             fichamatriculaIngresante: fichamatriculaIngresante,
-            matricula: matricula
+            matricula: matricula,
+            creditosaceptados: creditosaceptados
           },
           controller: 'InscripcionNewCtrl',
           fullscreen: useFullscreen
@@ -146,16 +127,16 @@
 
       $scope.FinalizarMatricula = function(){
         var serviceCompromisoPago = Restangular.all('compromisopagos');
-        if(matricula && matricula._id){
-          serviceCompromisoPago.customPOST({}, 'methods/generar/matricula/' + matricula._id).then(function(){
+        if(matricula && matricula.hasOwnProperty('_id')){
+          serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
+            console.log(response);
             ToastMD.success('Se finalizó su proceso de matrícula');
+            $state.go('app.matricularevisionlast');
+          },function(result){
+            ToastMD.error(result.data.message);
           });
         }
       };
-
-      // $scope.FinalizarMatricula = function(){
-      //    $state.go('app.matricularevisionlast');
-      // };
 
     })
 
@@ -173,19 +154,10 @@
     $rootScope,
     fichamatricula,
     fichamatriculaIngresante,
-    matricula
+    matricula,
+    creditosaceptados
   ) {
 
-    var creditosaceptados;
-    if(fichamatricula){
-      if(!fichamatricula.creditos){
-        creditosaceptados = 100;
-      }else{
-        creditosaceptados = fichamatricula.creditos.maximo.creditosmatricula;
-      }
-    }else if(fichamatriculaIngresante){
-      creditosaceptados = fichamatriculaIngresante.creditos.maximo.creditosmatricula;
-    }
     var creditosactuales = 0;
     angular.forEach(matricula._detalleMatricula, function(detalle){
       creditosactuales += detalle._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos;

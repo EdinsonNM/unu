@@ -7,9 +7,7 @@
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
       <section>
-        <md-subheader class="md-primary">
-          <h3>{{ UI.title }}</h3>
-        </md-subheader>
+
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
@@ -21,13 +19,18 @@
             </md-list-item>
           </md-list>
         </div>
+        <md-subheader>
+          <h2 class=" tc-{{$root.color.primary}}-500">Proceso de Pre-Matrícula</h2>
+          <br>
+          <strong class=" tc-{{$root.color.primary}}-400">Periodo {{ UI.title  }}</strong>
+        </md-subheader>
       </section>
 
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
       <div ng-cloak>
         <md-content class="col-md-10 col-md-offset-1 cursos-inscritos">
-          <p class="cursos-inscritos-p">Seleccione uno o más cursos a los cuales desea matricularse</p>
+          <p class="cursos-inscritos-p">Bienvenido al proceso de matricula. Por favor, seleccione uno o más cursos a los cuales desea matricularse</p>
           <div class="table-responsive" ng-if="cursosselected.length>0">
             <table show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
@@ -51,7 +54,7 @@
               </tbody>
               <tbody>
             </table>
-            <div class="text-center" ng-if="creditosactuales > 12">
+            <div class="text-center" ng-if="creditosactuales > 10">
               <button class="btn btn-success" ng-click="FinalizarMatricula()">FINALIZAR MATRICULA</button>
             </div>
           </div>

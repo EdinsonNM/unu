@@ -11,19 +11,9 @@ var Q = require('q');
 var _ = require('underscore');
 var moment = require('moment');
 const TASA={
-  PAGO_ORDINARIO:'01',
-  SEGUNDA_CARRERA:'04',
-  PENSION_SEMESTRE_SEGUNDA_CARRERA:'05',
-  EXONERACION_MATRICULA:'06',
-  AVANCE_CURRICULAR:'07',
-  OBSERVADO:'08',
-  REZAGADO:'09',
-  REINGRESANTE:'10',
-  DESAPROBADO_PROMEDIO_APROBADO:'11',
-  PAGO_RECARGO_EXTEMPORANEO:'12',
-  PAGO_REPETICION_CURSO:'13',
-  PAGO_CARNET_UNIVERSITARIO:'14',
-  PERDIDA_GRATUIDAD:'15'
+  MATRICULA_ORDINARIA:'01',
+  PERDIDA_GRATUIDAD:'04',
+  PAGO_REPETICION_CURSO:'05'
 };
 const PROCESO={
   REGULAR:'09',
@@ -64,10 +54,7 @@ class CompromisoPagoAlumno{
     this.deudaTotal=0;
   }
 
-  ObenerPagoReactualizacionMatricula(alumno){
-    var defer = Q.defer();
-    //if(alumno.condicion===)
-  }
+
   obtenerMatricula(){
     var self = this;
     var defer = Q.defer();
@@ -149,7 +136,7 @@ class CompromisoPagoAlumno{
   ObtenerDeudaOrdinaria(){
     console.log('ObtenerDeudaOrdinaria');
     var tasa,self=this;
-    tasa = _.findWhere(this.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    tasa = _.findWhere(this.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
     let valorTasa = _.findWhere(tasa.historial,{activo:true});
     self.deudas.push({tasa:tasa,monto:valorTasa.importe,activo:true});
@@ -220,18 +207,37 @@ class CompromisoPagoAlumno{
 
   ValidarProcesos(){
     let self = this;
-    let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR});
+    let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR;});
     //let procesoOrdinario = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.EXTEMPORANEO});
     //console.log(self.matricula._periodo.procesos);
-    if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado'};
+    if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado',status:500};
     return true;
+  }
+
+  ValidarExistenciaCompromiso(){
+    var self = this;
+    var defer = Q.defer();
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
+    if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
+    CompromisoPago.findOne({
+      //codigo:self.matricula._alumno.codigo,
+      _periodo:self.matricula._periodo._id,
+      _persona:self.matricula._alumno._persona,
+      _tasa:tasa._id,
+      estado:{$in:['Activo','Inactivo']}
+    },function(err,compromiso){
+      if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
+      if(compromiso) return defer.reject({message:'EL pago no se ha generado porque ya existe un compromiso registrado',status:412,detail:compromiso});
+      return defer.resolve(true);
+    });
+    return defer.promise;
   }
 
   generarCompromiso(){
     console.log('generarCompromiso');
     var defer = Q.defer();
     let self = this;
-    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
 
     let fechaVencimiento = moment().add(2, 'days');
@@ -321,6 +327,7 @@ class CompromisoPagoAlumno{
     .then(self.ValidarProcesos.bind(this))
     .then(self.validarMatriculaAlumno.bind(this))
     .then(self.obtenerNumeroCursosRepetidos.bind(this))
+    .then(self.ValidarExistenciaCompromiso.bind(this))
     .then(self.obtenerDeudaMatriculaOrdinaria.bind(this))
     .then(self.obtenerDeudaCursosRepetidos.bind(this))
     .then(self.obtenerDeudaPerdidaGratuidad.bind(this))
