@@ -227,6 +227,25 @@ class CompromisoPagoAlumno{
     return true;
   }
 
+  ValidarExistenciaCompromiso(){
+    var self = this;
+    var defer = Q.defer();
+    let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_ORDINARIO});
+    if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
+    CompromisoPago.findOne({
+      //codigo:self.matricula._alumno.codigo,
+      _periodo:self.matricula._periodo._id,
+      _persona:self.matricula._alumno._persona,
+      _tasa:tasa._id,
+      estado:{$in:['Activo','Inactivo']}
+    },function(err,compromiso){
+      if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
+      if(compromiso) return defer.reject({message:'EL pago no se ha generado porque ya existe un compromiso registrado',status:412,detail:compromiso});
+      return defer.resolve(true);
+    });
+    return defer.promise;
+  }
+
   generarCompromiso(){
     console.log('generarCompromiso');
     var defer = Q.defer();
@@ -321,6 +340,7 @@ class CompromisoPagoAlumno{
     .then(self.ValidarProcesos.bind(this))
     .then(self.validarMatriculaAlumno.bind(this))
     .then(self.obtenerNumeroCursosRepetidos.bind(this))
+    .then(self.ValidarExistenciaCompromiso.bind(this))
     .then(self.obtenerDeudaMatriculaOrdinaria.bind(this))
     .then(self.obtenerDeudaCursosRepetidos.bind(this))
     .then(self.obtenerDeudaPerdidaGratuidad.bind(this))
