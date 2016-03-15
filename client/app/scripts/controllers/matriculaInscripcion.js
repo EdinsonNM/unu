@@ -76,6 +76,7 @@
           _periodo: $scope.periodo._id
         };
         serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
+          console.log("matricula", response);
           if(!response){
             matricula = {};
             $scope.cursosselected = [];
