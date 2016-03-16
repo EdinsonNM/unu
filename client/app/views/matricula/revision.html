@@ -6,9 +6,7 @@
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
       <section>
-        <md-subheader >
-          <strong>Matrícula {{periodoNombre }}</strong>
-        </md-subheader>
+
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
@@ -19,6 +17,11 @@
               </div>
             </md-list-item>
           </md-list>
+        </div>
+        <div>
+          <h2 class=" tc-{{$root.color.primary}}-500">Requisitos para inicio de Matrícula!
+          <br>
+          <small class=" tc-{{$root.color.primary}}-400">Matrícula {{periodoNombre }}</small>
         </div>
       </section>
       <div flex layout="row" layout-fill style="padding-bottom:10px;">
