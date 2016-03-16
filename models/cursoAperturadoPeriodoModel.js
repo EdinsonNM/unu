@@ -25,7 +25,6 @@ var CursoAperturadoPeriodoSchema = new Schema({
 
 CursoAperturadoPeriodoSchema.plugin(mongoosePaginate);
 CursoAperturadoPeriodoSchema.plugin(uniqueValidator);
-
 CursoAperturadoPeriodoSchema.pre('save',function(next){
 	var now = new Date();
 	this.updatedAt = now;
