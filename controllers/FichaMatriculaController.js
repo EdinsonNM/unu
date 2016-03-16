@@ -138,11 +138,11 @@ module.exports=function(){
                   if(aperturado._planestudiodetalle){
                     count = 0;
                     fichamatricula._detalles.forEach(function(detalle){
-                      if(detalle._planEstudiosDetalle === aperturado._planestudiodetalle._id){
+                      if(detalle._planEstudiosDetalle.toString() === aperturado._planestudiodetalle._id.toString()){
                         count++;
                       }
                     });
-                    if(count === 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0){
+                    if(count > 0 && planesRegistrados.indexOf(aperturado._planestudiodetalle._id) < 0){
                       aperturado._grupos.forEach(function(grupo, key){
                         if(grupo.inscritos >= grupo.totalCupos){
                           aperturado._grupos.splice(key, 1);

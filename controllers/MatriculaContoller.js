@@ -41,41 +41,38 @@ module.exports = function() {
        * devuelve el último periodo registradoº
        */
        controller.get('/lastMatricula', function(req, res){
-       	var filter = req.query.filter;
-       	model.paginate(
-       		filter,
-       		{
-            limit: 1,
+        var alumno = req.query._alumno;
+        var periodo = req.query._periodo;
+        model.findOne({_periodo: periodo, _alumno: alumno})
+        .populate([{
+            path: '_detalleMatricula',
+            model: 'DetalleMatricula',
             populate: [{
-              path: '_detalleMatricula',
-              model: 'DetalleMatricula',
+              path: '_grupoCurso',
+              model: 'GrupoCurso',
               populate: [{
-                path: '_grupoCurso',
-                model: 'GrupoCurso',
+                path: '_seccion',
+                model: 'Seccion'
+              },{
+                path: '_cursoAperturadoPeriodo',
+                model: 'CursoAperturadoPeriodo',
                 populate: [{
-                  path: '_seccion',
-                  model: 'Seccion'
-                },{
-                  path: '_cursoAperturadoPeriodo',
-                  model: 'CursoAperturadoPeriodo',
+                  path: '_planestudiodetalle',
+                  model: 'Planestudiodetalle',
                   populate: [{
-                    path: '_planestudiodetalle',
-                    model: 'Planestudiodetalle',
-                    populate: [{
-                      path: '_curso',
-                      model: 'Curso'
-                    }]
+                    path: '_curso',
+                    model: 'Curso'
                   }]
                 }]
               }]
-           },{
-             path: '_planEstudio'
-          }]
-          },
-       		function(err, results, pageCount, itemCount){
-       			res.send(results.docs[0]);
-       		}
-       	);
+            }]
+         },{
+           path: '_planEstudio'
+        }])
+        .exec(function(err, matricula){
+          if(err) return res.status(500).send('No se encontró la matrícula.');
+          return res.status(200).send(matricula);
+        });
        });
 
     }

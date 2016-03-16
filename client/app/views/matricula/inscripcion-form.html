@@ -84,9 +84,9 @@
 
         </md-content>
       </div>
+      <md-dialog-actions layout="row">
+        <md-button class="tc-white bgc-{{$root.color.primary}}-500 right" ng-if="addMode||updateMode"  ng-click="addCursos()">Actualizar Matrícula</md-button>
+      </md-dialog-actions>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
-    <md-button class="tc-white bgc-{{$root.color.primary}}-500" ng-if="addMode||updateMode"  ng-click="addCursos()">Actualizar Matrícula</md-button>
-  </md-dialog-actions>
   </form>
 </md-dialog>
