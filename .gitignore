@@ -2,5 +2,6 @@
 /client/app/public/
 /client/npm-debug.log
 npm-debug.log
-/commons/data/*
+/commons/data/imports/*.*
+/commons/data/exports/*.*
 /jobs/node_modules

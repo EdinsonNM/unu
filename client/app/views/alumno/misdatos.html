@@ -20,7 +20,7 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>DNI:</label>
                         <md-icon md-font-icon="fa-credit-card" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable">
+                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable" ng-maxlength="8" type="number">
                         <div ng-messages="myForm.documento.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
@@ -127,7 +127,7 @@
                         <label>E-mail:</label>
                         <!--md-icon md-svg-src="img/icons/ic_email_24px.svg" class="email"></md-icon-->
                         <md-icon md-font-icon="fa-envelope" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="email" ng-model="model.email" ng-readonly="!editable">
+                        <input required name="email" ng-model="model.email" ng-readonly="!editable" type = "email">
                         <div ng-messages="myForm.email.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
@@ -139,7 +139,7 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>Teléfono:</label>
                         <md-icon md-font-icon="fa-mobile" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="telefono" ng-model="model.telefono" ng-readonly="!editable">
+                        <input required name="telefono" ng-model="model.telefono" ng-readonly="!editable" ng-maxlength="12">
                         <div ng-messages="myForm.telefono.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
