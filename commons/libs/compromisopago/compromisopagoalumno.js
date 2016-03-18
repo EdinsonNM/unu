@@ -268,6 +268,16 @@ class CompromisoPagoAlumno{
     return defer.promise;
   }
 
+  matricularIngresante(){
+    var defer = Q.defer();
+    let self = this;
+    self.matricula.estado="Matriculado";
+    self.matricula.save(function(err,data){
+      if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
+      return defer.resolve({matricula:data});
+    });
+    return defer.promise;
+  }
   validarMatriculaAlumno(){
     var self = this;
     console.log('validarMatriculaAlumno');
@@ -319,11 +329,11 @@ class CompromisoPagoAlumno{
     return defer.promise;
   }
 
-  generar(next){
+  generarAlumno(next){
     var self = this;
     Q
     .fcall(self.obtenerTasas.bind(this))
-    .then(self.obtenerMatricula.bind(this))
+    //.then(self.obtenerMatricula.bind(this))
     .then(self.ValidarProcesos.bind(this))
     .then(self.validarMatriculaAlumno.bind(this))
     .then(self.obtenerNumeroCursosRepetidos.bind(this))
@@ -334,6 +344,36 @@ class CompromisoPagoAlumno{
     .then(self.generarCompromiso.bind(this))
     .then(function(compromiso){
       return next(null,compromiso);
+    })
+    .catch(function(error){
+      return next(error);
+    })
+    .done();
+  }
+
+  generarIngresante(next){
+    var self = this;
+    Q
+    .fcall(self.validarMatriculaAlumno.bind(this))
+    .then(function(compromiso){
+      return next(null,compromiso);
+    })
+    .catch(function(error){
+      return next(error);
+    })
+    .done();
+  }
+
+  generar(next){
+    var self = this;
+    Q
+    .fcall(self.obtenerMatricula.bind(this))
+    .then(function(result){
+      if(self.matricula._alumno._periodoInicio === self.matricula._periodo){
+        self.generarIngresante(next);
+      }else{
+        self.generarAlumno(next);
+      }
     })
     .catch(function(error){
       return next(error);

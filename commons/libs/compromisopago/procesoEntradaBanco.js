@@ -70,7 +70,8 @@ var crearAlumno = function crearAlumno(ingresante,next){
           _facultad : objIngresante._facultad,
           _escuela : objIngresante._escuela,
           _tipoCondicionAlumno : tipocondicion._id,
-          _situacionAlumno : situacion._id
+          _situacionAlumno : situacion._id,
+          _modalidadIngreso:objIngresante._modalidad
         });
 
         var usuario = new UsuarioModel({

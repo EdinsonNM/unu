@@ -11,7 +11,17 @@
    */
 
   angular.module('unuApp')
-    .controller('MatriculaInscripcionCtrl', function(
+    .controller('MatriculaInscripcionCtrl',[
+    'MessageFactory',
+    '$rootScope',
+    '$scope',
+    'Restangular',
+    '$mdDialog',
+    '$timeout',
+    'ToastMD',
+    '$mdMedia',
+    '$state',
+    function(
       MessageFactory,
       $rootScope,
       $scope,
@@ -138,12 +148,25 @@
         }
       };
 
-    })
+    }])
 
   /**
    * controler de modal de cursos para agregar a la matrícula
    */
-  .controller('InscripcionNewCtrl', function(
+  .controller('InscripcionNewCtrl',[
+  '$scope',
+  'Restangular',
+  'MessageFactory',
+  'NgTableParams',
+  '$timeout',
+  '$mdDialog',
+  'ToastMD',
+  '$rootScope',
+  'fichamatricula',
+  'fichamatriculaIngresante',
+  'matricula',
+  'creditosaceptados',
+  function(
     $scope,
     Restangular,
     MessageFactory,
@@ -303,6 +326,6 @@ console.log('creditos actuales',creditosactuales);
       $mdDialog.hide();
     };
 
-  });
+  }]);
 
 }).call(this);
