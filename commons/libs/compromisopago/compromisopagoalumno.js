@@ -355,8 +355,9 @@ class CompromisoPagoAlumno{
     var self = this;
     Q
     .fcall(self.validarMatriculaAlumno.bind(this))
-    .then(function(compromiso){
-      return next(null,compromiso);
+    .then(self.matricularIngresante.bind(this))
+    .then(function(result){
+      return next(null,result);
     })
     .catch(function(error){
       return next(error);
@@ -369,12 +370,12 @@ class CompromisoPagoAlumno{
     Q
     .fcall(self.obtenerMatricula.bind(this))
     .then(function(result){
-      if(self.matricula._alumno._periodoInicio === self.matricula._periodo){
+      if(self.matricula._alumno._periodoInicio.toString() === self.matricula._periodo._id.toString()){
         self.generarIngresante(next);
-      }else{
+        }else{
         self.generarAlumno(next);
-      }
-    })
+        }
+      })
     .catch(function(error){
       return next(error);
     })
