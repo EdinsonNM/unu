@@ -12,6 +12,9 @@
 
   angular.module('unuApp')
     .controller('MatriculaInscripcionCtrl',[
+    'ALUMNO',
+    'PERIODO',
+    'PROCESO_MATRICULA',
     'MessageFactory',
     '$rootScope',
     '$scope',
@@ -22,6 +25,9 @@
     '$mdMedia',
     '$state',
     function(
+      ALUMNO,
+      PERIODO,
+      PROCESO_MATRICULA,
       MessageFactory,
       $rootScope,
       $scope,
@@ -37,13 +43,10 @@
        * initial Params
        */
       var getFichaMatricula, getMatricula, creditosaceptados;
-      $timeout(function() {
-        $scope.ALUMNO = $rootScope.ALUMNO;
-        $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
-        $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
-        getFichaMatricula();
-        getMatricula();
-      }, 800);
+      $scope.ALUMNO = ALUMNO;
+      $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+      $scope.periodoIngresante = ALUMNO._periodoInicio;
+
       $scope.creditosactuales = 0;
       $scope.UI = {
         refresh: false,
@@ -65,14 +68,13 @@
       servicePeriodos.customGET('lastPeriodo').then(function(response) {
         $scope.UI.title = response.nombre;
         $scope.periodo = response;
-        $scope.periodoActual = response._id;
-        creditosaceptados = response.parametros[0].valor;
+        creditosaceptados = 22//response.parametros[0].valor;
       });
       getFichaMatricula = function() {
         serviceFichaMatricula = Restangular.all('fichamatriculas');
         filter = {
-          _alumno: $scope.ALUMNO._id,
-          _periodo: $scope.periodo._id
+          _alumno: ALUMNO._id,
+          _periodo: PERIODO._id
         };
         serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
           fichamatricula = response;
@@ -83,7 +85,7 @@
         serviceMatricula = Restangular.all('matriculas');
         var filter = {
           _alumno: $scope.ALUMNO._id,
-          _periodo: $scope.periodo._id
+          _periodo: PERIODO._id
         };
         serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
           if(!response){
@@ -99,7 +101,8 @@
           });
         });
       };
-
+      getFichaMatricula();
+      getMatricula();
       /**
        * Abre modal para agregar cursos
        */
@@ -123,7 +126,7 @@
       };
 
       $scope.NextPage = function() {
-        if ($scope.periodoActual === $scope.periodoIngresante) {
+        if (PERIODO === $scope.periodoIngresante) {
           $state.go('app.matriculaingresantelast');
         } else {
           $state.go('app.matricularevisionlast');
@@ -134,6 +137,18 @@
         getFichaMatricula();
         getMatricula();
       });
+
+      $scope.TotalCreditos = function TotalCreditos(){
+        console.log('cursosselected',$scope.cursosselected);
+        var suma=0;
+        $scope.cursosselected.forEach(function(item){
+          suma+=parseInt(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos);
+        });
+
+        return suma;
+      };
+
+
 
       $scope.FinalizarMatricula = function(){
         var serviceCompromisoPago = Restangular.all('compromisopagos');
@@ -192,7 +207,7 @@ console.log('creditos actuales',creditosactuales);
     var serviceFichaMatricula, serviceDetalleMatricula, serviceCursoAperturadoPeriodo;
     $scope.includeActive = false;
     $scope.submited = false;
-    $scope.title = MessageFactory.Form.New.replace('{element}', name);
+    $scope.title = "Listado de Cursos Disponibles";
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
     $scope.model = {};
@@ -252,6 +267,8 @@ console.log('creditos actuales',creditosactuales);
         });
       }
     };
+
+
     ListaCursosGrupos();
 
     var findIndex = function(item) {

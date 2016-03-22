@@ -98,28 +98,21 @@ module.exports=function(){
       });
 
       /**
-       * devuelve el último periodo registradoº
+       * devuelve el último periodo registrado activo
        */
        controller.get('/lastPeriodo', function(req, res){
        	var filter = {activo: true};
-       	model.paginate(
-       		filter,
-       		{
-            limit: 1,
-            sort:{
-              $natural: -1
-           },
-           populate: [{
-             path:'procesos',
-             populate:{
-                path:'_proceso'
-             }
-          }]
-          },
-       		function(err, results, pageCount, itemCount){
-       			res.send(results.docs[0]);
-       		}
-       	);
+        model.findOne(filter).sort('-anio')
+        .populate([{
+          path:'procesos',
+          populate:{
+             path:'_proceso'
+          }
+        }]).exec(function(err,data){
+          if(err) return res.status(500).send({message:'Error Interno del Servidor',detail:err});
+          if(!data) return res.status(404).send({message:'No se encontro ningun periodo activo'});
+          return res.status(200).send(data);
+        });
        });
 
     }

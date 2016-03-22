@@ -41,15 +41,18 @@
       };
 
       $scope.LoadProcesosFacultad = function LoadProcesosFacultad() {
-        var serviceProcesoFacultad = Restangular.all('procesos');
-        serviceProcesoFacultad.getList({
-          conditions: {
-            _facultad: $scope.filter._facultad._id,
-            _periodo: $scope.filter._periodo._id
-          }
-        }).then(function(data) {
-          $scope.procesosFacultad = data;
-        });
+        if($scope.filter.hasOwnProperty('_facultad') && $scope.filter.hasOwnProperty('_periodo')){
+          var serviceProcesoFacultad = Restangular.all('procesofacultades');
+          serviceProcesoFacultad.getList({
+            populate:'_proceso _facultad _periodo',
+            conditions: {
+              _facultad: $scope.filter._facultad._id,
+              _periodo: $scope.filter._periodo._id
+            }
+          }).then(function(data) {
+            $scope.procesosFacultad = data;
+          });
+        }
       };
 
       var LoadPeriodos = function LoadPeriodos() {
@@ -62,54 +65,15 @@
       new LoadFacultades();
 
 
-      $scope.ListProcesos = function() {
-        $scope.tableParamsProcesos = new NgTableParams({
-          page: 1,
-          count: 10,
-          filter: {
-            _facultad: $scope.filter._facultad._id,
-            _periodo: $scope.filter._periodo._id
-          }
-        }, {
-          total: 0,
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
-            $scope.UI.refresh = true;
-            serviceProcesoFacultad.customGET('methods/paginate', query).then(function(result) {
-              $timeout(function() {
-                  if(result.data.length > 0){
-                      params.total(result.data[0].length);
-                      $defer.resolve(result.data[0].procesos);
-                  }else{
-                      params.total(0);
-                      $defer.resolve([]);
-                  }
-
-                $scope.UI.refresh = false;
-              }, 500);
-            });
-          }
-        });
-        $scope.tableParamsProcesos.settings({
-          counts: []
-        });
-      };
-
-      $scope.Refresh = function Refresh() {
-        $scope.UI.selected = null;
-        $scope.UI.editMode = false;
-        $scope.tableParams.reload();
-      };
 
       $scope.filter = {};
       $scope.New = function New($event) {
-        if (!$scope.filter._escuela) {
-          ToastMD.warning('Debe seleccionar una escuela antes de agregar un parametro');
+        if (!$scope.filter._facultad) {
+          ToastMD.warning('Debe seleccionar una facultad antes de agregar un proceso');
           return;
         }
         if (!$scope.filter._periodo) {
-          ToastMD.warning('Debe seleccionar un periodo antes de crear un parametro');
+          ToastMD.warning('Debe seleccionar un periodo antes de crear un proceso');
           return;
         }
 
@@ -121,13 +85,12 @@
           locals: {
             selectedTab: $scope.selectedTab,
             name: LOCAL.name,
-            table: $scope.tableParamsProcesos,
-            escuela: $scope.filter._escuela,
+            table: $scope.LoadProcesosFacultad,
+            facultad: $scope.filter._facultad,
             periodo: $scope.filter._periodo,
-            serviceProcesoFacultad: serviceProcesoFacultad,
-            serviceParametroEscuela: serviceParametroEscuela
+            serviceProcesoFacultad: serviceProcesoFacultad
           },
-          controller: 'EscuelaParametrosProcesosNewCtrl'
+          controller: 'FacultadProcesosNewCtrl'
         });
       };
       $scope.Edit = function Edit($event) {
@@ -138,11 +101,11 @@
           templateUrl: LOCAL.form,
           locals: {
             name: LOCAL.name,
-            table: $scope.tableParams,
+            table: $scope.LoadProcesosFacultad,
             model: Restangular.copy($scope.UI.selected),
-            escuela: $scope.filter._escuela
+            facultad: $scope.filter._facultad
           },
-          controller: 'EscuelaParametrosProcesosEditCtrl'
+          controller: 'FacultadProcesosEditCtrl'
         });
       };
 
@@ -156,11 +119,11 @@
           .cancel(MessageFactory.Buttons.No);
 
         var selected = Restangular.copy($scope.UI.selected);
-
+        selected.route = 'procesofacultades';
         $mdDialog.show(confirm).then(function() {
           selected.remove().then(function() {
-            $scope.Refresh();
-            ToastMD.info(MessageFactory.Form.Deleted);
+            $scope.LoadProcesosFacultad();
+            ToastMD.success(MessageFactory.Form.Deleted);
           });
         }, function() {
 
@@ -170,7 +133,7 @@
       $scope.EnabledEdit = function EnabledEdit(item) {
         $scope.UI.editMode = false;
         $scope.UI.selected = null;
-        angular.forEach($scope.tableParams.data, function(element) {
+        angular.forEach($scope.procesosFacultad, function(element) {
           if (item._id !== element._id) {
             element.active = false;
           }
@@ -187,9 +150,9 @@
   ])
 
   .controller('FacultadProcesosNewCtrl', [
-      '$scope', 'name', 'table', 'escuela', 'periodo', 'selectedTab', 'serviceParametroEscuela', 'serviceProcesoFacultad', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
-      function($scope, name, table, escuela, periodo, selectedTab, serviceParametroEscuela, serviceProcesoFacultad, MessageFactory, Restangular, ToastMD, $mdDialog) {
-        $scope._escuela = escuela;
+      '$scope', 'name', 'table', 'facultad', 'periodo', 'selectedTab', 'serviceProcesoFacultad', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+      function($scope, name, table, facultad, periodo, selectedTab,  serviceProcesoFacultad, MessageFactory, Restangular, ToastMD, $mdDialog) {
+        $scope._facultad = facultad;
         $scope._periodo = periodo;
         $scope.submited = false;
         $scope.title = MessageFactory.Form.New.replace('{element}', name);
@@ -197,7 +160,7 @@
         $scope.message = MessageFactory.Form;
 
         $scope.model = {
-          _escuela: escuela._id,
+          _facultad: facultad._id,
           _periodo: periodo._id
         };
 
@@ -205,57 +168,44 @@
           $mdDialog.hide();
         };
 
-        if(selectedTab == 0){ // Parametros
-            Restangular.all('parametros').getList().then(function(data) {
-              $scope.parametros = data;
+        Restangular.all('procesos').getList({sort:'nombre'}).then(function(data) {
+          $scope.procesos = data;
+        });
+        $scope.Save = function(form) {
+          $scope.submited = true;
+          if (form.$valid) {
+            serviceProcesoFacultad.post($scope.model).then(function() {
+              ToastMD.success(MessageFactory.Form.Saved);
+              $mdDialog.hide();
+              table();
             });
+          }
+        };
 
-            $scope.Save = function(form) {
-              $scope.submited = true;
-              if (form.$valid) {
-                serviceParametroEscuela.post($scope.model).then(function() {
-                  ToastMD.info(MessageFactory.Form.Saved);
-                  $mdDialog.hide();
-                  table.reload();
-                });
-              }
-            };
-
-        }else{ // Procesos
-            Restangular.all('procesos').getList().then(function(data) {
-              $scope.procesos = data;
-            });
-            $scope.Save = function(form) {
-              $scope.submited = true;
-              if (form.$valid) {
-                serviceProcesoFacultad.post($scope.model).then(function() {
-                  ToastMD.info(MessageFactory.Form.Saved);
-                  $mdDialog.hide();
-                  table.reload();
-                });
-              }
-            };
         }
-      }
+
     ])
-    .controller('FacultadProcesosEditCtrl', ['$scope', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
-      function($scope, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
-        $scope.escuela = escuela;
+    .controller('FacultadProcesosEditCtrl', ['$scope', 'table', 'name', 'model', 'facultad', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+      function($scope, table, name, model, facultad, MessageFactory, Restangular, ToastMD, $mdDialog) {
+        $scope._facultad = model._facultad;
+        $scope._periodo = model._periodo;
         $scope.submited = false;
-        $scope.model = model;
-        $scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
+        $scope.model = model ;
+        $scope.model.fechaInicio = new Date(model.fechaInicio) ;
+        $scope.model.fechaFin = new Date(model.fechaFin) ;
+        $scope.model.route = 'procesofacultades';
         $scope.title = MessageFactory.Form.Edit.replace('{element}', name);
         $scope.Buttons = MessageFactory.Buttons;
-        Restangular.all('periodos').getList().then(function(data) {
-          $scope.periodos = data;
+        Restangular.all('procesos').getList({sort:'nombre'}).then(function(data) {
+          $scope.procesos = data;
         });
         $scope.Save = function(form) {
           $scope.submited = true;
           if (form.$valid) {
             $scope.model.put().then(function() {
-              ToastMD.info(MessageFactory.Form.Updated);
+              ToastMD.success(MessageFactory.Form.Updated);
               $mdDialog.hide();
-              table.reload();
+              table();
             });
           }
         };

@@ -19,6 +19,10 @@ var ProcesoFacultadSchema = new Schema({
 			ref: 'Periodo',
 			required: true
 	},
+	estado:{
+		type:String,
+		enum:['Ejecutado','No Ejecutado']
+	},
 	fechaInicio: Date,
 	fechaFin: Date,
 
@@ -36,4 +40,4 @@ ProcesoFacultadSchema.pre('save',function(next){
 	next();
 });
 
-module.exports = mongoose.model('ProcesoFacultad', ProcesoFacultadSchema).plural('procesofacultades');
+module.exports = mongoose.model('ProcesoFacultad', ProcesoFacultadSchema).plural('procesofacultads');

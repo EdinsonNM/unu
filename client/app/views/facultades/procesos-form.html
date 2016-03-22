@@ -1,0 +1,96 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding window-modal-content-sm">
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Periodo</label>
+            <input required name="periodo" ng-model="_periodo.nombre" readonly>
+            <div ng-messages="myForm.periodo.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Nombre de Facultad</label>
+            <input required name="escuela" ng-model="_facultad.nombre" readonly>
+            <div ng-messages="myForm.escuela.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </diV>
+      </div>
+
+
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Proceso</label>
+            <md-select ng-model="model._proceso" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="proc in procesos" ng-value="proc">
+                {{proc.nombre}}
+              </md-option>
+            </md-select>
+            <div ng-messages="myForm.proceso.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+
+      <div flex layout="row" layout-sm="row">
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Feha Inicio</label>
+            <input type="date" required name="fechaInicio" ng-model="model.fechaInicio">
+            <div ng-messages="myForm.fechaInicio.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Feha Fin</label>
+            <input type="date" required name="fechaFin" ng-model="model.fechaFin">
+            <div ng-messages="myForm.fechaFin.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Estado</label>
+            <md-select ng-model="model.estado">
+                <md-option value="Ejecutado">Ejecutado</md-option>
+                <md-option value="No Ejecutado">No Ejecutado</md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-checkbox ng-model="model.activo">
+        Activo
+      </md-checkbox>
+      <span flex></span>
+      <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.Save}}</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

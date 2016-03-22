@@ -47,6 +47,10 @@
         getUser: function() {
           return service.customGET('auth/me', {});
         },
+        getAlumno: function(){
+          var serviceAlumno = Restangular.all('alumnos');
+          return serviceAlumno.customGET('auth/me', {});
+        },
         getAccess: function() {
           return $rootScope.USER._grupo.menu;
         }

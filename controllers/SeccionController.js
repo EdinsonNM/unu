@@ -32,8 +32,8 @@ module.exports = function() {
         model.paginate(
           filter, {
             page: page,
-            limit: limit
-            //populate: ['_facultad','_escuela']
+            limit: limit,
+            populate: ['_escuela']
           },
           function(err, results) {
             var obj = {
@@ -49,7 +49,7 @@ module.exports = function() {
           }
         );
       });
-      
+
     }
   };
 };

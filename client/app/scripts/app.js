@@ -56,8 +56,35 @@
         });
         return deferred.promise;
       };
-
       ResolveSessionController.$inject = ['UserFactory', '$q', '$rootScope', 'TYPE_GROUP'];
+
+      var GetAlumno =  function(UserFactory, $q, $rootScope,$state, ToastMD) {
+        var defer = $q.defer();
+        UserFactory.getAlumno().then(function(data){
+          $rootScope.ALUMNO = data;
+          defer.resolve(data);
+        },function(err){
+          ToastMD.error(err.data.message);
+          defer.reject(err);
+          $state.go('app');
+        });
+        return defer.promise;
+      };
+      GetAlumno.$inject = ['UserFactory', '$q', '$rootScope','$state','ToastMD'];
+
+      var GetPeriodoActivo =  function(UserFactory, Restangular, $q, $rootScope,$state, ToastMD) {
+        var defer = $q.defer();
+        var servicePeriodo = Restangular.all('periodos');
+        servicePeriodo.customGET('/lastPeriodo').then(function(data) {
+          defer.resolve(data);
+        },function(err){
+          ToastMD.error(err.data.message);
+          defer.reject(err);
+          $state.go('app');
+        });
+        return defer.promise;
+      };
+      GetPeriodoActivo.$inject = ['UserFactory','Restangular', '$q', '$rootScope','$state','ToastMD'];
 
       $stateProvider.state('app', {
           url: '/home',
@@ -69,30 +96,6 @@
           },
           resolve: {
             DataResolve: ResolveSessionController
-          }
-        }).state('appalumno', {
-          url: '/home-alumno',
-          templateUrl: 'views/appalumno.html',
-          controller: 'AppAlumnoCtrl',
-          resolve: {
-            DataResolve: function(UserFactory, OracleRestangular, $q, $rootScope) {
-              var deferred;
-              deferred = $q.defer();
-              UserFactory.getUser().then(function(result) {
-                var service;
-                $rootScope.USER = result.user;
-                service = OracleRestangular.all('alumno');
-                service.customGET('', {
-                  'filter[cod_alumno]': $rootScope.USER.username
-                }).then(function(result) {
-                  if (result.data.length > 0) {
-                    $rootScope.ALUMNO = result.data[0];
-                    deferred.resolve(true);
-                  }
-                });
-              });
-              return deferred.promise;
-            }
           }
         })
         .state('appalumno.inicio', {
@@ -271,6 +274,11 @@
           templateUrl: 'views/escuelas/params-procesos.html',
           controller: 'EscuelaParametrosProcesosCtrl'
         })
+        .state('app.procesosfacultad', {
+          url: '/facultad-procesos',
+          templateUrl: 'views/facultades/procesos.html',
+          controller: 'FacultadProcesosCtrl'
+        })
         .state('app.parametros', {
           url: '/parametros',
           templateUrl: 'views/parametros/list.html',
@@ -314,12 +322,23 @@
         .state('app.matricularevision', {
           url: '/testing/matricula/revision',
           templateUrl: 'views/matricula/revision.html',
-          controller: 'MatriculaRevisionCtrl'
+          controller: 'MatriculaRevisionCtrl',
+          resolve:{
+            ALUMNO:GetAlumno,
+            PERIODO:GetPeriodoActivo/*,
+            procesos:GetProcesos,
+            accesoUI:ValidadAccesoUI*/
+
+          }
         })
         .state('app.matriculainscripcion', {
           url: '/matricula/inscripcion',
           templateUrl: 'views/matricula/inscripcion.html',
-          controller: 'MatriculaInscripcionCtrl'
+          controller: 'MatriculaInscripcionCtrl',
+          resolve:{
+            ALUMNO:GetAlumno,
+            PERIODO:GetPeriodoActivo
+          }
         })
 
       .state('app.matriculacursos', {
@@ -388,6 +407,11 @@
       ALUMNO: 'ALUMNO',
       DOCENTE: 'DOCENTE',
       MIC: 'MIC'
+    })
+    .constant('PROCESO_MATRICULA', {
+      REGULAR: '09',
+      EXTEMPORANEO: '24',
+      INGRESANTE: '23'
     })
     //take all whitespace out of string
     .filter('nospace', function() {

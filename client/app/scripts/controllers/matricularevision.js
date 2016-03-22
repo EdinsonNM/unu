@@ -9,15 +9,13 @@
    * # FacultadesCtrl
    * Controller of the unuApp
    */
-
+// predef _:true,moment:true
   angular.module('unuApp').controller('MatriculaRevisionCtrl', [
-    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
-    function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+    'ALUMNO','PERIODO','PROCESO_MATRICULA','MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'NgTableParams', 'LxDialogService', 'ToastMD', '$mdBottomSheet', '$state',
+    function(ALUMNO,PERIODO,PROCESO_MATRICULA,MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, NgTableParams, LxDialogService, ToastMD, $mdBottomSheet, $state) {
+      console.log("ALUMNO=========",ALUMNO,'=============');
+      console.log("PERIODO ACTIVO:",PERIODO);
       var service, servicePendientes, serviceDeudas;
-
-      console.log('Mostrar' + $rootScope.ALUMNO.codigo);
-
-
 
       $scope.UI = {
         refresh: false,
@@ -28,148 +26,173 @@
         messagePendiente: 'No se encontro ningun pendiente',
         messageDeudas: 'No se encontro ninguna deuda pendiente',
         messageAction: 'Iniciar el proceso de matricula',
-        deudasValue: false,
-        pendientesValue: false,
-        nextStage1: false,
-        nextStage2: false
+        requisitos:{
+          modalidad:false,
+          conflictos:false,
+          deudas:false,
+          fechaMatriculaRegular:false
+        },
+        mostrarUI:false
       };
 
       $scope.modeIngreso = false;
 
       var LOCAL = {
         name: 'Registrar Matricula',
-        //form: 'views/aprobacion/cursos/form-grupo.html',
-        //route: 'matriculas',
 
       };
 
-      //service = Restangular.all(LOCAL.route);
       servicePendientes = Restangular.all('conflictosalumnos');
       serviceDeudas = Restangular.all('compromisopagos');
 
+
+
       var ListPendientesAlumno = function() {
-        //   if(id_alumno === 0){
-        //      return;
-        //   }
-        $scope.tableParamsPendientes = new NgTableParams({
-          page: 1,
-          count: 1000,
-          filter: {
-            _alumno: $scope.ALUMNO._id,
-            estado: 'Pendiente'
-          }
-        }, {
-          total: 0,
-          counts: [],
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
+        if(!$scope.tableParamsPendientes){
+          $scope.tableParamsPendientes = new NgTableParams({
+            page: 1,
+            count: 1000,
+            filter: {
+              _alumno: $scope.ALUMNO._id,
+              estado: 'Pendiente'
+            }
+          }, {
+            total: 0,
+            counts: [],
+            getData: function($defer, params) {
+              var query;
+              query = params.url();
 
-            servicePendientes.customGET('methods/conflicto', query).then(function(result) {
-              $timeout(function() {
-                params.total(result.total);
-                $defer.resolve(result.data);
-                if (result.data.length !== 0) {
-                  $scope.UI.pendientesValue = true;
-                  $scope.UI.nextStage1 = false;
-                } else {
-
-                  $scope.UI.nextStage1 = true;
-                  $scope.UI.messagePendiente = 'No se encontro ningun pendiente';
-
-                }
-              }, 500);
-            });
-          }
-        });
+              servicePendientes.customGET('methods/conflicto', query).then(function(result) {
+                $timeout(function() {
+                  params.total(result.total);
+                  $defer.resolve(result.data);
+                  if (result.data.length === 0) {
+                    $scope.UI.requisitos.conflictos = true;
+                  }
+                }, 500);
+              });
+            }
+          });
+        }else{
+          $scope.tableParamsPendientes.reload();
+        }
       };
 
       var ListDeudasAlumno = function() {
-        console.log('Codigo de alumno:' + $rootScope.ALUMNO.codigo);
-        $scope.tableParamsDeudas = new NgTableParams({
-          page: 1,
-          count: 1000,
-          filter: {
-            codigo: $scope.ALUMNO.codigo,
-            pagado: false
+        if(!$scope.tableParamsDeudas){
+          $scope.tableParamsDeudas = new NgTableParams({
+            page: 1,
+            count: 1000,
+            filter: {
+              codigo: $scope.ALUMNO.codigo,
+              pagado: false
 
-          }
-        }, {
-          total: 0,
-          counts: [],
-          getData: function($defer, params) {
-            var query;
-            query = params.url();
-            serviceDeudas.customGET('methods/deudas', query).then(function(result) {
-              $timeout(function() {
-                params.total(result.total);
-                $defer.resolve(result.data);
-                console.log(result.data);
-                if (result.data.length !== 0) {
-                  $scope.UI.deudasValue = true;
-                  $scope.UI.nextStage2 = false;
-                } else {
-                  $scope.UI.nextStage2 = true;
-                  $scope.UI.deudasValue = false;
-                  $scope.UI.messageDeudas = 'No se encontro ninguna deuda pendiente';
+            }
+          }, {
+            total: 0,
+            counts: [],
+            getData: function($defer, params) {
+              var query;
+              query = params.url();
+              serviceDeudas.customGET('methods/deudas', query).then(function(result) {
+                $timeout(function() {
+                  params.total(result.total);
+                  $defer.resolve(result.data);
+                  console.log(result.data);
+                  if (result.data.length === 0) {
+                    $scope.UI.requisitos.deudas = true;
+                  }
+                }, 500);
+              });
+            }
+          });
+        }else{
+          $scope.tableParamsDeudas.reload();
+        }
 
-                }
-              }, 500);
-            });
-          }
-        });
 
       };
 
       var verificaMatricula = function() {
-        $scope.nombreIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
-        $scope.modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
-        console.log('modadlida', $scope.modalidadIngreso);
-        switch ($scope.modalidadIngreso) {
+        var nombreModalidadIngreso;
+        var modalidadIngreso;
+        if($rootScope.ALUMNO._modalidadIngreso.hasOwnProperty('nombre')){
+          nombreModalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
+          modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
+        }else{
+          nombreModalidadIngreso = 'Sin Modalidad';
+          modalidadIngreso = '99';
+        }
+
+        switch (modalidadIngreso) {
           case '01':
           case '02':
           case '03':
           case '16':
-            $scope.modeIngreso = true;
-            var serviceMatricula = Restangular.all('matriculas');
-            serviceMatricula.getList({
-              conditions: {
-                _periodo: $scope.idLast,
-                _alumno: $scope.ALUMNO._id
-              }
-            }).then(function(data) {
-              // $scope.matricula = data[0];
-              $scope.matricula = data;
-              console.log('matricula scope');
-              console.log($scope.matricula);
-              // if($scope.matricula.length !== 0){}
-              if ($scope.matricula) {
-                angular.forEach($scope.matricula, function(item) {
-                  switch (item.estado) {
-                    case 'Proceso':
-                      console.log('Matricula en proceso');
-                      $state.go('app.matriculainscripcion');
-                      break;
-                    case 'Prematricula':
-                      console.log('Matricula en prematricula');
-                      $state.go('app.matricularevisionlast');
-                      break;
-                    case 'Matriculado':
-                      console.log('Con matricula matriculada');
-                      $state.go('app.matricularevisionlast');
-                      break;
-                  }
-                });
-              }
-            });
+            $scope.UI.requisitos.modalidad = true;
             break;
           default:
-            $scope.modeIngreso = false;
-            $scope.UI.nextStage1 = false;
-            $scope.UI.nextStage2 = false;
-            $scope.modeIngresoGlobal = false;
-            $scope.messageModalidad = 'por su modalidad de ingreso: ' + $scope.nombreIngreso;
+            $scope.UI.requisitos.modalidad = false;
+            $scope.messageModalidad = 'Estamos mejorando dia a dia pero por el momento no podemos atender la modalidad : ' + nombreModalidadIngreso;
         }
+      };
+
+      var validaProcesoRegularActivo = function validaProceso(){
+        var service = Restangular.all('procesofacultades');
+        service.getList({
+          populate:'_proceso',
+          conditions:{
+            _periodo:PERIODO._id,
+            _facultad:ALUMNO._escuela._facultad._id
+          }}).then(function(data){
+          var regular  = _.find(data,function(item){
+            return item._proceso.codigo ===PROCESO_MATRICULA.REGULAR;
+          });
+          debugger;
+          if(!regular) {
+            $scope.UI.requisitos.fechaMatriculaRegular = false;
+            $scope.UI.messageFechaRegular ='No se han definido las fechas para el inicio del proceso mátricula';
+          }else{
+            var today = new Date();
+            switch (true) {
+            case moment(today).isAfter(new Date(regular.fechaInicio)):
+            case moment(today).isBefore(new Date(regular.fechaFin)):
+              $scope.UI.requisitos.fechaMatriculaRegular = true;
+              break;
+            default:
+              $scope.UI.requisitos.fechaMatriculaRegular = false;
+              if(moment(today).isBefore(new Date(regular.fechaInicio)))
+                $scope.UI.messageFechaRegular ='Proceso de Matricula aun no se ha iniciado para su facultad';
+              if(moment(today).isAfter(new Date(regular.fechaFin)))
+                $scope.UI.messageFechaRegular ='Proceso de Matricula ya ha terminado';
+
+            }
+          }
+
+        });
+      };
+
+
+
+
+      var ValidadAccesoUI = function(){
+        console.log($state.$current.name);
+        var serviceMatricula = Restangular.all('matriculas');
+        serviceMatricula.getList({
+          conditions: {
+            _periodo: PERIODO._id,
+            _alumno: $scope.ALUMNO._id
+          }
+        }).then(function(data) {
+          if(data.length>0){
+            console.log($scope.matricula);
+            $scope.matricula = data[0];
+            $scope.RedirectWithMatricula($scope.matricula);
+          }else{
+            $scope.UI.mostrarUI = true;
+          }
+        });
       };
 
 
@@ -187,35 +210,20 @@
           $scope.idplanestudio = data[0]._planEstudios;
         });
       };
-
-      $timeout(function() {
-        console.log('root' + $rootScope.ALUMNO.codigo);
-        $scope.ALUMNO = $rootScope.ALUMNO;
-        console.log($rootScope.ALUMNO);
-        console.log('periodo' + $rootScope.ALUMNO.periodo);
-        $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
-        ListPendientesAlumno();
-        ListDeudasAlumno();
-        datosAlumno();
-        verificaMatricula();
-      }, 500);
-
-      var ultimoPeriodo = function ultimoPeriodo() {
-        var servicePeriodo = Restangular.all('periodos');
-        servicePeriodo.customGET('/lastPeriodo').then(function(data) {
-          $scope.periodo = data;
-          $scope.idLast = data._id;
-          $scope.periodoNombre = data.nombre;
-        });
-      };
-
-      ultimoPeriodo();
+      $scope.ALUMNO = ALUMNO;
+      $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+      ListPendientesAlumno();
+      ListDeudasAlumno();
+      datosAlumno();
+      verificaMatricula();
+      validaProcesoRegularActivo();
+      ValidadAccesoUI();
 
       $scope.Save = function() {
         //$scope.submited = true;
         //declaro el servicio con la ruta correcta del endpoint.
         $scope.model = {};
-        $scope.model._periodo = $scope.idLast;
+        $scope.model._periodo = PERIODO._id;
         $scope.model._alumno = $scope.ALUMNO._id;
         $scope.model._planEstudio = $scope.idplanestudio;
         $scope.model._escuela = $scope.ALUMNO._escuela;

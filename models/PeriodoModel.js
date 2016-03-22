@@ -16,8 +16,7 @@ var PeriodoSchema = new Schema({
         required: true
     },
     resolucion: {
-        type: String,
-        required: true
+        type: String
     },
     fechaResolucion: {
         type: Date,
