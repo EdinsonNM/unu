@@ -132,6 +132,11 @@
             <tr ng-repeat-end>
 
             </tr>
+            <tr ng-if="!cursoshabilitados">
+              <td colspan="8">
+                No se encontraron cursos aperturados disponibles para el periodo actual
+              </td>
+            </tr>
           </tbody>
         </table>
 
