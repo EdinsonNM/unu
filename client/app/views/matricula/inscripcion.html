@@ -46,8 +46,8 @@
               </md-input-container>
             </div>
           </div>
-          <div>Bienvenido al proceso de matricula. Por favor, seleccione uno o más cursos a los cuales desea matricularse</div>
-          <div class="table-responsive" ng-if="cursosselected.length>0">
+          <div>Bienvenido al proceso de matricula. Por favor, seleccione uno o más cursos a los cuales desea matricularse:</div>
+          <div class="table-responsive">
             <table show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
               <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
               <thead>
@@ -61,7 +61,14 @@
                 </tr>
               </thead>
               <tbody>
+                <tr ng-if="cursosselected.length===0">
+                  <td colspan="5"class="text-center">
+                    <h4 style="color:#c2c2c2;height:100px;line-height: 100px;">
+                      No se ha seleccionado ningun curso.Seleccione uno o mas cursos para realizar el proceso de matrícula
 
+                    </h4>
+                  </td>
+                </tr>
                 <tr ng-repeat="item in cursosselected" ng-click="item.active=!item.active;EnabledAdd(item)">
                   <td>{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
                   <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
@@ -70,7 +77,7 @@
                   <td class="text-left">{{ item._grupoCurso._seccion.nombre }}</td>
                   <td class="text-center">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos }}</td>
                 </tr>
-                <tr>
+                <tr ng-if="cursosselected.length>0">
 
                   <td></td>
                   <td></td>
@@ -82,8 +89,11 @@
               </tbody>
               <tbody>
             </table>
+            <p>
+              El número máximo de creditos disponibles para matricularse en este periodo es de: <strong>{{UI.fichamatricula.creditos.maximo.creditosmatricula}} creditos</strong>
+            </p>
             <div class="text-center" ng-if="cursosselected.length > 0">
-              <md-button class="md-raised md-primary" ng-click="FinalizarMatricula()">FINALIZAR MATRICULA</md-button>
+              <md-button class="md-raised md-primary" ng-click="FinalizarMatricula($event)">FINALIZAR MATRICULA</md-button>
             </div>
           </div>
         </md-content>

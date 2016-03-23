@@ -1,4 +1,4 @@
-<div id="printSection" style="width:100%;" >
+<div id="printSection" style="width:100%;">
   <div id="showprint">
     <div id="headerPre" layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding-bottom: 5px;">
       <div id="righthead" style="width:85%;">
@@ -12,7 +12,9 @@
             </div>
           </md-list-item>
         </md-list>
-        <p><strong>FACULTAD DE {{ALUMNO._facultad.nombre}}</strong></p>
+        <p>
+          <strong>FACULTAD DE {{ALUMNO._facultad.nombre}}</strong>
+        </p>
         <p>ESCUELA: {{ALUMNO._escuela.nombre}}</p>
       </div>
       <div id="lefthead" style="width:15%;">
@@ -34,15 +36,33 @@
         <tbody>
           <tr class="bg-table-group">
             <td></td>
-            <td><strong>CÓDIGO</strong></td>
-            <td><strong>NOMBRE CURSO</strong></td>
-            <td><strong>CICLO</strong></td>
-            <td><strong>CR.</strong></td>
-            <td><strong>TIPO CURSO</strong></td>
-            <td><strong>N.V.</strong></td>
-            <td><strong>ESTADO</strong></td>
-            <td><strong>OP1</strong></td>
-            <td><strong>RP</strong></td>
+            <td>
+              <strong>CÓDIGO</strong>
+            </td>
+            <td>
+              <strong>NOMBRE CURSO</strong>
+            </td>
+            <td>
+              <strong>CICLO</strong>
+            </td>
+            <td>
+              <strong>CR.</strong>
+            </td>
+            <td>
+              <strong>TIPO CURSO</strong>
+            </td>
+            <td>
+              <strong>N.V.</strong>
+            </td>
+            <td>
+              <strong>ESTADO</strong>
+            </td>
+            <td>
+              <strong>OP1</strong>
+            </td>
+            <td>
+              <strong>RP</strong>
+            </td>
           </tr>
           <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
             <td class="text-left" data-title="''">{{index}}</td>
@@ -66,18 +86,32 @@
       <h4 style="text-decoration: underline;">INFORMACION BASICA:</h4>
       <div layout="row" layout-margin layout-fill style="padding-top:5px;">
         <div class="infoFicha info">
-          <p><span>Orden de Matricula:</span> 0 </p>
-          <p><span>Máximo Credito Permitidos:</span> {{fichamatricula.creditos.maximo.creditosmatricula}}</p>
-          <p><span>Creditos Curriculares Aprobados:</span> </p>
-          <p><span>Ciclo Relativo: </span></p>
-          <p><span>Prom. Pond. Per. Ant: </span>{{fichamatricula.promedioPonderadoPeriodoAnterior}}</p>
+          <p>
+            <span>Orden de Matricula:</span> 0 </p>
+          <p>
+            <span>Máximo Credito Permitidos:</span> {{fichamatricula.creditos.maximo.creditosmatricula}}</p>
+          <p>
+            <span>Creditos Curriculares Aprobados:</span>
+          </p>
+          <p>
+            <span>Ciclo Relativo: </span>
+          </p>
+          <p>
+            <span>Prom. Pond. Per. Ant: </span>{{fichamatricula.promedioPonderadoPeriodoAnterior}}</p>
         </div>
         <div class="infoFicha info">
-          <p><span>Número de Créditos Matriculados:</span>{{creditosactuales}}</p>
-          <p><span>Número de Cursos Matriculados:</span>{{}}</p>
-          <p><span>Fecha:</span>{{}}</p>
-          <p><span>Firma de Alumno:</span></p>
-          <p><span>Firma de Consejero:</span></p>
+          <p>
+            <span>Número de Créditos Matriculados:</span>{{creditosactuales}}</p>
+          <p>
+            <span>Número de Cursos Matriculados:</span>{{}}</p>
+          <p>
+            <span>Fecha:</span>{{}}</p>
+          <p>
+            <span>Firma de Alumno:</span>
+          </p>
+          <p>
+            <span>Firma de Consejero:</span>
+          </p>
         </div>
       </div>
     </div>
@@ -197,29 +231,43 @@
       <!-- Imagen del usuario -->
 
       <!-- <div print-element-id="printSection" layout="row" layout-fill> -->
-      <md-content flex class="md-padding page-content" >
+      <md-content flex class="md-padding page-content">
         <div>
-          <h3><strong>Estimado alumno,</strong></h3>
+          <h3>
+            <strong>Estimado alumno,</strong>
+          </h3>
 
         </div>
 
         <div layout="row" layout-fill>
           <p ng-if="!print">
-            Ud ha finalizado su proceso de prematricula satisfactoriamente, a traves del cual hemos generado una reserva de sus cursos seleccionados para el periodo {{periodoNombre}}:</br><br>
+            Ud ha finalizado su proceso de prematricula satisfactoriamente, a traves del cual hemos generado una reserva de sus cursos seleccionados para el periodo {{periodoNombre}}:</br>
+            <br>
           </p>
           <p ng-if="print">
-            Ud ha finalizado su proceso de matricula satisfactoriamente, a traves del cual hemos generado una reserva de sus cursos seleccionados para el periodo {{periodoNombre}}:</br><br>
+            Ud ha finalizado su proceso de matricula satisfactoriamente, a traves del cual hemos generado una reserva de sus cursos seleccionados para el periodo {{periodoNombre}}:</br>
+            <br>
           </p>
         </div>
         <table show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
           <tbody>
             <tr class="bg-table-group">
               <td></td>
-              <td><strong>CÓDIGO</strong></td>
-              <td><strong>NOMBRE CURSO</strong></td>
-              <td><strong>CICLO</strong></td>
-              <td><strong>CR.</strong></td>
-              <td><strong>TIPO CURSO</strong></td>
+              <td>
+                <strong>CÓDIGO</strong>
+              </td>
+              <td>
+                <strong>NOMBRE CURSO</strong>
+              </td>
+              <td>
+                <strong>CICLO</strong>
+              </td>
+              <td>
+                <strong>CR.</strong>
+              </td>
+              <td>
+                <strong>TIPO CURSO</strong>
+              </td>
 
             </tr>
             <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
@@ -234,15 +282,15 @@
 
           </tbody>
         </table>
-        <p  ng-if="!print">
+        <p ng-if="!print">
           La Ficha de Prematrícula no constituye la obtención definitiva de cupo en los cursos seleccionados.
         </p>
-      <br>
+        <br>
         <!-- <div id="printSec"> -->
-        <p  ng-if="!print">
+        <p ng-if="!print">
           <strong>A continuación se muestra la información del pago que deberá realizar:</strong>
         </p>
-        <div   ng-if="!print">
+        <div ng-if="!print">
           <table ng-table="tableParamsDeudas" show-filter="false" class="table table-hover table-condensed table-striped table-bordered">
             <tbody>
               <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
@@ -259,13 +307,16 @@
           </table>
         </div>
 
-        <p  ng-if="!print">
-          Para finalizar su matrícula deberá realizar el abono respectivo dentro de las siguientes <strong>48:00 horas</strong> a traves de cualquier canal de atención del BBVA Banco Continental al siguiente numero de cuenta <strong>458-789845-0-53</strong> a nombre de <strong>Universidad Nacional de Ucayali</strong> por importe/concepto de:
+        <p ng-if="!print">
+          Para finalizar su matrícula deberá realizar el abono respectivo dentro de las siguientes
+          <strong>48:00 horas</strong> a traves de cualquier canal de atención del BBVA Banco Continental al siguiente numero de cuenta
+          <strong>458-789845-0-53</strong> a nombre de
+          <strong>Universidad Nacional de Ucayali</strong> por importe/concepto de:
         </p>
 
-          <p ng-if="!print">
-            Pasadas las HH horas y no habiéndose realizado el pago indicado, su Matrícula quedará sin efecto perdiendo los cupos guardados en los cursos seleccionados.
-          </p>
+        <p ng-if="!print">
+          Pasadas las HH horas y no habiéndose realizado el pago indicado, su Matrícula quedará sin efecto perdiendo los cupos guardados en los cursos seleccionados.
+        </p>
       </md-content>
 
       <div layout-align="center start" layout="row" layout-fill>
@@ -274,7 +325,9 @@
         </md-button>
       </div>
     </md-content>
-    <md-button ui-sref="app"  class="md-fab md-fab-bottom-right" aria-label="Regresar al menu principal" >
+    </div>
+  </md-content>
+    <md-button ui-sref="app" class="md-fab md-fab-bottom-right" aria-label="Regresar al menu principal">
       <md-tooltip md-direction="left">Regresar al menu principal</md-tooltip>
       <md-icon md-font-icon="fa fa-reply fa-lg tc-white"></md-icon>
     </md-button>
