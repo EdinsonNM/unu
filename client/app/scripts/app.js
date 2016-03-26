@@ -308,6 +308,11 @@
           templateUrl: 'views/conflictosalumnos/list.html',
           controller: 'ConflictosalumnoCtrl'
         })
+        .state('app.archivossalida', {
+          url: '/archivos-salida',
+          templateUrl: 'views/archivosbanco/list.html',
+          controller: 'ArchivosBancoSalidaCtrl'
+        })
         .state('app.otrasdeudasalumnos', {
           url: '/otrasdeudasalumnos',
           templateUrl: 'views/otrasdeudasalumnos/list.html',

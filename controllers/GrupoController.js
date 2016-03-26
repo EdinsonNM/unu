@@ -20,7 +20,8 @@ module.exports=function(){
                 {title:'Facultad',icon:'fa-institution',url:'app.facultad',order:1},
                 {title:'Alumnos',icon:'',url:'app.alumnos',order:2},
                 {title:'Conflictos',icon:'',url:'app.conflicto',order:3},
-                {title:'Conflictos Alumnos',icon:'',url:'app.conflictosalumno',order:4}
+                {title:'Conflictos Alumnos',icon:'',url:'app.conflictosalumno',order:4},
+                {title:'Archivos Salida',icon:'',url:'app.archivossalida',order:5}
               ],
               style:{
                 color: 'white',
