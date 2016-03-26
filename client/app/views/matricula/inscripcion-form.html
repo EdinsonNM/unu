@@ -11,138 +11,137 @@
     </md-toolbar>
 
     <md-dialog-content class="window-modal-content-md md-padding">
-      <table class="table table-condensed table-bordered ">
-        <thead>
-          <tr>
-            <th style="width:40px;">
-            </th>
-            <th>
-              Ciclo/Curso/Grupo
-            </th>
-            <th>
-              Código
-            </th>
-            <th>
-              Creditos
-            </th>
-            <th>
-              Cupos
-            </th>
-            <th>
-              Disponibles
-            </th>
+      <div class="table-responsive">
+        <table class="table table-hover table-condensed table-bordered ">
+          <thead>
+            <tr>
+              <th style="width:40px;">
+              </th>
+              <th>
+                CICLO / CURSO / GRUPO
+              </th>
+              <th>
+                CÓDIGO
+              </th>
+              <th>
+                CREDITOS
+              </th>
+              <th>
+                CUPOS
+              </th>
+              <th>
+                DISPONIBLES
+              </th>
+              <th>
+                DOCENTES
+              </th>
+              <th>
+                HORARIOS
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--CICLO-->
+            <tr ng-repeat-start="(ciclo, cursos) in cursoshabilitados">
+              <td>
+                <i class="fa fa-calendar fa-lg tc-{{$root.color.accent}}-500"></i>
+              </td>
+              <td colspan="7">
+                <a href class="groupTitle" ng-click="cursos.$hideRows = !cursos.$hideRows">
+                  <h3 class="tc-{{$root.color.accent}}-500">
+                    <span class="fa" ng-class="{ 'fa-chevron-right': cursos.$hideRows, 'fa-chevron-down': !cursos.$hideRows }"></span> CICLO {{ ciclo }}
+                  </h3>
+                </a>
+              </td>
 
-            <th>
-              Docentes
-            </th>
-            <th>
-              Horarios
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!--CICLO-->
-          <tr ng-repeat-start="(ciclo, cursos) in cursoshabilitados">
-            <td>
-              <i class="fa fa-calendar fa-lg tc-{{$root.color.accent}}-500"></i>
-            </td>
-            <td colspan="4">
-              <a href class="groupTitle" ng-click="cursos.$hideRows = !cursos.$hideRows">
-                <h3 class="tc-{{$root.color.accent}}-500">
-                  <span class="fa" ng-class="{ 'fa-chevron-right': cursos.$hideRows, 'fa-chevron-down': !cursos.$hideRows }"></span> CICLO {{ ciclo }}
-                </h3>
-              </a>
-            </td>
-            <td>
+            </tr>
+            <!--CURSO-->
+            <tr ng-repeat-start="curso in cursos" ng-hide="cursos.$hideRows">
+              <td>
+              </td>
+              <td colspan="7">
+                <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
+              </td>
+            </tr>
+            <tr ng-repeat-end ng-repeat="item in curso._grupos" ng-click="item.active=!item.active;EnabledEdit(item, curso)" ng-hide="cursos.$hideRows">
+              <td>
 
-            </td>
-            <td>
+              </td>
 
-            </td>
-            <td>
+              <td>
+                <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>  {{ item._seccion.nombre }}
+              </td>
+              <td>
+                  {{ curso._planestudiodetalle._curso.codigo }}
+              </td>
+              <td class="text-center">
+                {{ curso._planestudiodetalle.creditos }}
+              </td>
+              <td class="text-center">
+                {{item.totalCupos}}
+              </td>
+              <td class="text-center">
+                {{(item.totalCupos)-(item.matriculados)}}
+              </td>
+              <td class="text-center">
+                <md-menu>
+                  <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                    <md-icon md-menu-origin md-font-icon="fa fa-user"></md-icon>
+                  </md-button>
+                  <md-menu-content>
+                    <md-menu-item ng-repeat="horario in item._programaciones">
+                      <md-button>
+                        <md-icon md-menu-align-target md-font-icon="fa fa-user"></md-icon>
+                        {{horario._docente.nombres}} {{horario._docente.apellidos}} ({{horario.modalidadClaseGrupo}})
+                      </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="item._programaciones.length===0">
+                      <md-button>
+                        <md-icon md-menu-align-target md-font-icon="fa fa-user"></md-icon>
+                        No Asignado
+                      </md-button>
+                    </md-menu-item>
+                  </md-menu-content>
+                </md-menu>
+              </td>
+              <td class="text-center">
+                <md-menu>
+                  <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                    <md-icon md-menu-origin md-font-icon="fa fa-clock-o"></md-icon>
+                  </md-button>
+                  <md-menu-content>
 
-            </td>
-          </tr>
-          <!--CURSO-->
-          <tr ng-repeat-start="curso in cursos" ng-hide="cursos.$hideRows">
-            <td>
-            </td>
-            <td>
-              <strong>{{ curso._planestudiodetalle._curso.nombre }}</strong>
-            </td>
-            <td>
-              {{ curso._planestudiodetalle._curso.codigo }}
-            </td>
-            <td class="text-center">
-              {{ curso._planestudiodetalle.creditos }}
-            </td>
-            <td>
+                    <md-divider ng-repeat-start="horario in item._programaciones"></md-divider>
+                    <md-menu-item ng-repeat-end ng-repeat="itemHorario in horario.horarios">
+                      <md-button>
+                        <md-icon md-menu-align-target md-font-icon="fa fa-clock-o"></md-icon>
+                        {{itemHorario.dia}} ({{itemHorario.horaInicio| date : 'hh:mm'}} - {{itemHorario.horaFin| date : 'hh:mm'}})
+                      </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="item._programaciones.length===0">
+                      <md-button>
+                        <md-icon md-menu-align-target md-font-icon="fa fa-user"></md-icon>
+                        Horario no asignado
+                      </md-button>
+                    </md-menu-item>
+                  </md-menu-content>
+                </md-menu>
+              </td>
+            </tr>
+            <!--GRUPO-->
+            <tr ng-repeat-end>
 
-            </td>
-            <td>
+            </tr>
+            <tr ng-if="!cursoshabilitados">
+              <td colspan="8">
+                No se encontraron cursos aperturados disponibles para el periodo actual
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-            </td>
-            <td>
+      </div>
 
-            </td>
-            <td>
-
-            </td>
-          </tr>
-          <tr ng-repeat-end ng-repeat="item in curso._grupos" ng-click="item.active=!item.active;EnabledEdit(item, curso)" ng-hide="cursos.$hideRows">
-            <td>
-
-            </td>
-
-            <td colspan="3">
-              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>  {{ item._seccion.nombre }}
-            </td>
-
-            <td class="text-center">
-              {{item.totalCupos}}
-            </td>
-            <td class="text-center">
-              {{(item.totalCupos)-(item.matriculados)}}
-            </td>
-            <td class="text-center">
-              <md-menu>
-                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                  <md-icon md-menu-origin md-font-icon="fa fa-user"></md-icon>
-                </md-button>
-                <md-menu-content>
-                  <md-menu-item ng-repeat="horario in item._programaciones">
-                    <md-button>
-                      <md-icon md-menu-align-target md-font-icon="fa fa-user"></md-icon>
-                      {{horario._docente.nombres}} {{horario._docente.apellidos}} ({{horario.modalidadClaseGrupo}})
-                    </md-button>
-                  </md-menu-item>
-                </md-menu-content>
-              </md-menu>
-            </td>
-            <td class="text-center">
-              <md-menu>
-                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                  <md-icon md-menu-origin md-font-icon="fa fa-clock-o"></md-icon>
-                </md-button>
-                <md-menu-content>
-
-                  <md-divider ng-repeat-start="horario in item._programaciones"></md-divider>
-                  <md-menu-item ng-repeat-end ng-repeat="itemHorario in horario.horarios">
-                    <md-button>
-                      <md-icon md-menu-align-target md-font-icon="fa fa-clock-o"></md-icon>
-                      {{itemHorario.dia}} ({{itemHorario.horaInicio| date : 'hh:mm'}} - {{itemHorario.horaFin| date : 'hh:mm'}})
-                    </md-button>
-                  </md-menu-item>
-                </md-menu-content>
-              </md-menu>
-            </td>
-          </tr>
-          <!--GRUPO-->
-          <tr ng-repeat-end>
-
-          </tr>
-        </tbody>
-      </table>
     </md-dialog-content>
   <md-dialog-actions layout="row">
     <md-button class="tc-white bgc-{{$root.color.primary}}-500 right" ng-if="addMode||updateMode"  ng-click="addCursos()">Actualizar Matrícula</md-button>

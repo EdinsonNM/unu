@@ -54,7 +54,8 @@
         title: '',
         editMode: false,
         selected: null,
-        customActions: []
+        customActions: [],
+        fichamatricula:null
       };
       var LOCAL = {
         name: 'Matrícula',
@@ -64,12 +65,7 @@
       };
       var serviceFichaMatricula, fichamatricula, filter, fichamatriculaIngresante, serviceMatricula, matricula;
 
-      var servicePeriodos = Restangular.all('periodos');
-      servicePeriodos.customGET('lastPeriodo').then(function(response) {
-        $scope.UI.title = response.nombre;
-        $scope.periodo = response;
-        creditosaceptados = 22//response.parametros[0].valor;
-      });
+
       getFichaMatricula = function() {
         serviceFichaMatricula = Restangular.all('fichamatriculas');
         filter = {
@@ -78,6 +74,7 @@
         };
         serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
           fichamatricula = response;
+          $scope.UI.fichamatricula = fichamatricula;
           console.log('ficha matricula detalle', fichamatricula);
         });
       };
@@ -150,17 +147,31 @@
 
 
 
-      $scope.FinalizarMatricula = function(){
-        var serviceCompromisoPago = Restangular.all('compromisopagos');
-        if(matricula && matricula.hasOwnProperty('_id')){
-          serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
-            console.log(response);
-            ToastMD.success('Se finalizó su proceso de matrícula');
-            $state.go('app.matricularevisionlast');
-          },function(result){
-            ToastMD.error(result.data.message);
-          });
-        }
+      $scope.FinalizarMatricula = function($event){
+        var confirm = $mdDialog.confirm()
+            .title(LOCAL.name)
+            .content('Esta seguro de finalizar la inscripción?')
+            .ariaLabel('Finalizar Matrícula')
+            .targetEvent($event)
+            .ok(MessageFactory.Buttons.Yes)
+            .cancel(MessageFactory.Buttons.No);
+
+        $mdDialog.show(confirm).then(function() {
+          var serviceCompromisoPago = Restangular.all('compromisopagos');
+          if(matricula && matricula.hasOwnProperty('_id')){
+            serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
+              console.log(response);
+              ToastMD.success('Se finalizó su proceso de matrícula');
+              $state.go('app.matricularevisionlast');
+            },function(result){
+              ToastMD.error(result.data.message);
+            });
+          }
+        }, function() {
+
+        });
+
+
       };
 
     }])
@@ -297,8 +308,10 @@ console.log('creditos actuales',creditosactuales);
           }
         });
         if (!test) {
-          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > creditosaceptados){
-            ToastMD.warning('No puedes superar tu límite de créditos');
+          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula){
+            item.active = !item.active;
+            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+fichamatricula.creditos.maximo.creditosmatricula+' creditos)');
+            test = true;
           }else{
             creditosactuales += cursohabilitado._planestudiodetalle.creditos;
             $scope.groupsselected.push(item);
@@ -308,6 +321,7 @@ console.log('creditos actuales',creditosactuales);
           }
         }
       } else {
+        creditosactuales-= cursohabilitado._planestudiodetalle.creditos;
         var index = findIndex(item);
         angular.forEach(matricula._detalleMatricula, function(curso) {
           if (item._id === curso._grupoCurso._id) {
