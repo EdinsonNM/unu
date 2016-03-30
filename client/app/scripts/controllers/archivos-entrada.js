@@ -9,7 +9,7 @@
     * # ArchivosBancoSalidaCtrl
     * Controller of the unuApp
    */
-  angular.module('unuApp').controller('ArchivosBancoSalidaCtrl', [
+  angular.module('unuApp').controller('ArchivosBancoEntradaCtrl', [
     'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams',
   function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams) {
     var List, service;
@@ -17,14 +17,14 @@
     $scope.UI = {
       refresh: false,
       message: MessageFactory,
-      title: 'Listado de Archivos Salida',
+      title: 'Listado de Archivos Entrada',
       editMode: false,
       selected:null,
       customActions:[]
     };
 
     var LOCAL ={
-      name: 'ArchivosSalida',
+      name: 'ArchivosEntrada',
       form:'',
       route:'archivobancos'
     };
@@ -36,7 +36,7 @@
         page: 1,
         count: 10,
         filter:{
-          tipo: 'S'
+          tipo: 'E'
         }
       }, {
         total: 0,
@@ -87,75 +87,11 @@
       });*/
     };
 
-    $scope.GenerateFile = function GenerateFile($event){
-      var confirm = $mdDialog.confirm()
-          .title(LOCAL.name)
-          .content('Desea generar el archivo con los compromisos de pago?')
-          .ariaLabel(LOCAL.name)
-          .targetEvent($event)
-          .ok(MessageFactory.Buttons.Yes)
-          .cancel(MessageFactory.Buttons.No);
-
-      $mdDialog.show(confirm).then(function() {
-        $('#btnDownloadRecaudo').click();
-        $scope.Refresh();
-      }, function() {
-
-      });
+    $scope.UploadFile = function UploadFile($event){
+      
     };
 
     new List();
-    /*
-    $scope.New = function New($event){
-      var parentEl = angular.element(document.body);
-      $mdDialog.show({
-        parent: parentEl,
-        targetEvent: $event,
-        templateUrl :LOCAL.form,
-        locals:{
-          name: LOCAL.name,
-          table:$scope.tableParams,
-          service: service
-        },
-        controller: 'AulaNewCtrl'
-      });
-    };
-    $scope.Edit = function Edit($event){
-      var parentEl = angular.element(document.body);
-      $mdDialog.show({
-        parent: parentEl,
-        targetEvent: $event,
-        templateUrl :LOCAL.form,
-        locals:{
-          name: LOCAL.name,
-          table:$scope.tableParams,
-          model: Restangular.copy($scope.UI.selected)
-        },
-        controller: 'AulaEditCtrl'
-      });
-    };
-
-    $scope.Delete = function Delete($event){
-      var confirm = $mdDialog.confirm()
-          .title(LOCAL.name)
-          .content(MessageFactory.Form.QuestionDelete)
-          .ariaLabel(LOCAL.name)
-          .targetEvent($event)
-          .ok(MessageFactory.Buttons.Yes)
-          .cancel(MessageFactory.Buttons.No);
-
-      var selected = Restangular.copy($scope.UI.selected);
-
-      $mdDialog.show(confirm).then(function() {
-        selected.remove().then(function() {
-          $scope.Refresh();
-          ToastMD.success(MessageFactory.Form.Deleted);
-        });
-      }, function() {
-
-      });
-    };
-    */
   }]);
 
 }).call(this);

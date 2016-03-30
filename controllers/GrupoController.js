@@ -21,7 +21,8 @@ module.exports=function(){
                 {title:'Alumnos',icon:'',url:'app.alumnos',order:2},
                 {title:'Conflictos',icon:'',url:'app.conflicto',order:3},
                 {title:'Conflictos Alumnos',icon:'',url:'app.conflictosalumno',order:4},
-                {title:'Archivos Salida',icon:'',url:'app.archivossalida',order:5}
+                {title:'Archivos Salida',icon:'',url:'app.archivossalida',order:5},
+                {title:'Archivos Entrada',icon:'',url:'app.archivosentrada',order:6}
               ],
               style:{
                 color: 'white',
