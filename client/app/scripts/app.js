@@ -313,6 +313,11 @@
           templateUrl: 'views/archivosbanco/list.html',
           controller: 'ArchivosBancoSalidaCtrl'
         })
+        .state('app.archivosentrada', {
+          url: '/archivos-entrada',
+          templateUrl: 'views/archivosentrada/list.html',
+          controller: 'ArchivosBancoEntradaCtrl'
+        })
         .state('app.otrasdeudasalumnos', {
           url: '/otrasdeudasalumnos',
           templateUrl: 'views/otrasdeudasalumnos/list.html',

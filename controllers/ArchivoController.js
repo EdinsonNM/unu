@@ -1,4 +1,6 @@
 var model = require('../models/ArchivoBancoModel.js');
+var path = require('path');
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -13,9 +15,9 @@ module.exports = function() {
         var limit = parseInt(req.query.count);
         var page = parseInt(req.query.page) || 1;
         var filter = req.query.filter;
-        var tipoArchivo = req.query.tipoarchivo;
+        //var tipoArchivo = req.query.tipoarchivo;
 
-        filter.push(tipoArchivo);
+        //filter.push(tipoArchivo);
         model.paginate(
           filter, {
             page: page,
@@ -37,7 +39,11 @@ module.exports = function() {
         );
       });
       //ARCHIVOS DE SALIDA
-
+      controller.post('/methods/download', function(req, res) {
+        var nomArchivo = req.params.nombreArchivo;
+        pathFile = path.join(__dirname, '../', 'commons/data/exports', nomArchivo);
+        res.download(pathFile);
+      });
     }
   };
 };
