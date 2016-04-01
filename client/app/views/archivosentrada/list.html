@@ -26,7 +26,7 @@
 </md-content>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-if="!UI.editMode" ng-click="GenerateFile($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.UploadFile}}" >
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.UploadFile}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.UploadFile}}</md-tooltip>
   <md-icon md-font-icon="fa fa-cloud-upload fa-lg tc-white"></md-icon>
 </md-button>
@@ -36,10 +36,10 @@
   <md-icon md-font-icon="fa fa-download fa-lg tc-white"></md-icon>
 </md-button>
 
-<form action="api/compromisopagos/methods/process" method="post">
+<form action="api/compromisopagos/methods/process" method="post" ng-submit="Refresh()">
   <button id="btnUploadEntrada" type="submit" ng-show="false">Subir</button>
 </form>
 
-<form action="api/archivobancos/methods/download" method="post">
+<form action="{{URL_SERVER}}" method="post">
   <button id="btnDownloadArchivo" type="submit" ng-show="false">Download</button>
 </form>

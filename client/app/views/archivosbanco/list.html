@@ -36,10 +36,10 @@
   <md-icon md-font-icon="fa fa-download fa-lg tc-white"></md-icon>
 </md-button>
 
-<form action="api/compromisopagos/methods/process" method="post">
+<form action="api/compromisopagos/methods/process" method="post" ng-submit="Refresh()>
   <button id="btnDownloadRecaudo" type="submit" ng-show="false">Generar</button>
 </form>
 
-<form action="api/archivobancos/methods/download" method="post">
+<form action="{{URL_SERVER}}" method="post">
   <button id="btnDownloadArchivo" type="submit" ng-show="false">Download</button>
 </form>
