@@ -1,0 +1,33 @@
+<md-dialog aria-label="{{title}}">
+  <form name="myForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="Cancel()">
+          <md-icon md-font-icon="fa fa-close fa-lg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content class="window-modal-content-sm md-padding">
+        <div flex  layout="row" layout-sm="column">
+               <div flex>
+                   <md-input-container class="md-block">
+                     <input type='file' name="nombreArchivo" ng-model="model.nombre">
+                     <label></label>
+                   </md-input-container>
+               </div>
+           </div>
+
+    </md-dialog-content>
+
+
+      <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
+        <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.UploadFile}}</md-button>
+      </md-dialog-actions>
+
+  </form>
+</md-dialog>

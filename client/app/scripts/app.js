@@ -27,7 +27,8 @@
       'ngTable',
       'anim-in-out',
       'ngMaterial',
-      'ngMaterialDatePicker'
+      'ngMaterialDatePicker',
+      'ngFileUpload'
     ]).config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider) {
       RestangularProvider.setBaseUrl('/api');
       $httpProvider.interceptors.push('AuthInterceptor');

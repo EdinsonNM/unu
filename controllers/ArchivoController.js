@@ -39,7 +39,7 @@ module.exports = function() {
         );
       });
       //ARCHIVOS DE SALIDA
-      controller.post('/methods/download', function(req, res) {
+      controller.post('/methods/download/:nombreArchivo', function(req, res) {
         var nomArchivo = req.params.nombreArchivo;
         pathFile = path.join(__dirname, '../', 'commons/data/exports', nomArchivo);
         res.download(pathFile);

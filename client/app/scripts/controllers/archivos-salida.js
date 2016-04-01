@@ -10,8 +10,8 @@
     * Controller of the unuApp
    */
   angular.module('unuApp').controller('ArchivosBancoSalidaCtrl', [
-    'MessageFactory', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams',
-  function(MessageFactory, $rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams) {
+    'MessageFactory','$sce', '$rootScope', '$scope', 'Restangular', '$mdDialog', '$timeout', 'ngTableParams',
+  function(MessageFactory, $sce,$rootScope, $scope, Restangular, $mdDialog, $timeout, ngTableParams) {
     var List, service;
 
     $scope.UI = {
@@ -60,6 +60,7 @@
       $scope.UI.editMode = false;
       $scope.tableParams.reload();
     };
+    var archivoService = Restangular.all('archivobancos');
 
     $scope.EnabledEdit =function EnabledEdit(item){
       $scope.UI.editMode = false;
@@ -71,6 +72,7 @@
       });
 
       if( item.active ){
+        $scope.URL_SERVER = $sce.trustAsResourceUrl(archivoService.getRestangularUrl() + '/methods/download/'+item.nombre)
         $scope.UI.editMode = true;
         $scope.UI.selected = item;
         $scope.UI.selected.route = LOCAL.route;
@@ -78,6 +80,7 @@
     };
 
     $scope.DownloadFile = function DownloadFile($event){
+
       var nomArchivo = $scope.UI.selected.nombre;
       $('#btnDownloadArchivo').click();
       /*service.customPOST('methods/download', {nombreArchivo:nomArchivo}).then(function(result) {
@@ -98,7 +101,7 @@
 
       $mdDialog.show(confirm).then(function() {
         $('#btnDownloadRecaudo').click();
-        $scope.Refresh();
+        
       }, function() {
 
       });

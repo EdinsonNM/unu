@@ -25,7 +25,7 @@
 
     var LOCAL ={
       name: 'ArchivosEntrada',
-      form:'',
+      form:'views/archivosentrada/form.html',
       route:'archivobancos'
     };
     service = Restangular.all(LOCAL.route);
@@ -60,6 +60,7 @@
       $scope.UI.editMode = false;
       $scope.tableParams.reload();
     };
+    var archivoService = Restangular.all('archivobancos');
 
     $scope.EnabledEdit =function EnabledEdit(item){
       $scope.UI.editMode = false;
@@ -71,6 +72,7 @@
       });
 
       if( item.active ){
+        $scope.URL_SERVER = $sce.trustAsResourceUrl(archivoService.getRestangularUrl() + '/methods/download/'+item.nombre)
         $scope.UI.editMode = true;
         $scope.UI.selected = item;
         $scope.UI.selected.route = LOCAL.route;
@@ -88,10 +90,49 @@
     };
 
     $scope.UploadFile = function UploadFile($event){
-      
+
+    };
+
+    $scope.New = function New($event){
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl :LOCAL.form,
+        locals:{
+          name: LOCAL.name,
+          table:$scope.tableParams,
+          service: service
+        },
+        controller: 'ArchivoEntradaCtrl'
+      });
     };
 
     new List();
+  }])
+
+  .controller('ArchivoEntradaCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+    $scope.submited = false;
+    $scope.title = MessageFactory.Form.New.replace('{element}',name);
+    $scope.Buttons = MessageFactory.Buttons;
+    $scope.message = MessageFactory.Form;
+    Restangular.all('pabellones').getList().then(function(data){
+      $scope.pabellones = data;
+    });
+    $scope.Save = function(form) {
+      $scope.submited = true;
+      if (form.$valid) {
+        service.post($scope.model).then(function() {
+          ToastMD.success(MessageFactory.Form.Saved);
+          $mdDialog.hide();
+          table.reload();
+        });
+      }
+    };
+    $scope.Cancel = function(){
+      $mdDialog.hide();
+    };
   }]);
 
 }).call(this);
