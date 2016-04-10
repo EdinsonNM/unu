@@ -34,15 +34,15 @@
         <md-content class="md-padding">
           <div flex layout="row">
             <div flex>
-              <md-input-container class="md-block">
+              <md-input-container class="md-block" >
                 <label>Facultad</label>
-                <input required name="codigo" ng-model="ALUMNO._escuela._facultad.nombre">
+                <input required name="codigo" ng-model="ALUMNO._escuela._facultad.nombre" ng-readonly="checked">
               </md-input-container>
             </div>
             <div flex>
               <md-input-container class="md-block">
                 <label>Escuela</label>
-                <input required name="codigo" ng-model="ALUMNO._escuela.nombre">
+                <input required name="codigo" ng-model="ALUMNO._escuela.nombre" ng-readonly="checked">
               </md-input-container>
             </div>
           </div>
