@@ -1,6 +1,6 @@
 var model = require('../models/PlanestudioModel.js');
 var auth = require('../config/passport');
-
+var _ = require('underscore');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -40,6 +40,7 @@ module.exports=function(){
             populate: ['_escuela','_periodo']
           },
       		function(err, results){
+            var data = _.sortBy(results.docs, function(item){ return item.nombre; }).reverse();
             var obj = {
               total: results.total,
               perpage: limit*1,
@@ -47,7 +48,7 @@ module.exports=function(){
               last_page: results.pages,
               from: (page-1)*limit+1,
               to: page*limit,
-              data: results.docs
+              data: data
             };
       			res.send(obj);
       		}

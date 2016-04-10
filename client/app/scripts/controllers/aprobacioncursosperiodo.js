@@ -48,8 +48,11 @@
       };
       var LoadPeriodos = function LoadPeriodos() {
         var servicePeriodo = Restangular.all('periodos');
-        servicePeriodo.getList().then(function(data) {
+        servicePeriodo.getList({}).then(function(data) {
           $scope.periodos = data;
+          if(data.length>0){
+            $scope.filter._periodo = data[0];
+          }
         });
       };
       $scope.LoadEcuelas = function LoadEcuelas() {
