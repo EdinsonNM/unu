@@ -233,6 +233,10 @@ module.exports = function() {
         model
         .findOne({ _usuario: decoded._id })
         .populate([
+          {path:'_tipoAlumno'},
+          {path:'_tipoCondicionAlumno'},
+          {path:'_situacionAlumno'},
+          {path:'_tipoSituacionAlumno'},
           {path:'_modalidadIngreso'},
           {path:'_persona'},
           {

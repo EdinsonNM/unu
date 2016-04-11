@@ -134,12 +134,15 @@
             $rootScope.ShowAlert = false;
             $rootScope.ALUMNO = result[0];
             $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
-
+            var email = $rootScope.ALUMNO.email || '';
+            var documento = $rootScope.ALUMNO._persona.documento || '';
+            var telefono = $rootScope.ALUMNO.telefono || '';
+            var direccion = $rootScope.ALUMNO.direccion || '';
             switch (true) {
-              case $rootScope.ALUMNO.email.toString() === '':
-              case $rootScope.ALUMNO._persona.documento.toString() === '':
-              case $rootScope.ALUMNO.telefono.toString() === '':
-              case $rootScope.ALUMNO.direccion.toString() === '':
+              case email === '':
+              case documento === '':
+              case telefono === '':
+              case direccion === '':
                 $scope.aproved = false;
                 $scope.showmenu = false;
                 break;

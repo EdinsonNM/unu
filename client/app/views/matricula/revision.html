@@ -56,11 +56,28 @@
             </td>
             <td>
               Estamos en continua mejora pero por el momento solo soportamos el registro de alumnos bajos las siguientes modalidades de ingreso EXAMEN ORDINARIO, PRIMER PUESTO COLEGIOS, EXAMEN CEPREUNU
-              <div class="tc-{{$root.color.accent}}-500">
-                  {{messageModalidad}}
+              <div class="tc-{{$root.color.accent}}-500"  ng-if="!UI.requisitos.modalidad">
+                  {{messageModalidad}}. Deberá acercarse a coordinación académica para realizar el proceso de matricula de manera presencial
               </div>
             </td>
           </tr>
+
+          <tr>
+            <td class="text-center">
+              <i ng-if="!UI.requisitos.tipoAlumno||!UI.requisitos.tipoCondicionAlumno||!UI.requisitos.situacionAlumno||!UI.requisitos.tipoSituacionAlumno" class="fa fa-frown-o tc-{{$root.color.accent}}-500"></i>
+              <i ng-if="UI.requisitos.tipoAlumno&&UI.requisitos.tipoCondicionAlumno&&UI.requisitos.situacionAlumno&&UI.requisitos.tipoSituacionAlumno"class="fa fa-check tc-{{$root.color.primary}}-500 " ></i>
+            </td>
+            <td>
+              Tipo Alumno
+            </td>
+            <td>
+              Es necesario verificar que el alumno se encuentre bajo condiciones regulares dentro del sistema y que ademas sea un alumno activo.
+              <div class="tc-{{$root.color.accent}}-500" ng-if="!UI.requisitos.tipoAlumno||!UI.requisitos.tipoCondicionAlumno||!UI.requisitos.situacionAlumno||!UI.requisitos.tipoSituacionAlumno">
+                  Ud. deberá acercarse a coordinación académica para realizar el proceso de matricula de manera presencial
+              </div>
+            </td>
+          </tr>
+
           <tr>
             <td class="text-center">
               <i class="fa fa-frown-o tc-{{$root.color.accent}}-500" ng-if="!UI.requisitos.conflictos"></i>

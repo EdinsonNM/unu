@@ -52,6 +52,10 @@ var AlumnoSchema = new Schema({
         ref: 'Usuario',
         required: true
     },
+    _tipoAlumno:{
+      type: Schema.Types.ObjectId,
+      ref: 'TipoAlumno'
+    },
     // [NORMAL, [cualquier otro estado que indique que el alumno esta fuera de la universidad]]
     _tipoCondicionAlumno: {
         type: Schema.Types.ObjectId,
@@ -66,6 +70,10 @@ var AlumnoSchema = new Schema({
     _modalidadIngreso: {
         type: Schema.Types.ObjectId,
         ref: 'ModalidadIngreso'
+    },
+    _tipoSituacionAlumno:{
+      type: Schema.Types.ObjectId,
+      ref: 'TipoSituacionAlumno'
     },
     historial:{
       condicionesAlumno:[{

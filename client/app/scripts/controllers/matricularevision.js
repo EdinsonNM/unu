@@ -30,7 +30,11 @@
           modalidad:false,
           conflictos:false,
           deudas:false,
-          fechaMatriculaRegular:false
+          fechaMatriculaRegular:false,
+          tipoAlumno:false,
+          tipoCondicionAlumno:false,
+          situacionAlumno:false,
+          tipoSituacionAlumno:false
         },
         mostrarUI:false
       };
@@ -117,9 +121,9 @@
       var verificaMatricula = function() {
         var nombreModalidadIngreso;
         var modalidadIngreso;
-        if($rootScope.ALUMNO._modalidadIngreso.hasOwnProperty('nombre')){
-          nombreModalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.nombre;
-          modalidadIngreso = $rootScope.ALUMNO._modalidadIngreso.codigo;
+        if(ALUMNO._modalidadIngreso.hasOwnProperty('nombre')){
+          nombreModalidadIngreso = ALUMNO._modalidadIngreso.nombre;
+          modalidadIngreso = ALUMNO._modalidadIngreso.codigo;
         }else{
           nombreModalidadIngreso = 'Sin Modalidad';
           modalidadIngreso = '99';
@@ -137,6 +141,45 @@
             $scope.messageModalidad = 'Estamos mejorando dia a dia pero por el momento no podemos atender la modalidad : ' + nombreModalidadIngreso;
         }
       };
+
+      var verificaTipoAlumnoNormal = function(){
+        $scope.UI.requisitos.tipoAlumno = false;
+        if(!_.isEmpty(ALUMNO._tipoAlumno)){
+          if(ALUMNO._tipoAlumno.codigo==='02'){
+            $scope.UI.requisitos.tipoAlumno = true;
+          }
+        }
+      };
+
+      var verificaTipoCondicionAlumnoNormal = function(){
+        $scope.UI.requisitos.tipoCondicionAlumno = false;
+        if(!_.isEmpty(ALUMNO._tipoCondicionAlumno)){
+          if(ALUMNO._tipoCondicionAlumno.codigo==='01'){
+            $scope.UI.requisitos.tipoCondicionAlumno = true;
+          }
+        }
+      };
+
+      var verificaSituacionAlumnoActivo = function(){
+        $scope.UI.requisitos.situacionAlumno = false;
+        if(!_.isEmpty(ALUMNO._situacionAlumno)){
+          if(ALUMNO._situacionAlumno.codigo==='01'){
+            $scope.UI.requisitos.situacionAlumno = true;
+          }
+        }
+      };
+
+      var verificaTipoSituacionAlumnoNoMatriculado = function(){
+        $scope.UI.requisitos.tipoSituacionAlumno = false;
+        if(!_.isEmpty(ALUMNO._tipoSituacionAlumno)){
+          if(ALUMNO._tipoSituacionAlumno.codigo==='02'){
+            $scope.UI.requisitos.tipoSituacionAlumno = true;
+          }
+        }
+      };
+
+
+      var verificaTipo
 
       var validaProcesoRegularActivo = function validaProceso(){
         var service = Restangular.all('procesofacultades');
@@ -218,6 +261,10 @@
       verificaMatricula();
       validaProcesoRegularActivo();
       ValidadAccesoUI();
+      verificaSituacionAlumnoActivo();
+      verificaTipoAlumnoNormal();
+      verificaTipoCondicionAlumnoNormal();
+      verificaTipoSituacionAlumnoNoMatriculado();
 
       $scope.Save = function() {
         //$scope.submited = true;
