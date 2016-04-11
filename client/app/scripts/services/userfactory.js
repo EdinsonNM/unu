@@ -16,6 +16,7 @@
       service = Restangular.all('usuarios');
       return {
         login: function(user) {
+          console.log(user);
           service.customPOST(user, 'auth/login').then(function(result) {
             var cservice;
             AuthTokenFactory.setToken(result.token);
