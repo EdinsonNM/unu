@@ -117,6 +117,37 @@ module.exports=function(){
           grupo.save(function(error, data){
             //res.status(200).send(data);
           });
+
+          model.findOne({codigo: 'ALUMNO'}, function(error, grupo){
+            grupo.menu = [
+              {
+                order:0,
+                title:'Inicio',
+                description:'Bienvenido a la pantalla principal',
+                url:'app',
+                flex:'67',
+                style:{
+                  color: 'white',
+                  bgColor:'bgc-white',
+                  bgColorHead:'bgc-teal-500',
+                  image:'bghome-1.jpg'
+                }
+              },
+              {
+                order:1,
+                title:'Mis Datos',
+                description:'Realiza el mantenimiento de las tablas generales del sistema',
+                url:'app.alumnomisdatos',
+                flex:'67',
+                style:{
+                  color: 'white',
+                  bgColor:'bgc-white',
+                  bgColorHead:'bgc-teal-500',
+                  image:'bghome-1.jpg'
+                }
+              }];
+              grupo.save();
+          });
         });
 
         model.findOne({codigo: 'MIC'}, function(error, grupo){
