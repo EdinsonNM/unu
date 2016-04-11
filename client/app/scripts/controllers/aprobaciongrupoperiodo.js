@@ -235,9 +235,9 @@
         });
       };
 
-      $scope.Edit = function Edit($event) {
+      $scope.Edit = function Edit($event,grupo) {
         var parentEl = angular.element(document.body);
-        var model = Restangular.copy($scope.UI.selected);
+        var model = Restangular.copy(grupo);
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,

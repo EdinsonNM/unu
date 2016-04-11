@@ -252,7 +252,10 @@
         .state('app.alumnomisdatos', {
           url: '/alumno/misdatos',
           templateUrl: 'views/alumno/misdatos.html',
-          controller: 'AlumnoMisDatosCtrl'
+          controller: 'AlumnoMisDatosCtrl',
+          resolve:{
+            ALUMNO:GetAlumno,
+          }
         })
         .state('app.alumnocambiocontrasenia', {
           url: '/alumno/cambiocontrasenia',

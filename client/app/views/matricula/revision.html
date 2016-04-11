@@ -10,7 +10,7 @@
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
-              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <img ng-src="/images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
               <div class="md-list-item-text">
                 <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
                 <p>{{ ALUMNO.codigo }}</p>
@@ -121,14 +121,14 @@
               Proceso Matrícula Regular Activo
             </td>
             <td>
-              El proceso de matricula solo se realizara durante el plazo estableciado de acuerdo al cronograma de matricula establecido por cada facutad <br>
+              El proceso de matricula solo se realizara durante el plazo estableciado de acuerdo al cronograma de matricula establecido por cada facultad <br>
               <span class="tc-{{$root.color.accent}}-500">{{UI.messageFechaRegular}}</span>
             </td>
           </tr>
         </tbody>
 
       </table>
-      <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos" >
+      <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos&&UI.requisitos.fechaMatriculaRegular" >
         <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;"  ng-click="Save()">Iniciar el proceso de matricula</button>
        </div>
        <div layout="row" layout-align="center start" layout-fill ng-if="!UI.requisitos.modalidad||!UI.requisitos.deudas||!UI.requisitos.conflictos" >

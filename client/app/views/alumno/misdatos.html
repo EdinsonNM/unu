@@ -5,6 +5,19 @@
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <div class="md-primary md-12-line">
+        <md-list layout="column" layout-padding>
+          <md-list-item>
+            <img ng-src="/images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
+            <div class="md-list-item-text">
+              <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
+              <p>{{ ALUMNO.codigo }}</p>
+            </div>
+          </md-list-item>
+        </md-list>
+      </div>
+      <form name="myForm" novalidate>
+
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
       <div flex layout="row" layout-fill>
           <div flex-gt-sm="33" flex="33">
@@ -20,7 +33,7 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>DNI:</label>
                         <md-icon md-font-icon="fa-credit-card" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable" ng-maxlength="8" type="number">
+                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable" ng-maxlength="8">
                         <div ng-messages="myForm.documento.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
                         </div>
@@ -34,7 +47,7 @@
                         <md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon>
                         <input required name="nombres" ng-model="model._persona.nombres" ng-readonly="!editable">
                         <div ng-messages="myForm.nombres.$error" ng-if="submited">
-                          <div ng-message="required">{{message.Required}}</div>
+                          <div ng-message="required">Campo es obligatorio</div>
                       </md-input-container>
                   </div>
                   </div>
@@ -46,7 +59,7 @@
                         <md-icon md-font-icon="fa-user" class="fa s24 md-primary md-hue-1"></md-icon>
                         <input required name="apellidos" ng-model="model.apellidos" ng-readonly="!editable">
                         <div ng-messages="myForm.apellidos.$error" ng-if="submited">
-                          <div ng-message="required">{{message.Required}}</div>
+                          <div ng-message="required">Campo es obligatorio</div>
                         </div>
                       </md-input-container>
                   </div>
@@ -63,7 +76,7 @@
                           </md-option>
                         </md-select>
                         <div ng-messages="myForm.sexo.$error" ng-if="submited">
-                          <div ng-message="required">{{message.Required}}</div>
+                          <div ng-message="required">Campo es obligatorio</div>
                         </div>
                       </md-input-container>
                   </div>
@@ -74,6 +87,9 @@
                       <label>Fec. Nacimiento</label>
                       <md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon>
                       <input type="date" required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" ng-readonly="!editable">
+                      <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
+                        <div ng-message="required">Campo es obligatorio</div>
+                      </div>
                     </md-input-container>
                   </div>
               </div>
@@ -163,6 +179,7 @@
 
     </md-content>
   </div>
+</form>
 </md-content>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
@@ -170,7 +187,7 @@
   <md-tooltip md-direction="left">{{UI.message.Buttons.Edit}}</md-tooltip>
   <md-icon md-font-icon="fa fa-pencil fa-lg tc-white"></md-icon>
 </md-button>
-<md-button ng-if="UI.editMode" ng-click="Save($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}" >
+<md-button ng-if="UI.editMode" ng-click="Save($event,myForm)" class="md-fab md-fab-bottom-right md-primary" aria-label="{{UI.message.Buttons.New}}" >
   <md-tooltip md-direction="left">{{UI.message.Buttons.Save}}</md-tooltip>
   <md-icon md-font-icon="fa  fa-floppy-o fa-lg tc-white"></md-icon>
 </md-button>
