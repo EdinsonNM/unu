@@ -10,7 +10,7 @@
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
-              <img ng-src="/images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
+              <img ng-src="./images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
               <div class="md-list-item-text">
                 <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
                 <p>{{ ALUMNO.codigo }}</p>
@@ -68,7 +68,7 @@
               <i ng-if="UI.requisitos.tipoAlumno&&UI.requisitos.tipoCondicionAlumno&&UI.requisitos.situacionAlumno&&UI.requisitos.tipoSituacionAlumno"class="fa fa-check tc-{{$root.color.primary}}-500 " ></i>
             </td>
             <td>
-              Tipo Alumno
+              Estado Alumno
             </td>
             <td>
               Es necesario verificar que el alumno se encuentre bajo condiciones regulares dentro del sistema y que ademas sea un alumno activo.
@@ -145,7 +145,7 @@
         </tbody>
 
       </table>
-      <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos&&UI.requisitos.fechaMatriculaRegular" >
+      <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos&&UI.requisitos.fechaMatriculaRegular&&UI.requisitos.tipoAlumno&&UI.requisitos.tipoCondicionAlumno&&UI.requisitos.situacionAlumno&&UI.requisitos.tipoSituacionAlumno" >
         <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;"  ng-click="Save()">Iniciar el proceso de matricula</button>
        </div>
        <div layout="row" layout-align="center start" layout-fill ng-if="!UI.requisitos.modalidad||!UI.requisitos.deudas||!UI.requisitos.conflictos" >

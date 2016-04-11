@@ -17,6 +17,8 @@
       console.log("PERIODO ACTIVO:",PERIODO);
       var service, servicePendientes, serviceDeudas;
 
+      $scope.ALUMNO = ALUMNO;
+
       $scope.UI = {
         refresh: false,
         message: MessageFactory,
