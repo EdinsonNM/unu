@@ -11,13 +11,18 @@
         $scope.model = Restangular.copy(newValue);
     },true);
 
-    $scope.Save = function Save($event) {
-      service.customPUT($scope.model,'auth/change-password').then(function(res){
-        ToastMD.success('Contraseña cambiada correctamente.');
-      },
-      function(res){
-        ToastMD.warning(res.data.message);
-      });
+    $scope.Save = function Save($event,form) {
+      if(form.$valid){
+        service.customPUT($scope.model,'auth/change-password').then(function(res){
+          ToastMD.success('Contraseña cambiada correctamente.');
+        },
+        function(res){
+          ToastMD.warning(res.data.message);
+        });
+      }else{
+        ToastMD.warning("Información erronea o incompleta");
+      }
+
     };
 
   }]);

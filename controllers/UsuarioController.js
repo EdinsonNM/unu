@@ -81,14 +81,14 @@ module.exports=function(){
 
       });
 
-      controller.put('/auth/change-password',function(request,response,next){
-        /*try {
-          var decoded = jwt.verify(req.token,config.key_secret);
+      controller.put('/auth/change-password',auth.ensureAuthenticated,function(request,response,next){
+        try {
+          var decoded = jwt.verify(request.token,config.key_secret);
         }catch(err) {
           next(err);
           //return res.status(500).send({error:err});
-        }*/
-        var decoded= {_id:'567ef477040c56e064433c27'};
+        }
+        //var decoded= {_id:'567ef477040c56e064433c27'};
         model
         .findOne({ _id: decoded._id })
         .populate('_grupo').exec(function(err, user) {

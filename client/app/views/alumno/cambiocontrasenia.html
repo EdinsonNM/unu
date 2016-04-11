@@ -6,6 +6,8 @@
   <div layout="row" layout-align="center start" layout-margin layout-fill>
     <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
       <!--tabla: contiene el listado de elementos-->
+      <form name="myForm" novalidate>
+
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
       <div flex layout="row" layout-sm="row">
         <div flex-gt-sm="33" flex="33">
@@ -27,7 +29,7 @@
                 </div>
               </md-input-container>
             </div>
-          </div>         
+          </div>
           <div layout="row">
             <div flex>
               <md-input-container class="md-block">
@@ -52,12 +54,13 @@
           </div>
         </div>
       </div>
+    </form>
     </md-content>
   </div>
 </md-content>
 
 <!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
-<md-button ng-click="Save($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}">
+<md-button ng-click="Save($event,myForm)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.New}}">
   <md-tooltip md-direction="left">{{UI.message.Buttons.Save}}</md-tooltip>
   <md-icon md-font-icon="fa  fa-floppy-o fa-lg tc-white"></md-icon>
 </md-button>
