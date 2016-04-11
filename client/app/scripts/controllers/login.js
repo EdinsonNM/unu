@@ -11,7 +11,8 @@
    */
   angular.module('unuApp').controller('LoginCtrl',[
     '$scope', 'UserFactory', '$rootScope',
-    function($scope, UserFactory, $rootScope) {
+    function($scope, UserFactory) {
+    $scope.user = {username:'',password:''};
     $scope.Login = function() {
       UserFactory.login($scope.user);
     };
