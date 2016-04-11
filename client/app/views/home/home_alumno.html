@@ -5,7 +5,7 @@
   </md-subheader>
   <md-content flex style="max-width:1020px;margin:auto;">
     <div layout="row" layout-sm="column">
-      <div class="dashboard display-animation" flex="67" flex-sm="100" ng-if="aproved && showmenu" ng-click="LoadPage()">
+      <div class="dashboard display-animation" flex="67" flex-sm="100" ng-if="aproved && showmenu" ng-click="LoadPage2()">
         <a class="tile tile-lg bgc-white ripple-effect">
           <span class="content-wrapper">
               <span class="tile-content">
@@ -34,7 +34,7 @@
       </div>
 
       <div class="dashboard display-animation" flex="33" flex-sm="100" ng-if="aproved">
-        <a class="tile tile-lg bgc-teal-500 ripple-effect tc-white-1  " ui-sref="app.planestudios">
+        <a class="tile tile-lg bgc-teal-500 ripple-effect tc-white-1  " >
           <span class="content-wrapper">
               <span class="tile-content">
                 <span class="tile-img" style="background-image: url(images/bghome-2.jpg);background-size:cover;"></span>
@@ -47,7 +47,7 @@
         </a>
       </div>
       <div class="dashboard display-animation" flex="33" flex-sm="100" style="opacity:0.4;" ng-if="!aproved" >
-        <a class="tile tile-lg bgc-teal-500 ripple-effect tc-white-1  " ui-sref="app">
+        <a class="tile tile-lg bgc-teal-500 ripple-effect tc-white-1">
           <span class="content-wrapper">
               <span class="tile-content">
                 <span class="tile-img" style="background-image: url(images/bghome-2.jpg);background-size:cover;"></span>
@@ -87,8 +87,8 @@
           </span>
         </a>
       </div>
-      <div class="dashboard display-animation" flex>
-        <a href class="tile tile-lg bgc-white ripple-effect " ui-sref="app.facultad">
+      <div class="dashboard display-animation" flex style="opacity:0.4;">
+        <a href class="tile tile-lg bgc-white ripple-effect">
           <span class="content-wrapper">
               <span class="tile-content">
                 <span class="tile-img bgc-blue-grey-500 tc-white md-padding" >

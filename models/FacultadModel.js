@@ -14,7 +14,16 @@ var FacultadSchema = new Schema({
 		type:String,
 		required:true
 	},
-	_escuelas:[EscuelaModel],
+	_escuelas:[{
+    type:Schema.Types.ObjectId,
+    ref:'Escuela',
+    required:true
+  }],
+	procesos:[{
+    type:Schema.Types.ObjectId,
+    ref:'ProcesoFacultad',
+    required:true
+  }],
 	createdAt:Date,
 	updatedAt:Date
 });

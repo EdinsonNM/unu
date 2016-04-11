@@ -3,6 +3,10 @@ var Persona = require('../models/PersonaModel.js');
 var Usuario = require('../models/UsuarioModel.js');
 var Grupo = require('../models/GrupoModel.js');
 var Q = require('q');
+var jwt = require('jsonwebtoken');
+var passport = require('passport');
+var auth = require('../config/passport');
+var config = require('../config/config');
 
 
 module.exports = function() {
@@ -216,6 +220,47 @@ module.exports = function() {
           }]
         );
         next();
+      });
+
+      controller.get('/auth/me',auth.ensureAuthenticated,function(req,res,next){
+        var decoded;
+        decoded = jwt.verify(req.token,config.key_secret);
+        try {
+          decoded = jwt.verify(req.token,config.key_secret);
+        }catch(err) {
+          return res.status(403).send({message:'No se pudo validar las credenciales del alumno',detail:err});
+        }
+        model
+        .findOne({ _usuario: decoded._id })
+        .populate([
+          {path:'_tipoAlumno'},
+          {path:'_tipoCondicionAlumno'},
+          {path:'_situacionAlumno'},
+          {path:'_tipoSituacionAlumno'},
+          {path:'_modalidadIngreso'},
+          {path:'_persona'},
+          {
+            path:'_escuela',
+            model:'Escuela',
+            populate:{
+              path:'_facultad',
+              model:'Facultad',
+              populate:{
+                path:'procesos',
+                model:'ProcesoFacultad',
+                populate:{
+                  path:'_proceso',
+                  model:'Proceso'
+                }
+              }
+            }
+          }]).exec(function(err, alumno) {
+          if(err) return res.status(500).send({message:'Error Interno del Servidor',detail:err});
+          if(!alumno) return res.status(404).send({message:'No se encontro el alumno'});
+          res.status(200).send(alumno);
+          next();
+        });
+
       });
 
     }

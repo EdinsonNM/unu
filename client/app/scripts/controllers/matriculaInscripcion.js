@@ -11,7 +11,23 @@
    */
 
   angular.module('unuApp')
-    .controller('MatriculaInscripcionCtrl', function(
+    .controller('MatriculaInscripcionCtrl',[
+    'ALUMNO',
+    'PERIODO',
+    'PROCESO_MATRICULA',
+    'MessageFactory',
+    '$rootScope',
+    '$scope',
+    'Restangular',
+    '$mdDialog',
+    '$timeout',
+    'ToastMD',
+    '$mdMedia',
+    '$state',
+    function(
+      ALUMNO,
+      PERIODO,
+      PROCESO_MATRICULA,
       MessageFactory,
       $rootScope,
       $scope,
@@ -27,13 +43,10 @@
        * initial Params
        */
       var getFichaMatricula, getMatricula, creditosaceptados;
-      $timeout(function() {
-        $scope.ALUMNO = $rootScope.ALUMNO;
-        $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
-        $scope.periodoIngresante = $rootScope.ALUMNO._periodoInicio;
-        getFichaMatricula();
-        getMatricula();
-      }, 800);
+      $scope.ALUMNO = ALUMNO;
+      $scope.ALUMNO.imagen = 'https://scontent-mia1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/p40x40/11223699_10153156042805197_7314257029696994522_n.jpg?oh=e7bb5941596bf09f6912f9e557017e7b&oe=5768BB8B';
+      $scope.periodoIngresante = ALUMNO._periodoInicio;
+
       $scope.creditosactuales = 0;
       $scope.UI = {
         refresh: false,
@@ -41,7 +54,8 @@
         title: '',
         editMode: false,
         selected: null,
-        customActions: []
+        customActions: [],
+        fichamatricula:null
       };
       var LOCAL = {
         name: 'Matrícula',
@@ -51,21 +65,16 @@
       };
       var serviceFichaMatricula, fichamatricula, filter, fichamatriculaIngresante, serviceMatricula, matricula;
 
-      var servicePeriodos = Restangular.all('periodos');
-      servicePeriodos.customGET('lastPeriodo').then(function(response) {
-        $scope.UI.title = response.nombre;
-        $scope.periodo = response;
-        $scope.periodoActual = response._id;
-        creditosaceptados = response.parametros[0].valor;
-      });
+
       getFichaMatricula = function() {
         serviceFichaMatricula = Restangular.all('fichamatriculas');
         filter = {
-          _alumno: $scope.ALUMNO._id,
-          _periodo: $scope.periodo._id
+          _alumno: ALUMNO._id,
+          _periodo: PERIODO._id
         };
         serviceFichaMatricula.customGET('methods/fichamatriculadetalle', filter).then(function(response) {
           fichamatricula = response;
+          $scope.UI.fichamatricula = fichamatricula;
           console.log('ficha matricula detalle', fichamatricula);
         });
       };
@@ -73,7 +82,7 @@
         serviceMatricula = Restangular.all('matriculas');
         var filter = {
           _alumno: $scope.ALUMNO._id,
-          _periodo: $scope.periodo._id
+          _periodo: PERIODO._id
         };
         serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
           if(!response){
@@ -89,7 +98,8 @@
           });
         });
       };
-
+      getFichaMatricula();
+      getMatricula();
       /**
        * Abre modal para agregar cursos
        */
@@ -113,7 +123,7 @@
       };
 
       $scope.NextPage = function() {
-        if ($scope.periodoActual === $scope.periodoIngresante) {
+        if (PERIODO === $scope.periodoIngresante) {
           $state.go('app.matriculaingresantelast');
         } else {
           $state.go('app.matricularevisionlast');
@@ -125,25 +135,64 @@
         getMatricula();
       });
 
-      $scope.FinalizarMatricula = function(){
-        var serviceCompromisoPago = Restangular.all('compromisopagos');
-        if(matricula && matricula.hasOwnProperty('_id')){
-          serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
-            console.log(response);
-            ToastMD.success('Se finalizó su proceso de matrícula');
-            $state.go('app.matricularevisionlast');
-          },function(result){
-            ToastMD.error(result.data.message);
-          });
-        }
+      $scope.TotalCreditos = function TotalCreditos(){
+        console.log('cursosselected',$scope.cursosselected);
+        var suma=0;
+        $scope.cursosselected.forEach(function(item){
+          suma+=parseInt(item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos);
+        });
+
+        return suma;
       };
 
-    })
+
+
+      $scope.FinalizarMatricula = function($event){
+        var confirm = $mdDialog.confirm()
+            .title(LOCAL.name)
+            .content('Esta seguro de finalizar la inscripción?')
+            .ariaLabel('Finalizar Matrícula')
+            .targetEvent($event)
+            .ok(MessageFactory.Buttons.Yes)
+            .cancel(MessageFactory.Buttons.No);
+
+        $mdDialog.show(confirm).then(function() {
+          var serviceCompromisoPago = Restangular.all('compromisopagos');
+          if(matricula && matricula.hasOwnProperty('_id')){
+            serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
+              console.log(response);
+              ToastMD.success('Se finalizó su proceso de matrícula');
+              $state.go('app.matricularevisionlast');
+            },function(result){
+              ToastMD.error(result.data.message);
+            });
+          }
+        }, function() {
+
+        });
+
+
+      };
+
+    }])
 
   /**
    * controler de modal de cursos para agregar a la matrícula
    */
-  .controller('InscripcionNewCtrl', function(
+  .controller('InscripcionNewCtrl',[
+  '$scope',
+  'Restangular',
+  'MessageFactory',
+  'NgTableParams',
+  '$timeout',
+  '$mdDialog',
+  'ToastMD',
+  '$rootScope',
+  'fichamatricula',
+  'fichamatriculaIngresante',
+  'matricula',
+  'creditosaceptados',
+  function(
     $scope,
     Restangular,
     MessageFactory,
@@ -169,7 +218,7 @@ console.log('creditos actuales',creditosactuales);
     var serviceFichaMatricula, serviceDetalleMatricula, serviceCursoAperturadoPeriodo;
     $scope.includeActive = false;
     $scope.submited = false;
-    $scope.title = MessageFactory.Form.New.replace('{element}', name);
+    $scope.title = "Listado de Cursos Disponibles";
     $scope.Buttons = MessageFactory.Buttons;
     $scope.message = MessageFactory.Form;
     $scope.model = {};
@@ -229,6 +278,8 @@ console.log('creditos actuales',creditosactuales);
         });
       }
     };
+
+
     ListaCursosGrupos();
 
     var findIndex = function(item) {
@@ -257,8 +308,10 @@ console.log('creditos actuales',creditosactuales);
           }
         });
         if (!test) {
-          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > creditosaceptados){
-            ToastMD.warning('No puedes superar tu límite de créditos');
+          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula){
+            item.active = !item.active;
+            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+fichamatricula.creditos.maximo.creditosmatricula+' creditos)');
+            test = true;
           }else{
             creditosactuales += cursohabilitado._planestudiodetalle.creditos;
             $scope.groupsselected.push(item);
@@ -268,6 +321,7 @@ console.log('creditos actuales',creditosactuales);
           }
         }
       } else {
+        creditosactuales-= cursohabilitado._planestudiodetalle.creditos;
         var index = findIndex(item);
         angular.forEach(matricula._detalleMatricula, function(curso) {
           if (item._id === curso._grupoCurso._id) {
@@ -303,6 +357,6 @@ console.log('creditos actuales',creditosactuales);
       $mdDialog.hide();
     };
 
-  });
+  }]);
 
 }).call(this);

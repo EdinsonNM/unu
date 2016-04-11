@@ -98,11 +98,12 @@ module.exports=function(){
                 {title:'Periodos',icon:'',url:'app.periodos',order:1},
                 {title:'Procesos',icon:'fa-cogs',url:'app.procesos',order:2},
                 {title:'Parametros',icon:'fa-cogs',url:'app.parametros',order:3},
+                {title:'Parametros y Procesos por Facultad',icon:'',url:'app.procesosfacultad',order:4},
                 {title:'Parametros y Procesos por Periodo',icon:'',url:'app.paramprocesosperiodo',order:4},
                 {title:'Parametros y Procesos por Escuela',icon:'',url:'app.paramprocesosescuela',order:5},
-                {title:'Generación de ficha de matrícula',icon:'',url:'app.',order:6},
-                {title:'Ficha de matrícula individual',icon:'',url:'app.s',order:7},
-                {title:'Compromiso de Pagos',icon:'',url:'app.compromisopagos',order:7}
+                {title:'Generación de ficha de matrícula',icon:'',url:'app.',order:7},
+                {title:'Ficha de matrícula individual',icon:'',url:'app.s',order:8},
+                {title:'Compromiso de Pagos',icon:'',url:'app.compromisopagos',order:9}
               ],
               style:{
                 color: 'white',

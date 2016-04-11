@@ -4,13 +4,13 @@
   </md-subheader>
 
   <div layout="row" layout-align="center start" layout-margin layout-fill>
-    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+    <md-content ng-if="UI.mostrarUI" flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;min-height:400px;">
       <section>
 
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
-              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <img ng-src="/images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
               <div class="md-list-item-text">
                 <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
                 <p>{{ ALUMNO.codigo }}</p>
@@ -24,71 +24,143 @@
           <small class=" tc-{{$root.color.primary}}-400">Matrícula {{periodoNombre }}</small>
         </div>
       </section>
-      <div flex layout="row" layout-fill style="padding-bottom:10px;">
-        <p>Bienvenidos al proceso de matricula. Para iniciar el proceso es necesario que se asegure de levantar todas las observaciones y cancelar todas sus deudas pendientes con la universidad.</p>
+      <div flex layout="column" layout-fill style="padding-bottom:10px;">
+        <p>Queremos brindarte un mejor servicio, por ello, hemos implementado un nuevo proceso de matrícula mediante el cual podrás realizar el registro de cursos de manera virtual.</p>
+        <p>
+          Antes de iniciar con el proceso de matricula es importante que validemos algunas cosas para asegurar ud. pueda inicar correctamente su inscripción:
+        </p>
       </div>
 
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              Status
+            </th>
+            <th>
+              Requisitos
+            </th>
+            <th>
+              Descripción
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">
+              <i ng-if="!UI.requisitos.modalidad" class="fa fa-frown-o tc-{{$root.color.accent}}-500"></i>
+              <i ng-if="UI.requisitos.modalidad"class="fa fa-check tc-{{$root.color.primary}}-500 " ></i>
+            </td>
+            <td>
+              Modalidad de Ingreso
+            </td>
+            <td>
+              Estamos en continua mejora pero por el momento solo soportamos el registro de alumnos bajos las siguientes modalidades de ingreso EXAMEN ORDINARIO, PRIMER PUESTO COLEGIOS, EXAMEN CEPREUNU
+              <div class="tc-{{$root.color.accent}}-500"  ng-if="!UI.requisitos.modalidad">
+                  {{messageModalidad}}. Deberá acercarse a coordinación académica para realizar el proceso de matricula de manera presencial
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="text-center">
+              <i ng-if="!UI.requisitos.tipoAlumno||!UI.requisitos.tipoCondicionAlumno||!UI.requisitos.situacionAlumno||!UI.requisitos.tipoSituacionAlumno" class="fa fa-frown-o tc-{{$root.color.accent}}-500"></i>
+              <i ng-if="UI.requisitos.tipoAlumno&&UI.requisitos.tipoCondicionAlumno&&UI.requisitos.situacionAlumno&&UI.requisitos.tipoSituacionAlumno"class="fa fa-check tc-{{$root.color.primary}}-500 " ></i>
+            </td>
+            <td>
+              Tipo Alumno
+            </td>
+            <td>
+              Es necesario verificar que el alumno se encuentre bajo condiciones regulares dentro del sistema y que ademas sea un alumno activo.
+              <div class="tc-{{$root.color.accent}}-500" ng-if="!UI.requisitos.tipoAlumno||!UI.requisitos.tipoCondicionAlumno||!UI.requisitos.situacionAlumno||!UI.requisitos.tipoSituacionAlumno">
+                  Ud. deberá acercarse a coordinación académica para realizar el proceso de matricula de manera presencial
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="text-center">
+              <i class="fa fa-frown-o tc-{{$root.color.accent}}-500" ng-if="!UI.requisitos.conflictos"></i>
+              <i class="fa fa-check tc-{{$root.color.primary}}-500" ng-if="UI.requisitos.conflictos"></i>
+            </td>
+            <td>
+              Pendientes del Alumno
+            </td>
+            <td>
+              Es importante asegurar que Ud. no cuenta con algun conflicto o pendiente con la universidad, por lo cual, es necesario verificar si todo esta en orden :)<br>
+              <md-content ng-if="!UI.requisitos.conflictos" flex class="md-padding page-content">
+
+                <table ng-table="tableParamsPendientes" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+                  <tbody>
+                  <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.pendientesValue">
+                      <td class="text-left" data-title="'Código'" style="width:100px;">{{item._conflicto.codigo}}</td>
+                      <td class="text-left" data-title="'Descripción'">{{item._conflicto.nombre}}</td>
+                  </tr>
+
+                  </tbody>
+                </table>
+                <!-- <div ng-if="!UI.pendientesValue">{{UI.messagePendiente}}</div> -->
+              </md-content>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">
+              <i ng-if="!UI.requisitos.deudas" class="fa fa-frown-o tc-{{$root.color.accent}}-500"></i>
+              <i ng-if="UI.requisitos.deudas" class="fa fa-check tc-{{$root.color.primary}}-500"></i>
+            </td>
+            <td>
+              Deudas del alumno
+            </td>
+            <td>
+              Es importante asegurar que Ud. no cuenta con alguna deuda con la universidad, por lo cual, es necesario verificar si todo esta en orden :)<br>
+              <md-content ng-if="!UI.requisitos.deudas" flex class="md-padding page-content" ng-if="UI.deudasValue" >
+
+                <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+                  <tbody>
+                  <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
+                      <td class="text-left" data-title="'Código'">{{}}</td>
+                      <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
+                      <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
+                  </tr>
+
+                  </tbody>
+                </table>
+                <!-- <div ng-if="!UI.deudasValue">{{UI.messageDeudas}}</div> -->
+              </md-content>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">
+              <i ng-if="!UI.requisitos.fechaMatriculaRegular" class="fa fa-frown-o tc-{{$root.color.accent}}-500"></i>
+              <i ng-if="UI.requisitos.fechaMatriculaRegular" class="fa fa-check tc-{{$root.color.primary}}-500"></i>
+            </td>
+            <td>
+              Proceso Matrícula Regular Activo
+            </td>
+            <td>
+              El proceso de matricula solo se realizara durante el plazo estableciado de acuerdo al cronograma de matricula establecido por cada facultad <br>
+              <span class="tc-{{$root.color.accent}}-500">{{UI.messageFechaRegular}}</span>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+      <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos&&UI.requisitos.fechaMatriculaRegular" >
+        <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;"  ng-click="Save()">Iniciar el proceso de matricula</button>
+       </div>
+       <div layout="row" layout-align="center start" layout-fill ng-if="!UI.requisitos.modalidad||!UI.requisitos.deudas||!UI.requisitos.conflictos" >
+         <h3 class="tc-{{$root.color.accent}}-500">Al parecer uno o mas requisitos no sen han cumplido , por lo cual, no podra iniciar el proceso de matrícula</h3>
+       </div>
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
          <!-- Imagen del usuario -->
-      <div flex layout="row" layout-fill>
-        <strong>Pendientes del Alumno:</strong>
-      </div>
-      <div layout="row" layout-fill>
 
-        <md-content flex class="md-padding page-content">
 
-          <table ng-table="tableParamsPendientes" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
-            <tbody>
-            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.pendientesValue">
-                <td class="text-left" data-title="'Código'" style="width:100px;">{{item._conflicto.codigo}}</td>
-                <td class="text-left" data-title="'Descripción'">{{item._conflicto.nombre}}</td>
-            </tr>
+       </md-content>
 
-            <tr ng-if="!UI.pendientesValue">
-                <td class="text-center" colspan="3"> {{UI.messagePendiente}}</td>
-            </tr>
-            </tbody>
-          </table>
-          <!-- <div ng-if="!UI.pendientesValue">{{UI.messagePendiente}}</div> -->
-        </md-content>
-      </div>
-
-      <div flex layout="row" layout-fill>
-        <strong>Deudas del Alumno:</strong>
-      </div>
-
-      <div layout="row" layout-fill>
-        <md-content flex class="md-padding page-content" >
-          <table ng-table="tableParamsDeudas" show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
-            <tbody>
-            <tr ng-repeat="item in $data" ng-class="{'table-selected-row bgc-teal-50':item.active}" ng-if="UI.deudasValue">
-                <td class="text-left" data-title="'Código'">{{}}</td>
-                <td class="text-left" data-title="'Descripción'">{{item._tasa.nombre}}</td>
-                <td class="text-left" data-title="'Monto'">S/.{{item.saldo}}</td>
-            </tr>
-
-            <tr ng-if="!UI.deudasValue">
-                <td class="text-center" colspan="3"> {{UI.messageDeudas}}</td>
-            </tr>
-
-            </tbody>
-          </table>
-          <!-- <div ng-if="!UI.deudasValue">{{UI.messageDeudas}}</div> -->
-        </md-content>
-     </div>
-
-  <div flex layout="row" layout-fill ng-if="!UI.nextStage1||!UI.nextStage2 || !modeIngreso" class="tc-{{$root.color.accent}}-500">
-     <span class="fa fa-exclamation-circle"></span>
-   <strong>No es posible iniciar el proceso de matricula  {{messageModalidad}}</strong>
- </div>
-
-<div layout="row" layout-fill ng-if="UI.nextStage1&&UI.nextStage2&&modeIngreso" ng-click="Save()" >
-  <div class="text-center" flex>
-     <!-- <a href="#/home/matricula/inscripcion" ui-sref="app.matriculainscripcion"> -->
-    <a>
-  <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;">Iniciar el proceso de matricula</button>
-  </a>
+    <md-content ng-if="!UI.mostrarUI" flex class="text-center md-padding page-content md-whiteframe-4dp" style="max-width:1020px;min-height:300px;">
+      <br><br><br><br>
+      <h2 class="tc-{{$root.color.primary}}-500">Bienvenido</h2>
+      <h3><i class="fa fa-spinner fa-pulse"></i> Validando Acceso a interfaz. Espere un momento...</h3>
+    </md-content>
   </div>
-
- </div>
 </md-content>

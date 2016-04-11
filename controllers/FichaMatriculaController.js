@@ -91,7 +91,8 @@ module.exports=function(){
                 model: 'Seccion'
               },{
                 path: '_programaciones',
-                model: 'ProgramacionGrupoCurso'
+                model: 'ProgramacionGrupoCurso',
+                populate:[{path:'_docente',model:'Docente'}]
               }]
             },{
               path: '_planestudiodetalle',

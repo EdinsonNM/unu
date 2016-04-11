@@ -210,7 +210,7 @@ class CompromisoPagoAlumno{
     let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR;});
     //let procesoOrdinario = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.EXTEMPORANEO});
     //console.log(self.matricula._periodo.procesos);
-    if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado',status:500};
+    //if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado',status:500};
     return true;
   }
 
@@ -268,6 +268,16 @@ class CompromisoPagoAlumno{
     return defer.promise;
   }
 
+  matricularIngresante(){
+    var defer = Q.defer();
+    let self = this;
+    self.matricula.estado="Matriculado";
+    self.matricula.save(function(err,data){
+      if(err) return defer.reject({message:'Error interno del servidor',detail:err,status:500});
+      return defer.resolve({matricula:data});
+    });
+    return defer.promise;
+  }
   validarMatriculaAlumno(){
     var self = this;
     console.log('validarMatriculaAlumno');
@@ -319,11 +329,11 @@ class CompromisoPagoAlumno{
     return defer.promise;
   }
 
-  generar(next){
+  generarAlumno(next){
     var self = this;
     Q
     .fcall(self.obtenerTasas.bind(this))
-    .then(self.obtenerMatricula.bind(this))
+    //.then(self.obtenerMatricula.bind(this))
     .then(self.ValidarProcesos.bind(this))
     .then(self.validarMatriculaAlumno.bind(this))
     .then(self.obtenerNumeroCursosRepetidos.bind(this))
@@ -335,6 +345,37 @@ class CompromisoPagoAlumno{
     .then(function(compromiso){
       return next(null,compromiso);
     })
+    .catch(function(error){
+      return next(error);
+    })
+    .done();
+  }
+
+  generarIngresante(next){
+    var self = this;
+    Q
+    .fcall(self.validarMatriculaAlumno.bind(this))
+    .then(self.matricularIngresante.bind(this))
+    .then(function(result){
+      return next(null,result);
+    })
+    .catch(function(error){
+      return next(error);
+    })
+    .done();
+  }
+
+  generar(next){
+    var self = this;
+    Q
+    .fcall(self.obtenerMatricula.bind(this))
+    .then(function(result){
+      if(self.matricula._alumno._periodoInicio.toString() === self.matricula._periodo._id.toString()){
+        self.generarIngresante(next);
+        }else{
+        self.generarAlumno(next);
+        }
+      })
     .catch(function(error){
       return next(error);
     })

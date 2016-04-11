@@ -75,7 +75,7 @@
                   <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
                 </td>
                 <td class="text-left" data-title="'Curso'" sortable="curso">{{item._curso.nombre}}</td>
-                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item._curso.codigo}}</td>
+                <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }">{{item.codigo}}</td>
                 <td data-title="'N° Creditos'">{{item.creditos}}</td>
                 <td data-title="'N° Horas'">{{item.horas_total}}</td>
                 <td data-title="'N° Horas Teoria'">{{item.horas_teoria}}</td>
@@ -122,7 +122,7 @@
 </md-button>
 
 <!-- pestañas -->
-<!-- 
+<!--
 <div ng-cloak>
   <md-content class="md-padding">
     <md-tabs class="md-accent" md-selected="data.selectedIndex" md-align-tabs="{{data.bottom}}">

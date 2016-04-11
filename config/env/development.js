@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-  db: 'mongodb://localhost/unu-development',
-  port:3000,
+  db: process.env.DATABASE||'mongodb://localhost/unu-development',
+  port:process.env.PORT || 3000,
   key_secret: process.env.KEY_SECRET
 };

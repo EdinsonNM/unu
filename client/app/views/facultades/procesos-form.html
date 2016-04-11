@@ -9,7 +9,7 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-dialog-content class="window-modal-content-sm">
+    <md-dialog-content class="md-padding window-modal-content-sm">
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
@@ -23,8 +23,8 @@
 
         <div flex>
           <md-input-container class="md-block">
-            <label>Nombre de Escuela</label>
-            <input required name="escuela" ng-model="_escuela.nombre" readonly>
+            <label>Nombre de Facultad</label>
+            <input required name="escuela" ng-model="_facultad.nombre" readonly>
             <div ng-messages="myForm.escuela.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
@@ -36,23 +36,46 @@
       <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
-            <label>Parametro</label>
-            <md-select ng-model="model.parametro" ng-model-options="{trackBy: '$value._id'}">
-              <md-option ng-repeat="param in parametros" ng-value="param">
-                {{param.nombre}}
+            <label>Proceso</label>
+            <md-select ng-model="model._proceso" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="proc in procesos" ng-value="proc">
+                {{proc.nombre}}
               </md-option>
             </md-select>
-            <div ng-messages="myForm.parametro.$error" ng-if="submited">
+            <div ng-messages="myForm.proceso.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>
         </div>
+      </div>
 
+      <div flex layout="row" layout-sm="row">
         <div flex>
           <md-input-container class="md-block">
-            <label>Valor</label>
-            <input required name="valor" ng-model="model.valor">
-            <div ng-messages="myForm.valor.$error" ng-if="submited">
+            <label>Feha Inicio</label>
+            <input type="date" required name="fechaInicio" ng-model="model.fechaInicio">
+            <div ng-messages="myForm.fechaInicio.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Feha Fin</label>
+            <input type="date" required name="fechaFin" ng-model="model.fechaFin">
+            <div ng-messages="myForm.fechaFin.$error" ng-if="submited">
+              <div ng-message="required">{{message.Required}}</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div flex>
+          <md-input-container class="md-block">
+            <label>Estado</label>
+            <md-select ng-model="model.estado">
+                <md-option value="Ejecutado">Ejecutado</md-option>
+                <md-option value="No Ejecutado">No Ejecutado</md-option>
+            </md-select>
+            <div ng-messages="myForm.estado.$error" ng-if="submited">
               <div ng-message="required">{{message.Required}}</div>
             </div>
           </md-input-container>

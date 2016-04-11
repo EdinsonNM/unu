@@ -55,6 +55,7 @@
         console.log(store.getItem('facultadSelected'));
         if(store.getItem('facultadSelected')){
           $scope.filter._facultad = JSON.parse(store.getItem('facultadSelected'));
+          $scope.LoadEcuelas();
         }
 
       });
@@ -66,6 +67,7 @@
         $scope.escuelas = data;
         if(store.getItem('escuelaSelected')){
           $scope.filter._escuela = JSON.parse(store.getItem('escuelaSelected'));
+          $scope.ListPlanEstudios();
         }
       });
     };
@@ -83,7 +85,8 @@
         count: 10,
         filter:{
           _escuela:0
-        }
+        },
+        sorting: { '_periodo.nombre': "desc" }
       }, {
         total: 0,
         getData: function($defer, params) {
