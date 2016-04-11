@@ -111,7 +111,7 @@ class CompromisoPagoAlumno{
       self.matricula._detalleMatricula.forEach(function(item){
         let iddetalle = item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._id;
         let repetido = _.find(listaCursosRepetidos,function(cursoRepetido){
-          return cursoRepetido._planEstudiosDetalle._id === iddetalle;
+          return cursoRepetido._planEstudiosDetalle._id.toString() === iddetalle.toString();
         });
         if(repetido){
           self.numeroCursosRepetidos +=1;
