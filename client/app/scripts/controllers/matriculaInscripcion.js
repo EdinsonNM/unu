@@ -308,9 +308,9 @@ console.log('creditos actuales',creditosactuales);
           }
         });
         if (!test) {
-          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula){
+          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula + fichamatricula.creditos.maximoampliacion){
             item.active = !item.active;
-            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+fichamatricula.creditos.maximo.creditosmatricula+' creditos)');
+            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+ (fichamatricula.creditos.maximo.creditosmatricula + fichamatricula.creditos.maximoampliacion)+' creditos)');
             test = true;
           }else{
             creditosactuales += cursohabilitado._planestudiodetalle.creditos;
