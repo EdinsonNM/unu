@@ -1,6 +1,6 @@
 
 var Matricula = require('../models/MatriculaModel.js');
-var CompromisoPagoAlumno = require('../commons/libs/compromisopago/Compromisopagoalumno.js');
+var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno.js');
 
 module.exports=function(){
 
