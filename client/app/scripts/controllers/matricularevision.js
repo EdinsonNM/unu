@@ -267,8 +267,9 @@
       verificaTipoAlumnoNormal();
       verificaTipoCondicionAlumnoNormal();
       verificaTipoSituacionAlumnoNoMatriculado();
-
+      $scope.disabledButton = false;
       $scope.Save = function() {
+        $scope.disabledButton = true;
         //$scope.submited = true;
         //declaro el servicio con la ruta correcta del endpoint.
         $scope.model = {};
@@ -281,13 +282,15 @@
         service = Restangular.all('matriculas');
         service.post($scope.model).then(function() {
           ToastMD.info(MessageFactory.Form.Saved);
-          // $mdDialog.hide();
+          $scope.disabledButton = false;
         }, function(error) {
+          $scope.disabledButton = false;
           switch (error.status) {
             case 422:
               $scope.ValidationError = error.data;
               break;
             default:
+            ToastMD.info(error.data.message);
           }
 
         }, function(result) {

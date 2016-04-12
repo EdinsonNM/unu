@@ -146,7 +146,7 @@
 
       </table>
       <div layout="row" layout-align="center start" layout-fill ng-if="UI.requisitos.modalidad&&UI.requisitos.deudas&&UI.requisitos.conflictos&&UI.requisitos.fechaMatriculaRegular&&UI.requisitos.tipoAlumno&&UI.requisitos.tipoCondicionAlumno&&UI.requisitos.situacionAlumno&&UI.requisitos.tipoSituacionAlumno" >
-        <button ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;"  ng-click="Save()">Iniciar el proceso de matricula</button>
+        <button ng-disabled="{{disabledButton}}" ui-sref="app.matriculainscripcion" class="md-button" style="background-color: rgb(255,152,0);color:white;text-align:center;padding: 5px;"  ng-click="Save()">Iniciar el proceso de matricula</button>
        </div>
        <div layout="row" layout-align="center start" layout-fill ng-if="!UI.requisitos.modalidad||!UI.requisitos.deudas||!UI.requisitos.conflictos" >
          <h3 class="tc-{{$root.color.accent}}-500">Al parecer uno o mas requisitos no sen han cumplido , por lo cual, no podra iniciar el proceso de matrícula</h3>

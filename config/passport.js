@@ -35,6 +35,7 @@ passport.use(new LocalStrategy(
 module.exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
     var token;
     var strAuthorization = req.headers.authorization;
+    req.isAuthenticated = false;
     if (typeof strAuthorization !== 'undefined') {
         var authorization = strAuthorization.split(" ");
         if(authorization.length===2){
@@ -43,9 +44,11 @@ module.exports.ensureAuthenticated = function ensureAuthenticated(req, res, next
           try {
             var user = jwt.verify(req.token,config.key_secret);
             req._user = user;
+            req.isAuthenticated = true;
             next();
 
           }catch(err) {
+            req.isAuthenticated = false;
             next(err);
           }
         }else{
