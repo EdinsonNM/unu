@@ -115,7 +115,7 @@
         })
         .state('login', {
           url: '/',
-          templateUrl: 'views/cierreTemporal.html',
+          templateUrl: 'views/login.html',
           controller: 'LoginCtrl'
         })
         .state('getcode', {
