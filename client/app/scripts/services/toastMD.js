@@ -13,28 +13,28 @@
     return {
       info: function info(message){
         $mdToast.show({
-           template: '<md-toast><span class="tc-blue-900 fa fa-info-circle fa-lg"></span>&nbsp;' + message + '</md-toast>',
+           template: '<md-toast><span class="tc-blue-900 fa fa-info-circle fa-lg"></span>p<span class="tc-white">&nbsp;' + message + '</span></md-toast>',
            hideDelay: 4000,
            position: 'top right'
         });
       },
       success: function success(message){
         $mdToast.show({
-           template: '<md-toast><span class="tc-green-900 fa fa-check fa-lg"></span>&nbsp;' + message + '</md-toast>',
+           template: '<md-toast><span class="tc-green-900 fa fa-check fa-lg"></span><span  class="tc-white">&nbsp;' + message + '</span></md-toast>',
            hideDelay: 4000,
            position: 'top right'
         });
       },
       warning: function warning(message){
         $mdToast.show({
-           template: '<md-toast><span class="tc-yellow-900 fa fa-exclamation-triangle fa-lg"></span>&nbsp;' + message + '</md-toast>',
+           template: '<md-toast><span class="tc-yellow-900 fa fa-exclamation-triangle fa-lg"></span><span  class="tc-white">&nbsp;' + message + '</span></md-toast>',
            hideDelay: 4000,
            position: 'top right'
         });
       },
       error: function warning(message){
         $mdToast.show({
-           template: '<md-toast><span class="tc-red-900 fa fa-exclamation-triangle fa-lg"></span>&nbsp;' + message + '</md-toast>',
+           template: '<md-toast><span class="tc-red-900 fa fa-exclamation-triangle fa-lg"></span><span  class="tc-white">&nbsp;' + message + '</span></md-toast>',
            hideDelay: 4000,
            position: 'top right'
         });
