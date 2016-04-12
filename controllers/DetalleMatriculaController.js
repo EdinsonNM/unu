@@ -1,5 +1,6 @@
 var model = require('../models/DetalleMatriculaModel.js');
 var Parent = require('../models/MatriculaModel.js');
+var auth = require('../config/passport');
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -35,11 +36,23 @@ module.exports = function() {
         next();
       });
 
+      controller.request(auth.ensureAuthenticated);
+
+      controller.request(function (request, response, next) {
+        if (request.isAuthenticated) return next();
+        return response.send(401);
+      });
+
       /**
        * actualiza el _detalleMatricula en MatriculaModel despues de crear el detalle matricula
        */
       controller.request('post', function (request, response, next) {
-        next();
+        model.findOne({_matricula:request.body._matricula,_grupoCurso:request.body._grupoCurso},function(err,data){
+          if(err) return response.status(500).send({message:'Ocurrio un error interno del sistema',detail:err});
+          if(data) return response.status(200).send(data);
+          next();
+        });
+
         request.baucis.outgoing(function (context, callback) {
           Parent.update({
             _id: context.doc._matricula

@@ -1,4 +1,6 @@
 var model = require('../models/MatriculaModel.js');
+var auth = require('../config/passport');
+
 module.exports = function() {
   var baucis = require('baucis');
   return {
@@ -7,6 +9,23 @@ module.exports = function() {
       controller.relations(true);
       controller.hints(true);
       controller.fragment('/matriculas');
+
+      controller.request(auth.ensureAuthenticated);
+
+      controller.request(function (request, response, next) {
+        if (request.isAuthenticated) return next();
+        return response.send(401);
+      });
+
+
+      controller.request('post',function(req,res,next){
+          var params = req.body;
+          model.findOne({_periodo:params._periodo,_alumno:params._alumno},function(err,data){
+            if(err) return res.status(500).send({message:'Ocurrio un error interno del sistema',detail:err});
+            if(data) return res.status(200).send(data);
+            return next();
+          });
+      });
 
       controller.query('get', function(req, res, next){
         req.baucis.query.populate(

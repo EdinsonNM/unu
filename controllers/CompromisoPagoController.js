@@ -3,6 +3,7 @@ var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var auth = require('../config/passport');
 var path = require('path');
 var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno');
+var NuevosCompromisos = require('../unicostmp/recalculo-compromisos.js');
 //var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
 module.exports=function(){
   var baucis=require('baucis');
@@ -78,6 +79,12 @@ module.exports=function(){
             if(err) return res.status(err.status).send(err);
             return res.status(201).send(data);
         });
+
+      });
+
+      controller.post('/methods/recalculo-compromisos',function(req,res){
+        NuevosCompromisos();
+        return res.status(201).send("ok");
 
       });
 
