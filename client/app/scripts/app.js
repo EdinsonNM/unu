@@ -26,7 +26,8 @@
       'angular-loading-bar',
       'ngTable',
       'anim-in-out',
-      'ngMaterial'
+      'ngMaterial',
+      'ngMaterialDatePicker'
     ]).config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider) {
       RestangularProvider.setBaseUrl('/api');
       $httpProvider.interceptors.push('AuthInterceptor');
