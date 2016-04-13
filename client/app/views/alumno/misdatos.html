@@ -38,9 +38,12 @@
                       <md-input-container class="md-icon-float md-block">
                         <label>DNI:</label>
                         <md-icon md-font-icon="fa-credit-card" class="fa s24 md-primary md-hue-1"></md-icon>
-                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable" ng-maxlength="8">
+                        <input required name="documento" ng-model="model._persona.documento" ng-readonly="!editable" ng-maxlength="8" ng-minlength="8">
                         <div ng-messages="myForm.documento.$error" ng-if="submited">
                           <div ng-message="required">{{message.Required}}</div>
+                          <div ng-message="minlength">DNI debe tener 8 digitos</div>
+                          <div ng-message="maxLength">DNI debe tener 8 digitos</div>
+
                         </div>
                       </md-input-container>
                   </div>

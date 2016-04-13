@@ -93,7 +93,7 @@
               El número máximo de creditos disponibles para matricularse en este periodo es de: <strong>{{UI.fichamatricula.creditos.maximo.creditosmatricula + UI.fichamatricula.creditos.maximoampliacion }} creditos</strong>
             </p>
             <div class="text-center" ng-if="cursosselected.length > 0">
-              <md-button ng-disabled="{{disabledButton}}" class="md-raised md-primary" ng-click="FinalizarMatricula($event)">FINALIZAR MATRICULA</md-button>
+              <md-button ng-disabled="disabledButton" class="md-raised md-primary" ng-click="FinalizarMatricula($event)">FINALIZAR MATRICULA</md-button>
             </div>
           </div>
         </md-content>

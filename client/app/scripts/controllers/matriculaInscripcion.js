@@ -148,7 +148,7 @@
 
       $scope.disabledButton = false;
       $scope.FinalizarMatricula = function($event){
-        $scope.disabledButton = true;
+
         var confirm = $mdDialog.confirm()
             .title(LOCAL.name)
             .content('Esta seguro de finalizar la inscripción?')
@@ -158,6 +158,7 @@
             .cancel(MessageFactory.Buttons.No);
 
         $mdDialog.show(confirm).then(function() {
+          $scope.disabledButton = true;
           var serviceCompromisoPago = Restangular.all('compromisopagos');
           if(matricula && matricula.hasOwnProperty('_id')){
             serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
