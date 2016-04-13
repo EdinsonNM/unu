@@ -8,14 +8,14 @@ module.exports = function(config){
   var app = express();
   var routes=require('./routes')();
   var staticFolder = 'client/app/';
-  var morgan = require('morgan');
+  //var morgan = require('morgan');
   // config express
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  morgan.token('id', function getId(req) {
+  /*morgan.token('id', function getId(req) {
     return req.id;
-  });
-  app.use(morgan(':id :method :url :response-time'));
+  });*/
+  //app.use(morgan(':id :method :url :response-time'));
   app.use(cors());
 
   app.use('/api',baucis());

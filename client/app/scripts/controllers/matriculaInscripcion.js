@@ -81,7 +81,7 @@
       getMatricula = function(){
         serviceMatricula = Restangular.all('matriculas');
         var filter = {
-          _alumno: $scope.ALUMNO._id,
+          _alumno: ALUMNO._id,
           _periodo: PERIODO._id
         };
         serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
@@ -146,8 +146,9 @@
       };
 
 
-
+      $scope.disabledButton = false;
       $scope.FinalizarMatricula = function($event){
+        $scope.disabledButton = true;
         var confirm = $mdDialog.confirm()
             .title(LOCAL.name)
             .content('Esta seguro de finalizar la inscripción?')
@@ -163,8 +164,10 @@
               console.log(response);
               ToastMD.success('Se finalizó su proceso de matrícula');
               $state.go('app.matricularevisionlast');
+              $scope.disabledButton = false;
             },function(result){
               ToastMD.error(result.data.message);
+              $scope.disabledButton = false;
             });
           }
         }, function() {
