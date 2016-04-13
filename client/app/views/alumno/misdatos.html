@@ -12,14 +12,19 @@
             <div class="md-list-item-text">
               <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
               <p>{{ ALUMNO.codigo }}</p>
+
             </div>
           </md-list-item>
         </md-list>
+        <div>
+          <h2 class=" tc-{{$root.color.primary}}-500">Mis Datos</h2>
+          <strong>Para actualizar sus datos debe presionar sobre el boton editar que se encuentra en la parte derecha inferior.</strong>
+        </div>
       </div>
       <form name="myForm" novalidate>
 
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
-      <div flex layout="row" layout-fill>
+      <div flex layout="row" class="md-padding" layout-fill>
           <div flex-gt-sm="33" flex="33">
               <div class="mt+ mr+">
                   <strong>Datos Personales:</strong>
@@ -86,7 +91,7 @@
                       <md-input-container class="md-icon-float md-block">
                       <label>Fec. Nacimiento</label>
                       <md-icon md-font-icon="fa-calendar" class="fa s24 md-primary md-hue-1"></md-icon>
-                      <input type="date" required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" ng-readonly="!editable">
+                      <input time="false" date="true" mdc-datetime-picker="" type="text"  required name="fechaNacimiento" ng-model="model._persona.fechaNacimiento" ng-readonly="!editable">
                       <div ng-messages="myForm.fechaNacimiento.$error" ng-if="submited">
                         <div ng-message="required">Campo es obligatorio</div>
                       </div>
