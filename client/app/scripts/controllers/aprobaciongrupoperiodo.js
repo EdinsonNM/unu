@@ -476,6 +476,8 @@
       $scope.Save = function(form) {
         $scope.submited = true;
         if (form.$valid) {
+          $scope.model.route = 'grupocursos';
+          //$scope.model.path = 'grupocursos';
           $scope.model.put().then(function() {
             ToastMD.success(MessageFactory.Form.Updated);
             $mdDialog.hide();

@@ -58,6 +58,7 @@
 
                   <th class="text-center"><strong>Grupo</strong></th>
                   <th class="text-center"><strong>Nro Créditos</strong></th>
+                  <th class="text-center"><strong>Estado</strong></th>
                 </tr>
               </thead>
               <tbody>
@@ -69,13 +70,14 @@
                     </h4>
                   </td>
                 </tr>
-                <tr ng-repeat="item in cursosselected" ng-click="item.active=!item.active;EnabledAdd(item)">
+                <tr ng-repeat="item in cursosselected" ng-click="item.active=!item.active;EnabledAdd(item)" ng-class="{'tc-red-500':item.estado=='SinCupo'}">
                   <td>{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
                   <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
                   <td class="text-left">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo }}</td>
 
                   <td class="text-left">{{ item._grupoCurso._seccion.nombre }}</td>
                   <td class="text-center">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos }}</td>
+                  <td class="text-center">{{item.estado}}</td>
                 </tr>
                 <tr ng-if="cursosselected.length>0">
 
@@ -83,8 +85,10 @@
                   <td></td>
 
                   <td></td>
+
                   <td><strong>Totales:</strong></td>
                   <td class="text-center"><strong>{{ TotalCreditos();}}</strong></td>
+                  <td></td>
                 </tr>
               </tbody>
               <tbody>
