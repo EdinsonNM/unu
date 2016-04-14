@@ -427,7 +427,7 @@ module.exports  = function(filename,next){
           });
           x.then(function(){
             lockFile.unlockSync(pathLockFile);
-            LiberarMatriculas();
+            //LiberarMatriculas();
             console.log('finalizo..');
           }).done();
 
