@@ -8,6 +8,8 @@ module.exports = function(config){
   var app = express();
   var routes=require('./routes')();
   var staticFolder = 'client/app/';
+  require('dotenv').config();
+
   //var morgan = require('morgan');
   // config express
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,7 +23,14 @@ module.exports = function(config){
   app.use('/api',baucis());
   app.use(express.static(staticFolder));
   app.get('/',function(req,res){
-    res.sendFile(path.join(__dirname+'/'+staticFolder+'/index.html'));
+    var isOpenApp=process.env.OPENAPP|| true;
+    console.log('isOpenApp',isOpenApp);
+    if(isOpenApp){
+      res.sendFile(path.join(__dirname+'/'+staticFolder+'/index.html'));
+    }else{
+      res.sendFile(path.join(__dirname+'/'+staticFolder+'/disconnected.html'));
+    }
+
   });
   app.set('jwt-key',config.key_secret);
 
