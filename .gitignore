@@ -4,4 +4,6 @@
 npm-debug.log
 /commons/data/imports/*.txt
 /commons/data/exports/*.txt
+/commons/data/imports/*.lock
+/commons/data/exports/*.lock
 /jobs/node_modules
