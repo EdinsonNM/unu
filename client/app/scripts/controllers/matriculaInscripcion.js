@@ -169,6 +169,7 @@
             },function(result){
               ToastMD.error(result.data.message);
               $scope.disabledButton = false;
+              getMatricula();
             });
           }
         }, function() {

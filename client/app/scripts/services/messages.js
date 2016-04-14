@@ -25,7 +25,10 @@
         Observe:'Observar',
         Import: 'Importar',
         PaymentImport: 'Importar Pagos',
-        Payment: 'Pago Individual'
+        Payment: 'Pago Individual',
+        Download: 'Descargar',
+        GenerateFile: 'Generar Archivo',
+        UploadFile: 'Subir Archivo'
       },
       Form:{
         New:'Agregar {element}',

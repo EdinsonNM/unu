@@ -27,7 +27,8 @@
       'ngTable',
       'anim-in-out',
       'ngMaterial',
-      'ngMaterialDatePicker'
+      'ngMaterialDatePicker',
+      'ngFileUpload'
     ]).config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider) {
       RestangularProvider.setBaseUrl('/api');
       $httpProvider.interceptors.push('AuthInterceptor');
@@ -307,6 +308,16 @@
           url: '/conflictosalumnos',
           templateUrl: 'views/conflictosalumnos/list.html',
           controller: 'ConflictosalumnoCtrl'
+        })
+        .state('app.archivossalida', {
+          url: '/archivos-salida',
+          templateUrl: 'views/archivosbanco/list.html',
+          controller: 'ArchivosBancoSalidaCtrl'
+        })
+        .state('app.archivosentrada', {
+          url: '/archivos-entrada',
+          templateUrl: 'views/archivosentrada/list.html',
+          controller: 'ArchivosBancoEntradaCtrl'
         })
         .state('app.otrasdeudasalumnos', {
           url: '/otrasdeudasalumnos',

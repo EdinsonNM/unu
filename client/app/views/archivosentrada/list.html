@@ -1,0 +1,45 @@
+<md-content  class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary " style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp" style="max-width:1020px;">
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+      <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed table-striped table-bordered ">
+        <tbody>
+          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+          <tr ng-repeat="item in $data" ng-click="item.active=!item.active;EnabledEdit(item)" ng-class="{'table-selected-row bgc-teal-50':item.active}">
+            <td style="width:30px;">
+              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
+            </td>
+            <td class="text-left" data-title="'Nombre'" sortable="nombre" filter="{'nombre':'text'}">{{item.nombre}}</td>
+            <td class="text-right" data-title="'Registros'" >{{item.registros}}</td>
+            <td class="text-right" data-title="'Importe Total'" >{{item.importeTotal}}</td>
+            <td class="text-center" data-title="'Fecha Banco'" sortable="fechabanco" filter="{'fechabanco':'text'}">{{item.fechabanco}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-content>
+  </div>
+</md-content>
+
+<!-- Button New: solo visible cuando ningun elemento de la lista ha sido seleccionado-->
+<md-button ng-if="!UI.editMode" ng-click="New($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.UploadFile}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.UploadFile}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-cloud-upload fa-lg tc-white"></md-icon>
+</md-button>
+
+<md-button ng-if="UI.editMode" ng-click="DownloadFile($event)" class="md-fab md-fab-bottom-right" aria-label="{{UI.message.Buttons.Download}}" >
+  <md-tooltip md-direction="left">{{UI.message.Buttons.Download}}</md-tooltip>
+  <md-icon md-font-icon="fa fa-download fa-lg tc-white"></md-icon>
+</md-button>
+
+<form action="api/compromisopagos/methods/process" method="post" ng-submit="Refresh()">
+  <button id="btnUploadEntrada" type="submit" ng-show="false">Subir</button>
+</form>
+
+<form action="{{URL_SERVER}}" method="post">
+  <button id="btnDownloadArchivo" type="submit" ng-show="false">Download</button>
+</form>

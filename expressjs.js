@@ -7,6 +7,8 @@ module.exports = function(config){
   var cors = require('cors');//para permitir solicitudes desde cualquier puerto
   var app = express();
   var routes=require('./routes')();
+  require('dotenv').config();
+
   var staticFolder = 'client/app/';
   //var morgan = require('morgan');
   // config express
@@ -21,7 +23,16 @@ module.exports = function(config){
   app.use('/api',baucis());
   app.use(express.static(staticFolder));
   app.get('/',function(req,res){
-    res.sendFile(path.join(__dirname+'/'+staticFolder+'/index.html'));
+    //res.sendFile(path.join(__dirname+'/'+staticFolder+'/disconnected.html'));
+    console.log(process.env.OPENAPP);
+    var isOpenApp=(process.env.OPENAPP==='true')?true:false;
+    console.log(isOpenApp);
+    if(isOpenApp){
+      res.sendFile(path.join(__dirname+'/'+staticFolder+'/app.html'));
+    }else{
+      res.sendFile(path.join(__dirname+'/'+staticFolder+'/disconnected.html'));
+    }
+
   });
   app.set('jwt-key',config.key_secret);
 
