@@ -101,7 +101,7 @@
 
       $mdDialog.show(confirm).then(function() {
         $('#btnDownloadRecaudo').click();
-        
+
       }, function() {
 
       });

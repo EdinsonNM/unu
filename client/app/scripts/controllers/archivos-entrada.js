@@ -111,8 +111,8 @@
     new List();
   }])
 
-  .controller('ArchivoEntradaCtrl',['$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
-  function($scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
+  .controller('ArchivoEntradaCtrl',['Upload','$scope', 'table', 'name', 'MessageFactory', '$mdDialog', 'service', 'ToastMD', 'Restangular',
+  function(Upload,$scope, table, name, MessageFactory, $mdDialog, service, ToastMD, Restangular){
     $scope.submited = false;
     $scope.title = MessageFactory.Form.New.replace('{element}',name);
     $scope.Buttons = MessageFactory.Buttons;
@@ -133,6 +133,30 @@
     $scope.Cancel = function(){
       $mdDialog.hide();
     };
+
+
+        $scope.submit = function(form,file) {
+          console.log('submit');
+              if (form.file.$valid && file) {
+                $scope.upload(file);
+              }
+            };
+
+            // upload on file select or drop
+        $scope.upload = function (file) {
+            Upload.upload({
+                url: 'api/archivobancos/methods/upload',
+                data: {file: file}
+            }).then(function (resp) {
+                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+                $mdDialog.hide();
+            }, function (resp) {
+                console.log('Error status: ' + resp.status);
+            }, function (evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            });
+        };
   }]);
 
 }).call(this);

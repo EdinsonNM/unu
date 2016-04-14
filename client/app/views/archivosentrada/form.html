@@ -11,14 +11,20 @@
     </md-toolbar>
 
     <md-dialog-content class="window-modal-content-sm md-padding">
+      <form name="form">
         <div flex  layout="row" layout-sm="column">
                <div flex>
                    <md-input-container class="md-block">
-                     <input type='file' name="nombreArchivo" ng-model="model.nombre">
-                     <label></label>
+                     <label>Seleccione un archivo..</label>
+
+                     <input type="file" ngf-select ng-model="file" name="file"
+             accept="image/*" ngf-max-size="2MB" required
+             ngf-model-invalid="errorFile">
                    </md-input-container>
                </div>
            </div>
+
+      </form>
 
     </md-dialog-content>
 
@@ -26,7 +32,7 @@
       <md-dialog-actions layout="row">
         <span flex></span>
         <md-button class="md-raised" ng-click="Cancel()">{{Buttons.Cancel}}</md-button>
-        <md-button class="md-raised md-primary" ng-click="Save(myForm)">{{Buttons.UploadFile}}</md-button>
+        <md-button class="md-raised md-primary" ng-click="submit(myForm,file)">{{Buttons.UploadFile}}</md-button>
       </md-dialog-actions>
 
   </form>
