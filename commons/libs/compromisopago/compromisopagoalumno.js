@@ -96,7 +96,7 @@ class CompromisoPagoAlumno{
     return defer.promise;
   }
   obtenerNumeroCursosRepetidos(){
-    console.log('obtenerNumeroCursosRepetidos');
+    //console.log('obtenerNumeroCursosRepetidos');
     var defer = Q.defer();
     var self = this;
     FichaMatricula.findOne({_alumno:self.matricula._alumno._id,_periodo:self.matricula._periodo._id})
@@ -134,7 +134,7 @@ class CompromisoPagoAlumno{
   }
 
   ObtenerDeudaOrdinaria(){
-    console.log('ObtenerDeudaOrdinaria');
+    //console.log('ObtenerDeudaOrdinaria');
     var tasa,self=this;
     tasa = _.findWhere(this.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
     if(!tasa) throw {message:'No se encontro tasa ordinaria',status:500};
@@ -144,10 +144,10 @@ class CompromisoPagoAlumno{
     return self.deudaTotal;
   }
   obtenerDeudaMatriculaOrdinaria(){
-    console.log('obtenerDeudaMatriculaOrdinaria');
+    //console.log('obtenerDeudaMatriculaOrdinaria');
     let self = this;
     let modalidad;
-    console.log(self.matricula._alumno.hasOwnProperty('_modalidadIngreso'));
+    //console.log(self.matricula._alumno.hasOwnProperty('_modalidadIngreso'));
     if(self.matricula._alumno._doc.hasOwnProperty('_modalidadIngreso') ){
       modalidad = self.matricula._alumno._modalidadIngreso.codigo;
       switch (modalidad) {
@@ -166,7 +166,7 @@ class CompromisoPagoAlumno{
 
   }
   obtenerDeudaCursosRepetidos(){
-    console.log('obtenerDeudaCursosRepetidos');
+    //console.log('obtenerDeudaCursosRepetidos');
     var self = this;
     let tasa = _.findWhere(self.tasas,{codigo:TASA.PAGO_REPETICION_CURSO});
     if(!tasa) throw {message:'No se encontro tasa para repetición de curso',status:500};
@@ -209,7 +209,7 @@ class CompromisoPagoAlumno{
     let self = this;
     let procesoOrdinario = _.find(self.matricula._periodo.procesos,function(item){ return item._proceso.codigo===PROCESO.REGULAR;});
     //let procesoOrdinario = _.findWhere(self.matricula._periodo.procesos,{codigo:PROCESO.EXTEMPORANEO});
-    //console.log(self.matricula._periodo.procesos);
+    ////console.log(self.matricula._periodo.procesos);
     //if(!procesoOrdinario) throw {message:'EL proceso de matricula ordinario no se ha definido para el periodo seleccionado',status:500};
     return true;
   }
@@ -234,7 +234,7 @@ class CompromisoPagoAlumno{
   }
 
   generarCompromiso(){
-    console.log('generarCompromiso');
+    //console.log('generarCompromiso');
     var defer = Q.defer();
     let self = this;
     let tasa = _.findWhere(self.tasas,{codigo:TASA.MATRICULA_ORDINARIA});
@@ -280,7 +280,7 @@ class CompromisoPagoAlumno{
   }
   validarMatriculaAlumno(){
     var self = this;
-    console.log('validarMatriculaAlumno');
+    //console.log('validarMatriculaAlumno');
     let promises = [];
     let disponibilidad = true;
     let defer = Q.defer();
@@ -301,9 +301,9 @@ class CompromisoPagoAlumno{
       }
     });
     if(!disponibilidad){
-      console.log('no disponibilidad');
+      //console.log('no disponibilidad');
       Q.all(promises).then(function(result){
-        console.log('no disponibilidad');
+        //console.log('no disponibilidad');
         return defer.reject({message:'Uno o mas cursos no tienen disponibilidad',status:400});
       });
     }else{
@@ -321,7 +321,7 @@ class CompromisoPagoAlumno{
         promisesGrupos.push(SaveGrupo(item));
       });
       Q.all(promisesGrupos).then(function(result){
-        console.log('update grupos..',result);
+        //console.log('update grupos..',result);
         return defer.resolve(true);
       });
 

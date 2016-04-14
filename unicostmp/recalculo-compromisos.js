@@ -4,7 +4,9 @@ var CompromisoPago=require('../models/CompromisoPagoModel.js');
 var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno.js');
 
 module.exports=function(){
-  CompromisoPago.remove({pagado:false},{multi:true},function(err,data){
+  console.log('recalculo..');
+  CompromisoPago.remove({pagado:false},function(err,data){
+    //console.log(err,data);
     if(err) return false;
     Matricula.find({estado:'Prematricula'}).populate('_alumno').exec(function(err,matricula){
       if(err) console.log({message:'Error interno del servidor',detail:err,status:500});
@@ -15,7 +17,7 @@ module.exports=function(){
         var compromiso = new CompromisoPagoAlumno(item._id);
         compromiso.generar(function(err,data){
             if(err) console.log('Error: ',item._id , err);
-            console.log('Correcto: ',item._id);
+            //console.log('Correcto: ',item._id);
         });
       });
     });
