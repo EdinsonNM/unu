@@ -15,9 +15,9 @@ module.exports=function(){
       matricula.forEach(function(item){
 
         var compromiso = new CompromisoPagoAlumno(item._id);
-        compromiso.generar(function(err,data){
+        compromiso.generarCompromisoRecalculo(function(err,data){
             if(err) console.log('Error: ',item._id , err);
-            //console.log('Correcto: ',item._id);
+            console.log('Correcto: ',item._id);
         });
       });
     });
