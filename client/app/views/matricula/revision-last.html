@@ -8,7 +8,7 @@
             <div class="md-list-item-text" style="width:100%;">
               <h3 class="ng-binding">UNIVERSIDAD NACIONAL DE UCAYALI</h3>
               <p class="ng-binding">OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
-              <h2 style="text-align:center;"> FICHA DE MATRICULA </br>SEMESTRE ACADEMICO {{periodoNombre}}</h2>
+              <h2 style="text-align:center;"> BOLETA DE MATRICULA </br>SEMESTRE ACADEMICO {{periodoNombre}}</h2>
             </div>
           </md-list-item>
         </md-list>
@@ -32,7 +32,7 @@
     <md-content flex class="md-padding page-content" style="border-bottom: 2px solid black;">
       <!-- <div id="printSec"> -->
 
-      <table show-filter="true" class="table table-hover table-condensed table-striped table-bordered">
+      <table  class="table table-hover table-condensed table-striped table-bordered">
         <tbody>
           <tr class="bg-table-group">
             <td></td>
@@ -49,19 +49,7 @@
               <strong>CR.</strong>
             </td>
             <td>
-              <strong>TIPO CURSO</strong>
-            </td>
-            <td>
-              <strong>N.V.</strong>
-            </td>
-            <td>
               <strong>ESTADO</strong>
-            </td>
-            <td>
-              <strong>OP1</strong>
-            </td>
-            <td>
-              <strong>RP</strong>
             </td>
           </tr>
           <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
@@ -70,18 +58,13 @@
             <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
             <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
             <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>
-            <td class="text-left" data-title="'TIPO CURSO'"></td>
-            <td class="text-left" data-title="'N.V.'"></td>
-            <td class="text-left" data-title="'ESTADO'">{{}}</td>
-            <td class="text-left" data-title="'OP1'">{{}}</td>
-            <td data-title="'RP'" style="width:30px;">
-              <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
-            </td>
+            <td class="text-left" data-title="'ESTADO'">Matriculado</td>
           </tr>
 
         </tbody>
       </table>
     </md-content>
+    <!--
     <div style="padding-top:5px;">
       <h4 style="text-decoration: underline;">INFORMACION BASICA:</h4>
       <div layout="row" layout-margin layout-fill style="padding-top:5px;">
@@ -194,7 +177,7 @@
       </div>
 
     </div>
-
+-->
   </div>
 </div>
 
