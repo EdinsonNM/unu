@@ -20,7 +20,7 @@
         $scope.Buttons = MessageFactory.Buttons;
         $scope.UI = {
           message: MessageFactory,
-          title: 'Mis Datos',
+          title: 'Actualización de Mis Datos',
           editMode: false
         };
         $scope.message = MessageFactory.Form;

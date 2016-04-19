@@ -210,7 +210,7 @@
         <div class="md-primary md-12-line">
           <md-list layout="column" layout-padding>
             <md-list-item>
-              <img ng-src="{{ ALUMNO.imagen }}" class="md-avatar">
+              <img ng-src="/images/{{ALUMNO._persona.sexo}}.jpg" class="md-avatar">
               <div class="md-list-item-text">
                 <h3>{{ ALUMNO._persona.nombres }} {{ ALUMNO._persona.apellidoPaterno }} {{ ALUMNO._persona.apellidoMaterno }}</h3>
                 <p>{{ ALUMNO.codigo }}</p>
@@ -309,16 +309,11 @@
 
         <p ng-if="!print">
           Para finalizar su matrícula deberá realizar el abono respectivo dentro de las siguientes
-          <strong>48:00 horas</strong> a traves de cualquier canal de atención del BBVA Banco Continental indicando el concepto
-          <strong>PAGO DE RECAUDACIÓN</strong> a nombre de
-          <strong>Universidad Nacional de Ucayali</strong> por importe/concepto de:
+          <strong>48:00 horas</strong> a traves de cualquier canal de atención del BBVA Banco Continental indicando que van a realizar un pago al código <strong>556</strong>
+          o tambien indicando que el pago es para la <strong>Universidad Nacional de Ucayali</strong>.
         </p>
 
-        <p ng-if="!print">
-          Pasadas las 48:00 horas y no habiéndose realizado el pago indicado, su Matrícula quedará sin efecto perdiendo los cupos guardados en los cursos seleccionados.<br>
-          - Para los alumnos que realizaron su pre-matricula el dia 11/04/2016 tendran opcion a realizar su pago desde el 12/04/2016 hasta el 13/04/2016<br>
-          - Para los alumnos que realizaron su pre-matricula el dia 12/04/2016 solo podran realizar su pago el día 13/04/2016<br>
-        </p>
+
       </md-content>
 
       <div layout-align="center start" layout="row" layout-fill>

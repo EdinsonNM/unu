@@ -29,7 +29,19 @@
 
     <!-- Add your site or application content here -->
 <!--div ui-view class="anim-in-out anim-fade" data-anim-speed="1000"></div-->
-<div ui-view layout="row" layout-fill></div>
+<div layout="row" layout-fill>
+
+  <div class="bg-login" layout="column" layout-fill>
+    <div class="ct-app">
+      <div class="ct-login z-depth-1">
+        <span class="fs-headline display-block">Sistema de Matrícula</span>
+        <span class="fs-caption display-block">Universidad Nacional de Ucayali</span>
+          <img src="/images/error-01.png"/>
+      </div>
+    </div>
+  </div>
+
+</div>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <!--script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -41,33 +53,6 @@
        ga('send', 'pageview');
     </script-->
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="scripts/vendors/jquery.min.js"></script>
-    <script src="public/js/vendors.js"></script>
-    <script src="scripts/vendors/angular-loading-bar/build/loading-bar.js"></script>
-    <!-- TODO Cargar bundle segun entorno-->
-    <script src="public/js/bundle-min.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- Smartsupp Live Chat script -->
-    <script type="text/javascript">
-    var _smartsupp = _smartsupp || {};
-    _smartsupp.key = '09f5cd6e4cba2affbaaa539a3286df0aabdf5b85';
-    window.smartsupp||(function(d) {
-    	var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-    	s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-    	c.type='text/javascript';c.charset='utf-8';c.async=true;
-    	c.src='//www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-    })(document);
-    </script>
-<script src="http://cdn.jsdelivr.net/webshim/1.12.4/extras/modernizr-custom.js"></script>
-    <script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-  <script>
-      webshims.setOptions('forms-ext', {types: 'date'});
-  webshims.polyfill('forms forms-ext');
-  </script>
 
 </body>
 </html>

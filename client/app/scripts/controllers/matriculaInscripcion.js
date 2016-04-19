@@ -81,7 +81,7 @@
       getMatricula = function(){
         serviceMatricula = Restangular.all('matriculas');
         var filter = {
-          _alumno: $scope.ALUMNO._id,
+          _alumno: ALUMNO._id,
           _periodo: PERIODO._id
         };
         serviceMatricula.customGET('lastMatricula', filter).then(function(response) {
@@ -146,8 +146,9 @@
       };
 
 
-
+      $scope.disabledButton = false;
       $scope.FinalizarMatricula = function($event){
+
         var confirm = $mdDialog.confirm()
             .title(LOCAL.name)
             .content('Esta seguro de finalizar la inscripción?')
@@ -157,14 +158,18 @@
             .cancel(MessageFactory.Buttons.No);
 
         $mdDialog.show(confirm).then(function() {
+          $scope.disabledButton = true;
           var serviceCompromisoPago = Restangular.all('compromisopagos');
           if(matricula && matricula.hasOwnProperty('_id')){
             serviceCompromisoPago.customPOST({}, '/methods/generar/matricula/' + matricula._id).then(function(response){
               console.log(response);
               ToastMD.success('Se finalizó su proceso de matrícula');
               $state.go('app.matricularevisionlast');
+              $scope.disabledButton = false;
             },function(result){
               ToastMD.error(result.data.message);
+              $scope.disabledButton = false;
+              getMatricula();
             });
           }
         }, function() {
@@ -308,9 +313,9 @@ console.log('creditos actuales',creditosactuales);
           }
         });
         if (!test) {
-          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula){
+          if(creditosactuales + cursohabilitado._planestudiodetalle.creditos > fichamatricula.creditos.maximo.creditosmatricula + fichamatricula.creditos.maximoampliacion){
             item.active = !item.active;
-            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+fichamatricula.creditos.maximo.creditosmatricula+' creditos)');
+            ToastMD.warning('No puedes superar tu límite de créditos (máximo permitido:'+ (fichamatricula.creditos.maximo.creditosmatricula + fichamatricula.creditos.maximoampliacion)+' creditos)');
             test = true;
           }else{
             creditosactuales += cursohabilitado._planestudiodetalle.creditos;
