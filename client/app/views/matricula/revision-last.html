@@ -54,7 +54,7 @@
           </tr>
           <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
             <td class="text-left" data-title="''">{{index}}</td>
-            <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
+            <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.codigo }}</td>
             <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
             <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
             <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>
@@ -255,7 +255,7 @@
             </tr>
             <tr ng-repeat="item in cursosselected" ng-class="{'table-selected-row bgc-teal-50':item.active}">
               <td class="text-left" data-title="''">{{index}}</td>
-              <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.codigo }}</td>
+              <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.codigo }}</td>
               <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
               <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
               <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>

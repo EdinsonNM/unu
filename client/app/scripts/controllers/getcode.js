@@ -10,13 +10,22 @@
    * Controller of the unuApp
    */
   angular.module('unuApp').controller('GetCodeCtrl', [
-    '$scope', 'Restangular', '$rootScope',
-    function($scope, Restangular, $rootScope) {
+    '$scope', 'Restangular', '$rootScope','ToastMD',
+    function($scope, Restangular, $rootScope, ToastMD) {
         $scope.model = {};
-        var service = Restangular.all("alumnos");
-        service.customPOST('getCode', {email: $scope.model.email}).then(function(result) {
+
+        $scope.ObtenerCodigo = function(){
+          var service = Restangular.all('alumnos');
+          service.customPOST( $scope.model,'methods/getcode').then(function(result) {
+              $scope.codigoAlumno ='Código de alumno es '+result;
+              ToastMD.success('Se encontró el alumno con el dni ingresado');
+          },function(result){
+            $scope.codigoAlumno='';
             console.log(result);
-        });
+            ToastMD.warning(result.data.message);
+          });
+        };
+
     }
   ]);
 
