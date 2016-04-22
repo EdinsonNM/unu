@@ -27,6 +27,11 @@ var CompromisopagoSchema = new Schema({
       required:true,
       default:0
     },
+    saldoFavor:{
+      type:Number,
+      required:true,
+      default:0
+    },
     moratotal:{
       type:Number,
       default:0
@@ -100,6 +105,7 @@ CompromisopagoSchema.pre('save',function(next){
   }
   this.moratotal = montoTotalMora;
   this.saldo = (totalDeuda - montoTotalPagado <= 0)?0:totalDeuda - montoTotalPagado;
+  this.saldoFavor = (totalDeuda - montoTotalPagado < 0)?(montoTotalPagado-totalDeuda):0;
   this.pagado = (totalDeuda - montoTotalPagado <= 0)?true:false;
 	next();
 });

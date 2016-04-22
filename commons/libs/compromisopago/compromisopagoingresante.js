@@ -11,8 +11,8 @@ var Q = require('q');
 var _ = require('underscore');
 //var Periodo = require('../../models/PeriodoModel.js');/*
 const TASA={
-  PARTICULAR:'02',
-  ESTATAL:'03'
+  PARTICULAR:'03',
+  ESTATAL:'02'
 };
 const PROCESO={
   ORDINARIO:'09',
