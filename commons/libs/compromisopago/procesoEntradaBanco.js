@@ -12,7 +12,7 @@ var tipocondicionalumno = require('../../../models/TipoCondicionAlumnoModel.js')
 var situacionalumno = require('../../../models/SituacionAlumnoModel.js'); //model de SituacionAlumno
 var escuelas = require('../../../models/EscuelaModel.js'); //model de Escuela
 var AvanceCurricularModel = require('../../../models/AvanceCurricularModel.js'); //model de AvanceCurricular
-
+var PeriodoModel = require('../../../models/PeriodoModel.js');
 var Matricula = require('../../../models/MatriculaModel.js'); //model de Matricula
 var DetalleMatricula = require('../../../models/DetalleMatriculaModel.js'); //model de DetalleMatricula
 //var GrupoCurso = require('../../../models/grupoCursoModel.js'); //model de DetalleMatricula
@@ -27,7 +27,7 @@ var _ = require('underscore');
 var NroCuenta = "";
 var tipoCondicion,situacion,grupoAlumno;
 
-var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo){
+var crearCodigoAlumno = function (escuela, anioPeriodo){
   var defer = Q.defer();
   var codigo="";
   var correlativo = 0;
@@ -50,13 +50,46 @@ var crearCodigoAlumno = function crearAlumno(escuela, anioPeriodo){
 
 };
 
+var crearCodigoAntiguoAlumno = function(escuela,anioPeriodo){
+  var defer = Q.defer();
+  var codigo="";
+  var correlativo = 0;
+  var idsPeriodos = [];
+  PeriodoModel.find({anio:anioPeriodo},function(err,periodos){
+    if(err) return defer.reject(err);
+    periodos.forEach(function(periodo){
+      idsPeriodos.push(periodo._id);
+    });
+    AlumnoModel.find({_periodoInicio:{$in:idsPeriodos}})
+    .sort('-codigo')
+    .limit(1)
+    .exec(function(err,data){
+      if(err) return defer.reject(err);
+      if(data.length===0){
+        correlativo = 1;
+      }else{
+        correlativo = parseInt(data[0].codigo.substring(6))+1;
+      }
+      var correlativoString = utils.pad(correlativo,4,'0');
+      var anioString = anioPeriodo.toString().substring(0,1)+anioPeriodo.toString().substr(-2);
+      codigo =  utils.pad('',3,'0')+anioString+correlativoString;
+      defer.resolve(codigo);
+    });
+  });
+  return defer.promise;
+
+};
+
 var crearAlumno = function crearAlumno(ingresante,next){
 
   planestudio.find({estado:'Aprobado',_escuela:ingresante._escuela}).populate('_periodo _escuela').exec(function(err,planesdeestudio){
     if(err) return next(err);
 
-    var objPlanEstudioVigente = _.sortBy(planesdeestudio, function(item){ return -item._periodo.anio; })[0];
-    crearCodigoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio).then(function(codigo){
+    var objPlanEstudioVigente = _.sortBy(planesdeestudio, function(item){
+      return -(item._periodo.anio.toString()+utils.pad(item._periodo.periodo,2,'0')) ;
+    })[0];
+    //console.log(objPlanEstudioVigente);
+    crearCodigoAntiguoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio).then(function(codigo){
       //if(err) return next(err);
       ingresante.estado = 'Matriculado';
       ingresante.save(function(err, objIngresante){
@@ -276,23 +309,34 @@ var procesarPago = function procesarPago(item,index){
       if(!ingresante){
         compromisopago.save(function(err,objCompromisoPago){
           if(err) return defer.reject(err);
-          if(objCompromisoPago.pagado)
+          if(objCompromisoPago.pagado){
             ProcesarAlumno(objCompromisoPago,function(err,data){
               if(err) return defer.reject(err);
               return defer.resolve(objCompromisoPago);
             });
+          }else{
+            return defer.resolve(objCompromisoPago);
+          }
         });
       }else{
-        procesarIngresante(ingresante).then(
-          function(alumno){
-            compromisopago.referenciAlumno = alumno.codigo;
-            compromisopago.save(function(err,objCompromisoPago){
-              if(err) return defer.reject(err);
-              return defer.resolve(objCompromisoPago);
+        if(ImporteDepositado>=compromisopago.saldo){
+          procesarIngresante(ingresante).then(
+            function(alumno){
+              compromisopago.referenciAlumno = alumno.codigo;
+              compromisopago.save(function(err,objCompromisoPago){
+                if(err) return defer.reject(err);
+                return defer.resolve(objCompromisoPago);
+              });
+            },function(result){
+              return defer.reject(result);
             });
-          },function(result){
-            return defer.reject(result);
+        }else{
+          compromisopago.save(function(err,objCompromisoPago){
+            if(err) return defer.reject(err);
+            return defer.resolve(objCompromisoPago);
           });
+        }
+
       }
     });
   });
