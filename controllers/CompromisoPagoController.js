@@ -1,5 +1,7 @@
-var model = require('../models/CompromisoPagoModel.js');
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
+var procesoPago = require('../commons/libs/compromisopago/procesoEntradaBanco');
+var model = require('../models/CompromisoPagoModel.js');
+
 var auth = require('../config/passport');
 var path = require('path');
 var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno');
@@ -21,6 +23,13 @@ module.exports=function(){
           var nomArchivo = result.nombre;
           pathFile = path.join(__dirname, '../', 'commons/data/exports', nomArchivo);
           res.download(pathFile);
+        });
+      });
+
+      controller.post('/methods/registropago/:id',function(req,res){
+        procesoPago.procesarPago(req.params.id,req.body.monto,req.body.fecha,function(err,data){
+          if(err) return res.status(err.status).send({message:err.message,detail:err.error});
+          return res.status(200).send(data);
         });
       });
 

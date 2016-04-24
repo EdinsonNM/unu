@@ -33,8 +33,8 @@
     $rootScope.app.module = ' > ' + LOCAL.name;
 
     //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
-    $scope.UI.customActions.push({label:'Escuelas', onclick: function(){
-      $state.go('app.escuelas', { id: $scope.UI.selected._id });
+    $scope.UI.customActions.push({label:'Registrar pagos',icon:'fa-money', onclick: function($event){
+      $scope.Edit($event);
     }});
     //end custom actions
 
@@ -81,6 +81,7 @@
       });
     };
     $scope.Edit = function Edit($event){
+      console.log("edit...");
       var parentEl = angular.element(document.body);
       $mdDialog.show({
         parent: parentEl,
@@ -170,19 +171,23 @@
     };
 
   }])
-  .controller('ComrpomisoPagoEditCtrl',['$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
-  function($scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
+  .controller('ComrpomisoPagoEditCtrl',['Restangular','$scope', 'table', 'name', 'MessageFactory', 'model', 'ToastMD', '$mdDialog',
+  function(Restangular,$scope, table, name, MessageFactory, model, ToastMD, $mdDialog){
     $scope.submited = false;
     $scope.model = model;
-    $scope.title = MessageFactory.Form.Edit.replace('{element}',name);
+    $scope.title = "Realizar pago de compromiso";
     $scope.Buttons = MessageFactory.Buttons;
+    var service = Restangular.all('compromisopagos');
     $scope.Save = function(form) {
       $scope.submited = true;
       if (form.$valid) {
-        $scope.model.put().then(function() {
-          ToastMD.success(MessageFactory.Form.Updated);
+        service.customPOST($scope.model,'methods/registropago/'+model._id).then(function(data) {
+          ToastMD.success('Compromiso pagado satisfactoriamente');
           $mdDialog.hide();
+          console.log(data);
           table.reload();
+        },function(result){
+          ToastMD.warning(result.data.message);
         });
       }
     };

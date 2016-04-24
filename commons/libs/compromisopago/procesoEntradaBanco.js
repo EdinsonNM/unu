@@ -19,7 +19,7 @@ var DetalleMatricula = require('../../../models/DetalleMatriculaModel.js'); //mo
 var FichaMatricula = require('../../../models/FichaMatriculaModel.js'); //model de Alumno
 var FichaMatriculaDetalle = require('../../../models/FichaMatriculaDetalleModel.js'); //model de Alumno
 
-
+var moment = require('moment');
 var fs = require('fs'); //permite escribir y leer en disco
 var lockFile = require('lockfile');
 var Q = require('q');
@@ -398,7 +398,7 @@ var LiberarMatriculas = function(next){
   }
 };
 
-module.exports  = function(filename,next){
+module.exports.procesarPagos  = function(filename,next){
   if ( !filename || typeof filename != 'string' ) next("filename (string) is required.");
   var pathFile = filename;
   var pathLockFile = filename+'.lock';
@@ -480,5 +480,39 @@ module.exports  = function(filename,next){
 
       });
     }
+  });
+};
+
+module.exports.procesarPago = function(compromisopagoId,monto,fecha,next){
+  CompromisoPago.findOne({_id:compromisopagoId},function(err,compromiso){
+    if(err) return next({status:500,message:'Error interno del servidor',error:err});
+    if(!compromiso) return next({status:404,message:'No se encontro el compromiso',error:null});
+    if(!compromiso.pagado){
+      var montoNum = monto * 100;
+      var linea='';
+      linea +='00';
+      linea += utils.pad('ALUMNO',30,' ');
+      linea += compromiso.codigo;
+      linea += utils.pad('TASA',14,' ');
+      linea += compromiso._id.toString();
+      linea += utils.pad(montoNum,15,'0'); //Importe pagado
+      linea += utils.pad(montoNum,15,'0'); //Importe pagado
+      linea += utils.pad(0,15,'0'); //Importe mora
+      linea += utils.pad(9999,4,'00'); //Oficina donde se realizo el pago 4
+      linea += utils.pad(1,6,'0');//Nro de movimiento 6
+      linea += moment(fecha).format('YYYYMMDD'); //fecha de pago 8
+      linea += '01'; //Tipo Valor 2
+      linea += '99'; //Canal de entrada 2
+      linea += utils.pad('',5,' ');//Vacio 5
+      procesarPago(linea,0).then(function(result){
+        return next(null,result);
+      });
+    }else{
+      return next({status:402,message:'Compromiso de pago ya se encuentra pagado'});
+    }
+
+    //console.log(linea);
+    //return next(null,linea);
+
   });
 };

@@ -7,7 +7,7 @@ module.exports.watchBanco  = function(folder){
       var datafile= filename.split('.');
       if(datafile.pop()!='lock'){
         console.log("something changed in watched directory", filename,'\n' );
-    		process(filename,function ( error, data ) {
+    		process.procesarPagos(filename,function ( error, data ) {
     			if (error) {
     				console.log(error);
     			}
