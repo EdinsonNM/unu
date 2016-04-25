@@ -91,6 +91,7 @@ var crearAlumno = function crearAlumno(ingresante,next){
     //console.log(objPlanEstudioVigente);
     crearCodigoAntiguoAlumno(objPlanEstudioVigente._escuela,ingresante._periodo.anio).then(function(codigo){
       //if(err) return next(err);
+      console.log('actualizado a matriculado');
       ingresante.estado = 'Matriculado';
       ingresante.save(function(err, objIngresante){
         if(err) return next(err);
@@ -307,6 +308,7 @@ var procesarPago = function procesarPago(item,index){
     }).populate('_periodo').exec(function(err,ingresante){
       if(err) return defer.reject(err);
       if(!ingresante){
+        console.log('es alumno _persona:',compromisopago._persona.toString());
         compromisopago.save(function(err,objCompromisoPago){
           if(err) return defer.reject(err);
           if(objCompromisoPago.pagado){
@@ -319,6 +321,7 @@ var procesarPago = function procesarPago(item,index){
           }
         });
       }else{
+        console.log('es ingresante',ImporteDepositado,compromisopago.saldo);
         if(ImporteDepositado>=compromisopago.saldo){
           procesarIngresante(ingresante).then(
             function(alumno){
@@ -483,36 +486,66 @@ module.exports.procesarPagos  = function(filename,next){
   });
 };
 
-module.exports.procesarPago = function(compromisopagoId,monto,fecha,next){
-  CompromisoPago.findOne({_id:compromisopagoId},function(err,compromiso){
-    if(err) return next({status:500,message:'Error interno del servidor',error:err});
-    if(!compromiso) return next({status:404,message:'No se encontro el compromiso',error:null});
-    if(!compromiso.pagado){
-      var montoNum = monto * 100;
-      var linea='';
-      linea +='00';
-      linea += utils.pad('ALUMNO',30,' ');
-      linea += compromiso.codigo;
-      linea += utils.pad('TASA',14,' ');
-      linea += compromiso._id.toString();
-      linea += utils.pad(montoNum,15,'0'); //Importe pagado
-      linea += utils.pad(montoNum,15,'0'); //Importe pagado
-      linea += utils.pad(0,15,'0'); //Importe mora
-      linea += utils.pad(9999,4,'00'); //Oficina donde se realizo el pago 4
-      linea += utils.pad(1,6,'0');//Nro de movimiento 6
-      linea += moment(fecha).format('YYYYMMDD'); //fecha de pago 8
-      linea += '01'; //Tipo Valor 2
-      linea += '99'; //Canal de entrada 2
-      linea += utils.pad('',5,' ');//Vacio 5
-      procesarPago(linea,0).then(function(result){
-        return next(null,result);
+module.exports.procesarPagoIndividual = function(compromisopagoId,monto,fecha,next){
+      Q.fcall(function(archivo){
+      var defer = Q.defer();
+      tipocondicionalumno.findOne({codigo:'01'},function(err,tc){
+        if(err) return defer.reject(err);
+        return defer.resolve({tipocondicion:tc});
       });
-    }else{
-      return next({status:402,message:'Compromiso de pago ya se encuentra pagado'});
-    }
+      return defer.promise;
+    })
+    .then(function(result){
+      var defer = Q.defer();
+      situacionalumno.findOne({codigo:'01'},function(err,st){
+        if(err) return defer.reject(err);
+        result.situacion = st;
+        return defer.resolve(result);
+      });
+      return defer.promise;
+    })
+    .then(function(result){
+      var defer = Q.defer();
+      GrupoModel.findOne({codigo:'ALUMNO'}).exec(function(err,gr){
+        if(err) return next(err);
+        result.grupoAlumno = gr;
+        return defer.resolve(result);
+      });
+      return defer.promise;
+    })
+    .then(function(result){
+      grupoAlumno = result.grupoAlumno;
+      situacion = result.situacion;
+      tipocondicion = result.tipocondicion;
+      CompromisoPago.findOne({_id:compromisopagoId},function(err,compromiso){
+        if(err) return next({status:500,message:'Error interno del servidor',error:err});
+        if(!compromiso) return next({status:404,message:'No se encontro el compromiso',error:null});
+        if(!compromiso.pagado){
+          var montoNum = monto * 100;
+          var linea='';
+          linea +='00';
+          linea += utils.pad('ALUMNO',30,' ');
+          linea += compromiso.codigo;
+          linea += utils.pad('TASA',14,' ');
+          linea += compromiso._id.toString();
+          linea += utils.pad(montoNum,15,'0'); //Importe pagado
+          linea += utils.pad(montoNum,15,'0'); //Importe pagado
+          linea += utils.pad(0,15,'0'); //Importe mora
+          linea += utils.pad(9999,4,'00'); //Oficina donde se realizo el pago 4
+          linea += utils.pad(1,6,'0');//Nro de movimiento 6
+          linea += moment(fecha).format('YYYYMMDD'); //fecha de pago 8
+          linea += '01'; //Tipo Valor 2
+          linea += '99'; //Canal de entrada 2
+          linea += utils.pad('',5,' ');//Vacio 5
+          procesarPago(linea,0).then(function(result){
+            return next(null,result);
+          });
+        }else{
+          return next({status:402,message:'Compromiso de pago ya se encuentra pagado'});
+        }
 
-    //console.log(linea);
-    //return next(null,linea);
+    })
+    .done();
 
   });
 };

@@ -72,7 +72,7 @@ module.exports = function() {
               Persona.findOne({documento: req.body.documento},function(err, persona){
                 if(err) return res.status(500).send({message:err});
                 if(!persona) return res.status(404).send({message:"No se encontro el alumno"});
-                model.findOne({_persona: persona._id},function(err, alumno){
+                model.findOne({_persona: persona._id}).sort('-createdAt').limit(1).exec(function(err, alumno){
                   if(err) return res.status(500).send({message:err});
                   if(!alumno) return res.status(404).send({message:"No se encontro el alumno"});
                   res.status(200).send(alumno.codigo);

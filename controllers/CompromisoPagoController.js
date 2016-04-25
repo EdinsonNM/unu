@@ -27,7 +27,7 @@ module.exports=function(){
       });
 
       controller.post('/methods/registropago/:id',function(req,res){
-        procesoPago.procesarPago(req.params.id,req.body.monto,req.body.fecha,function(err,data){
+        procesoPago.procesarPagoIndividual(req.params.id,req.body.monto,req.body.fecha,function(err,data){
           if(err) return res.status(err.status).send({message:err.message,detail:err.error});
           return res.status(200).send(data);
         });
