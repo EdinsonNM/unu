@@ -1,4 +1,4 @@
-var utils = require('compromisopago/procesoEntradaBanco');
+/*var utils = require('compromisopago/procesoEntradaBanco');
 load("data/ing.js");
 var conn = new Mongo()
 var db = conn.getDB("unu-testing");
@@ -20,3 +20,4 @@ for (var i = 0; i < ingresantes.length; i++) {
       print( i + 'NO' );
     }
 }
+*/

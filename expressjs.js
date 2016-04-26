@@ -43,5 +43,7 @@ module.exports = function(config){
     console.log('App listening at http://%s:%s', host, port);
   });
 
+  server.timeout = 15000;
+
   return app;
 };
