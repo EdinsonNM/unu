@@ -10,7 +10,7 @@
     "dev": "nodemon app",
     "client": "cd client && gulp",
     "debug": "node-inspector --web-port 8082 --save-live-edit true && node --debug-brk app.js",
-    "debug-win": "start node-inspector --web-port 8082 --save-live-edit true && start node --debug-brk app.js",
+    "debug-win": "start node-inspector --web-port 8083 --save-live-edit true && start node --debug-brk app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install-all": ".\\scripts\\install-all.sh",
     "build-all": ".\\scripts\\build-all.sh",
