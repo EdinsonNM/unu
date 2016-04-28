@@ -7,6 +7,8 @@ var path = require('path');
 var CompromisoPagoAlumno = require('../commons/libs/compromisopago/compromisopagoalumno');
 var NuevosCompromisos = require('../unicostmp/recalculo-compromisos.js');
 //var CompromisoPago = require('../commons/libs/compromisopago/compromisopago');
+
+var generarIngresantes = require('../commons/generarAlumnos');
 module.exports=function(){
   var baucis=require('baucis');
   return{
@@ -88,6 +90,12 @@ module.exports=function(){
             if(err) return res.status(err.status).send(err);
             return res.status(201).send(data);
         });
+
+      });
+
+      controller.post('/methods/generar/ingresantes',function(req,res){
+        generarIngresantes()
+        return res.status(200).send('Proceso en ejecución');
 
       });
 
