@@ -94,7 +94,7 @@ module.exports=function(){
       });
 
       controller.post('/methods/generar/ingresantes',function(req,res){
-        generarIngresantes()
+        generarIngresantes();
         return res.status(200).send('Proceso en ejecución');
 
       });
@@ -102,7 +102,6 @@ module.exports=function(){
       controller.post('/methods/recalculo-compromisos',function(req,res){
         NuevosCompromisos();
         return res.status(201).send("ok");
-
       });
 
       controller.get('/methods/paginate', function(req, res){
