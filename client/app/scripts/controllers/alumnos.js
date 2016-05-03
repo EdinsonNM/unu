@@ -54,6 +54,21 @@
         $scope.estadoCivil = result;
       });
 
+      //custom actions: Es un array [{label:'Nombre Acción',onclick: function(){}}]
+      $scope.UI.customActions.push({label:'Cambiar Contraseña', icon:'fa-key',onclick: function($event){
+        var parentEl = angular.element(document.body);
+        var model = Restangular.copy($scope.UI.selected);
+        $mdDialog.show({
+          parent: parentEl,
+          targetEvent: $event,
+          templateUrl: 'views/alumnos/reset-password.html',
+          locals: {
+            model:model
+          },
+          controller: 'AlumnoResetPasswordCtrl'
+        });
+      }});
+
       var LoadPeriodos = function LoadPeriodos() {
         var servicePeriodo = Restangular.all(LOCAL.route_periodos);
         servicePeriodo.getList().then(function(data) {
@@ -358,6 +373,28 @@
         $mdDialog.hide();
       };
     }
-  ]);
+  ])
+.controller('AlumnoResetPasswordCtrl', ['$scope',  'model', 'ToastMD', '$mdDialog', 'Restangular','MessageFactory',
+function($scope,model,ToastMD,$mdDialog,Restangular,MessageFactory){
+  $scope.submited = false;
+  $scope.model = model;
+  $scope.alumno = $scope.model._persona.nombres+' '+$scope.model._persona.apellidoPaterno+' '+$scope.model._persona.apellidoMaterno;
+  $scope.title = 'Cambiar Contraseña';
+  $scope.Buttons = MessageFactory.Buttons;
+  var service = Restangular.all('usuarios');
+  $scope.Save = function(form) {
+    $scope.submited = true;
+    if (form.$valid) {
+      service.customPOST({_usuario:model._usuario,password:$scope.model.password},'/auth/change-password-users').then(function() {
+        ToastMD.success(MessageFactory.Form.Updated);
+        $mdDialog.hide();
+      });
+    }
+  };
+  $scope.Cancel = function() {
+    $mdDialog.hide();
+  };
+}
+]);
 
 }).call(this);

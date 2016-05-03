@@ -1,6 +1,7 @@
 var procExport = require('../commons/libs/compromisopago/procesoSalidaBanco');
 var procesoPago = require('../commons/libs/compromisopago/procesoEntradaBanco');
 var model = require('../models/CompromisoPagoModel.js');
+var Persona = require('../models/PersonaModel.js');
 
 var auth = require('../config/passport');
 var path = require('path');
@@ -108,31 +109,50 @@ module.exports=function(){
       	var limit = parseInt(req.query.count);
       	var page = parseInt(req.query.page) || 1;
       	var filter = req.query.filter;
+        var filterPersona={};
         for (var key in filter) {
           switch (key) {
             case 'codigo':
-            case 'nombre':
               filter[key] = new RegExp(filter[key],'i');
+              break;
+            case 'nombres':
+            case 'apellidoPaterno':
+            case 'apellidoMaterno':
+              filterPersona[key] = new RegExp(filter[key],'i');
+              delete filter[key];
               break;
           }
         }
-      	model.paginate(
-      		filter,
-      		{page: page, limit: limit,populate:'_persona'},
-      		function(err, results, pageCount, itemCount){
+        var ids=[];
+        Persona
+        .find(filterPersona)
+        .select('_id')
+        .exec(function(err,data){
+          data.forEach(function(item){
+            ids.push(item._id);
+          });
+          if(filterPersona)
+            if(filter)
+              filter._persona = {$in:ids};
+        	model.paginate(
+        		filter,
+        		{page: page, limit: limit,populate:'_persona'},
+        		function(err, results, pageCount, itemCount){
 
-            var obj = {
-              total: results.total,
-              perpage: limit*1,
-              current_page: page*1,
-              last_page: results.pages,
-              from: (page-1)*limit+1,
-              to: page*limit,
-              data: results.docs
-            };
-      			res.send(obj);
-      		}
-      	);
+              var obj = {
+                total: results.total,
+                perpage: limit*1,
+                current_page: page*1,
+                last_page: results.pages,
+                from: (page-1)*limit+1,
+                to: page*limit,
+                data: results.docs
+              };
+        			res.send(obj);
+        		}
+        	);
+        });
+
       });
     }
   };

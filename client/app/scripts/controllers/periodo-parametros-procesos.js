@@ -94,6 +94,7 @@
             name: LOCAL.name,
             table:  $scope.ListarParamsProcesos,
             model: Restangular.copy($scope.UI.selected),
+            serviceProcesoPeriodo: serviceProcesoPeriodo,
             periodo: $scope.filter._periodo,
             escuela: $scope.filter._escuela
           },
@@ -192,11 +193,14 @@
         }
       }
     ])
-    .controller('PeriodoParametrosProcesosEditCtrl', ['selectedTab','$scope','periodo', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
-      function(selectedTab,$scope, periodo, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
+    .controller('PeriodoParametrosProcesosEditCtrl', ['selectedTab','serviceProcesoPeriodo','$scope','periodo', 'table', 'name', 'model', 'escuela', 'MessageFactory', 'Restangular', 'ToastMD', '$mdDialog',
+      function(selectedTab,serviceProcesoPeriodo,$scope, periodo, table, name, model, escuela, MessageFactory, Restangular, ToastMD, $mdDialog) {
         $scope._periodo = periodo;
         $scope.escuela = escuela;
+        console.log(model);
         $scope.model = model;
+        $scope.model.fechaInicio = new Date(model.fechaInicio);
+        $scope.model.fechaFin = new Date(model.fechaFin);
         //$scope.model.fecha_resolucion = new Date($scope.model.fecha_resolucion);
         $scope.title = MessageFactory.Form.Edit.replace('{element}', name);
         $scope.Buttons = MessageFactory.Buttons;

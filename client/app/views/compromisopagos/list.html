@@ -15,8 +15,9 @@
               <span class="fa fa-square  fa-lg tc-blue-grey-50" ng-class="{'fa-check-square tc-{{$root.color.accent}}-500':item.active}"></span>
             </td>
             <td class="text-left" data-title="'Código'" sortable="codigo" filter="{'codigo':'text'}">{{item.codigo}}</td>
-            <td class="text-left" data-title="'Nombres'" sortable="nombre" filter="{'nombre':'text'}">{{item._persona.nombres}}</td>
-            <td class="text-left" data-title="'Apellidos'" sortable="apellidos" filter="{'apellidos':'text'}">{{item._persona.apellidoPaterno}} {{item._persona.apellidoMaterno}}</td>
+            <td class="text-left" data-title="'Nombres'" sortable="nombre" filter="{'nombres':'text'}">{{item._persona.nombres}}</td>
+            <td class="text-left" data-title="'A.Paterno'" sortable="apellidoPaterno" filter="{'apellidoPaterno':'text'}">{{item._persona.apellidoPaterno}}</td>
+            <td class="text-left" data-title="'A.Materno'" sortable="apellidoMaterno" filter="{'apellidoMaterno':'text'}">{{item._persona.apellidoMaterno}}</td>
             <td class="text-left" data-title="'Importe'" sortable="resolucion" filter="{'resolucion':'text'}">{{item.importe | currency:"S/."}}</td>
             <td class="text-left" data-title="'Saldo'" sortable="saldo" filter="{'resolucion':'text'}">{{item.saldo | currency:"S/."}}</td>
             <td class="text-left" data-title="'Saldo a Favor'" sortable="saldofavor" filter="{'resolucion':'text'}">{{item.saldoFavor | currency:"S/."}}</td>

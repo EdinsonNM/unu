@@ -60,7 +60,7 @@
             <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.codigo }}</td>
             <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
             <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
-            <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._seccion.nombre}}</td>
+            <td class="text-left" data-title="'GRUPO'">{{item._grupoCurso._seccion.nombre}}</td>
             <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>
             <td class="text-left" data-title="'ESTADO'">Matriculado</td>
           </tr>
@@ -68,120 +68,7 @@
         </tbody>
       </table>
     </md-content>
-    <!--
-    <div style="padding-top:5px;">
-      <h4 style="text-decoration: underline;">INFORMACION BASICA:</h4>
-      <div layout="row" layout-margin layout-fill style="padding-top:5px;">
-        <div class="infoFicha info">
-          <p>
-            <span>Orden de Matricula:</span> 0 </p>
-          <p>
-            <span>Máximo Credito Permitidos:</span> {{fichamatricula.creditos.maximo.creditosmatricula}}</p>
-          <p>
-            <span>Creditos Curriculares Aprobados:</span>
-          </p>
-          <p>
-            <span>Ciclo Relativo: </span>
-          </p>
-          <p>
-            <span>Prom. Pond. Per. Ant: </span>{{fichamatricula.promedioPonderadoPeriodoAnterior}}</p>
-        </div>
-        <div class="infoFicha info">
-          <p>
-            <span>Número de Créditos Matriculados:</span>{{creditosactuales}}</p>
-          <p>
-            <span>Número de Cursos Matriculados:</span>{{}}</p>
-          <p>
-            <span>Fecha:</span>{{}}</p>
-          <p>
-            <span>Firma de Alumno:</span>
-          </p>
-          <p>
-            <span>Firma de Consejero:</span>
-          </p>
-        </div>
-      </div>
-    </div>
 
-    <div style="padding-top: 5px;">
-      <h4 style="text-decoration: underline;">RECOMENDACIONES:</h4>
-      <div layout="row" layout-margin layout-fill style="padding-top:5px;">
-        <p>
-          1.- El CONSEJERO debe señalar los cursos en los que el Alumno puede Matricularse y anular los restantes
-        </p>
-      </div>
-      <div layout="row" layout-margin layout-fill>
-        <p>
-          2.- Si el ALUMNO no esta conforme con el presente documento, solicite su correción en la Oficina General de Coordinación y Servicios Académicos.
-        </p>
-      </div>
-    </div>
-
-    <div style="padding-top: 5px;">
-      <strong>Datos del estudiante</strong>
-      <div layout="row" layout-margin layout-fill>
-        <table class="data-alumno" style="width: 100%">
-          <tr>
-            <td class="td-alu">Fecha de Nacimiento:</td>
-            <td></td>
-            <td class="td-lit">Edad:</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="td-alu">Documento de Identidad:</td>
-            <td></td>
-            <td class="td-lit">Telefono:</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="td-alu">
-              Dirección:
-            </td>
-            <td colspan="3"></td>
-          </tr>
-          <tr>
-            <td class="td-alu">
-              Dirección Electronica:
-            </td>
-            <td colspan="3">
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div layout="row" layout-margin layout-fill>
-      <table class="data-alumno" style="width: 100%">
-        <tr>
-          <td class="td-alu">Año y semestre que inició Estudios</td>
-          <td></td>
-          <td class="td-lit">Ultimo Año y semestre Estudiado:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td class="td-alu" colspan="2">
-            Veces que solicitó Retiro Total y fue aceptado:
-          </td>
-          <td colspan="2"></td>
-        </tr>
-        <tr>
-          <td class="td-alu" colspan="2">
-            Indicar los Años y semestres en que solicitó Retiro Total:
-          </td>
-          <td colspan="2">
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div layout="row" layout-margin layout-fill style="padding-top: 5px;">
-      <small>N.V.: número de veces</small>
-      <div style="margin:auto; margin-right: 0px;">
-        <strong style="display: inline-block;">USUARIO {{ALUMNO.codigo}} CLAVE {{ALUMNO.codigo}}</strong>
-      </div>
-
-    </div>
--->
   </div>
 </div>
 
@@ -265,7 +152,7 @@
               <td class="text-left" data-title="'CODIGO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.codigo }}</td>
               <td class="text-left" data-title="'NOMBRE CURSO'">{{ item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle._curso.nombre }}</td>
               <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.ciclo}}</td>
-              <td class="text-left" data-title="'CICLO'">{{item._grupoCurso._seccion.nombre}}</td>
+              <td class="text-left" data-title="'GRUPO'">{{item._grupoCurso._seccion.nombre}}</td>
               <td class="text-left" data-title="'CR.'">{{item._grupoCurso._cursoAperturadoPeriodo._planestudiodetalle.creditos}}</td>
               <td class="text-left" data-title="'TIPO CURSO'"></td>
 

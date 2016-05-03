@@ -46,7 +46,7 @@
    <!--custom actions: Se agregan en el controlador solo cuando es necesario considerar mas opciones para cada elemento de la lista-->
    <md-button ng-repeat="action in UI.customActions" aria-label="{{action.label}}" class="md-fab md-raised md-mini" ng-click="action.onclick($event)">
      <md-tooltip md-direction="left">{{action.label}}</md-tooltip>
-     <md-icon md-font-icon="fa fa-institution fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
+     <md-icon md-font-icon="fa {{action.icon}} fa-lg tc-{{$root.color.accent}}-500" aria-label="{{action.label}}"></md-icon>
    </md-button>
    <!--end custom actions-->
    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->

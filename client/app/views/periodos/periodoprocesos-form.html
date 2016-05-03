@@ -46,7 +46,7 @@
         <div flex>
           <md-input-container class="md-block">
             <label>Proceso</label>
-            <md-select ng-model="model.proceso" ng-model-options="{trackBy: '$value._id'}">
+            <md-select ng-model="model._proceso" ng-model-options="{trackBy: '$value._id'}">
               <md-option ng-repeat="proc in procesos" ng-value="proc">
                 {{proc.nombre}}
               </md-option>

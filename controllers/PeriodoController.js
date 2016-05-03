@@ -19,7 +19,7 @@ module.exports=function(){
           model.findByIdAndUpdate(
               request.body._periodo,
               {$push: {"procesos": {
-                  _proceso: request.body.proceso._id,
+                  _proceso: request.body._proceso,
                   fechaInicio: request.body.fechaInicio,
                   fechaFin: request.body.fechaFin
               }}},

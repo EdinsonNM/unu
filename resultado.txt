@@ -3243,3 +3243,18 @@ se genero alumno con codigo: 0070970668
 se genero alumno con codigo: 0070970668
 se genero alumno con codigo: 0070970668
 se genero alumno con codigo: 0070970668
+3 May 02:21:05 - [33m[nodemon] v1.3.7[39m
+3 May 02:21:05 - [33m[nodemon] to restart at any time, enter `rs`[39m
+3 May 02:21:05 - [33m[nodemon] watching: *.*[39m
+3 May 02:21:05 - [32m[nodemon] starting `node app.js`[39m
+connect to Enviroment: production
+connect to Enviroment: production
+connect to Enviroment: production
+connect to Enviroment: production
+App listening at http://:::8082
+App listening at http://:::8082
+App listening at http://:::8082
+App listening at http://:::8082
+connect to Enviroment: production
+App listening at http://:::8082
+¨Desea terminar el trabajo por lotes (S/N)? 

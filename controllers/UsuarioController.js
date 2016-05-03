@@ -122,6 +122,30 @@ module.exports=function(){
 
       });
 
+      controller.post('/auth/change-password-users',auth.ensureAuthenticated,function(request,response,next){
+        if(request.isAuthenticated){
+          model
+          .findOne({ _id: request._user._id })
+          .populate('_grupo').exec(function(err, userAdmin) {
+            if(userAdmin._grupo.codigo=='ADMIN'){
+              model
+              .findOne({ _id: request.body._usuario })
+              .exec(function(err, user) {
+                if (err) { return response.status(500).send({message:'Ocurrio un error intenro del sistema',detail:err}); }
+                user.password = request.body.password;
+                user.save(function(err,result){
+                  if (err) { return response.status(500).send({message:'Ocurrio un error intenro del sistema',detail:err}); }
+                  return response.status(200).send();
+                });
+
+              });
+            }else{
+              return response.status(401).send({message:'No Autorizado'});
+            }
+          });
+        }
+      });
+
       var updatePassword = function(item){
         var defer = Q.defer();
         item.save(function(err,data){
