@@ -86,7 +86,7 @@
             switch (item._proceso.codigo) {
               case '09':
               case '23':
-                $scope.process = true;
+                /*$scope.process = true;
                 var fechaInicio = new Date(item.fechaInicio);
                 var fechaFin = new Date(item.fechaFin);
                 if (fechaInicio <= f && f <= fechaFin) {
@@ -104,7 +104,8 @@
                     $scope.aproved = false;
                     $state.go('app.alumnomisdatos');
                   }
-                }
+                }*/
+                $scope.aproved = true;
                 break;
               default:
                 if ($rootScope.ALUMNO.email && $rootScope.ALUMNO._persona.documento) {
