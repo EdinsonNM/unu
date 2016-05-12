@@ -36,6 +36,28 @@ module.exports=function(){
                 next();
             });
         });
+        controller.get('/methods/alumnosMatriculados/:idperido',function(req,res,next){
+          model
+          .findOne({_periodo:req.params.id})
+          .populate([
+            {
+              path:'_planEstudios',
+              model:'Planestudio'
+            },
+            {
+              path:'detalleAvance._planEstudiosDetalle',
+              model:'Planestudiodetalle',
+              populate:{
+                path:'_curso',
+                model:'Curso'
+              }
+            }]).exec(function(err, planestudio) {
+            if(err) return res.status(500).send({message:'Error Interno del Servidor',detail:err});
+            if(!planestudio) return res.status(404).send({message:'No se encontro plan de estudio'});
+            res.status(200).send(planestudio);
+            next();
+          });
+        });
 
       });
 
@@ -175,6 +197,35 @@ module.exports=function(){
           return res.status(200).send(fichaMatricula);
         });
       });
+      controller.get('/methods/alumnosMatriculados/:idperido',function(req,res,next){
+        model
+        .findOne({_periodo:req.params.idperido})
+        .populate(
+          [{
+            path:'_grupos',
+            populate:
+              {
+                path: '_seccion',
+                model: 'Seccion'
+              }
+            },{
+            path: '_planestudiodetalle',
+            populate: [{
+              path: '_curso',
+              model: 'Curso'
+              },{
+              path: '_planestudio',
+              model: 'Planestudio'
+              }]
+            }
+        ]).exec(function(err, cursos) {
+          if(err) return res.status(500).send({message:'Error Interno del Servidor',detail:err});
+          if(!cursos) return res.status(404).send({message:'No se encontro plan de estudio'});
+          res.status(200).send(cursos);
+          next();
+        });
+      });
+
 
     }
   };
