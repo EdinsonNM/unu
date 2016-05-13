@@ -95,8 +95,6 @@
 
             </tr>
             <tr ng-repeat-start="item in group.data" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
-              <td style="width:30px;">
-              </td>
               <td class="text-left" data-title="'Curso'" sortable="curso"><strong>{{item._planestudiodetalle._curso.nombre}}</strong></td>
               <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"><strong>{{item._planestudiodetalle.codigo}}</strong></td>
               <td data-title="'Grupos'">
@@ -107,9 +105,8 @@
               <td data-title="'Matriculados'"></td>
 
             </tr>
-            <tr ng-repeat-end ng-repeat="grupo in item._grupos" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
-              <td>
-              </td>
+            <tr style="border:1px solid #ccc;" ng-repeat-end ng-repeat="grupo in item._grupos" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
+
               <td colspan="3">
                 Seccion {{grupo._seccion.nombre}}
               </td>
