@@ -1,4 +1,4 @@
-<div id="printSection" style="width:100%;">
+<div id="printSection" style="width:100%;" class="visible-print-block">
   <div id="showprint" ng-if="print">
     <div id="headerPre" layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding-bottom: 5px;">
       <div id="righthead" style="width:85%;">
@@ -72,7 +72,7 @@
   </div>
 </div>
 
-<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+<md-content class="page-content hidden-print" layout-align="center start" style="background-color:#f2f2f2">
   <md-subheader class="md-primary " style="margin-right: 0">
     <h3>Matrícula {{periodoNombre }}</h3>
   </md-subheader>
