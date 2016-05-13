@@ -1,13 +1,13 @@
-<div id="printSection" style="width:100%;" class="visible-print-block">
-  <div id="showprint" ng-if="print">
+<div  style="width:100%;" class="visible-print-inline">
+  <div ng-if="print">
     <div id="headerPre" layout="row" layout-margin layout-fill style="border-bottom: 2px solid black; padding-bottom: 5px;">
       <div id="righthead" style="width:85%;">
         <md-list class="md-layout-column layout-padding md-teal-theme" role="list" style="padding-left:0px; font-size:10px;">
           <md-list-item role="listitem" class="md-no-proxy" style="padding-left:0px;">
             <img src="/images/logo.jpg" width="100" height="100" class="img-round user-logo-main">
             <div class="md-list-item-text" style="width:100%;">
-              <h3 class="ng-binding">UNIVERSIDAD NACIONAL DE UCAYALI</h3>
-              <p class="ng-binding">OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
+              <h3>UNIVERSIDAD NACIONAL DE UCAYALI</h3>
+              <p>OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
               <h2 style="text-align:center;"> BOLETA DE MATRICULA </br>SEMESTRE ACADEMICO {{periodoNombre}}</h2>
             </div>
           </md-list-item>
@@ -202,7 +202,7 @@
     </md-content>
     </div>
   </md-content>
-    <md-button ui-sref="app" class="md-fab md-fab-bottom-right" aria-label="Regresar al menu principal">
-      <md-tooltip md-direction="left">Regresar al menu principal</md-tooltip>
+    <md-button ui-sref="app" class="md-fab md-fab-bottom-right hidden-print" aria-label="Regresar al menu principal">
+      <md-tooltip class="hidden-print" md-direction="left">Regresar al menu principal</md-tooltip>
       <md-icon md-font-icon="fa fa-reply fa-lg tc-white"></md-icon>
     </md-button>
