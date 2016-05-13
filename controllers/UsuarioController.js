@@ -1,11 +1,16 @@
 var Grupo = require('../models/GrupoModel.js');
 var model = require('../models/UsuarioModel.js');
+var Alumno = require('../models/AlumnoModel.js');
 var baucis=require('baucis');
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var auth = require('../config/passport');
 var config = require('../config/config');
 var Q=require('q');
+var crypto = require('crypto');
+var messagesResponses = require('../commons/libs/responses/responses');
+var Email = require('../commons/libs/email');
+
 module.exports=function(){
   return{
     setup:function(){
@@ -33,9 +38,6 @@ module.exports=function(){
            });
 
         });
-
-
-
       });
       controller.post('/auth/login', function(req,res,next){
         passport.authenticate('local', function(err, user, info) {
@@ -144,6 +146,57 @@ module.exports=function(){
             }
           });
         }
+      });
+
+      controller .post('/auth/forgot',function(request,response){
+        var email = request.body.email;
+        if(email){
+          Alumno.findOne({email:email},function(error,alumno){
+            if(error) return messagesResponses.InternalError(response,error);
+            if(!alumno) return messagesResponses.NotFound(response,'No se encontro ninguna coincidencia para el email ingresado');
+            model.findOne({username:alumno.codigo},function(error,usuario){
+              if(error) return messagesResponses.InternalError(response,error);
+              if(!usuario) return messagesResponses.NotFound(response,'No se encontro el usuario');
+              var token = crypto.randomBytes(32).toString('hex');
+              usuario.resetPasswordToken = token;
+              usuario.resetPasswordExpires =  Date.now() + 3600000;
+              usuario.save(function(error,data){
+                console.log("user saved...",error,data);
+                if(error)  return messagesResponses.InternalError(response,error);
+                Email(request,usuario,alumno,function(error){
+                  if(error) return messagesResponses.InternalError(response,error);
+                   response.status(200).send();
+                });
+               
+              });
+            });
+          });
+        }else{
+          return messagesResponses.BadRequest(response,"Email es obligatorio");
+        }
+        
+        
+      });
+
+      controller.get('/auth/resetpassword/:token',function(request,response){
+       model.findOne({ resetPasswordToken: request.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+          if (!user) return messagesResponses.NotFound(response,'No se encontro el usuario');
+          return response.status(200).send(user);
+        });
+      });
+
+      controller.post('/auth/resetpassword/:token',function(request,response){
+       model.findOne({ resetPasswordToken: request.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+          if (!user) return messagesResponses.NotFound(response,'No se encontro el usuario');
+          user.password = req.body.password;
+          user.resetPasswordToken = void 0;
+          user.resetPasswordExpires = void 0;
+
+          user.save(function(error) {
+           if(error)  return messagesResponses.InternalError(response,error);
+           return response.status(200).send({message:'Contraseña actualizada satisfactoriamente'});
+          });
+        });
       });
 
       var updatePassword = function(item){
