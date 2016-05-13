@@ -294,9 +294,32 @@ md-icon.s32 span
 	#printSection
 		display none
 
+.container-max
+	max-width:1020px
+
 @media print
-	body *
-		visibility hidden
+	table
+	.table
+		width:100%
+	table th
+	table td
+		border:1px solid #000
+		padding:0.5em
+	.table th
+	.table td
+		border:1px solid #000
+			padding:0.5em
+	.container-max{
+			max-width:100%
+	}
+	.table-responsive{
+		overflow: visible;
+	}
+	md-content{
+		overflow: visible;
+		width:100%;
+	}
+
 
 	#printSec
 		visibility visible

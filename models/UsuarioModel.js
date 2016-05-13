@@ -14,6 +14,8 @@ var UsuarioSchema = new Schema({
     ref:'Grupo',
     required:true
   },
+  resetPasswordToken:String,
+  resetPasswordExpires:Date,
   salt:String,
 	createdAt:Date,
 	updatedAt:Date

@@ -414,6 +414,11 @@
           url: '/compromisopagos',
           templateUrl: 'views/compromisopagos/list.html',
           controller: 'CompromisoPagoCtrl'
+        })
+        .state('app.reportegrupocursos', {
+          url: '/reportes/grupocursos',
+          templateUrl: 'views/reportes/grupocursos.html',
+          controller: 'RptCursoGrupoCrtl'
         });
     }]).constant('TYPE_ALUMNO', {
       INGRESANTE: 'ING'

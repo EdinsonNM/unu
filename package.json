@@ -40,11 +40,16 @@
     "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "node-watch": "^0.3.5",
+    "nodemailer": "^2.3.2",
+    "nodemailer-smtp-transport": "^2.4.2",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
     "throng": "^3.0.0",
     "underscore": "^1.8.3"
   },
-  "cacheDirectories":["client/app/public","node_modules"]
+  "cacheDirectories": [
+    "client/app/public",
+    "node_modules"
+  ]
 }

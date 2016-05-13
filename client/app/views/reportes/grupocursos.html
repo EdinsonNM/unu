@@ -1,0 +1,137 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary hidden-print" style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+  <md-list class="md-layout-column layout-padding md-teal-theme visible-print-block" role="list" style="padding-left:0px; font-size:10px;">
+    <md-list-item role="listitem" class="md-no-proxy" style="padding-left:10px;">
+      <img src="/images/logo.jpg" width="60" height="60" class="img-round user-logo-main">
+      <div class="md-list-item-text" style="width:100%;padding-top:10px;">
+        <h3 class="ng-binding">UNIVERSIDAD NACIONAL DE UCAYALI</h3>
+        <p class="ng-binding">OFICINA GENERAL DE COORDINACION Y SERVICIOS ACADEMICOS</p>
+      </div>
+    </md-list-item>
+    <h2 style="text-align:center;"> {{UI.title}}</h2>
+
+  </md-list>
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp container-max">
+      <div class="hidden-print" flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodo</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo" >
+                {{periodo.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListPlanEstudios()" >
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Plan Estudios</label>
+            <md-select ng-model="filter._planestudios" ng-model-options="{trackBy: '$value._id'}" ng-change="ListGruposAprobados();ListAllGruposCursos()" >
+              <md-option ng-repeat="plan in planestudios" ng-value="plan">
+                {{plan.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+      <table class="table table-hover table-condensed table-striped table-bordered visible-print-block" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="font-size:11px;" colspan="2">
+              <strong>Facultad/Escuela</strong><br/>
+              {{filter._facultad.nombre}} / {{filter._escuela.nombre}}
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:11px;" >
+              <strong>Periodo</strong><br/>
+              {{filter._periodo.nombre}}
+            </td>
+            <td style="font-size:11px;">
+              <strong>Plan Estudios</strong><br/>
+              {{filter._planestudios.nombre}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+
+      <div id="impresion" class="table-responsive" >
+        <table  ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+          <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+          <tbody ng-repeat="group in $groups">
+            <tr class="ng-table-group">
+              <td colspan="{{$columns.length}}">
+                <a href class="groupTitle">
+                  <strong>Ciclo: {{group.value}} </strong>
+                </a>
+              </td>
+
+            </tr>
+            <tr ng-repeat-start="item in group.data" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
+              <td class="text-left" data-title="'Curso'" sortable="curso"><strong>{{item._planestudiodetalle._curso.nombre}}</strong></td>
+              <td data-title="'Código'" sortable="codigo" filter="{ 'codigo': 'text' }"><strong>{{item._planestudiodetalle.codigo}}</strong></td>
+              <td data-title="'Grupos'">
+                <strong>{{item._grupos.length}}</strong>
+              </td>
+              <td data-title="'Cupos'"></td>
+              <td data-title="'Inscritos'"></td>
+              <td data-title="'Matriculados'"></td>
+
+            </tr>
+            <tr style="border:1px solid #ccc;" ng-repeat-end ng-repeat="grupo in item._grupos" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
+
+              <td colspan="3">
+                Seccion {{grupo._seccion.nombre}}
+              </td>
+              <td>
+                {{grupo.totalCupos}}
+              </td>
+              <td>
+                {{grupo.inscritos}}
+              </td>
+              <td>
+                {{grupo.matriculados}}
+              </td>
+
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- fin de pestañas -->
+    </md-content>
+  </div>
+</md-content>
+
+<md-button onCLick="window.print();" class="md-fab md-fab-bottom-right hidden-print" aria-label="{{UI.message.Buttons.New}}" >
+  <md-tooltip md-direction="left" class="hidden-print">Imprimir</md-tooltip>
+  <md-icon md-font-icon="fa fa-print fa-lg tc-white"></md-icon>
+</md-button>
