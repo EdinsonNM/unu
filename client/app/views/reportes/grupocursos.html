@@ -58,40 +58,50 @@
           </md-input-container>
         </div>
       </div>
-      <table class="table table-hover table-condensed table-striped table-bordered visible-print-block" style="width:100%;">
-        <tbody>
-          <tr>
-            <td style="font-size:11px;" colspan="2">
-              <strong>Facultad/Escuela</strong><br/>
-              {{filter._facultad.nombre}} / {{filter._escuela.nombre}}
-            </td>
-          </tr>
-          <tr>
-            <td style="font-size:11px;" >
-              <strong>Periodo</strong><br/>
-              {{filter._periodo.nombre}}
-            </td>
-            <td style="font-size:11px;">
-              <strong>Plan Estudios</strong><br/>
-              {{filter._planestudios.nombre}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
 
       <!--tabla: contiene el listado de elementos-->
       <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
 
       <div id="impresion" class="table-responsive" >
-        <table  ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
+        <table id="tableReport"  ng-table="tableParams" show-filter="false" class="table table-hover table-condensed table-striped table-bordered ">
           <!-- En la mayoria de los casos solo sera necesario agregar o modificar la información de las columnas -->
+
           <tbody ng-repeat="group in $groups">
+            <tr ng-if="$index===0">
+              <td>
+                <strong>Facultad</strong><br/>
+                {{filter._facultad.nombre}} 
+              </td>
+              <td colspan="5">
+                <strong>Escuela</strong><br/>
+               {{filter._escuela.nombre}}
+              </td>
+            </tr>
+             <tr ng-if="$index===0">
+             <td colspan="1"style="font-size:11px;" >
+                <strong>Periodo</strong><br/>
+                {{filter._periodo.nombre}}
+              </td>
+              <td colspan="5" style="font-size:11px;">
+                <strong>Plan Estudios</strong><br/>
+                {{filter._planestudios.nombre}}
+              </td>
+             </tr>
             <tr class="ng-table-group">
-              <td colspan="{{$columns.length}}">
+              <td colspan="6">
                 <a href class="groupTitle">
                   <strong>Ciclo: {{group.value}} </strong>
                 </a>
               </td>
+
+            </tr>
+            <tr ng-if="$index===0">
+              <th>CURSO</th>
+              <th>CODIGO</th>
+              <th>GRUPOS</th>
+              <th>CUPOS</th>
+              <th>INSCRITOS</th>
+              <th>MATRICULADOS</th>
 
             </tr>
             <tr ng-repeat-start="item in group.data" ng-if="filter._planestudios._id == item._planestudiodetalle._planestudio">
@@ -124,6 +134,7 @@
 
           </tbody>
         </table>
+
       </div>
 
       <!-- fin de pestañas -->
@@ -131,7 +142,25 @@
   </div>
 </md-content>
 
-<md-button onCLick="window.print();" class="md-fab md-fab-bottom-right hidden-print" aria-label="{{UI.message.Buttons.New}}" >
-  <md-tooltip md-direction="left" class="hidden-print">Imprimir</md-tooltip>
-  <md-icon md-font-icon="fa fa-print fa-lg tc-white"></md-icon>
-</md-button>
+<!--acciones: se mostraran al seleccionar un elemento del listado-->
+<md-fab-speed-dial  md-open="false" md-direction="up" class="md-fling md-fab-bottom-right hidden-print">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab  hidden-print"> 
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="Imprimir" class="md-fab md-raised md-mini" onClick="window.print()">
+     <md-tooltip  class=" hidden-print" md-direction="left">Imprimir</md-tooltip>
+     <md-icon  md-font-icon="fa fa-print fa-lg  tc-{{$root.color.accent}}-500" aria-label="Imprimir"></md-icon>
+   </md-button>
+   <md-button aria-label="Exportar a Excel" class="md-fab md-raised md-mini hidden-print" onClick="fnExcelReport('tableReport')">
+     <md-tooltip  class=" hidden-print" md-direction="left">Exportar a Excel</md-tooltip>
+     <md-icon class="md-accent" md-font-icon="fa fa-file-excel-o fa-lg  tc-{{$root.color.accent}}-500 " aria-label="Exportar a Excel"></md-icon>
+   </md-button>
+   
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>
