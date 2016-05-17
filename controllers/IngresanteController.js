@@ -11,6 +11,7 @@ var modelAlumno = require('../models/AlumnoModel.js');
 var modelPlanEstudioDetalle = require('../models/PlanestudiodetalleModel.js');
 var modelAvanceCurricular = require('../models/AvanceCurricularModel.js');
 var CompromisoPagoIngresante = require('../commons/libs/compromisopago/compromisopagoingresante');
+var IngresanteService = require('../services/ingresante');
 
 var Validator = require('jsonschema').Validator;
 var schemaPago  = require('../schemas/ingresante-pagos');
@@ -363,6 +364,8 @@ module.exports = function() {
         });
 
       });
+
+      controller.get('/methods/reports/ingresantefacultad',IngresanteService.listByFacultad);
     }
   };
 };

@@ -16,6 +16,9 @@ class MessageResponse{
 	static BadRequest(response,message){
 		return response.status(400).send({message:message});
 	}
+	static OK(response,data){
+		return response.status(200).send(data);
+	}
 }
 
 module.exports = MessageResponse;

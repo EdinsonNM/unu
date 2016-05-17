@@ -1,0 +1,115 @@
+<md-content class="page-content" layout-align="center start" style="background-color:#f2f2f2">
+  <md-subheader class="md-primary hidden-print" style="margin-right: 0">
+    <h3>{{UI.title}}</h3>
+  </md-subheader>
+
+  <div layout="row" layout-align="center start" layout-margin layout-fill>
+    <md-content flex class="md-padding page-content md-whiteframe-4dp container-max">
+      <div class="hidden-print" flex-container="row" flex-gutter="24">
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Periodo</label>
+            <md-select ng-model="filter._periodo" ng-model-options="{trackBy: '$value._id'}">
+              <md-option ng-repeat="periodo in periodos" ng-value="periodo" >
+                {{periodo.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Facultad</label>
+            <md-select ng-model="filter._facultad" ng-model-options="{trackBy: '$value._id'}" ng-change="LoadEcuelas()">
+              <md-option ng-repeat="fac in facultades" ng-value="fac">
+                {{fac.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div flex-item>
+          <md-input-container class="md-block">
+            <label>Escuela</label>
+            <md-select ng-model="filter._escuela" ng-model-options="{trackBy: '$value._id'}" ng-change="ListIngresantes()" >
+              <md-option value="">Todas las Escuelas</md-option>
+              <md-option ng-repeat="escuela in escuelas" ng-value="escuela">
+                {{escuela.nombre}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+
+      <!--tabla: contiene el listado de elementos-->
+      <md-progress-linear md-mode="indeterminate" ng-if="UI.refresh" class="md-accent"></md-progress-linear>
+
+      <div id="impresion" class="table-responsive" >
+        <table id="tableReport"  class="table table-hover table-condensed table-striped table-bordered ">
+          <thead>
+            <tr>
+            <th colspan="1">
+               <img src="/images/logo.jpg" width="60" height="60" class="img-round user-logo-main">
+            </th>
+              <th colspan="5">
+                <h4>UNIVERSIDAD NACIONAL DE UCAYALI</h4>
+                <h4>{{filter._facultad.nombre}}</h4>
+              </th>
+            </tr>
+            <tr>
+              <th colspan="6" style="text-align:center;">
+                <h2>Reporte de Ingresantes por Facultad</h2>
+              </th>
+            </tr>
+            <tr>
+              <th>Código</th>
+              <th>DNI</th>
+              <th>Apellidos y Nombres</th>
+              <th>Facultad</th>
+              <th>Escuela</th>
+              <th>Año Ingreso</th>
+            </tr>
+          </thead>
+          <tbody>
+           <tr  ng-repeat-start="(key,value) in data | groupBy: '_escuela.nombre'">
+              <th colspan="6">Escuela Profesional: {{key}}</th>
+            </tr>
+            <tr ng-repeat-end ng-repeat="ingresante in value">
+              <td>{{ingresante.codigoPostulante}}</td>
+              <td>{{ingresante._persona.documento}}</td>
+              <td>{{ingresante._persona.apellidoPaterno+'  '+ingresante._persona.apellidoMaterno+',  '+ingresante._persona.nombres}}</td>
+              <td>{{ingresante._escuela._facultad.nombre}}</td>
+              <td>{{ingresante._escuela.nombre}}</td>
+              <td>{{ingresante._periodo.anio}}</td>
+            </tr>
+           
+          </tbody>
+        </table>
+
+      </div>
+
+      <!-- fin de pestañas -->
+    </md-content>
+  </div>
+</md-content>
+
+<!--acciones: se mostraran al seleccionar un elemento del listado-->
+<md-fab-speed-dial  md-open="false" md-direction="up" class="md-fling md-fab-bottom-right hidden-print">
+ <md-fab-trigger>
+   <md-button aria-label="menu" class="md-fab  hidden-print"> 
+     <md-icon md-font-icon="fa fa-bars fa-lg tc-white"></md-icon>
+   </md-button>
+ </md-fab-trigger>
+
+ <md-fab-actions>
+    <!--default actions: Acciones por defecto que contendra cada interfaz de mantenimiento-->
+   <md-button aria-label="Imprimir" class="md-fab md-raised md-mini" onClick="window.print()">
+     <md-tooltip  class=" hidden-print" md-direction="left">Imprimir</md-tooltip>
+     <md-icon  md-font-icon="fa fa-print fa-lg  tc-{{$root.color.accent}}-500" aria-label="Imprimir"></md-icon>
+   </md-button>
+   <md-button aria-label="Exportar a Excel" class="md-fab md-raised md-mini hidden-print" onClick="fnExcelReport('tableReport')">
+     <md-tooltip  class=" hidden-print" md-direction="left">Exportar a Excel</md-tooltip>
+     <md-icon class="md-accent" md-font-icon="fa fa-file-excel-o fa-lg  tc-{{$root.color.accent}}-500 " aria-label="Exportar a Excel"></md-icon>
+   </md-button>
+   
+   <!--end default actions-->
+ </md-fab-actions>
+</md-fab-speed-dial>

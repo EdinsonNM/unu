@@ -28,7 +28,8 @@
       'anim-in-out',
       'ngMaterial',
       'ngMaterialDatePicker',
-      'ngFileUpload'
+      'ngFileUpload',
+      'angular.filter'
     ]).config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, RestangularProvider, $httpProvider) {
       RestangularProvider.setBaseUrl('/api');
       $httpProvider.interceptors.push('AuthInterceptor');
@@ -419,6 +420,11 @@
           url: '/reportes/grupocursos',
           templateUrl: 'views/reportes/grupocursos.html',
           controller: 'RptCursoGrupoCrtl'
+        })
+        .state('app.reporteingrcd clientesantefacultad', {
+          url: '/reportes/ingresantes/facultad',
+          templateUrl: 'views/reportes/ingresantes/ingresantes_facultad.html',
+          controller: 'RptIngresantesFacultadCrtl'
         });
     }]).constant('TYPE_ALUMNO', {
       INGRESANTE: 'ING'
