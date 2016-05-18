@@ -421,10 +421,15 @@
           templateUrl: 'views/reportes/grupocursos.html',
           controller: 'RptCursoGrupoCrtl'
         })
-        .state('app.reporteingrcd clientesantefacultad', {
+        .state('app.reporteingresantefacultad', {
           url: '/reportes/ingresantes/facultad',
           templateUrl: 'views/reportes/ingresantes/ingresantes_facultad.html',
           controller: 'RptIngresantesFacultadCrtl'
+        })
+        .state('app.reportematriculadosfacultad', {
+          url: '/reportes/alumnos/matriculados/facultad',
+          templateUrl: 'views/reportes/alumnos/matriculados_facultad.html',
+          controller: 'RptMatriculadosFacultadCrtl'
         });
     }]).constant('TYPE_ALUMNO', {
       INGRESANTE: 'ING'

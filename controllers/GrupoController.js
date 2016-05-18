@@ -114,6 +114,24 @@ module.exports=function(){
                 image:'bghome-2.jpg'
               }
             }
+            {
+              order:5,
+              title:'Reportes',
+              description:'Listadodo de Reportes del sistema',
+              url:'',
+              flex:'67',
+              children:[
+                {title:'Matriculados por Grupo',icon:'fa-institution',url:'app.reportegrupocursos',order:1},
+                {title:'Ingresantes por Facultad',icon:'',url:'app.reporteingresantefacultad',order:2},
+                {title:'Matriculados por facultad',icon:'',url:'app.reportematriculadosfacultado',order:3}
+              ],
+              style:{
+                color: 'white',
+                bgColor:'bgc-white',
+                bgColorHead:'bgc-teal-500',
+                image:'bghome-1.jpg'
+              }
+            },
 
           ];
           grupo.save(function(error, data){

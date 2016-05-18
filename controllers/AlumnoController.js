@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var auth = require('../config/passport');
 var config = require('../config/config');
-
+var AlumnoService = require('../services/alumnos');
 
 module.exports = function() {
   var baucis = require('baucis');
@@ -258,6 +258,8 @@ module.exports = function() {
         });
 
       });
+
+      controller.get('/methods/reports/matriculadosfacultad',AlumnoService.listMatriculadosByFacultad);
 
     }
   };
