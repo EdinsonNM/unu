@@ -71,7 +71,7 @@
           <tbody>
 
             <tr ng-repeat="matricula in data">
-              <td>{{$index}}</td>
+              <td>{{$index+1}}</td>
               <td>{{matricula._alumno.codigo}}</td>
               <td>{{matricula._alumno._persona.documento}}</td>
               <td>{{matricula._alumno._persona.apellidoPaterno+'  '+matricula._alumno._persona.apellidoMaterno+',  '+matricula._alumno._persona.nombres}}</td>
