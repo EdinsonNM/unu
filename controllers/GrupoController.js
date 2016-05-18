@@ -123,7 +123,7 @@ module.exports=function(){
               children:[
                 {title:'Matriculados por Grupo',icon:'fa-institution',url:'app.reportegrupocursos',order:1},
                 {title:'Ingresantes por Facultad',icon:'',url:'app.reporteingresantefacultad',order:2},
-                {title:'Matriculados por facultad',icon:'',url:'app.reportematriculadosfacultado',order:3}
+                {title:'Matriculados por facultad',icon:'',url:'app.reportematriculadosfacultad',order:3}
               ],
               style:{
                 color: 'white',
