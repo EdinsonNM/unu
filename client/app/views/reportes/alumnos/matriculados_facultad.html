@@ -60,6 +60,7 @@
               </th>
             </tr>
             <tr>
+              <th></th>
               <th>Código</th>
               <th>DNI</th>
               <th>Apellidos y Nombres</th>
@@ -70,13 +71,18 @@
           <tbody>
 
             <tr ng-repeat="matricula in data">
+              <td>{{$index}}</td>
               <td>{{matricula._alumno.codigo}}</td>
               <td>{{matricula._alumno._persona.documento}}</td>
               <td>{{matricula._alumno._persona.apellidoPaterno+'  '+matricula._alumno._persona.apellidoMaterno+',  '+matricula._alumno._persona.nombres}}</td>
               <td>{{matricula._alumno._escuela._facultad.nombre}}</td>
               <td>{{matricula._alumno._escuela.nombre}}</td>
             </tr>
-           
+           <tr>
+            <th></th>
+             <th>TOTAL</th>
+             <th colspan="4">{{data.length}}</th>
+           </tr>
           </tbody>
         </table>
 

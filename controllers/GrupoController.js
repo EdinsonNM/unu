@@ -113,7 +113,7 @@ module.exports=function(){
                 bgColorHead:'bgc-teal-500',
                 image:'bghome-2.jpg'
               }
-            }
+            },
             {
               order:5,
               title:'Reportes',
